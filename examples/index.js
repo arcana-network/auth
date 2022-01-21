@@ -78,7 +78,7 @@ let ciphertext;
 let publicKey;
 encryptBtn.addEventListener("click", async () => {
   console.log("Doing encryption");
-  const c = await ArcanaEmbedder.encryptWithPublicKey({
+  const c = await WalletProvider.encryptWithPublicKey({
     publicKey,
     message: plaintext,
   });
