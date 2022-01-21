@@ -33,7 +33,14 @@ WalletProvider
 ```js
 await wallet.requestLogin("google")
 ```
+## Events
 
+```js
+provider.on('chainChanged', handler: (chainId: number) => void);
+provider.on('accountsChanged', handler: (accounts: string[]) => void);
+provider.on('connect', handler: ({ chainId: number }) => void);
+provider.isConnected(): Promise<boolean>;
+```
 ## RPC API’s
 
 ### eth_accounts
