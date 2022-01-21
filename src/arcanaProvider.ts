@@ -31,6 +31,18 @@ interface RequestArguments {
   params?: unknown[] | Record<string, unknown>;
 }
 
+class EthereumError extends Error implements JsonRpcError {
+  code: number;
+  message: string;
+  data: string;
+  constructor(code: number, message: string, data: string = "") {
+    super(message);
+    this.code = code;
+    this.message = message;
+    this.data = data;
+  }
+}
+
 interface JsonRpcRequestArgs {
   id?: JsonRpcId;
   jsonrpc?: JsonRpcVersion;
@@ -69,19 +81,13 @@ export class ArcanaProvider {
   }
 
   public async triggerLogin(loginType: string) {
-    const comm = await this.communication.promise;
-    await comm.triggerLogin(loginType);
+    const c = await this.communication.promise;
+    await c.triggerLogin(loginType);
   }
 
   private initProvider() {
     this.initEngine();
     this.provider = providerFromEngine(this.jsonRpcEngine);
-  }
-
-  private onReply(method: string, id: number, callback: () => void) {
-    return new Promise((resolve, reject) => {
-      this.subscriber.once(`result:${method}:${id}`, callback);
-    });
   }
 
   async request(args: RequestArguments) {
@@ -115,7 +121,6 @@ export class ArcanaProvider {
           error: Error,
           response: PendingJsonRpcResponse<{ result: string; error: string }>
         ): void => {
-          console.log({ response });
           if (error || response.error) {
             reject(error || response.error);
           } else {
@@ -197,9 +202,7 @@ export class ArcanaProvider {
       const method = "eth_accounts";
       const c = await this.communication.promise;
       const r = this.createRequest(method, undefined);
-      this.getResponse<string[]>(method, r.id).then((res) => {
-        resolve(res);
-      });
+      this.getResponse<string[]>(method, r.id).then(resolve, reject);
       await c.sendRequest(r);
     });
   };
@@ -211,9 +214,7 @@ export class ArcanaProvider {
     return new Promise(async (resolve, reject) => {
       const method = "eth_sendTransaction";
       const c = await this.communication.promise;
-      this.getResponse<string>(method, req.id).then((res) => {
-        return resolve(res);
-      });
+      this.getResponse<string>(method, req.id).then(resolve, reject);
       await c.sendRequest(req);
     });
   };
@@ -226,9 +227,7 @@ export class ArcanaProvider {
     return new Promise(async (resolve, reject) => {
       const method = "eth_signTypedData_v4";
       const c = await this.communication.promise;
-      this.getResponse<string>(method, req.id).then((res) => {
-        resolve(res);
-      });
+      this.getResponse<string>(method, req.id).then(resolve, reject);
       await c.sendRequest(req);
     });
   };
@@ -240,9 +239,7 @@ export class ArcanaProvider {
     return new Promise(async (resolve, reject) => {
       const method = "eth_sign";
       const c = await this.communication.promise;
-      this.getResponse<string>(method, req.id).then((res) => {
-        resolve(res);
-      });
+      this.getResponse<string>(method, req.id).then(resolve, reject);
       await c.sendRequest(req);
     });
   };
@@ -264,9 +261,7 @@ export class ArcanaProvider {
     return new Promise(async (resolve, reject) => {
       const method = "eth_signTransaction";
       const c = await this.communication.promise;
-      this.getResponse<string>(method, req.id).then((res) => {
-        return resolve(res);
-      });
+      this.getResponse<string>(method, req.id).then(resolve, reject);
       await c.sendRequest(req);
     });
   };
@@ -303,8 +298,7 @@ export class ArcanaProvider {
         (params: { error: string; result: U }) => {
           console.log("Get response: ", { params });
           if (params.error) {
-            // Handle error in a better way
-            return reject(new Error(params.error));
+            return reject(getError(params.error));
           }
           return resolve(params.result);
         }
@@ -312,3 +306,11 @@ export class ArcanaProvider {
     });
   }
 }
+
+const getError = (message: string) => {
+  if (message == "user_deny") {
+    return new EthereumError(4001, "The request was denied by the user");
+  } else {
+    return new EthereumError(-32603, "Internal error");
+  }
+};

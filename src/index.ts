@@ -1,6 +1,7 @@
 import { ArcanaProvider } from "./arcanaProvider";
 import IframeWrapper from "./iframeWrapper";
 import { encryptWithPublicKey, cipher } from "eth-crypto";
+import SafeEventEmitter from "@metamask/safe-event-emitter";
 
 interface LoginParams {
   appId: string;
@@ -11,7 +12,7 @@ interface State {
   redirectUri?: string;
 }
 
-class WalletProvider {
+class WalletProvider extends SafeEventEmitter {
   public static async encryptWithPublicKey({
     message,
     publicKey,
@@ -27,6 +28,7 @@ class WalletProvider {
   private iframeWrapper: IframeWrapper;
   private arcanaProvider: ArcanaProvider;
   constructor(private params: LoginParams) {
+    super();
     this.initializeState();
   }
 
@@ -40,15 +42,7 @@ class WalletProvider {
     );
     this.arcanaProvider = new ArcanaProvider();
     const { communication } = await this.iframeWrapper.getIframeInstance({
-      onConnect: (address: string) => {
-        // this.emit("connect", { address });
-      },
-      onDisconnect: (err: string) => {
-        // this.emit("disconnect", err);
-      },
-      onAccountChanged: (account: string) => {},
-      onChainChanged: (chainId) => {},
-      onMessage: (message: { type: string; data: string }) => {},
+      onEvent: this.handleEvents,
       onMethodResponse: (method: string, response: any) => {
         this.arcanaProvider.onResponse(method, response);
       },
@@ -56,13 +50,34 @@ class WalletProvider {
     this.arcanaProvider.setConnection(communication);
   }
 
+  handleEvents = (t: string, val: unknown) => {
+    switch (t) {
+      case "accountsChanged":
+        this.emit(t, [val]);
+        break;
+      case "chainChanged":
+        this.emit("chainChanged", val);
+        break;
+      case "connect":
+        this.emit("connect", val);
+        break;
+      case "disconnect":
+        this.emit("disconnect", val);
+        break;
+      case "message":
+        this.emit("message", val);
+        break;
+      default:
+        break;
+    }
+  };
+
   public requestLogin(loginType: string) {
     if (this.arcanaProvider) {
       this.arcanaProvider.triggerLogin(loginType);
     }
   }
 
-  public emit() {}
   public async isLoggedIn() {
     return this.arcanaProvider.isLoggedIn();
   }
@@ -72,6 +87,7 @@ class WalletProvider {
   }
 
   private initializeState() {
+    // const iframeUrl = "http://localhost:3000";
     const iframeUrl = "https://arcana-wallet-test.netlify.app";
     const redirectUri = `${iframeUrl}/${this.params.appId}/redirect`;
     this.state = { iframeUrl, redirectUri };
