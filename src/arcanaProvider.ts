@@ -8,10 +8,6 @@ import {
   getUniqueId,
   PendingJsonRpcResponse,
   JsonRpcResponse,
-  createScaffoldMiddleware,
-  createAsyncMiddleware,
-  JsonRpcMiddleware,
-  Json,
 } from "json-rpc-engine";
 import {
   providerFromEngine,
@@ -21,10 +17,11 @@ import {
 } from "eth-json-rpc-middleware";
 import { createWalletMiddleware } from "./walletMiddleware";
 import { PollingBlockTracker, Provider } from "eth-block-tracker";
-import { AsyncMethodReturns, Connection } from "penpal";
+import { Connection } from "penpal";
 import { ethErrors } from "eth-rpc-errors";
 import { SafeEventEmitterProvider } from "eth-json-rpc-middleware/dist/utils/cache";
 import { EventEmitter } from "./EventEmitter";
+import SafeEventEmitter from "@metamask/safe-event-emitter";
 
 interface RequestArguments {
   method: string;
@@ -50,13 +47,14 @@ interface JsonRpcRequestArgs {
   params?: unknown;
 }
 
-export class ArcanaProvider {
+export class ArcanaProvider extends SafeEventEmitter {
   public onResponse: (method: string, response: any) => any;
   private jsonRpcEngine: JsonRpcEngine;
   private provider: SafeEventEmitterProvider;
   private subscriber: EventEmitter;
   private communication: Connection<IConnectionMethods>;
   constructor() {
+    super();
     this.initProvider();
     this.subscriber = new EventEmitter();
     this.onResponse = (method: string, response: any) => {
@@ -76,8 +74,14 @@ export class ArcanaProvider {
     return this.provider;
   }
 
-  public isLoggedIn() {
-    // return this.communication.isLoggedIn();
+  public async isConnected() {
+    try {
+      const c = await this.communication.promise;
+      return c.isLoggedIn();
+    } catch (e) {
+      console.log({ e });
+      return false;
+    }
   }
 
   public async triggerLogin(loginType: string) {

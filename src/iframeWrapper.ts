@@ -1,5 +1,5 @@
 import { iframeWrapperParams, IConnectionMethods } from "./interfaces";
-import { AsyncMethodReturns, connectToChild, Connection } from "penpal";
+import { connectToChild, Connection } from "penpal";
 
 export default class IframeWrapper {
   private iframe: HTMLIFrameElement;

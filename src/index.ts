@@ -1,7 +1,6 @@
 import { ArcanaProvider } from "./arcanaProvider";
 import IframeWrapper from "./iframeWrapper";
 import { encryptWithPublicKey, cipher } from "eth-crypto";
-import SafeEventEmitter from "@metamask/safe-event-emitter";
 
 interface LoginParams {
   appId: string;
@@ -12,7 +11,7 @@ interface State {
   redirectUri?: string;
 }
 
-class WalletProvider extends SafeEventEmitter {
+class WalletProvider {
   public static async encryptWithPublicKey({
     message,
     publicKey,
@@ -28,7 +27,6 @@ class WalletProvider extends SafeEventEmitter {
   private iframeWrapper: IframeWrapper;
   private arcanaProvider: ArcanaProvider;
   constructor(private params: LoginParams) {
-    super();
     this.initializeState();
   }
 
@@ -36,7 +34,7 @@ class WalletProvider extends SafeEventEmitter {
     this.iframeWrapper = new IframeWrapper(
       {
         appId: this.params.appId,
-        network: "test",
+        network: "testnet",
       },
       this.state.iframeUrl
     );
@@ -53,19 +51,19 @@ class WalletProvider extends SafeEventEmitter {
   handleEvents = (t: string, val: unknown) => {
     switch (t) {
       case "accountsChanged":
-        this.emit(t, [val]);
+        this.arcanaProvider.emit(t, [val]);
         break;
       case "chainChanged":
-        this.emit("chainChanged", val);
+        this.arcanaProvider.emit("chainChanged", val);
         break;
       case "connect":
-        this.emit("connect", val);
+        this.arcanaProvider.emit("connect", val);
         break;
       case "disconnect":
-        this.emit("disconnect", val);
+        this.arcanaProvider.emit("disconnect", val);
         break;
       case "message":
-        this.emit("message", val);
+        this.arcanaProvider.emit("message", val);
         break;
       default:
         break;
@@ -76,10 +74,6 @@ class WalletProvider extends SafeEventEmitter {
     if (this.arcanaProvider) {
       this.arcanaProvider.triggerLogin(loginType);
     }
-  }
-
-  public async isLoggedIn() {
-    return this.arcanaProvider.isLoggedIn();
   }
 
   public getProvider() {
