@@ -33,10 +33,27 @@ initWalletBtn.addEventListener("click", async () => {
   try {
     await wallet.init();
     provider = wallet.getProvider();
+    const connected = await provider.isConnected();
+    console.log({ connected });
+    setHooks();
   } catch (e) {
     console.log({ e });
   }
 });
+
+function setHooks() {
+  provider.on("connect", async (params) => {
+    console.log({ type: "connect", params: params });
+    const connected = await provider.isConnected();
+    console.log({ connected });
+  });
+  provider.on("accountsChanged", (params) => {
+    console.log({ type: "accountsChanged", params: params });
+  });
+  provider.on("chainChanged", async (params) => {
+    console.log({ type: "chainChanged", params: params });
+  });
+}
 
 getAccountsBtn.addEventListener("click", async () => {
   console.log("Requesting accounts");
