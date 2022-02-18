@@ -20,7 +20,6 @@ import { PollingBlockTracker, Provider } from "eth-block-tracker";
 import { Connection } from "penpal";
 import { ethErrors } from "eth-rpc-errors";
 import { SafeEventEmitterProvider } from "eth-json-rpc-middleware/dist/utils/cache";
-import { EventEmitter } from "./EventEmitter";
 import SafeEventEmitter from "@metamask/safe-event-emitter";
 
 interface RequestArguments {
@@ -48,19 +47,17 @@ interface JsonRpcRequestArgs {
 }
 
 export class ArcanaProvider extends SafeEventEmitter {
-  public onResponse: (method: string, response: any) => any;
+  public onResponse = (method: string, response: any) => {
+    this.subscriber.emit(`result:${method}:${response.id}`, response);
+  };
   private jsonRpcEngine: JsonRpcEngine;
   private provider: SafeEventEmitterProvider;
-  private subscriber: EventEmitter;
+  private subscriber: SafeEventEmitter;
   private communication: Connection<IConnectionMethods>;
   constructor() {
     super();
     this.initProvider();
-    this.subscriber = new EventEmitter();
-    this.onResponse = (method: string, response: any) => {
-      console.log("Provider constructor:", { method, response });
-      this.subscriber.emit(`result:${method}:${response.id}`, response);
-    };
+    this.subscriber = new SafeEventEmitter();
   }
 
   public setConnection(connection: Connection<IConnectionMethods>) {

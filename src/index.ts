@@ -1,4 +1,4 @@
-import { ArcanaProvider } from "./arcanaProvider";
+import { ArcanaProvider } from "./provider";
 import IframeWrapper from "./iframeWrapper";
 import { encryptWithPublicKey, cipher } from "eth-crypto";
 
