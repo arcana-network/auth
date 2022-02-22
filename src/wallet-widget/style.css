@@ -1,9 +1,20 @@
 .arcana-widget {
-  --bg-color: #ededed;
+  --button-bg-color: #ededed;
+  --text-color: #0f0f0f;
+  --body-bg-color-1: rgba(232, 232, 232, 0.36);
+  --body-bg-color-2: #d6d8d9;
 
   position: absolute;
   bottom: 3%;
   right: 3%;
+}
+
+.arcana-widget_dark-mode {
+  --button-bg-color: #000000;
+  --text-color: #ffffff;
+  --header-bg-color: #1f1f1f;
+  --body-bg-color-1: #000000;
+  --body-bg-color-2: #84523f;
 }
 
 .arcana-widget_button {
@@ -13,6 +24,7 @@
   border-radius: 50%;
   box-shadow: 4px 5px 4px rgba(0, 0, 0, 0.25);
   cursor: pointer;
+  background-color: var(--button-bg-color);
 
   display: flex;
   flex-direction: column;
@@ -28,6 +40,7 @@
 
 .arcana-widget_button-text {
   font-size: 12px;
+  color: var(--text-color);
 }
 
 .arcana-widget_iframe-container {
@@ -45,8 +58,8 @@
 
   background: linear-gradient(
     138.99deg,
-    #f0f0f0 22.29%,
-    rgba(254, 254, 255, 0) 101.74%
+    var(--header-bg-color, #f0f0f0) 22.29%,
+    var(--header-bg-color, rgba(254, 254, 255, 0)) 101.74%
   );
   box-shadow: -1px -1px 3px #ffffff, 1.5px 1.5px 3px rgba(174, 174, 192, 0.4);
   border-top-left-radius: 5px;
@@ -55,7 +68,11 @@
 
 .arcana-widget_iframe-body {
   flex-grow: 1;
-  background-color: var(--bg-color);
+  background: linear-gradient(
+    324.81deg,
+    var(--body-bg-color-2) 14.65%,
+    var(--body-bg-color-1) 92.36%
+  );
   padding: 16px;
 }
 
@@ -85,6 +102,7 @@
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
+  color: var(--text-color);
 }
 
 .arcana_widget_iframe-header-close-btn-img {
