@@ -3,6 +3,7 @@
   --text-color: #0f0f0f;
   --body-bg-color-1: rgba(232, 232, 232, 0.36);
   --body-bg-color-2: #d6d8d9;
+  --close-button-img: url("./assets/images/close_button.png");
 
   position: absolute;
   bottom: 3%;
@@ -15,6 +16,7 @@
   --header-bg-color: #1f1f1f;
   --body-bg-color-1: #000000;
   --body-bg-color-2: #84523f;
+  --close-button-img: url("./assets/images/close_button_colored.png");
 }
 
 .arcana-widget_button {
@@ -114,8 +116,10 @@
   height: 20px;
   padding: 0;
   border: none;
-  background-color: #fff;
+  background-color: var(--header-bg-color);
   cursor: pointer;
+  background-image: var(--close-button-img);
+  background-size: contain;
 }
 
 .arcana_widget-component-hide {
