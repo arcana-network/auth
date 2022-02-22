@@ -27,6 +27,7 @@ const widgetButton = createElement(
   "button",
   {
     className: "arcana-widget_button",
+    onclick: onWidgetButtonClick,
   },
   widgetButtonImage,
   widgetButtonText
@@ -57,7 +58,10 @@ const widgetCloseButtonImg = createElement("img", {
 
 const widgetCloseButton = createElement(
   "button",
-  { className: "arcana_widget_iframe-header-close-btn" },
+  {
+    className: "arcana_widget_iframe-header-close-btn",
+    onclick: onCloseWidgetClick,
+  },
   widgetCloseButtonImg
 );
 
@@ -94,7 +98,23 @@ const widgetContainer = createElement(
   {
     className: "arcana-widget",
   },
+  widgetButton,
   widgetIframeContainer
 );
 
-document.body.appendChild(widgetContainer);
+function onWidgetButtonClick() {
+  widgetIframeContainer.classList.remove("arcana_widget-component-hide");
+  widgetButton.classList.add("arcana_widget-component-hide");
+}
+
+function onCloseWidgetClick() {
+  widgetIframeContainer.classList.add("arcana_widget-component-hide");
+  widgetButton.classList.remove("arcana_widget-component-hide");
+}
+
+function initWidgetUI() {
+  widgetIframeContainer.classList.add("arcana_widget-component-hide");
+  document.body.appendChild(widgetContainer);
+}
+
+initWidgetUI();
