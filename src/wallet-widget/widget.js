@@ -1,5 +1,4 @@
 widgetImagePath = "./assets/images/widget_logo_example.png";
-widgetCloseImg = "./assets/images/close_button.png";
 widgetAppName = "xyz company";
 
 function createElement(type, props, ...children) {
@@ -51,19 +50,10 @@ const widgetLogoText = createElement(
   widgetHeaderText
 );
 
-const widgetCloseButtonImg = createElement("img", {
-  src: widgetCloseImg,
-  className: "arcana_widget_iframe-header-close-btn-img",
+const widgetCloseButton = createElement("button", {
+  className: "arcana_widget_iframe-header-close-btn",
+  onclick: onCloseWidgetClick,
 });
-
-const widgetCloseButton = createElement(
-  "button",
-  {
-    className: "arcana_widget_iframe-header-close-btn",
-    onclick: onCloseWidgetClick,
-  },
-  widgetCloseButtonImg
-);
 
 const widgetIframeHeader = createElement(
   "div",
@@ -76,6 +66,7 @@ const widgetIframeHeader = createElement(
 
 const widgetIframe = createElement("iframe", {
   className: "arcana-widget_iframe",
+  src: "http://arcana.network",
 });
 
 const widgetIframeBody = createElement(
