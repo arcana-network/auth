@@ -1,7 +1,9 @@
 .arcana-widget {
+  --bg-color: #ededed;
+
   position: absolute;
-  bottom: 5%;
-  right: 5%;
+  bottom: 3%;
+  right: 3%;
 }
 
 .arcana-widget_button {
@@ -10,6 +12,7 @@
   border: none;
   border-radius: 50%;
   box-shadow: 4px 5px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
 
   display: flex;
   flex-direction: column;
@@ -25,4 +28,84 @@
 
 .arcana-widget_button-text {
   font-size: 12px;
+}
+
+.arcana-widget_iframe-container {
+  width: 360px;
+  height: 540px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.arcana-widget_iframe-header {
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+
+  background: linear-gradient(
+    138.99deg,
+    #f0f0f0 22.29%,
+    rgba(254, 254, 255, 0) 101.74%
+  );
+  box-shadow: -1px -1px 3px #ffffff, 1.5px 1.5px 3px rgba(174, 174, 192, 0.4);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.arcana-widget_iframe-body {
+  flex-grow: 1;
+  background-color: var(--bg-color);
+  padding: 16px;
+}
+
+.arcana-widget_iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+
+  background: #f9f9f9;
+  box-shadow: 4px 5px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+}
+
+.arcana-widget_iframe-header_logo-text {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.arcana-widget_iframe-header_logo {
+  width: 25px;
+  height: 25px;
+  margin-right: 6px;
+}
+
+.arcana-widget_iframe-header_text {
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.arcana_widget_iframe-header-close-btn-img {
+  width: 100%;
+}
+
+.arcana_widget_iframe-header-close-btn {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+@media (max-width: 375px) {
+  .arcana-widget_iframe-container {
+    width: 235px;
+    height: 375px;
+  }
+  .arcana-widget_button {
+    border-radius: 30px 0px 30px 30px;
+  }
 }
