@@ -7,6 +7,12 @@
   --widget-button-width: 117px;
   --widget-button-height: 117px;
 
+  --widget-button-img-width: 71px;
+  --widget-button-img-height: 43px;
+
+  --widget-header-img-width: 126px;
+  --widget-header-img-height: 25px;
+
   --widget-container-width-desktop: 360px;
   --widget-container-height-desktop: 540px;
 
@@ -43,8 +49,8 @@
 }
 
 .arcana-widget_button-img {
-  width: 25px;
-  height: 25px;
+  width: var(--widget-button-img-width);
+  height: var(--widget-button-img-height);
   margin-bottom: 5px;
 }
 
@@ -65,6 +71,7 @@
   padding: 10px 16px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 
   background: linear-gradient(
     138.99deg,
@@ -88,23 +95,10 @@
   border-bottom-right-radius: var(--corner-radius);
 }
 
-.arcana-widget_iframe-header_logo-text {
-  display: flex;
-  align-items: center;
-  flex-grow: 1;
-}
-
 .arcana-widget_iframe-header_logo {
-  width: 25px;
-  height: 25px;
   margin-right: 6px;
-}
-
-.arcana-widget_iframe-header_text {
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 700;
-  color: var(--text-color);
+  width: var(--widget-header-img-width);
+  height: var(--widget-header-img-height);
 }
 
 .arcana_widget_iframe-header-close-btn-img {

@@ -1,6 +1,3 @@
-widgetImagePath = "./assets/images/widget_logo_example.png";
-widgetAppName = "xyz company";
-
 function createElement(type, props, ...children) {
   const dom = document.createElement(type);
   if (props) Object.assign(dom, props);
@@ -16,15 +13,8 @@ function setElementAttribute(element, props) {
 }
 
 const widgetButtonImage = createElement("img", {
-  src: widgetImagePath,
   className: "arcana-widget_button-img",
 });
-
-const widgetButtonText = createElement(
-  "span",
-  { className: "arcana-widget_button-text" },
-  widgetAppName
-);
 
 const widgetButton = createElement(
   "button",
@@ -32,27 +22,12 @@ const widgetButton = createElement(
     className: "arcana-widget_button",
     onclick: onWidgetButtonClick,
   },
-  widgetButtonImage,
-  widgetButtonText
+  widgetButtonImage
 );
 
 const widgetHeaderLogo = createElement("img", {
-  src: widgetImagePath,
   className: "arcana-widget_iframe-header_logo",
 });
-
-const widgetHeaderText = createElement(
-  "span",
-  { className: "arcana-widget_iframe-header_text" },
-  widgetAppName
-);
-
-const widgetLogoText = createElement(
-  "div",
-  { className: "arcana-widget_iframe-header_logo-text" },
-  widgetHeaderLogo,
-  widgetHeaderText
-);
 
 const widgetCloseButton = createElement("button", {
   className: "arcana_widget_iframe-header-close-btn",
@@ -64,7 +39,7 @@ const widgetIframeHeader = createElement(
   {
     className: "arcana-widget_iframe-header",
   },
-  widgetLogoText,
+  widgetHeaderLogo,
   widgetCloseButton
 );
 
@@ -83,7 +58,7 @@ const widgetIframeBody = createElement(
 
 const widgetIframeContainer = createElement(
   "div",
-  { className: "arcana-widget_iframe-container" },
+  { className: "arcana-widget_iframe-container arcana_widget-component-hide" },
   widgetIframeHeader,
   widgetIframeBody
 );
@@ -107,7 +82,8 @@ function onCloseWidgetClick() {
   widgetButton.classList.remove("arcana_widget-component-hide");
 }
 
-function initWidgetUI() {
-  widgetIframeContainer.classList.add("arcana_widget-component-hide");
+function initWidgetUI(config = {}) {
+  setElementAttribute(widgetButtonImage, { src: config.logo_button });
+  setElementAttribute(widgetHeaderLogo, { src: config.logo_header });
   document.body.appendChild(widgetContainer);
 }
