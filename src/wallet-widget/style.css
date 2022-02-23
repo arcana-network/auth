@@ -1,6 +1,7 @@
 .arcana-widget {
   --button-bg-color: #ededed;
   --text-color: #0f0f0f;
+  --header-bg-color: #f0f0f0;
   --body-bg-color-1: rgba(232, 232, 232, 0.36);
   --body-bg-color-2: #d6d8d9;
   --close-button-img: url("./assets/images/close_button.png");
@@ -60,7 +61,7 @@
 
   background: linear-gradient(
     138.99deg,
-    var(--header-bg-color, #f0f0f0) 22.29%,
+    var(--header-bg-color) 22.29%,
     var(--header-bg-color, rgba(254, 254, 255, 0)) 101.74%
   );
   box-shadow: -1px -1px 3px #ffffff, 1.5px 1.5px 3px rgba(174, 174, 192, 0.4);
