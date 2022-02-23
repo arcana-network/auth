@@ -2,9 +2,18 @@
   --button-bg-color: #ededed;
   --text-color: #0f0f0f;
   --header-bg-color: #f0f0f0;
-  --body-bg-color-1: rgba(232, 232, 232, 0.36);
-  --body-bg-color-2: #d6d8d9;
   --close-button-img: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACuSURBVHgB7ZTBCYAwDEW/TtBRHMGNHMG6iSO4gW5kN9AUeghiNan1UOiDoNIkj0IiUKkUjTFmoOiUNT1S8IUUB8UulVLeGGrGWE4bO3DObfSYfB+K9U0aJDZ8NkiFGtm3m7Kb+bD4ypM0u+xJ+pssIp1/ld1Ik2Qt9Bzs3VEsUKASXkZ/g3BlkrgbEMnKZJOxs7xSyehnk2r27LOU/bzFo8+kovxYA6us6VGpFM0JJh9YsfU7O7QAAAAASUVORK5CYII=");
+
+  --widget-button-width: 117px;
+  --widget-button-height: 117px;
+
+  --widget-container-width-desktop: 360px;
+  --widget-container-height-desktop: 540px;
+
+  --widget-container-width-mobile: 235px;
+  --widget-container-height-mobile: 375px;
+
+  --corner-radius: 5px;
 
   position: absolute;
   bottom: 3%;
@@ -15,14 +24,12 @@
   --button-bg-color: #000000;
   --text-color: #ffffff;
   --header-bg-color: #1f1f1f;
-  --body-bg-color-1: #000000;
-  --body-bg-color-2: #84523f;
   --close-button-img: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAD6SURBVHgB7ZTNDYIwFIBfK96NP3s4gm7gAoYRHIGygRsYQ7jrBDAQUc4Cfb4STXqh9iEXEr6kCQXKV/p+ACYmRs0ywdMmfW05a9YX3Lmey86FSbUToM9azzJf6TrFCAOd0UYjtrA4znMSxnS58JG2Mq1VO9G1gL7Qn6pV0iCNZ5fUyD7v4PJaKfgXl3RwmUvaR8Y6ayNFkCYhShp3GqG5T7GLH+Fc+XyDHVxLClyZQQIXGaA1K2cB3oABS2invgCRg2fJ9BLaMnOMxVHuOXXKwpWNPnU6mGxwKafOfKXO5m3H7FfqU+9V35g2tThAH8yuue3KbBQmJkbNGx1Y4ubJGgc3AAAAAElFTkSuQmCC");
 }
 
 .arcana-widget_button {
-  width: 117px;
-  height: 117px;
+  width: var(--widget-button-width);
+  height: var(--widget-button-height);
   border: none;
   border-radius: 50%;
   box-shadow: 4px 5px 4px rgba(0, 0, 0, 0.25);
@@ -47,8 +54,8 @@
 }
 
 .arcana-widget_iframe-container {
-  width: 360px;
-  height: 540px;
+  width: var(--widget-container-width-desktop);
+  height: var(--widget-container-height-desktop);
 
   display: flex;
   flex-direction: column;
@@ -65,8 +72,8 @@
     var(--header-bg-color, rgba(254, 254, 255, 0)) 101.74%
   );
   box-shadow: -1px -1px 3px #ffffff, 1.5px 1.5px 3px rgba(174, 174, 192, 0.4);
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+  border-top-left-radius: var(--corner-radius);
+  border-top-right-radius: var(--corner-radius);
 }
 
 .arcana-widget_iframe-body {
@@ -77,8 +84,8 @@
   width: 100%;
   height: 100%;
   border: none;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: var(--corner-radius);
+  border-bottom-right-radius: var(--corner-radius);
 }
 
 .arcana-widget_iframe-header_logo-text {
@@ -121,8 +128,8 @@
 
 @media (max-width: 375px) {
   .arcana-widget_iframe-container {
-    width: 235px;
-    height: 375px;
+    width: var(--widget-container-width-mobile);
+    height: var(--widget-container-height-mobile);
   }
   .arcana-widget_button {
     border-radius: 30px 0px 30px 30px;
