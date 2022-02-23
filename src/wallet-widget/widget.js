@@ -11,6 +11,10 @@ function createElement(type, props, ...children) {
   return dom;
 }
 
+function setElementAttribute(element, props) {
+  Object.assign(element, props);
+}
+
 const widgetButtonImage = createElement("img", {
   src: widgetImagePath,
   className: "arcana-widget_button-img",
