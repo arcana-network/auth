@@ -4,7 +4,7 @@
   --header-bg-color: #f0f0f0;
   --body-bg-color-1: rgba(232, 232, 232, 0.36);
   --body-bg-color-2: #d6d8d9;
-  --close-button-img: url("./assets/images/close_button.png");
+  --close-button-img: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACuSURBVHgB7ZTBCYAwDEW/TtBRHMGNHMG6iSO4gW5kN9AUeghiNan1UOiDoNIkj0IiUKkUjTFmoOiUNT1S8IUUB8UulVLeGGrGWE4bO3DObfSYfB+K9U0aJDZ8NkiFGtm3m7Kb+bD4ypM0u+xJ+pssIp1/ld1Ik2Qt9Bzs3VEsUKASXkZ/g3BlkrgbEMnKZJOxs7xSyehnk2r27LOU/bzFo8+kovxYA6us6VGpFM0JJh9YsfU7O7QAAAAASUVORK5CYII=");
 
   position: absolute;
   bottom: 3%;
@@ -17,7 +17,7 @@
   --header-bg-color: #1f1f1f;
   --body-bg-color-1: #000000;
   --body-bg-color-2: #84523f;
-  --close-button-img: url("./assets/images/close_button_colored.png");
+  --close-button-img: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAD6SURBVHgB7ZTNDYIwFIBfK96NP3s4gm7gAoYRHIGygRsYQ7jrBDAQUc4Cfb4STXqh9iEXEr6kCQXKV/p+ACYmRs0ywdMmfW05a9YX3Lmey86FSbUToM9azzJf6TrFCAOd0UYjtrA4znMSxnS58JG2Mq1VO9G1gL7Qn6pV0iCNZ5fUyD7v4PJaKfgXl3RwmUvaR8Y6ayNFkCYhShp3GqG5T7GLH+Fc+XyDHVxLClyZQQIXGaA1K2cB3oABS2invgCRg2fJ9BLaMnOMxVHuOXXKwpWNPnU6mGxwKafOfKXO5m3H7FfqU+9V35g2tThAH8yuue3KbBQmJkbNGx1Y4ubJGgc3AAAAAElFTkSuQmCC");
 }
 
 .arcana-widget_button {
