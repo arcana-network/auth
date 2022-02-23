@@ -54,11 +54,6 @@
   margin-bottom: 5px;
 }
 
-.arcana-widget_button-text {
-  font-size: 12px;
-  color: var(--text-color);
-}
-
 .arcana-widget_iframe-container {
   width: var(--widget-container-width-desktop);
   height: var(--widget-container-height-desktop);
@@ -96,7 +91,6 @@
 }
 
 .arcana-widget_iframe-header_logo {
-  margin-right: 6px;
   width: var(--widget-header-img-width);
   height: var(--widget-header-img-height);
 }
