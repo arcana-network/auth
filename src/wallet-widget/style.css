@@ -51,7 +51,6 @@
 .arcana-widget_button-img {
   width: var(--widget-button-img-width);
   height: var(--widget-button-img-height);
-  margin-bottom: 5px;
 }
 
 .arcana-widget_iframe-container {
