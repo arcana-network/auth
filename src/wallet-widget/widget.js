@@ -107,5 +107,3 @@ function initWidgetUI() {
   widgetIframeContainer.classList.add("arcana_widget-component-hide");
   document.body.appendChild(widgetContainer);
 }
-
-initWidgetUI();
