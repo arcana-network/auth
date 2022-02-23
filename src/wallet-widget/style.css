@@ -71,22 +71,14 @@
 
 .arcana-widget_iframe-body {
   flex-grow: 1;
-  background: linear-gradient(
-    324.81deg,
-    var(--body-bg-color-2) 14.65%,
-    var(--body-bg-color-1) 92.36%
-  );
-  padding: 16px;
 }
 
 .arcana-widget_iframe {
   width: 100%;
   height: 100%;
   border: none;
-
-  background: #f9f9f9;
-  box-shadow: 4px 5px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 
 .arcana-widget_iframe-header_logo-text {
