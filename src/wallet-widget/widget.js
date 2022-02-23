@@ -83,7 +83,14 @@ function onCloseWidgetClick() {
 }
 
 function initWidgetUI(config = {}) {
-  setElementAttribute(widgetButtonImage, { src: config.logo_button });
-  setElementAttribute(widgetHeaderLogo, { src: config.logo_header });
+  setElementAttribute(widgetButtonImage, {
+    src: config[`logo_button_${config.theme}`],
+  });
+  setElementAttribute(widgetHeaderLogo, {
+    src: config[`logo_header_${config.theme}`],
+  });
+  if (config.theme === "dark") {
+    widgetContainer.classList.add("arcana-widget_dark-mode");
+  }
   document.body.appendChild(widgetContainer);
 }
