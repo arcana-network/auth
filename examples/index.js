@@ -2,7 +2,7 @@ console.log(window);
 
 const { WalletProvider } = window.arcana.wallet;
 const wallet = new WalletProvider({
-  appId: 411,
+  appId: "20",
 });
 
 // get from eth_accounts

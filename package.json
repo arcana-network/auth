@@ -12,7 +12,8 @@
   "browser": {
     "stream": "stream-browserify",
     "crypto": "crypto-browserify",
-    "assert": "assert"
+    "assert": "assert",
+    "events": "events"
   },
   "devDependencies": {
     "typescript": "^4.3.5"
@@ -27,6 +28,8 @@
     "eth-crypto": "^2.1.0",
     "eth-json-rpc-middleware": "^8.0.1",
     "eth-sig-util": "^3.0.1",
+    "ethers": "^5.5.4",
+    "events": "^3.3.0",
     "json-rpc-engine": "^6.1.0",
     "penpal": "^6.0.1",
     "process": "^0.11.10",

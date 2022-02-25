@@ -1,9 +1,11 @@
 import { ArcanaProvider } from "./provider";
 import IframeWrapper from "./iframeWrapper";
 import { encryptWithPublicKey, cipher } from "eth-crypto";
-
+import { getWalletType } from "./utils"
+import { setNetwork } from "./config"
 interface LoginParams {
   appId: string;
+  network: "testnet" | "dev";
 }
 
 interface State {
@@ -22,23 +24,31 @@ class WalletProvider {
     const ciphertext = await encryptWithPublicKey(publicKey, message);
     return cipher.stringify(ciphertext);
   }
+
   private state: State;
-  private iframe: HTMLIFrameElement;
   private iframeWrapper: IframeWrapper;
   private arcanaProvider: ArcanaProvider;
   constructor(private params: LoginParams) {
     this.initializeState();
+    if(this.params.network === "testnet") {
+      setNetwork(this.params.network);
+    }
   }
 
   public async init() {
+    if(this.iframeWrapper) {
+      return;
+    }
     this.iframeWrapper = new IframeWrapper(
       {
         appId: this.params.appId,
-        network: "testnet",
+        network: this.params.network,
       },
       this.state.iframeUrl
     );
     this.arcanaProvider = new ArcanaProvider();
+    const walletType = await getWalletType(this.params.appId);
+    this.iframeWrapper.setWalletType(walletType)
     const { communication } = await this.iframeWrapper.getIframeInstance({
       onEvent: this.handleEvents,
       onMethodResponse: (method: string, response: any) => {
@@ -46,9 +56,11 @@ class WalletProvider {
       },
     });
     this.arcanaProvider.setConnection(communication);
+    this.arcanaProvider.setHandlers(this.iframeWrapper.show, this.iframeWrapper.hide)
   }
 
   handleEvents = (t: string, val: unknown) => {
+    console.log({ t, val})
     switch (t) {
       case "accountsChanged":
         this.arcanaProvider.emit(t, [val]);
@@ -81,8 +93,8 @@ class WalletProvider {
   }
 
   private initializeState() {
-    // const iframeUrl = "http://localhost:3000";
-    const iframeUrl = "https://arcana-wallet-test.netlify.app";
+    const iframeUrl = "http://localhost:3000";
+    // const iframeUrl = "https://arcana-wallet-test.netlify.app";
     const redirectUri = `${iframeUrl}/${this.params.appId}/redirect`;
     this.state = { iframeUrl, redirectUri };
   }
