@@ -1,12 +1,14 @@
 import { iframeWrapperParams, IConnectionMethods } from "./interfaces";
 import { connectToChild, Connection } from "penpal";
-
+import { iframeStyle, closeButtonStyle, roundButtonStyle } from "./styles";
+import { WalletTypes } from "./typings"
 export default class IframeWrapper {
   private iframe: HTMLIFrameElement;
   private button: HTMLDivElement;
   private closeButton: HTMLDivElement;
   private iframeCommunication: Connection<IConnectionMethods>;
-  private open = false;
+  private walletType: number;
+  private opened = false;
   constructor(private params: iframeWrapperParams, private iframeUrl: string) {
     this.checkSecureOrigin();
   }
@@ -18,6 +20,54 @@ export default class IframeWrapper {
     return { iframe, communication };
   }
 
+  public setWalletType(walletType: number) {
+    this.walletType = walletType;
+  }
+
+  show = () => {
+    console.log(`show(${this.walletType}) called`)
+    switch(this.walletType) {
+      case WalletTypes.Full:
+        {
+          console.log('opening')
+          this.openFrame();
+          break;
+        }
+      case WalletTypes.Partial:
+        {
+          console.log('opening')
+          this.openFrame();
+          break;
+        }
+      case WalletTypes.NoUI:
+      case WalletTypes.Disabled:
+        default:
+          break;
+    }
+  }
+
+  hide = () => {
+    console.log(`hide(${this.walletType}) called`)
+    switch(this.walletType) {
+      case WalletTypes.Full:
+        {
+          console.log('closing')
+          this.closeFrame();
+          break;
+        }
+      case WalletTypes.Partial:
+        {
+          console.log('closing')
+          this.closeFrame();
+          break;
+        }
+      case WalletTypes.NoUI:
+      case WalletTypes.Disabled:
+      default:
+        break;
+    }
+  }
+
   private async createOrGetInstance(params: {
     [k: string]: (params: any) => any;
   }) {
@@ -25,8 +75,8 @@ export default class IframeWrapper {
       if (!this.iframe) {
         this.initIframe();
         this.createButton();
+        this.display();
       }
-      this.display();
       console.log("Going to display iframe");
       if (!this.iframeCommunication) {
         await this.createIframeCommunicationInstance(params);
@@ -40,73 +90,42 @@ export default class IframeWrapper {
   private initIframe() {
     this.iframe = document.createElement("iframe");
     this.iframe.className = "wallet_iframe";
-    // this.iframe.src = `${this.iframeUrl}/login`;
     this.iframe.src = `${this.iframeUrl}/${this.params.appId}/login`;
     this.iframe.style.display = "none";
-    this.iframe.style.position = "fixed";
-    this.iframe.style.bottom = "0";
-    this.iframe.style.right = "0";
-    this.iframe.style.width = "100%";
-    this.iframe.style.border = "1px solid black";
-    this.iframe.style.borderRadius = "5px";
-    this.iframe.style.zIndex = "100";
-    this.iframe.height = "500px";
     console.log({ initIframe: this.iframe });
   }
 
+
   private closeFrame() {
-    if (this.open) {
+    if (this.opened) {
       this.iframe.style.display = "none";
-      this.closeButton.style.display = "none";
-      this.button.style.display = "flex";
-      this.open = false;
+      if(this.walletType === WalletTypes.Full) {
+        this.closeButton.style.display = "none";
+        this.button.style.display = "flex";
+      }
+      this.opened = false;
     }
   }
 
   private openFrame() {
-    if (!this.open) {
+    if (!this.opened) {
       this.iframe.style.display = "block";
-      this.closeButton.style.display = "flex";
-      this.button.style.display = "none";
-      this.open = true;
+      if(this.walletType === WalletTypes.Full) {
+        this.closeButton.style.display = "flex";
+        this.button.style.display = "none";
+      }
+      this.opened = true;
     }
   }
   private display() {
-    if (this.iframe.style.display !== "block") {
-      const style = {
-        display: "block",
-        height: "500px",
-        width: "400px",
-        top: "auto",
-        left: "auto",
-        right: "10px",
-        bottom: "10px",
-      };
-
-      Object.assign(this.iframe.style, style);
-      console.log("Appending iframe");
-      document.body.appendChild(this.iframe);
-      this.openFrame();
-    }
+    Object.assign(this.iframe.style, iframeStyle);
+    document.body.appendChild(this.iframe);
     return;
   }
 
   private createCloseButton() {
     this.closeButton = document.createElement("div");
-    this.closeButton.style.position = "absolute";
-    this.closeButton.style.textAlign = "center";
-    this.closeButton.style.display = "flex";
-    this.closeButton.style.color = "white";
-    this.closeButton.style.backgroundColor = "black";
-    this.closeButton.style.alignItems = "center";
-    this.closeButton.style.width = "25px";
-    this.closeButton.style.height = "25px";
-    this.closeButton.style.borderRadius = "50%";
-    this.closeButton.style.right = "0";
-    this.closeButton.style.bottom = "500px";
-    this.closeButton.style.margin = "0 auto";
-    this.closeButton.style.cursor = "pointer";
-    this.closeButton.style.zIndex = "200";
+    Object.assign(this.closeButton.style, closeButtonStyle)
     this.closeButton.addEventListener("click", (e) => {
       e.preventDefault();
       this.closeFrame();
@@ -121,34 +140,23 @@ export default class IframeWrapper {
   }
 
   private createButton() {
-    this.button = document.createElement("div");
-    this.button.style.position = "absolute";
-    this.button.style.textAlign = "center";
-    this.button.style.display = "flex";
-    this.button.style.color = "white";
-    this.button.style.backgroundColor = "black";
-    this.button.style.alignItems = "center";
-    this.button.style.width = "60px";
-    this.button.style.height = "60px";
-    this.button.style.borderRadius = "50%";
-    this.button.style.right = "10px";
-    this.button.style.bottom = "10px";
-    this.button.style.margin = "0 auto";
-    this.button.style.cursor = "pointer";
-    this.button.style.zIndex = "200";
-    this.button.addEventListener("click", (e) => {
-      e.preventDefault();
-      this.openFrame();
-    });
-
-    const text = document.createElement("div");
-    text.innerHTML = "A";
-    text.style.width = "100%";
-
-    this.button.appendChild(text);
-
-    this.createCloseButton();
-    document.body.appendChild(this.button);
+    if(this.walletType === WalletTypes.Full) {
+        this.button = document.createElement("div");
+        Object.assign(this.button.style, roundButtonStyle)
+        this.button.addEventListener("click", (e) => {
+          e.preventDefault();
+          this.openFrame();
+        });
+    
+        const text = document.createElement("div");
+        text.innerHTML = "A";
+        text.style.width = "100%";
+    
+        this.button.appendChild(text);
+    
+        this.createCloseButton();
+        document.body.appendChild(this.button);
+      }
   }
 
   private async createIframeCommunicationInstance(params: {

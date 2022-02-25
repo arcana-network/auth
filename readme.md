@@ -118,3 +118,8 @@ provider
     // Use signature
   })
 ```
+
+
+## Development
+
+Update `iframeUrl` in `src/index.ts` to your wallet website.

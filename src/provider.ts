@@ -27,6 +27,15 @@ interface RequestArguments {
   params?: unknown[] | Record<string, unknown>;
 }
 
+const permissionedCalls = [
+  "eth_sign",
+  "personal_sign",
+  "eth_decrypt",
+  "eth_signTypedData_v4",
+  "eth_signTransaction",
+  "eth_sendTransaction",
+];
+
 class EthereumError extends Error implements JsonRpcError {
   code: number;
   message: string;
@@ -47,13 +56,12 @@ interface JsonRpcRequestArgs {
 }
 
 export class ArcanaProvider extends SafeEventEmitter {
-  public onResponse = (method: string, response: any) => {
-    this.subscriber.emit(`result:${method}:${response.id}`, response);
-  };
   private jsonRpcEngine: JsonRpcEngine;
   private provider: SafeEventEmitterProvider;
   private subscriber: SafeEventEmitter;
   private communication: Connection<IConnectionMethods>;
+  private iframeOpenHandler: () => void;
+  private iframeCloseHandler: () => void;
   constructor() {
     super();
     this.initProvider();
@@ -63,6 +71,15 @@ export class ArcanaProvider extends SafeEventEmitter {
   public setConnection(connection: Connection<IConnectionMethods>) {
     this.communication = connection;
   }
+
+  public setHandlers(openHandler: () => any, closeHandler: () => any) {
+    this.iframeOpenHandler = openHandler;
+    this.iframeCloseHandler = closeHandler;
+  }
+
+  public onResponse = (method: string, response: any) => {
+    this.subscriber.emit(`result:${method}:${response.id}`, response);
+  };
 
   public getProvider() {
     if (!this.provider) {
@@ -91,6 +108,18 @@ export class ArcanaProvider extends SafeEventEmitter {
     this.provider = providerFromEngine(this.jsonRpcEngine);
   }
 
+  private openPermissionScreen(method: string) {
+    if(permissionedCalls.includes(method)) {
+      this.iframeOpenHandler()
+    }
+  }
+
+  private closePermissionScreen(method: string) {
+    if(permissionedCalls.includes(method)) {
+      this.iframeCloseHandler()
+    }
+  }
+
   async request(args: RequestArguments) {
     if (!args || typeof args !== "object" || Array.isArray(args)) {
       throw ethErrors.rpc.invalidRequest({
@@ -108,12 +137,14 @@ export class ArcanaProvider extends SafeEventEmitter {
       });
     }
 
+    this.openPermissionScreen(method)
     const req: JsonRpcRequest<unknown> = {
       method,
       params,
       jsonrpc: "2.0",
       id: getUniqueId(),
     };
+
 
     return new Promise((resolve, reject) => {
       this.rpcRequest(
@@ -297,6 +328,7 @@ export class ArcanaProvider extends SafeEventEmitter {
       this.subscriber.once(
         `result:${method}:${id}`,
         (params: { error: string; result: U }) => {
+          this.closePermissionScreen(method);
           console.log("Get response: ", { params });
           if (params.error) {
             return reject(getError(params.error));
