@@ -6,6 +6,7 @@ import { setNetwork } from "./config"
 interface LoginParams {
   appId: string;
   network: "testnet" | "dev";
+  iframeUrl?: string;
 }
 
 interface State {
@@ -93,7 +94,10 @@ class WalletProvider {
   }
 
   private initializeState() {
-    const iframeUrl = "http://localhost:3000";
+    let iframeUrl = "http://localhost:3000";
+    if(this.params.iframeUrl) {
+      iframeUrl = this.params.iframeUrl
+    }
     // const iframeUrl = "https://arcana-wallet-test.netlify.app";
     const redirectUri = `${iframeUrl}/${this.params.appId}/redirect`;
     this.state = { iframeUrl, redirectUri };

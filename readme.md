@@ -6,13 +6,18 @@
 const { WalletProvider } = window.arcana.wallet;
 
 const wallet = new WalletProvider({
-  appId: 411,
+  appId: `${appId}`,
+  iframeUrl: `${iframeUrl}`
 });
 
 await wallet.init();
 provider = wallet.getProvider();
 ```
 
+## Building the code
+```js
+npm run build
+```
 
 ## Wallet API’s
 Request encryption
