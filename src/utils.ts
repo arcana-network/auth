@@ -1,5 +1,6 @@
 import { ethers } from 'ethers'
 import { getConfig } from "./config"
+import { widgetThemeConfig } from './interfaces'
 
 const getContract = (rpcUrl: string, appAddress: string) => {
     const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
@@ -41,4 +42,12 @@ const getAppAddress = async (id: string) => {
     return address;
   };
 
-export { getWalletType }
+const getWidgetButtonImage = (theme: string, assets: object) => {
+    if(theme === "dark") {
+        return assets.logo_vertical_dark
+    } else if(theme = "light") {
+        return assets.logo_vertical_light
+    }
+}
+
+export { getWalletType, getWidgetButtonImage }
