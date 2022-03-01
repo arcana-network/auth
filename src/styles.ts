@@ -17,19 +17,33 @@ const closeButtonStyle =  {
 
 const roundButtonStyle = {
     position : "absolute",
-    textAlign : "center",
-    display : "flex",
-    color : "white",
-    backgroundColor : "black",
-    alignItems : "center",
-    width : "60px",
-    height : "60px",
+    right : "30px",
+    bottom : "30px",
+
+    width : "117px",
+    height : "117px",
+    border: "none",
     borderRadius : "50%",
-    right : "10px",
-    bottom : "10px",
+    boxShadow: "4px 5px 4px rgba(0, 0, 0, 0.25)",
     margin : "0 auto",
     cursor : "pointer",
     zIndex : "200",
+
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+}
+
+const roundButtonStyle_theme = {
+    light: {
+        ...roundButtonStyle,
+        backgroundColor : "#ededed",
+    },
+    dark: {
+        ...roundButtonStyle,
+        backgroundColor : "#000000",
+    }
 }
 
 const iframeStyle = {
@@ -47,6 +61,6 @@ const iframeStyle = {
 
 export {
     closeButtonStyle,
-    roundButtonStyle,
+    roundButtonStyle_theme,
     iframeStyle
 }
