@@ -1,7 +1,9 @@
-import { iframeWrapperParams, IConnectionMethods } from "./interfaces";
+import { iframeWrapperParams, IConnectionMethods, widgetThemeConfig } from "./interfaces";
 import { connectToChild, Connection } from "penpal";
-import { iframeStyle, closeButtonStyle, roundButtonStyle } from "./styles";
+import { iframeStyle, closeButtonStyle, roundButtonStyle_theme } from "./styles";
 import { WalletTypes } from "./typings"
+import { getWidgetButtonImage } from "./utils"
+
 export default class IframeWrapper {
   private iframe: HTMLIFrameElement;
   private button: HTMLDivElement;
@@ -9,7 +11,7 @@ export default class IframeWrapper {
   private iframeCommunication: Connection<IConnectionMethods>;
   private walletType: number;
   private opened = false;
-  constructor(private params: iframeWrapperParams, private iframeUrl: string) {
+  constructor(private params: iframeWrapperParams, private iframeUrl: string, private themeConfig: widgetThemeConfig) {
     this.checkSecureOrigin();
   }
 
@@ -87,6 +89,7 @@ export default class IframeWrapper {
     }
     return { iframe: this.iframe, communication: this.iframeCommunication };
   }
+
   private initIframe() {
     this.iframe = document.createElement("iframe");
     this.iframe.className = "wallet_iframe";
@@ -117,6 +120,7 @@ export default class IframeWrapper {
       this.opened = true;
     }
   }
+
   private display() {
     Object.assign(this.iframe.style, iframeStyle);
     document.body.appendChild(this.iframe);
@@ -141,15 +145,19 @@ export default class IframeWrapper {
 
   private createButton() {
     if(this.walletType === WalletTypes.Full) {
+        const { themeConfig: { assets, theme } } = this
         this.button = document.createElement("div");
-        Object.assign(this.button.style, roundButtonStyle)
+        const buttonImage = document.createElement('img')
+        buttonImage.src = getWidgetButtonImage(theme, assets)
+        this.button.appendChild(buttonImage)
+
+        Object.assign(this.button.style, roundButtonStyle_theme[theme])
         this.button.addEventListener("click", (e) => {
           e.preventDefault();
           this.openFrame();
         });
     
         const text = document.createElement("div");
-        text.innerHTML = "A";
         text.style.width = "100%";
     
         this.button.appendChild(text);
@@ -171,6 +179,7 @@ export default class IframeWrapper {
     });
     this.iframeCommunication = connection;
   }
+
   private checkSecureOrigin() {
     const isLocalhost =
       location.hostname === "localhost" || location.hostname === "127.0.0.1";
