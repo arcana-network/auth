@@ -13,7 +13,8 @@ export default class IframeWrapper {
   private iframeCommunication: Connection<IConnectionMethods>;
   private walletType: number;
   private opened = false;
-  constructor(private params: iframeWrapperParams, private iframeUrl: string, private themeConfig: widgetThemeConfig) {
+
+  constructor(private params: iframeWrapperParams, private iframeUrl: string, private themeConfig: IWidgetThemeConfig) {
     this.checkSecureOrigin();
   }
 
