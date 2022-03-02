@@ -1,4 +1,4 @@
-import { iframeWrapperParams, IConnectionMethods, widgetThemeConfig } from "./interfaces";
+import { iframeWrapperParams, IConnectionMethods, IWidgetThemeConfig } from "./interfaces";
 import { connectToChild, Connection } from "penpal";
 import { iframeStyle, closeButtonStyle, roundButtonStyle_theme } from "./styles";
 import { WalletTypes } from "./typings"
