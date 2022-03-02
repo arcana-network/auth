@@ -2,7 +2,7 @@ import { iframeWrapperParams, IConnectionMethods, IWidgetThemeConfig } from "./i
 import { connectToChild, Connection } from "penpal";
 import { iframeStyle, closeButtonStyle, roundButtonStyle_theme } from "./styles";
 import { WalletTypes } from "./typings"
-import { getWidgetButtonImage } from "./utils"
+import { createDomElement, getLogo } from "./utils"
 
 export default class IframeWrapper {
   private iframe: HTMLIFrameElement;
