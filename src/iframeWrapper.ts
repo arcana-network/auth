@@ -6,8 +6,10 @@ import { createDomElement, getLogo } from "./utils"
 
 export default class IframeWrapper {
   private iframe: HTMLIFrameElement;
-  private button: HTMLDivElement;
+  private widgetBubble: HTMLButtonElement;
+
   private closeButton: HTMLDivElement;
+
   private iframeCommunication: Connection<IConnectionMethods>;
   private walletType: number;
   private opened = false;
@@ -76,7 +78,7 @@ export default class IframeWrapper {
     try {
       if (!this.iframe) {
         this.initIframe();
-        this.createButton();
+        this.createWidgetBubble();
         this.display();
       }
       console.log("Going to display iframe");
@@ -104,7 +106,7 @@ export default class IframeWrapper {
       this.iframe.style.display = "none";
       if(this.walletType === WalletTypes.Full) {
         this.closeButton.style.display = "none";
-        this.button.style.display = "flex";
+        this.widgetBubble.style.display = "flex";
       }
       this.opened = false;
     }
@@ -115,7 +117,7 @@ export default class IframeWrapper {
       this.iframe.style.display = "block";
       if(this.walletType === WalletTypes.Full) {
         this.closeButton.style.display = "flex";
-        this.button.style.display = "none";
+        this.widgetBubble.style.display = "none";
       }
       this.opened = true;
     }
@@ -143,27 +145,14 @@ export default class IframeWrapper {
     document.body.appendChild(this.closeButton);
   }
 
-  private createButton() {
+  private createWidgetBubble() {
     if(this.walletType === WalletTypes.Full) {
-        const { themeConfig: { assets, theme } } = this
-        this.button = document.createElement("div");
-        const buttonImage = document.createElement('img')
-        buttonImage.src = getWidgetButtonImage(theme, assets)
-        this.button.appendChild(buttonImage)
+        const { themeConfig: { theme } } = this
+        
+        const buttonLogo = createDomElement("img", {src: getLogo(this.themeConfig, "vertical")})
+        this.widgetBubble = createDomElement("button", {onclick: this.openFrame, style: roundButtonStyle_theme[theme]}, buttonLogo)
 
-        Object.assign(this.button.style, roundButtonStyle_theme[theme])
-        this.button.addEventListener("click", (e) => {
-          e.preventDefault();
-          this.openFrame();
-        });
-    
-        const text = document.createElement("div");
-        text.style.width = "100%";
-    
-        this.button.appendChild(text);
-    
-        this.createCloseButton();
-        document.body.appendChild(this.button);
+        document.body.appendChild(this.widgetBubble);
       }
   }
 
