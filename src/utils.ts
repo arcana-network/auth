@@ -46,6 +46,16 @@ const getLogo = (themeConfig: IWidgetThemeConfig, orientation: Orientation) => {
     const { theme, assets } = themeConfig
     return assets.logo[theme][orientation]
 }
-}
+
+const createDomElement = (type: string, props: object, ...children: any) => {
+    let dom = document.createElement(type);
+    if (props) Object.assign(dom, props);
+    if (props.style) Object.assign(dom.style, props.style)
+    for (let child of children) {
+      if (typeof child != "string") dom.appendChild(child);
+      else dom.appendChild(document.createTextNode(child));
+    }
+    return dom;
+  }
 
 export { getWalletType, getWidgetButtonImage }
