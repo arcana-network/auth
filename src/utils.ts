@@ -58,4 +58,4 @@ const createDomElement = (type: string, props: object, ...children: any) => {
     return dom;
   }
 
-export { getWalletType, getWidgetButtonImage }
+export { getWalletType, getLogo, createDomElement }
