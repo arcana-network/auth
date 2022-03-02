@@ -1,6 +1,6 @@
 import { ethers } from 'ethers'
 import { getConfig } from "./config"
-import { widgetThemeConfig } from './interfaces'
+import { IWidgetThemeConfig, Orientation } from './interfaces'
 
 const getContract = (rpcUrl: string, appAddress: string) => {
     const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
