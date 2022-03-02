@@ -42,12 +42,10 @@ const getAppAddress = async (id: string) => {
     return address;
   };
 
-const getWidgetButtonImage = (theme: string, assets: object) => {
-    if(theme === "dark") {
-        return assets.logo_vertical_dark
-    } else if(theme = "light") {
-        return assets.logo_vertical_light
-    }
+const getLogo = (themeConfig: IWidgetThemeConfig, orientation: Orientation) => {
+    const { theme, assets } = themeConfig
+    return assets.logo[theme][orientation]
+}
 }
 
 export { getWalletType, getWidgetButtonImage }
