@@ -7,10 +7,16 @@ const wallet = new WalletProvider({
 
 const themeConfig = {
   assets: {
-    logo_horizontal_light: "./assets/images/logo_horizontal_light.png",
-    logo_vertical_light: "./assets/images/logo_vertical_light.png",
-    logo_horizontal_dark: "./assets/images/logo_horizontal_dark.png",
-    logo_vertical_dark: "./assets/images/logo_vertical_dark.png",
+    logo: {
+      dark: {
+        horizontal: "./assets/images/logo-horizontal-dark.png",
+        vertical: "./assets/images/logo-vertical-dark.png",
+      },
+      light: {
+        horizontal: "./assets/images/logo-horizontal-light.png",
+        vertical: "./assets/images/logo-vertical-light.png",
+      },
+    },
   },
   theme: "dark",
 };
