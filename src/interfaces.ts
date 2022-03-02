@@ -9,12 +9,18 @@ export interface iframeWrapperParams {
 
 export interface IWidgetThemeConfig {
   assets: {
-    logo_vertical_light: string,
-    logo_vertical_dark: string,
-    logo_horizontal_light: string,
-    logo_horizontal_dark: string,
+   logo: {
+     dark: {
+       horizontal: string,
+       vertical: string
+     },
+     light: {
+       horizontal: string,
+       vertical: string
+     }
+   }
   },
-  theme: string
+  theme: Theme
 }
 
 export interface IConnectionMethods {
