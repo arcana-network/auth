@@ -7,7 +7,7 @@ export interface iframeWrapperParams {
   network: string;
 }
 
-export interface widgetThemeConfig {
+export interface IWidgetThemeConfig {
   assets: {
     logo_vertical_light: string,
     logo_vertical_dark: string,
