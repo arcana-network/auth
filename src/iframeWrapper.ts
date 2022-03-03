@@ -7,9 +7,6 @@ import { createDomElement, getLogo } from "./utils"
 export default class IframeWrapper {
   private iframe: HTMLIFrameElement;
   private widgetBubble: HTMLButtonElement;
-
-  private closeButton: HTMLDivElement;
-
   private iframeCommunication: Connection<IConnectionMethods>;
   private walletType: number;
   private opened = false;
@@ -30,39 +27,33 @@ export default class IframeWrapper {
   }
 
   show = () => {
-    console.log(`show(${this.walletType}) called`)
     switch(this.walletType) {
       case WalletTypes.Full:
         {
-          console.log('opening')
           this.openFrame();
           break;
         }
       case WalletTypes.Partial:
         {
-          console.log('opening')
           this.openFrame();
           break;
         }
       case WalletTypes.NoUI:
       case WalletTypes.Disabled:
-        default:
-          break;
+      default:
+        break;
     }
   }
 
   hide = () => {
-    console.log(`hide(${this.walletType}) called`)
     switch(this.walletType) {
       case WalletTypes.Full:
         {
-          console.log('closing')
           this.closeFrame();
           break;
         }
       case WalletTypes.Partial:
         {
-          console.log('closing')
           this.closeFrame();
           break;
         }
@@ -78,11 +69,8 @@ export default class IframeWrapper {
   }) {
     try {
       if (!this.iframe) {
-        this.initIframe();
-        this.createWidgetBubble();
-        this.display();
+        this.initWalletUI()
       }
-      console.log("Going to display iframe");
       if (!this.iframeCommunication) {
         await this.createIframeCommunicationInstance(params);
       }
@@ -93,20 +81,9 @@ export default class IframeWrapper {
     return { iframe: this.iframe, communication: this.iframeCommunication };
   }
 
-  private initIframe() {
-    this.iframe = document.createElement("iframe");
-    this.iframe.className = "wallet_iframe";
-    this.iframe.src = `${this.iframeUrl}/${this.params.appId}/login`;
-    this.iframe.style.display = "none";
-    console.log({ initIframe: this.iframe });
-  }
-
-
   private closeFrame() {
     if (this.opened) {
-      this.iframe.style.display = "none";
       if(this.walletType === WalletTypes.Full) {
-        this.closeButton.style.display = "none";
         this.widgetBubble.style.display = "flex";
       }
       this.opened = false;
@@ -115,46 +92,33 @@ export default class IframeWrapper {
 
   private openFrame() {
     if (!this.opened) {
-      this.iframe.style.display = "block";
       if(this.walletType === WalletTypes.Full) {
-        this.closeButton.style.display = "flex";
         this.widgetBubble.style.display = "none";
       }
       this.opened = true;
     }
   }
 
-  private display() {
-    Object.assign(this.iframe.style, iframeStyle);
-    document.body.appendChild(this.iframe);
-    return;
-  }
-
-  private createCloseButton() {
-    this.closeButton = document.createElement("div");
-    Object.assign(this.closeButton.style, closeButtonStyle)
-    this.closeButton.addEventListener("click", (e) => {
-      e.preventDefault();
-      this.closeFrame();
-    });
-
-    const text = document.createElement("div");
-    text.innerHTML = "x";
-    text.style.width = "100%";
-
-    this.closeButton.appendChild(text);
-    document.body.appendChild(this.closeButton);
+  private createWidgetIframe() {
+    this.iframe = document.createElement("iframe");
+    this.iframe.className = "wallet_iframe";
+    this.iframe.src = `${this.iframeUrl}/${this.params.appId}/login`;
+    this.iframe.style.display = "none";
   }
 
   private createWidgetBubble() {
     if(this.walletType === WalletTypes.Full) {
         const { themeConfig: { theme } } = this
-        
         const buttonLogo = createDomElement("img", {src: getLogo(this.themeConfig, "vertical")})
         this.widgetBubble = createDomElement("button", {onclick: this.openFrame, style: roundButtonStyle_theme[theme]}, buttonLogo)
-
-        document.body.appendChild(this.widgetBubble);
       }
+  }
+
+  private initWalletUI() {
+    this.createWidgetIframe()
+    this.createWidgetBubble()
+    document.body.appendChild(this.widgetBubble);
+    document.body.appendChild(this.iframe);
   }
 
   private async createIframeCommunicationInstance(params: {
