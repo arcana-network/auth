@@ -3,7 +3,7 @@ import IframeWrapper from "./iframeWrapper";
 import { encryptWithPublicKey, cipher } from "eth-crypto";
 import { getWalletType } from "./utils"
 import { setNetwork } from "./config"
-import { widgetThemeConfig } from "./interfaces"
+import { IWidgetThemeConfig } from "./interfaces"
 
 interface LoginParams {
   appId: string;
@@ -38,7 +38,7 @@ class WalletProvider {
     }
   }
 
-  public async init(themeConfig: widgetThemeConfig) {
+  public async init(themeConfig: IWidgetThemeConfig) {
     if(this.iframeWrapper) {
       return;
     }
