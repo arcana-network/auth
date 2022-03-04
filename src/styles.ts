@@ -18,7 +18,7 @@ const baseWidgetBubbleStyle = {
   width: "117px",
   height: "117px",
   border: "none",
-  borderRadius: VIEWPORT_SMALL ? "30px 0px 30px 30px" : "50%",
+  borderRadius: "50%",
   boxShadow: "4px 5px 4px rgba(0, 0, 0, 0.25)",
   margin: "0 auto",
   cursor: "pointer",
