@@ -12,13 +12,13 @@ const VIEWPORT_LARGE = window.matchMedia("(min-width: 1025px)").matches;
 
 const baseWidgetBubbleStyle = {
   position: "absolute",
-  right: "30px",
-  bottom: "30px",
+  right: VIEWPORT_SMALL ? "20px" : "30px",
+  bottom: VIEWPORT_SMALL ? "20px" : "30px",
 
   width: "117px",
   height: "117px",
   border: "none",
-  borderRadius: "50%",
+  borderRadius: VIEWPORT_SMALL ? "30px 0px 30px 30px" : "50%",
   boxShadow: "4px 5px 4px rgba(0, 0, 0, 0.25)",
   margin: "0 auto",
   cursor: "pointer",
@@ -59,10 +59,10 @@ const widgetBubbleStyle = {
 const widgetIframeStyle = {
   container: {
     position: "absolute",
-    height: "540px",
-    width: "360px",
-    right: "30px",
-    bottom: "30px",
+    height: VIEWPORT_SMALL ? "375px" : "540px",
+    width: VIEWPORT_SMALL ? "235px" : "360px",
+    right: VIEWPORT_SMALL ? "20px" : "30px",
+    bottom: VIEWPORT_SMALL ? "20px" : "30px",
 
     display: "flex",
     flexDirection: "column",
