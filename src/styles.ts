@@ -4,6 +4,12 @@ const closeButtonImage = {
   dark: "url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAD6SURBVHgB7ZTNDYIwFIBfK96NP3s4gm7gAoYRHIGygRsYQ7jrBDAQUc4Cfb4STXqh9iEXEr6kCQXKV/p+ACYmRs0ywdMmfW05a9YX3Lmey86FSbUToM9azzJf6TrFCAOd0UYjtrA4znMSxnS58JG2Mq1VO9G1gL7Qn6pV0iCNZ5fUyD7v4PJaKfgXl3RwmUvaR8Y6ayNFkCYhShp3GqG5T7GLH+Fc+XyDHVxLClyZQQIXGaA1K2cB3oABS2invgCRg2fJ9BLaMnOMxVHuOXXKwpWNPnU6mGxwKafOfKXO5m3H7FfqU+9V35g2tThAH8yuue3KbBQmJkbNGx1Y4ubJGgc3AAAAAElFTkSuQmCC)",
 };
 
+const VIEWPORT_SMALL = window.matchMedia("(max-width: 768px)").matches;
+const VIEWPORT_MEDIUM = window.matchMedia(
+  "(min-width: 769px) and (max-width: 1024px)"
+).matches;
+const VIEWPORT_LARGE = window.matchMedia("(min-width: 1025px)").matches;
+
 const baseWidgetBubbleStyle = {
   position: "absolute",
   right: "30px",
