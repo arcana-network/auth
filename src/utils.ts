@@ -45,7 +45,11 @@ const getLogo = (themeConfig: IWidgetThemeConfig, orientation: Orientation) => {
   return assets.logo[theme][orientation];
 };
 
-const createDomElement = (type: string, props: object, ...children: any) => {
+const createDomElement = (
+  type: string,
+  props: object,
+  ...children: string[] | HTMLElement[]
+): HTMLElement => {
   let dom = document.createElement(type);
   if (props) {
     Object.assign(dom, props);
