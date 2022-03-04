@@ -5,6 +5,22 @@ const wallet = new WalletProvider({
   appId: "20",
 });
 
+const themeConfig = {
+  assets: {
+    logo: {
+      dark: {
+        horizontal: "./assets/images/logo-horizontal-dark.png",
+        vertical: "./assets/images/logo-vertical-dark.png",
+      },
+      light: {
+        horizontal: "./assets/images/logo-horizontal-light.png",
+        vertical: "./assets/images/logo-vertical-light.png",
+      },
+    },
+  },
+  theme: "dark",
+};
+
 // get from eth_accounts
 let from = "";
 
@@ -31,7 +47,7 @@ let provider;
 initWalletBtn.addEventListener("click", async () => {
   console.log("Init wallet");
   try {
-    await wallet.init();
+    await wallet.init(themeConfig);
     provider = wallet.getProvider();
     const connected = await provider.isConnected();
     console.log({ connected });
@@ -143,8 +159,7 @@ sendTransactionBtn.addEventListener("click", async () => {
         to: "0x0000000000000000000000000000000000000000", // Required except during contract publications.
         from, // must match user's active address.
         value: "0x00", // Only required to send ether to the recipient from the initiating external account.
-        data:
-          "0x7f7465737432000000000000000000000000000000000000000000000000000000600057", // Optional, but used for defining smart contract creation and interaction.
+        data: "0x7f7465737432000000000000000000000000000000000000000000000000000000600057", // Optional, but used for defining smart contract creation and interaction.
       },
     ],
   });

@@ -3,6 +3,8 @@ import IframeWrapper from "./iframeWrapper";
 import { encryptWithPublicKey, cipher } from "eth-crypto";
 import { getWalletType } from "./utils"
 import { setNetwork } from "./config"
+import { IWidgetThemeConfig } from "./interfaces"
+
 interface LoginParams {
   appId: string;
   network: "testnet" | "dev";
@@ -36,7 +38,7 @@ class WalletProvider {
     }
   }
 
-  public async init() {
+  public async init(themeConfig: IWidgetThemeConfig) {
     if(this.iframeWrapper) {
       return;
     }
@@ -45,7 +47,8 @@ class WalletProvider {
         appId: this.params.appId,
         network: this.params.network,
       },
-      this.state.iframeUrl
+      this.state.iframeUrl,
+      themeConfig
     );
     this.arcanaProvider = new ArcanaProvider();
     const walletType = await getWalletType(this.params.appId);
