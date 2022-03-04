@@ -48,7 +48,7 @@ const getLogo = (themeConfig: IWidgetThemeConfig, orientation: Orientation) => {
 const createDomElement = (
   type: string,
   props: object,
-  ...children: string[] | HTMLElement[]
+  ...children: (string | HTMLElement)[]
 ): HTMLElement => {
   let dom = document.createElement(type);
   if (props) {
