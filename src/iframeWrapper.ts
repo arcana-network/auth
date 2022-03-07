@@ -176,6 +176,8 @@ export default class IframeWrapper {
     document.body.appendChild(this.widgetIframeContainer)
   }
 
+  // Todo: add remove event listener for "resize" event
+
   private resizeWidgetUI() {
     const { matches: isViewPortSmall } = window.matchMedia(
       `(max-width: ${BREAKPOINT_SMALL}px)`
