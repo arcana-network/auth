@@ -168,6 +168,8 @@ export default class IframeWrapper {
 
     this.resizeWidgetUI()
 
+    window.addEventListener("resize", () => this.resizeWidgetUI())
+
     this.widgetIframeContainer.style.display = "none"
 
     document.body.appendChild(this.widgetBubble)
