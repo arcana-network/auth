@@ -1,5 +1,5 @@
 import {
-  iframeWrapperParams,
+  IframeWrapperParams,
   IConnectionMethods,
   IWidgetThemeConfig,
 } from "./interfaces";
@@ -18,7 +18,7 @@ export default class IframeWrapper {
   private walletType: number;
 
   constructor(
-    private params: iframeWrapperParams,
+    private params: IframeWrapperParams,
     private iframeUrl: string,
     private themeConfig: IWidgetThemeConfig
   ) {
