@@ -1,6 +1,11 @@
 import { ethers } from "ethers";
 import { getConfig } from "./config";
-import { IWidgetThemeConfig, Orientation } from "./interfaces";
+import {
+  IWalletPosition,
+  IWalletSize,
+  IWidgetThemeConfig,
+  Orientation,
+} from "./interfaces";
 
 const getContract = (rpcUrl: string, appAddress: string) => {
   const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
@@ -62,4 +67,51 @@ const createDomElement = (
   return dom;
 };
 
-export { getWalletType, getLogo, createDomElement };
+const setWalletSize = (element: HTMLElement, sizes: IWalletSize): void => {
+  const { height, width } = sizes;
+  element.style.height = height;
+  element.style.width = width;
+};
+
+const setWalletPosition = (
+  element: HTMLElement,
+  position: IWalletPosition
+): void => {
+  const { right, bottom } = position;
+  element.style.right = right;
+  element.style.bottom = bottom;
+};
+
+const getWalletSize = (isViewportSmall: Boolean): IWalletSize => {
+  const sizes = { height: "", width: "" };
+  if (isViewportSmall) {
+    sizes.height = "375px";
+    sizes.width = "235px";
+  } else {
+    sizes.height = "540px";
+    sizes.width = "360px";
+  }
+  return sizes;
+};
+
+const getWalletPosition = (isViewportSmall: Boolean): IWalletPosition => {
+  const position = { right: "", bottom: "" };
+  if (isViewportSmall) {
+    position.right = "20px";
+    position.bottom = "20px";
+  } else {
+    position.right = "30px";
+    position.bottom = "30px";
+  }
+  return position;
+};
+
+export {
+  getWalletType,
+  getLogo,
+  createDomElement,
+  setWalletSize,
+  getWalletSize,
+  setWalletPosition,
+  getWalletPosition,
+};
