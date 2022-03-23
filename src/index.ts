@@ -315,7 +315,7 @@ class AuthProvider {
 
 const getAppAddress = async (appID: string): Promise<string> => {
   try {
-    const res = await fetch(`${Config.gatewayUrl}/get-address/?id=${appID}`);
+    const res = await fetch(`${Config.gatewayUrl}/api/v1/get-address/?id=${appID}`);
     const json: { address: string } = await res.json();
     let address = json?.address;
     if (!address) {
@@ -332,7 +332,7 @@ const getAppAddress = async (appID: string): Promise<string> => {
 
 const getCurrentConfig = async (): Promise<string> => {
   try {
-    const res = await fetch(`${Config.gatewayUrl}/get-config/`);
+    const res = await fetch(`${Config.gatewayUrl}/api/v1/get-config/`);
     const json: { RPC_URL: string } = await res.json();
     if (!json.RPC_URL) {
       throw new ArcanaException('Error during fetching config');
