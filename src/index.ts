@@ -58,6 +58,9 @@ class WalletProvider {
       onMethodResponse: (method: string, response: any) => {
         this.arcanaProvider.onResponse(method, response);
       },
+      getThemeConfig: () => {
+        return themeConfig;
+      },
     });
     this.arcanaProvider.setConnection(communication);
     this.arcanaProvider.setHandlers(this.iframeWrapper.show, this.iframeWrapper.hide)
