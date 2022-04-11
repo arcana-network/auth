@@ -4,9 +4,12 @@
   "description": "",
   "main": "dist/wallet.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
+    "format": "prettier --ignore-path .gitignore --write .",
+    "lint": "eslint --ext .ts src",
     "build": "esbuild src/index.ts --define:global=window --inject:config/esbuild.inject.js --format=iife --global-name=arcana.wallet --bundle --target=chrome58,firefox57,safari11,edge18  --outfile=dist/wallet.js",
-    "watch": "npm run build -- --watch"
+    "watch": "npm run build -- --watch",
+    "prepare": "husky install"
   },
   "author": "makyl",
   "license": "ISC",
@@ -17,6 +20,16 @@
     "events": "events"
   },
   "devDependencies": {
+    "@types/jest": "^27.4.1",
+    "@typescript-eslint/eslint-plugin": "^5.18.0",
+    "@typescript-eslint/parser": "^5.18.0",
+    "eslint": "^8.12.0",
+    "eslint-config-prettier": "^8.5.0",
+    "husky": ">=6",
+    "jest": "^27.5.1",
+    "jest-environment-jsdom": "^27.5.1",
+    "lint-staged": ">=10",
+    "prettier": "^2.6.2",
     "typescript": "^4.3.5"
   },
   "dependencies": {
@@ -36,5 +49,9 @@
     "process": "^0.11.10",
     "stream-browserify": "^3.0.0",
     "web3-providers-http": "^1.6.1"
+  },
+  "lint-staged": {
+    "*.ts": "eslint --cache --fix",
+    "*.{js,css,md}": "prettier --write"
   }
 }
