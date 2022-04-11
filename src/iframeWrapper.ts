@@ -6,7 +6,16 @@ import {
 import { connectToChild, Connection } from 'penpal'
 import { widgetIframeStyle, widgetBubbleStyle } from './styles'
 import { WalletTypes } from './typings'
-import { createDomElement, getLogo } from './utils'
+import {
+  createDomElement,
+  getLogo,
+  getWalletPosition,
+  getWalletSize,
+  setWalletPosition,
+  setWalletSize,
+} from './utils'
+
+const BREAKPOINT_SMALL = 768
 
 export default class IframeWrapper {
   private iframe: HTMLIFrameElement
@@ -155,10 +164,30 @@ export default class IframeWrapper {
     this.widgetIframeContainer = this.createWidgetIframe()
     this.widgetBubble = this.createWidgetBubble()
 
+    this.resizeWidgetUI()
+
+    window.addEventListener('resize', () => this.resizeWidgetUI())
+
     this.widgetIframeContainer.style.display = 'none'
 
     document.body.appendChild(this.widgetBubble)
     document.body.appendChild(this.widgetIframeContainer)
+  }
+
+  // Todo: add remove event listener for "resize" event
+
+  private resizeWidgetUI() {
+    const { matches: isViewPortSmall } = window.matchMedia(
+      `(max-width: ${BREAKPOINT_SMALL}px)`
+    )
+
+    setWalletSize(this.widgetIframeContainer, getWalletSize(isViewPortSmall))
+    setWalletPosition(this.widgetBubble, getWalletPosition(isViewPortSmall))
+
+    setWalletPosition(
+      this.widgetIframeContainer,
+      getWalletPosition(isViewPortSmall)
+    )
   }
 
   private closeWidgetIframe() {

@@ -6,8 +6,6 @@ const closeButtonImage = {
 
 const baseWidgetBubbleStyle = {
   position: 'absolute',
-  right: '30px',
-  bottom: '30px',
 
   width: '117px',
   height: '117px',
@@ -53,10 +51,7 @@ const widgetBubbleStyle = {
 const widgetIframeStyle = {
   container: {
     position: 'absolute',
-    height: '540px',
-    width: '360px',
-    right: '30px',
-    bottom: '30px',
+    // Size and position values are set in iframewrapper.ts
 
     display: 'flex',
     flexDirection: 'column',

@@ -39,3 +39,13 @@ export interface IMessageParams {
   from: string
   data: string | ITypedDataMessage[]
 }
+
+export interface IWalletSize {
+  height: string
+  width: string
+}
+
+export interface IWalletPosition {
+  right: string
+  bottom: string
+}
