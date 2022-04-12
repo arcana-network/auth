@@ -4,7 +4,6 @@
 import { FetchMock } from 'jest-fetch-mock';
 import { AuthProvider } from '../src/index';
 import { LoginType, StoreIndex } from '../src/types';
-// import { KeyReconstructor } from '@arcana/keystore';
 
 const fetchMock = fetch as FetchMock;
 
@@ -83,7 +82,7 @@ jest.mock('@arcana/keystore', () => {
 
 jest.mock('../src/oauthMeta', () => {
   return {
-    OAuthContractMeta: function() {
+    OAuthContractMeta: function () {
       return {
         getClientID: () => {
           return 'google_client_id';
@@ -100,7 +99,7 @@ const getGatewayAPIMockResponse = () => {
 };
 
 describe('AuthProvider', () => {
-  const appID = 'appID_1';
+  const appId = 'appID_1';
   const email = 'abc@example.com';
   const state = '_jf5too8sv';
   const samplePrivateKey = 'pk_pk_pk';
@@ -108,20 +107,20 @@ describe('AuthProvider', () => {
     const { rpcResponse, appAddressResponse } = getGatewayAPIMockResponse();
     fetchMock.mockResponseOnce(JSON.stringify(rpcResponse));
     fetchMock.mockResponseOnce(JSON.stringify(appAddressResponse));
-    const auth = await AuthProvider.init({ appID, flow: 'redirect' });
+    const auth = await AuthProvider.init({ appId, flow: 'redirect' });
 
     expect(fetchMock).toBeCalledTimes(2);
-    expect(auth['params'].appID).toEqual(appID);
+    expect(auth['params'].appId).toEqual(appId);
     expect(auth['params'].rpcUrl).toEqual(rpcResponse.RPC_URL);
     expect(auth['appAddress']).toEqual(appAddressResponse.address);
   });
 
   test('init on redirect mode with redirect params should fetch private key', async () => {
     localStorage.setItem(
-      `${appID}:${StoreIndex.LOGIN_TYPE}`,
+      `${appId}:${StoreIndex.LOGIN_TYPE}`,
       JSON.stringify(LoginType.google)
     );
-    localStorage.setItem(`${appID}:state`, JSON.stringify(state));
+    localStorage.setItem(`${appId}:state`, JSON.stringify(state));
 
     const { rpcResponse, appAddressResponse } = getGatewayAPIMockResponse();
     fetchMock.mockResponseOnce(JSON.stringify(rpcResponse));
@@ -132,7 +131,7 @@ describe('AuthProvider', () => {
       {}
     );
     mockGetPrivate.mockResolvedValueOnce({ privateKey: samplePrivateKey });
-    const auth = await AuthProvider.init({ appID, flow: 'redirect' });
+    const auth = await AuthProvider.init({ appId, flow: 'redirect' });
 
     expect(mockGetPrivate).toBeCalledWith({
       id: email,
@@ -152,8 +151,9 @@ describe('AuthProvider', () => {
     const { rpcResponse, appAddressResponse } = getGatewayAPIMockResponse();
     fetchMock.mockResponseOnce(JSON.stringify(rpcResponse));
     fetchMock.mockResponseOnce(JSON.stringify(appAddressResponse));
+    // fetchMock.mockResponseOnce(JSON.stringify({ email }));
     const auth = await AuthProvider.init({
-      appID,
+      appId,
       flow: 'redirect',
       redirectUri: 'http://localhost/redirect',
     });

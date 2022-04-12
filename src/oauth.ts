@@ -1,14 +1,16 @@
 import { getLogger } from './logger';
 import { LoginType, UserInfo } from './types';
 import { generateID, RedirectParams } from './utils';
-import Config from './config';
+import { getConfig } from './config';
 import { ArcanaAuthException } from './errors';
 
+const Config = getConfig('dev');
 interface OauthParams {
   redirectUri: string;
   state: string;
   clientID: string;
   nonce?: string;
+  extraParams?: { [k: string]: string };
 }
 
 export interface OauthHandler {
@@ -25,12 +27,15 @@ export const request = async <T>(
 ): Promise<T> => {
   const response = await fetch(url, { headers });
   const data = await response.json();
+
   const logger = getLogger('request');
   if (response.status < 400) {
     return data as T;
   } else {
     logger.error('error_during_request', { err: data });
-    throw new ArcanaAuthException(`Error during getting user info`);
+    throw new ArcanaAuthException(
+      `Error during API call: ${JSON.stringify(data)}`
+    );
   }
 };
 
@@ -88,6 +93,7 @@ export class GoogleHandler implements OauthHandler {
       const data = await request<GoogleUserInfoResponse>(this.userInfoUrl, {
         Authorization: `Bearer ${accessToken}`,
       });
+      console.log({ data });
       return {
         id: data.email,
         email: data.email,
@@ -493,5 +499,87 @@ export class TwitterHandler implements OauthHandler {
 
       logger.error('error_cleanup_twitter', { err });
     }
+  }
+}
+
+export interface OtpLoginResponse {
+  success: boolean;
+}
+
+export async function passwordlessAuthorizeWrapper(
+  url: string
+): Promise<OtpLoginResponse> {
+  try {
+    const response = await request<OtpLoginResponse>(url);
+    return response as OtpLoginResponse;
+  } catch (e) {
+    const error = new ArcanaAuthException(
+      `Error during authorize: ${(e as Error).message}`
+    );
+    return Promise.reject(error);
+  }
+}
+
+interface PasswordlessInfoResponse {
+  name?: string;
+  email: string;
+}
+
+export class PasswordlessHandler implements OauthHandler {
+  public readonly loginType = LoginType.passwordless;
+  private oauthUrl = `${Config.passwordlessUrl}/oauth/authorize`;
+  private userInfoUrl = `${Config.passwordlessUrl}/api/token/verify`;
+
+  constructor(private appID: string) {
+    return;
+  }
+
+  public async getAuthUrl({
+    clientID,
+    redirectUri,
+    state,
+    extraParams,
+  }: OauthParams): Promise<string> {
+    const url = new URL(this.oauthUrl);
+    url.searchParams.append('client_id', clientID);
+    url.searchParams.append('redirect_uri', redirectUri);
+    url.searchParams.append('state', state);
+    url.searchParams.append('json', extraParams?.json || 'false');
+    if (extraParams?.email) {
+      url.searchParams.append('email', extraParams.email);
+    }
+    return url.toString();
+  }
+
+  public handleRedirectParams = async (
+    params: RedirectParams
+  ): Promise<RedirectParams> => {
+    if (!params.access_token && params.id_token) {
+      return {
+        ...params,
+        access_token: params.id_token,
+      };
+    } else {
+      return { ...params };
+    }
+  };
+
+  public async getUserInfo(accessToken: string): Promise<UserInfo> {
+    try {
+      const data = await request<PasswordlessInfoResponse>(this.userInfoUrl, {
+        Authorization: `Bearer ${accessToken}`,
+      });
+      return {
+        id: data.email,
+        email: data.email,
+        name: data.name,
+      };
+    } catch (e) {
+      return Promise.reject(e);
+    }
+  }
+
+  public async cleanup(): Promise<void> {
+    return;
   }
 }

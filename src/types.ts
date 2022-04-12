@@ -5,6 +5,11 @@ export enum LoginType {
   twitch = 'twitch',
   github = 'github',
   twitter = 'twitter',
+  passwordless = 'passwordless',
+}
+
+export interface OtpOptions {
+  withUI?: boolean;
 }
 
 export interface UserInfo {
@@ -21,17 +26,19 @@ export interface StoredUserInfo {
 }
 
 export interface InitParams {
-  appID: string;
+  appId: string;
+  appAddress?: string;
   redirectUri?: string;
-  network?: 'test' | 'testnet';
+  network?: 'dev' | 'testnet';
   rpcUrl?: string;
   flow?: 'popup' | 'redirect';
+  debug?: boolean;
 }
 
 export interface StateParams {
-  appID: string;
+  appId: string;
   redirectUri: string;
-  network: 'test' | 'testnet';
+  network: 'dev' | 'testnet';
   rpcUrl?: string;
   flow: 'popup' | 'redirect';
 }
@@ -47,9 +54,16 @@ export interface Store {
   get(key: string): string | null;
   delete(key: string): void;
   clear(): void;
+  unload(): void;
 }
 
 export interface OAuthFetcher {
   getClientID(loginType: LoginType): Promise<string>;
   getLogins(): Promise<string[]>;
+}
+
+export interface InternalConfig {
+  signatureUrl: string;
+  gatewayUrl: string;
+  passwordlessUrl: string;
 }

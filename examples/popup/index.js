@@ -4,6 +4,7 @@ const twitterLoginBtn = document.getElementById('twitter-login');
 const discordLoginBtn = document.getElementById('discord-login');
 const twitchLoginBtn = document.getElementById('twitch-login');
 const redditLoginBtn = document.getElementById('reddit-login');
+const passwordlessLoginBtn = document.getElementById('passwordless-login');
 const { AuthProvider } = window.arcana.auth;
 const userIDElement = document.getElementById('user-id');
 const keyElement = document.getElementById('pvt-key');
@@ -18,7 +19,7 @@ window.onload = async function() {
   let auth;
   try {
     auth = await AuthProvider.init({
-      appID: '19',
+      appId: '411',
       network: 'testnet',
       flow: 'popup',
       redirectUri: 'http://localhost:9001/examples/popup/redirect',
@@ -57,6 +58,13 @@ window.onload = async function() {
   });
   redditLoginBtn.addEventListener('click', () => {
     login('reddit');
+  });
+  passwordlessLoginBtn.addEventListener('click', async () => {
+    await auth.loginWithOtp();
+    if (auth.isLoggedIn()) {
+      const info = await auth.getUserInfo();
+      setUserInfo(info.userInfo.id, info.privateKey, 'passwordless');
+    }
   });
 };
 // const checkLogin = async () => {

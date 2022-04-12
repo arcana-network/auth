@@ -4,6 +4,7 @@ const twitterLoginBtn = document.getElementById('twitter-login');
 const discordLoginBtn = document.getElementById('discord-login');
 const twitchLoginBtn = document.getElementById('twitch-login');
 const redditLoginBtn = document.getElementById('reddit-login');
+const passwordlessLoginBtn = document.getElementById('passwordless-login');
 const { AuthProvider } = window.arcana.auth;
 const userIDElement = document.getElementById('user-id');
 const keyElement = document.getElementById('pvt-key');
@@ -14,12 +15,12 @@ const setUserInfo = (id, key, type) => {
   keyElement.innerText = key;
   typeElement.innerText = type;
 };
-window.onload = async function() {
+window.onload = async function () {
   let auth;
   try {
     auth = await AuthProvider.init({
-      appID: '19',
-      network: 'testnet',
+      appId: '20',
+      network: 'dev',
       flow: 'redirect',
       // Skip redirectUri if it is same as current url
     });
@@ -60,6 +61,16 @@ window.onload = async function() {
   });
   redditLoginBtn.addEventListener('click', () => {
     login('reddit');
+  });
+  passwordlessLoginBtn.addEventListener('click', async () => {
+    const response = await auth.loginWithOtp('abc@example.com', {
+      withUI: false,
+    });
+    console.log({ response });
+    if (auth.isLoggedIn()) {
+      const info = await auth.getUserInfo();
+      setUserInfo(info.userInfo.id, info.privateKey, 'passwordless');
+    }
   });
 };
 // const checkLogin = async () => {

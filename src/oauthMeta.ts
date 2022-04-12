@@ -9,12 +9,7 @@ export class OAuthContractMeta implements OAuthFetcher {
     this.appContract = new ethers.Contract(
       appAddress,
       [
-        'function googleClientId() public view returns (string)',
-        'function redditClientId() public view returns (string)',
-        'function githubClientId() public view returns (string)',
-        'function twitterClientId() public view returns (string)',
-        'function discordClientId() public view returns (string)',
-        'function twitchClientId() public view returns (string)',
+        'function clientID(string) public view returns (string)',
       ],
       provider
     );
@@ -24,9 +19,7 @@ export class OAuthContractMeta implements OAuthFetcher {
   public async getClientID(loginType: LoginType): Promise<string> {
     try {
       if (!this.clientIDs[loginType]) {
-        const clientID: string[] = await this.appContract.functions[
-          `${loginType}ClientId`
-        ]();
+        const clientID: string[] = await this.appContract.functions.clientID(loginType);
         if (clientID[0]) {
           this.clientIDs[loginType] = clientID[0];
         }

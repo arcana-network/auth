@@ -25,13 +25,13 @@ yarn add @arcana/auth
 ```js
 const { AuthProvider, SocialLoginType } = window.arcana.auth;
 // or
-import { AuthProvider,SocialLoginType } from '@arcana/auth';
+import { AuthProvider } from '@arcana/auth';
 ```
 ### Initialise
 
 ```js
 const auth = await AuthProvider.init({
-   appID: `${appID}`,
+   appId: `${appId}`,
    flow: 'redirect', // 'popup' or 'redirect'
    redirectUri:'' // Can be ignored for redirect flow if same as login page
 });
@@ -42,6 +42,22 @@ const auth = await AuthProvider.init({
 ```js
 await auth.loginWithSocial(SocialLoginType.google);
 ```
+
+### Initiate passwordless login
+
+```js
+const result = await auth.loginWithOtp(`${emailAddress}`, { withUI: boolean });
+```
+Options:
+- `{ withUI: true }` - the user is redirected to `email-sent` or `error` page
+- `{ withUI: false }` - gets a `json` response back with no redirection
+
+### Get login status
+```js
+const loggedIn = auth.isLoggedIn(); /* boolean response */
+```
+
+The user info is saved in memory after successful login, before `unload` event of the page it gets stored in `session-storage` and is refetched to memory and removed from `session-storage` after successful page reload.
 
 ### Get user info
 
@@ -64,20 +80,16 @@ const userInfo = auth.getUserInfo();
 ### Get public key
 
 ```js
-const { X, Y } = await auth.getPublicKey({
-  verifier: <loginType>,
-  id: <email | username>,
-});
+const publicKey = await auth.getPublicKey({
+  verifier: SocialLoginType.google,
+  id: `${email}`,
+}, output); /* output can be 'point', 'compressed' or 'uncompressed'; */
 ```
-
-### Check if user already logged in
-```js
-const loggedIn = auth.isLoggedIn();
-if (!loggedIn) {
-  await auth.loginWithSocial(SocialLoginType.google);
-}
-const userInfo = auth.getUserInfo()
-```
+Output:
+- `point` will be output with `{ x: string, y: string }`
+- `compressed` will be `string` like `0x03...`
+- `uncompressed` will be a `string` like `0x04...`
+- defaults to `uncompressed` 
 
 ### Clear login session
 

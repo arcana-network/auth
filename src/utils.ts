@@ -7,6 +7,7 @@ import {
   RedditHandler,
   GithubHandler,
   TwitterHandler,
+  PasswordlessHandler,
 } from './oauth';
 import * as Sentry from '@sentry/browser';
 import { getLogger } from './logger';
@@ -35,6 +36,9 @@ export function getLoginHandler(
     }
     case LoginType.twitter: {
       return new TwitterHandler(appID);
+    }
+    case LoginType.passwordless: {
+      return new PasswordlessHandler(appID);
     }
   }
 }
