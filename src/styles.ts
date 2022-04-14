@@ -46,6 +46,18 @@ const widgetBubbleStyle = {
     ...baseWidgetBubbleStyle,
     backgroundColor: "#000000",
   },
+  closeButton: {
+    ...baseCloseButtonStyle,
+    width: "20px",
+    height: "20px",
+
+    position: "absolute",
+    top: "-15px",
+    right: "0px",
+
+    backgroundImage: closeButtonImage.light,
+    backgroundPosition: "center",
+  },
 }
 
 const widgetIframeStyle = {
