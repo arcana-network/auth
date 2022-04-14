@@ -62,6 +62,10 @@ class WalletProvider {
       getThemeConfig: () => {
         return themeConfig
       },
+      sendPendingRequestCount: (count: Number) => {
+        const reqCountBadgeEl = document.getElementById("req-count-badge")
+        reqCountBadgeEl.textContent = `${count}`
+      },
     })
     this.arcanaProvider.setConnection(communication)
     this.arcanaProvider.setHandlers(
@@ -109,7 +113,7 @@ class WalletProvider {
   }
 
   private initializeState() {
-    let iframeUrl = "http://localhost:3000"
+    let iframeUrl = "http://localhost:8080"
     if (this.params.iframeUrl) {
       iframeUrl = this.params.iframeUrl
     }
