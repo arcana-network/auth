@@ -152,6 +152,11 @@ export default class IframeWrapper {
       const buttonLogo = createDomElement("img", {
         src: getLogo(this.themeConfig, "vertical"),
       })
+      const reqCountBadge = createDomElement("p", {
+        id: "req-count-badge",
+        style: widgetBubbleStyle.reqCountBadge,
+        textContent: 0,
+      })
       const closeButton = createDomElement("button", {
         onclick: (event: Event) => {
           event.stopImmediatePropagation()
@@ -165,6 +170,7 @@ export default class IframeWrapper {
           onclick: () => this.openWidgetIframe(),
           style: widgetBubbleStyle[theme],
         },
+        reqCountBadge,
         buttonLogo,
         closeButton
       )
