@@ -34,7 +34,7 @@ const baseHeaderContainerStyle = {
   justifyContent: "space-between",
   alignItems: "center",
   padding: "10px 16px",
-  borderRadius: "5px 5px 0px 0px",
+  borderRadius: "10px 10px 0px 0px",
 }
 
 const widgetBubbleStyle = {
@@ -100,11 +100,12 @@ const widgetIframeStyle = {
   },
   body: {
     flex: 1,
+    display: "flex",
   },
   iframe: {
-    height: "100%",
-    width: "100%",
+    flex: 1,
     border: "none",
+    borderRadius: "0px 0px 10px 10px",
   },
 }
 
