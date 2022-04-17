@@ -48,7 +48,8 @@ class WalletProvider {
         network: this.params.network,
       },
       this.state.iframeUrl,
-      themeConfig
+      themeConfig,
+      this.destroyWalletUI
     );
     this.arcanaProvider = new ArcanaProvider();
     const walletType = await getWalletType(this.params.appId);
@@ -64,6 +65,14 @@ class WalletProvider {
     });
     this.arcanaProvider.setConnection(communication);
     this.arcanaProvider.setHandlers(this.iframeWrapper.show, this.iframeWrapper.hide)
+  }
+
+  destroyWalletUI = () => {
+    if(this.iframeWrapper) {
+      this.iframeWrapper.widgetBubble.remove()
+      this.iframeWrapper.widgetIframeContainer.remove()
+    }
+    this.iframeWrapper = null
   }
 
   handleEvents = (t: string, val: unknown) => {
