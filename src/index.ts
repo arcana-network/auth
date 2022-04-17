@@ -62,9 +62,22 @@ class WalletProvider {
       getThemeConfig: () => {
         return themeConfig;
       },
+      sendPendingRequestCount: (count: Number) => {
+        this.onReceivingPendingRequestCount(count)
+      },
     });
     this.arcanaProvider.setConnection(communication);
     this.arcanaProvider.setHandlers(this.iframeWrapper.show, this.iframeWrapper.hide)
+  }
+
+  onReceivingPendingRequestCount(count: Number) {
+    const reqCountBadgeEl = document.getElementById("req-count-badge")
+      if(count > 0) {
+        reqCountBadgeEl.style.display = "flex"
+        reqCountBadgeEl.textContent = `${count}`
+      } else {
+        reqCountBadgeEl.style.display = "none"
+      }
   }
 
   destroyWalletUI = () => {
