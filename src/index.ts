@@ -62,7 +62,7 @@ class WalletProvider {
       getThemeConfig: () => {
         return themeConfig;
       },
-      sendPendingRequestCount: (count: Number) => {
+      sendPendingRequestCount: (count: number) => {
         this.onReceivingPendingRequestCount(count)
       },
     });
@@ -70,7 +70,7 @@ class WalletProvider {
     this.arcanaProvider.setHandlers(this.iframeWrapper.show, this.iframeWrapper.hide)
   }
 
-  onReceivingPendingRequestCount(count: Number) {
+  onReceivingPendingRequestCount(count: number) {
     const reqCountBadgeEl = document.getElementById("req-count-badge")
       if(count > 0) {
         reqCountBadgeEl.style.display = "flex"
