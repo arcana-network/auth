@@ -29,7 +29,8 @@ export default class IframeWrapper {
   constructor(
     private params: iframeWrapperParams,
     private iframeUrl: string,
-    private themeConfig: IWidgetThemeConfig
+    private themeConfig: IWidgetThemeConfig,
+    private destroyWalletUI: () => void
   ) {
     this.checkSecureOrigin()
   }
@@ -190,6 +191,10 @@ export default class IframeWrapper {
 
     document.body.appendChild(this.widgetBubble)
     document.body.appendChild(this.widgetIframeContainer)
+  }
+
+  private onCloseBubbleClick() {
+    this.destroyWalletUI()
   }
 
   // Todo: add remove event listener for "resize" event
