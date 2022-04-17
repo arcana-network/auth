@@ -72,7 +72,7 @@ class WalletProvider {
 
   onReceivingPendingRequestCount(count: number) {
     const reqCountBadgeEl = document.getElementById("req-count-badge")
-      if(count > 0) {
+      if (count > 0) {
         reqCountBadgeEl.style.display = "flex"
         reqCountBadgeEl.textContent = `${count}`
       } else {
@@ -81,7 +81,7 @@ class WalletProvider {
   }
 
   destroyWalletUI = () => {
-    if(this.iframeWrapper) {
+    if (this.iframeWrapper) {
       this.iframeWrapper.widgetBubble.remove()
       this.iframeWrapper.widgetIframeContainer.remove()
     }
