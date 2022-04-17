@@ -46,6 +46,35 @@ const widgetBubbleStyle = {
     ...baseWidgetBubbleStyle,
     backgroundColor: "#000000",
   },
+  closeButton: {
+    ...baseCloseButtonStyle,
+    width: "20px",
+    height: "20px",
+
+    position: "absolute",
+    top: "-15px",
+    right: "0px",
+
+    backgroundImage: closeButtonImage.light,
+    backgroundPosition: "center",
+  },
+  reqCountBadge: {
+    width: "25px",
+    height: "25px",
+    borderRadius: "50%",
+    background: "linear-gradient(159.35deg, #F3A2A2 -22.29%, #FFB1B1 102.13%)",
+
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+
+    fontWeight: 600,
+    fontSize: "12px",
+
+    position: "absolute",
+    top: "-10px",
+    left: "10px",
+  },
 }
 
 const widgetIframeStyle = {
