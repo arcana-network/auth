@@ -29,7 +29,7 @@ class WalletProvider {
   }
 
   private state: State;
-  private iframeWrapper: IframeWrapper;
+  private iframeWrapper: IframeWrapper | null;
   private arcanaProvider: ArcanaProvider;
   constructor(private params: LoginParams) {
     this.initializeState();
