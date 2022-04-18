@@ -105,7 +105,7 @@ await auth.logout();
 ```js
 window.onload = async () => {
   const auth = await AuthProvider.init({
-    appID: `${appID}`,
+    appId: `${appId}`,
     flow: 'redirect',
     redirectUri:'path/to/redirect' 
   });
@@ -124,7 +124,7 @@ window.onload = async () => {
 ```js
 window.onload = async () => {
   const auth = await AuthProvider.init({
-    appID: `${appID}`,
+    appId: `${appId}`,
     redirectUri:'path/to/redirect' 
   });
 

@@ -8,7 +8,7 @@ import {
   GithubHandler,
   TwitterHandler,
   PasswordlessHandler,
-} from './oauth';
+} from './oauthHandlers';
 import * as Sentry from '@sentry/browser';
 import { getLogger } from './logger';
 
@@ -16,29 +16,30 @@ export class ArcanaException extends Error {}
 
 export function getLoginHandler(
   loginType: LoginType,
-  appID: string
+  appID: string,
+  clientId: string
 ): OauthHandler {
   switch (loginType) {
     case LoginType.google: {
-      return new GoogleHandler(appID);
+      return new GoogleHandler(appID, clientId);
     }
     case LoginType.twitch: {
-      return new TwitchHandler(appID);
+      return new TwitchHandler(appID, clientId);
     }
     case LoginType.discord: {
-      return new DiscordHandler(appID);
+      return new DiscordHandler(appID, clientId);
     }
     case LoginType.reddit: {
-      return new RedditHandler(appID);
+      return new RedditHandler(appID, clientId);
     }
     case LoginType.github: {
-      return new GithubHandler(appID);
+      return new GithubHandler(appID, clientId);
     }
     case LoginType.twitter: {
-      return new TwitterHandler(appID);
+      return new TwitterHandler(appID, clientId);
     }
     case LoginType.passwordless: {
-      return new PasswordlessHandler(appID);
+      return new PasswordlessHandler(appID, clientId);
     }
   }
 }
@@ -131,18 +132,12 @@ export const validateParams = (
 };
 
 export const generateID = (): string => {
-  return (
-    '_' +
-    Math.random()
-      .toString(36)
-      .substr(2, 9)
-  );
+  return '_' + Math.random().toString(36).substr(2, 9);
 };
 
-export const getSentryErrorReporter = (): ((m: string) => void) => {
+export const getSentryErrorReporter = (dsn: string): ((m: string) => void) => {
   Sentry.init({
-    dsn:
-      'https://d36bd0cc31cb46feb91a0c39e9b5178a@o1011868.ingest.sentry.io/6005958',
+    dsn,
     maxBreadcrumbs: 5,
     debug: true,
   });

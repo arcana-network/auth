@@ -4,11 +4,11 @@ import { generateID, RedirectParams } from './utils';
 import { getConfig } from './config';
 import { ArcanaAuthException } from './errors';
 
-const Config = getConfig('dev');
+const config = getConfig();
+
 interface OauthParams {
   redirectUri: string;
   state: string;
-  clientID: string;
   nonce?: string;
   extraParams?: { [k: string]: string };
 }
@@ -54,18 +54,17 @@ export class GoogleHandler implements OauthHandler {
   private prompt = 'consent select_account';
   private userInfoUrl = 'https://www.googleapis.com/userinfo/v2/me';
 
-  constructor(private appID: string) {
+  constructor(private appID: string, private clientId: string) {
     return;
   }
 
   public async getAuthUrl({
-    clientID,
     redirectUri,
     state,
     nonce,
   }: OauthParams): Promise<string> {
     const url = new URL(this.oauthUrl);
-    url.searchParams.append('client_id', clientID);
+    url.searchParams.append('client_id', this.clientId);
     url.searchParams.append('redirect_uri', redirectUri);
     url.searchParams.append('state', state);
     url.searchParams.append('scope', this.scope);
@@ -93,7 +92,6 @@ export class GoogleHandler implements OauthHandler {
       const data = await request<GoogleUserInfoResponse>(this.userInfoUrl, {
         Authorization: `Bearer ${accessToken}`,
       });
-      console.log({ data });
       return {
         id: data.email,
         email: data.email,
@@ -122,17 +120,16 @@ export class RedditHandler implements OauthHandler {
   private scope = 'identity';
   private responseType = 'token';
   private oauthUrl = 'https://www.reddit.com/api/v1/authorize';
-  constructor(private appID: string) {
+  constructor(private appID: string, private clientId: string) {
     return;
   }
 
   public async getAuthUrl({
-    clientID,
     redirectUri,
     state,
   }: OauthParams): Promise<string> {
     const url = new URL(this.oauthUrl);
-    url.searchParams.append('client_id', clientID);
+    url.searchParams.append('client_id', this.clientId);
     url.searchParams.append('redirect_uri', redirectUri);
     url.searchParams.append('state', state);
     url.searchParams.append('scope', this.scope);
@@ -184,17 +181,16 @@ export class DiscordHandler implements OauthHandler {
   private scope = 'identify email';
   private userInfoUrl = 'https://discordapp.com/api/users/@me';
 
-  constructor(private appID: string) {
+  constructor(private appID: string, private clientId: string) {
     return;
   }
 
   public async getAuthUrl({
-    clientID,
     redirectUri,
     state,
   }: OauthParams): Promise<string> {
     const url = new URL(this.oauthUrl);
-    url.searchParams.append('client_id', clientID);
+    url.searchParams.append('client_id', this.clientId);
     url.searchParams.append('redirect_uri', redirectUri);
     url.searchParams.append('state', state);
     url.searchParams.append('scope', this.scope);
@@ -251,7 +247,6 @@ interface TwitchUserInfoResponse {
 
 export class TwitchHandler implements OauthHandler {
   public readonly loginType = LoginType.twitch;
-  private clientId: string;
   private userInfoUrl = 'https://api.twitch.tv/helix/users';
   private oauthUrl = 'https://id.twitch.tv/oauth2/authorize';
   private scope = 'openid user:read:email';
@@ -261,19 +256,16 @@ export class TwitchHandler implements OauthHandler {
     userinfo: { email: null, email_verified: null },
   });
 
-  constructor(private appID: string) {
+  constructor(private appID: string, private clientId: string) {
     return;
   }
 
   public async getAuthUrl({
-    clientID,
     redirectUri,
     state,
   }: OauthParams): Promise<string> {
-    this.clientId = clientID;
-
     const url = new URL(this.oauthUrl);
-    url.searchParams.append('client_id', clientID);
+    url.searchParams.append('client_id', this.clientId);
     url.searchParams.append('redirect_uri', redirectUri);
     url.searchParams.append('state', state);
     url.searchParams.append('scope', this.scope);
@@ -331,20 +323,19 @@ export class GithubHandler implements OauthHandler {
   public readonly loginType = LoginType.github;
   private url = 'https://api.github.com/user';
   private oauthUrl = 'https://github.com/login/oauth/authorize';
-  private sigUrl = `${Config.signatureUrl}/github`;
+  private sigUrl = `${config.signatureUrl}/github`;
   private responseType = 'token id_token';
   private scope = 'read:user user:email';
-  constructor(private appID: string) {
+  constructor(private appID: string, private clientId: string) {
     return;
   }
 
   public async getAuthUrl({
-    clientID,
     redirectUri,
     state,
   }: OauthParams): Promise<string> {
     const url = new URL(this.oauthUrl);
-    url.searchParams.append('client_id', clientID);
+    url.searchParams.append('client_id', this.clientId);
     url.searchParams.append('redirect_uri', redirectUri);
     url.searchParams.append('state', state);
     url.searchParams.append('scope', this.scope);
@@ -408,11 +399,11 @@ interface TwitterInternalResponse {
 export class TwitterHandler implements OauthHandler {
   public readonly loginType = LoginType.twitter;
   private oauthToken: string;
-  private sigUrl = `${Config.signatureUrl}/twitter`;
+  private sigUrl = `${config.signatureUrl}/twitter`;
   private oauthTokenSecret: string;
   private oauthUrl = 'https://api.twitter.com/oauth/authorize?oauth_token=';
 
-  constructor(private appID: string) {}
+  constructor(private appID: string, private clientId: string) {}
 
   public async getRequestToken(): Promise<TwitterInternalResponse> {
     const url = new URL(`${this.sigUrl}/${this.appID}/requestToken`);
@@ -527,21 +518,20 @@ interface PasswordlessInfoResponse {
 
 export class PasswordlessHandler implements OauthHandler {
   public readonly loginType = LoginType.passwordless;
-  private oauthUrl = `${Config.passwordlessUrl}/oauth/authorize`;
-  private userInfoUrl = `${Config.passwordlessUrl}/api/token/verify`;
+  private oauthUrl = `${config.passwordlessUrl}/oauth/authorize`;
+  private userInfoUrl = `${config.passwordlessUrl}/api/token/verify`;
 
-  constructor(private appID: string) {
+  constructor(private appID: string, private clientId: string) {
     return;
   }
 
   public async getAuthUrl({
-    clientID,
     redirectUri,
     state,
     extraParams,
   }: OauthParams): Promise<string> {
     const url = new URL(this.oauthUrl);
-    url.searchParams.append('client_id', clientID);
+    url.searchParams.append('client_id', this.clientId);
     url.searchParams.append('redirect_uri', redirectUri);
     url.searchParams.append('state', state);
     url.searchParams.append('json', extraParams?.json || 'false');

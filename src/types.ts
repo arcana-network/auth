@@ -66,4 +66,5 @@ export interface InternalConfig {
   signatureUrl: string;
   gatewayUrl: string;
   passwordlessUrl: string;
+  sentryDsn: string;
 }

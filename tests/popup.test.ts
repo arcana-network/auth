@@ -1,5 +1,9 @@
 import Popup from '../src/popup';
 import { RedirectParams } from '../src/utils';
+import { freezeLogLevel, LOG_LEVEL, setLogLevel } from '../src/logger';
+
+setLogLevel(LOG_LEVEL.NOLOGS);
+freezeLogLevel();
 
 function createMockWindowResponse(params) {
   const mockedOpen = jest.fn();

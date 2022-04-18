@@ -7,7 +7,11 @@ import {
   RedditHandler,
   TwitchHandler,
   TwitterHandler,
-} from '../src/oauth';
+} from '../src/oauthHandlers';
+import { freezeLogLevel, LOG_LEVEL, setLogLevel } from '../src/logger';
+
+setLogLevel(LOG_LEVEL.NOLOGS);
+freezeLogLevel();
 
 function createMockWindow(href: string) {
   const postMessage = jest.fn();
@@ -28,17 +32,18 @@ function createMockWindow(href: string) {
 
 describe('getInfoHandler', () => {
   test('returns correct handler depending on login type', () => {
-    const gh = getLoginHandler(LoginType.google, '');
+    const clientID = 'clientID';
+    const gh = getLoginHandler(LoginType.google, '', clientID);
     expect(gh instanceof GoogleHandler).toBe(true);
-    const dh = getLoginHandler(LoginType.discord, '');
+    const dh = getLoginHandler(LoginType.discord, '', clientID);
     expect(dh instanceof DiscordHandler).toBe(true);
-    const rh = getLoginHandler(LoginType.reddit, '');
+    const rh = getLoginHandler(LoginType.reddit, '', clientID);
     expect(rh instanceof RedditHandler).toBe(true);
-    const th = getLoginHandler(LoginType.twitch, '');
+    const th = getLoginHandler(LoginType.twitch, '', clientID);
     expect(th instanceof TwitchHandler).toBe(true);
-    const twh = getLoginHandler(LoginType.twitter, '');
+    const twh = getLoginHandler(LoginType.twitter, '', clientID);
     expect(twh instanceof TwitterHandler).toBe(true);
-    const gih = getLoginHandler(LoginType.github, '');
+    const gih = getLoginHandler(LoginType.github, '', clientID);
     expect(gih instanceof GithubHandler).toBe(true);
   });
 });

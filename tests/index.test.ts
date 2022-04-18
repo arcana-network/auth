@@ -3,9 +3,14 @@
  */
 import { FetchMock } from 'jest-fetch-mock';
 import { AuthProvider } from '../src/index';
+import { freezeLogLevel, LOG_LEVEL, setLogLevel } from '../src/logger';
 import { LoginType, StoreIndex } from '../src/types';
 
+// Build up
 const fetchMock = fetch as FetchMock;
+
+setLogLevel(LOG_LEVEL.NOLOGS);
+freezeLogLevel();
 
 beforeEach(() => {
   fetchMock.resetMocks();
@@ -28,6 +33,7 @@ afterEach(() => {
   getItemSpy.mockRestore();
   setItemSpy.mockRestore();
 });
+
 function createMockWindow(href: string, params) {
   const postMessage = jest.fn();
   const addEventListener = jest
@@ -97,6 +103,8 @@ const getGatewayAPIMockResponse = () => {
   const appAddressResponse = { address: '0xAddress' };
   return { rpcResponse, appAddressResponse };
 };
+
+// Actual test cases
 
 describe('AuthProvider', () => {
   const appId = 'appID_1';

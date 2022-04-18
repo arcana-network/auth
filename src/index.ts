@@ -24,7 +24,7 @@ import {
   OauthHandler,
   passwordlessAuthorizeWrapper,
   OtpLoginResponse,
-} from './oauth';
+} from './oauthHandlers';
 import SessionStore from './sessionStore';
 import Popup from './popup';
 import { KeyReconstructor } from '@arcana/keystore';
@@ -35,7 +35,7 @@ import {
   setExceptionReporter,
   setLogLevel,
 } from './logger';
-import { getConfig } from './config';
+import { getConfig, setConfigEnv } from './config';
 import { OAuthContractMeta } from './oauthMeta';
 import { LocalStore } from './localStore';
 import { ArcanaAuthException } from './errors';
@@ -61,20 +61,20 @@ class AuthProvider {
   private appAddress = '';
   constructor(params: InitParams) {
     this.params = this.getParams(params);
-    if (params.debug) {
-      setLogLevel(LOG_LEVEL.DEBUG);
-      setExceptionReporter(getSentryErrorReporter());
-    }
-    if (this.params.network === 'testnet') {
-      setLogLevel(LOG_LEVEL.NOLOGS);
-    }
-    if (params.appAddress) {
-      this.appAddress = params.appAddress;
-    }
-    this.config = getConfig(this.params.network);
+    setConfigEnv(this.params.network);
+    this.config = getConfig();
     this.logger = getLogger('AuthProvider');
     this.store = new SessionStore(this.params.appId);
     this.localstore = new LocalStore(this.params.appId);
+    if (params.appAddress) {
+      this.appAddress = params.appAddress;
+    }
+    if (params.debug) {
+      setLogLevel(LOG_LEVEL.DEBUG);
+      setExceptionReporter(getSentryErrorReporter(this.config.sentryDsn));
+    } else {
+      setLogLevel(LOG_LEVEL.NOLOGS);
+    }
   }
 
   public async loginWithSocial(loginType: LoginType): Promise<void> {
@@ -84,16 +84,15 @@ class AuthProvider {
 
     await this.init();
 
-    const clientID = await this.fetchClientID(loginType);
+    const clientId = await this.fetchClientID(loginType);
 
-    this.logger.info('clientID', clientID);
+    this.logger.info('clientID', clientId);
 
-    const loginHandler = getLoginHandler(loginType, this.appAddress);
+    const loginHandler = getLoginHandler(loginType, this.appAddress, clientId);
 
     const state = generateID();
 
     const url = await loginHandler.getAuthUrl({
-      clientID: clientID,
       redirectUri: this.params.redirectUri,
       state,
     });
@@ -101,7 +100,7 @@ class AuthProvider {
     if (this.params.flow == 'redirect') {
       this.localstore.set<LoginType>(StoreIndex.LOGIN_TYPE, loginType);
       this.localstore.set<string>(StoreIndex.STATE, state);
-      setTimeout(() => (window.location.href = url), 50);
+      this.redirectTo(url);
       return;
     }
 
@@ -127,14 +126,14 @@ class AuthProvider {
 
     const loginHandler = getLoginHandler(
       LoginType.passwordless,
-      this.appAddress
+      this.appAddress,
+      ''
     );
 
     const state = generateID();
 
     const json = !options.withUI;
     const url = await loginHandler.getAuthUrl({
-      clientID: this.appAddress,
       redirectUri: this.params.redirectUri,
       state,
       extraParams: { email, json: json.toString() },
@@ -149,7 +148,7 @@ class AuthProvider {
       const response = await passwordlessAuthorizeWrapper(url);
       return response;
     } else {
-      setTimeout(() => (window.location.href = url), 50);
+      this.redirectTo(url);
       return;
     }
   }
@@ -213,7 +212,8 @@ class AuthProvider {
       return;
     }
 
-    const loginHandler = getLoginHandler(loginType, this.appAddress);
+    const clientId = await this.fetchClientID(loginType);
+    const loginHandler = getLoginHandler(loginType, this.appAddress, clientId);
     let params = parseHash(new URL(window.location.href));
 
     if (isParamsEmpty(params)) {
@@ -285,6 +285,11 @@ class AuthProvider {
       this.logger.error('Error during config init', e);
       throw e;
     }
+  }
+
+  private redirectTo(url: string) {
+    const w = window.parent ? window.parent : window;
+    setTimeout(() => (w.location.href = url), 50);
   }
 
   private async initKeyReconstructor(): Promise<void> {
@@ -368,7 +373,6 @@ class AuthProvider {
   ) {
     if (params.access_token) {
       const userInfo = await handler.getUserInfo(params.access_token);
-      console.log({ userInfo });
       return userInfo;
     } else {
       throw new ArcanaAuthException('access token missing');
@@ -393,7 +397,7 @@ class AuthProvider {
       logger.info('return_data', data);
       return data.privateKey;
     } catch (e) {
-      this.logger.error(`Error during getting pvt key`, { e });
+      this.logger.error(`Error during getting pvt key`, e);
       return Promise.reject(
         new ArcanaException('Error during getting user key')
       );
@@ -417,6 +421,7 @@ const getAppAddress = async (
     }
     return address;
   } catch (e) {
+    getLogger('getAppAddress').error('error during fetching', e);
     throw new ArcanaException(`Invalid appId: ${appId}`);
   }
 };
@@ -430,6 +435,7 @@ const getCurrentConfig = async (gatewayUrl: string): Promise<string> => {
     }
     return json.RPC_URL;
   } catch (e) {
+    getLogger('getCurrentConfig').error('error during fetching', e);
     throw new ArcanaException(`Error during fetching config`);
   }
 };

@@ -6,8 +6,14 @@ import {
   TwitchHandler,
   TwitterHandler,
   GithubHandler,
-} from '../src/oauth';
+  PasswordlessHandler,
+} from '../src/oauthHandlers';
+import { freezeLogLevel, LOG_LEVEL, setLogLevel } from '../src/logger';
 import { ArcanaAuthException } from '../src/errors';
+import { OauthHandler } from '../src/oauthHandlers';
+
+setLogLevel(LOG_LEVEL.NOLOGS);
+freezeLogLevel();
 
 const fetchMock = fetch as FetchMock;
 
@@ -16,7 +22,7 @@ beforeEach(() => {
 });
 
 describe('GoogleHandler', () => {
-  const h = new GoogleHandler('');
+  const h = new GoogleHandler('', 'clientID');
 
   test('returns expected user info', async () => {
     const email = 'foo@bar.com';
@@ -28,7 +34,6 @@ describe('GoogleHandler', () => {
 
   test('returns expected auth url', async () => {
     const res = await h.getAuthUrl({
-      clientID: 'clientID',
       state: 'a',
       redirectUri: 'redirectUri',
       nonce: 'n',
@@ -57,7 +62,7 @@ describe('GoogleHandler', () => {
 });
 
 describe('RedditHandler', () => {
-  const h = new RedditHandler('');
+  const h = new RedditHandler('', 'clientID');
   test('returns expected user info', async () => {
     const name = '/u/qwertyuiop';
     fetchMock.mockResponse(JSON.stringify({ name }));
@@ -68,7 +73,6 @@ describe('RedditHandler', () => {
 
   test('returns expected auth url', async () => {
     const res = await h.getAuthUrl({
-      clientID: 'clientID',
       state: 'a',
       redirectUri: 'redirectUri',
     });
@@ -96,7 +100,7 @@ describe('RedditHandler', () => {
 });
 
 describe('TwitchHandler', () => {
-  const h = new TwitchHandler('clientId');
+  const h: OauthHandler = new TwitchHandler('appId', 'clientID');
 
   test('returns expected user info', async () => {
     const id = 'foo@bar.com';
@@ -106,9 +110,37 @@ describe('TwitchHandler', () => {
     expect(res.id).toBe(id);
   });
 
+  test('send expected params in header on info', async () => {
+    fetchMock.mockResponse(
+      JSON.stringify({
+        data: [
+          {
+            display_name: 'ABC',
+            email: 'abc@example.com',
+            profile_image_url: 'picture',
+          },
+        ],
+      })
+    );
+    const res = await h.getUserInfo('test_access_token');
+    expect(res).toStrictEqual({
+      id: 'abc@example.com',
+      name: 'ABC',
+      picture: 'picture',
+    });
+    expect(fetchMock).toHaveBeenCalled();
+    expect(fetchMock).toHaveBeenCalledWith(
+      'https://api.twitch.tv/helix/users',
+      {
+        headers: {
+          Authorization: 'Bearer test_access_token',
+          'Client-ID': 'clientID',
+        },
+      }
+    );
+  });
   test('returns expected auth url', async () => {
     const res = await h.getAuthUrl({
-      clientID: 'clientID',
       state: 'a',
       redirectUri: 'redirectUri',
     });
@@ -136,7 +168,7 @@ describe('TwitchHandler', () => {
 });
 
 describe('DiscordHandler', () => {
-  const h = new DiscordHandler('');
+  const h = new DiscordHandler('', 'clientID');
 
   test('returns expected email id if verified', async () => {
     const email = 'foo@bar.com';
@@ -155,7 +187,6 @@ describe('DiscordHandler', () => {
 
   test('returns expected auth url', async () => {
     const res = await h.getAuthUrl({
-      clientID: 'clientID',
       state: 'a',
       redirectUri: 'redirectUri',
     });
@@ -182,7 +213,7 @@ describe('DiscordHandler', () => {
   });
 });
 describe('TwitterHandler', () => {
-  const h = new TwitterHandler('appID');
+  const h = new TwitterHandler('appID', 'clientID');
   test('returns expected user info', async () => {
     const id_str = 'foo@bar.com';
     fetchMock.mockResponse(JSON.stringify({ id_str }));
@@ -219,7 +250,17 @@ describe('TwitterHandler', () => {
 });
 
 describe('GithubHandler', () => {
-  const h = new GithubHandler('app');
+  const h = new GithubHandler('app', 'clientID');
+
+  test('returns expected auth url', async () => {
+    const res = await h.getAuthUrl({
+      state: 'a',
+      redirectUri: 'redirectUri',
+    });
+    expect(res).toBe(
+      'https://github.com/login/oauth/authorize?client_id=clientID&redirect_uri=redirectUri&state=a&scope=read%3Auser+user%3Aemail&response_type=token+id_token'
+    );
+  });
 
   test('returns expected user info', async () => {
     const id = 1;
@@ -250,5 +291,40 @@ describe('GithubHandler', () => {
     expect(res).rejects.toEqual(
       new ArcanaAuthException('Expected `code` from github hash params')
     );
+  });
+});
+
+describe('PasswordlessHandler', () => {
+  const h = new PasswordlessHandler('app', 'clientID');
+
+  test('returns expected auth url', async () => {
+    const res = await h.getAuthUrl({
+      state: 'a',
+      redirectUri: 'redirectUri',
+    });
+    expect(res).toBe(
+      'https://passwordless.dev.arcana.network/oauth/authorize?client_id=clientID&redirect_uri=redirectUri&state=a&json=false'
+    );
+  });
+
+  test('returns expected user info', async () => {
+    const email = 'abc@example.com';
+    fetchMock.mockResponse(JSON.stringify({ email }));
+    const res = await h.getUserInfo('test_access_token');
+    console.log({ res });
+    expect(fetchMock).toHaveBeenCalled();
+    expect(res.id).toBe(email);
+  });
+
+  test('returns expected redirect params', async () => {
+    const input = {
+      id_token: 'access_token',
+    };
+    const res = await h.handleRedirectParams(input);
+    expect(res).toStrictEqual({
+      ...input,
+      access_token: 'access_token',
+      id_token: 'access_token',
+    });
   });
 });

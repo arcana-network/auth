@@ -68,6 +68,13 @@ export class Logger {
   }
 
   error(message: string, params: unknown = {}): void {
+    if (params instanceof Error) {
+      this.internalLog(
+        LOG_LEVEL.ERROR,
+        message,
+        `${params.name}: ${params.message}: ${params.stack}`
+      );
+    }
     this.internalLog(LOG_LEVEL.ERROR, message, params);
     sendException(JSON.stringify({ message, params }));
   }

@@ -1,23 +1,33 @@
-import { InternalConfig } from './types'
+import { InternalConfig } from './types';
 
-const getConfig = (env: "dev" | "testnet"): InternalConfig => {
-  if(env === "testnet") {
+let env = 'dev';
+
+const getConfig = (): InternalConfig => {
+  if (env === 'testnet') {
     return TESTNET_CONFIG;
   }
-  return DEV_CONFIG
-}
+  return DEV_CONFIG;
+};
 
-export { getConfig };
+const setConfigEnv = (e: 'dev' | 'testnet'): void => {
+  env = e;
+};
+
+export { getConfig, setConfigEnv };
+
+const sentryDsn =
+  'https://d36bd0cc31cb46feb91a0c39e9b5178a@o1011868.ingest.sentry.io/6005958';
 
 const DEV_CONFIG: InternalConfig = {
   signatureUrl: 'https://oauth.arcana.network/oauth',
   gatewayUrl: 'https://gateway02.arcana.network',
   passwordlessUrl: 'https://passwordless.dev.arcana.network',
+  sentryDsn,
 };
-
 
 const TESTNET_CONFIG: InternalConfig = {
   signatureUrl: 'https://oauth01-pro-testnet.arcana.network/oauth',
   gatewayUrl: 'https://gateway-testnet.arcana.network',
   passwordlessUrl: 'https://passwordless.dev.arcana.network',
+  sentryDsn,
 };
