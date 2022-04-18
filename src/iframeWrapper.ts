@@ -29,7 +29,8 @@ export default class IframeWrapper {
   constructor(
     private params: iframeWrapperParams,
     private iframeUrl: string,
-    private themeConfig: IWidgetThemeConfig
+    private themeConfig: IWidgetThemeConfig,
+    private destroyWalletUI: () => void
   ) {
     this.checkSecureOrigin()
   }
@@ -151,13 +152,29 @@ export default class IframeWrapper {
       const buttonLogo = createDomElement("img", {
         src: getLogo(this.themeConfig, "vertical"),
       })
+
+      const reqCountBadge = createDomElement("p", {
+        id: "req-count-badge",
+        style: {...widgetBubbleStyle.reqCountBadge, display: "none"},
+      })
+
+      const closeButton = createDomElement("button", {
+        onclick: (event: Event) => {
+          event.stopPropagation()
+          this.onCloseBubbleClick()
+        },
+        style: widgetBubbleStyle.closeButton,
+      })
+
       return createDomElement(
         "button",
         {
           onclick: () => this.openWidgetIframe(),
           style: widgetBubbleStyle[theme],
         },
-        buttonLogo
+        reqCountBadge,
+        buttonLogo,
+        closeButton
       )
     }
   }
@@ -174,6 +191,10 @@ export default class IframeWrapper {
 
     document.body.appendChild(this.widgetBubble)
     document.body.appendChild(this.widgetIframeContainer)
+  }
+
+  private onCloseBubbleClick() {
+    this.destroyWalletUI()
   }
 
   // Todo: add remove event listener for "resize" event
