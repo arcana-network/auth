@@ -1,5 +1,6 @@
 import { LoginType, OAuthFetcher } from './types';
 import { ethers } from 'ethers';
+import { getLogger } from './logger';
 
 export class OAuthContractMeta implements OAuthFetcher {
   private appContract: ethers.Contract;
@@ -8,9 +9,7 @@ export class OAuthContractMeta implements OAuthFetcher {
     const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
     this.appContract = new ethers.Contract(
       appAddress,
-      [
-        'function clientID(string) public view returns (string)',
-      ],
+      ['function clientID(string) public view returns (string)'],
       provider
     );
     this.clientIDs = {};
@@ -19,13 +18,17 @@ export class OAuthContractMeta implements OAuthFetcher {
   public async getClientID(loginType: LoginType): Promise<string> {
     try {
       if (!this.clientIDs[loginType]) {
-        const clientID: string[] = await this.appContract.functions.clientID(loginType);
+        const clientID: string[] = await this.appContract.functions.clientID(
+          loginType
+        );
         if (clientID[0]) {
           this.clientIDs[loginType] = clientID[0];
         }
       }
       return this.clientIDs[loginType];
     } catch (e) {
+      const logger = getLogger('oauth_contract_meta');
+      logger.error('getClientID', e);
       return '';
     }
   }

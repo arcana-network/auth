@@ -99,6 +99,8 @@ export class GoogleHandler implements OauthHandler {
         picture: data.picture,
       };
     } catch (e) {
+      const logger = getLogger('oauth_handler');
+      logger.error('googleHandler', e);
       return Promise.reject(e);
     }
   }
@@ -157,6 +159,8 @@ export class RedditHandler implements OauthHandler {
       });
       return { id: data.name, name: data.name, picture: data.icon_img };
     } catch (e) {
+      const logger = getLogger('oauth_handler');
+      logger.error('redditHandler', e);
       return Promise.reject(e);
     }
   }
@@ -229,6 +233,8 @@ export class DiscordHandler implements OauthHandler {
         picture: data.avatar,
       };
     } catch (e) {
+      const logger = getLogger('oauth_handler');
+      logger.error('discordHandler', e);
       return Promise.reject(e);
     }
   }
@@ -303,6 +309,8 @@ export class TwitchHandler implements OauthHandler {
         picture: data.data[0]?.profile_image_url,
       };
     } catch (e) {
+      const logger = getLogger('oauth_handler');
+      logger.error('twitchHandler', e);
       return Promise.reject(e);
     }
   }
@@ -373,6 +381,8 @@ export class GithubHandler implements OauthHandler {
         picture: data.avatar_url,
       };
     } catch (e) {
+      const logger = getLogger('oauth_handler');
+      logger.error('githubHandler', e);
       return Promise.reject(e);
     }
   }
@@ -450,6 +460,8 @@ export class TwitterHandler implements OauthHandler {
         picture: data.profile_image_url_https,
       };
     } catch (e) {
+      const logger = getLogger('oauth_handler');
+      logger.error('twitterHandler', e);
       return Promise.reject(e);
     }
   }
@@ -487,8 +499,7 @@ export class TwitterHandler implements OauthHandler {
       await request<{ success: boolean }>(url.toString());
     } catch (err) {
       const logger = getLogger('twitter');
-
-      logger.error('error_cleanup_twitter', { err });
+      logger.error('error_cleanup_twitter', err);
     }
   }
 }
@@ -504,6 +515,8 @@ export async function passwordlessAuthorizeWrapper(
     const response = await request<OtpLoginResponse>(url);
     return response as OtpLoginResponse;
   } catch (e) {
+    const logger = getLogger('passwordlessAuthorizeWrapper');
+    logger.error('error', e);
     const error = new ArcanaAuthException(
       `Error during authorize: ${(e as Error).message}`
     );
@@ -565,6 +578,8 @@ export class PasswordlessHandler implements OauthHandler {
         name: data.name,
       };
     } catch (e) {
+      const logger = getLogger('oauth_handler');
+      logger.error('passwordlessHandler', e);
       return Promise.reject(e);
     }
   }

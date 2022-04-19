@@ -88,7 +88,7 @@ export const handleRedirectPage = (origin = '*'): void => {
     parseAndSendRedirectParams(window.location, origin);
   } catch (error) {
     const logger = getLogger('handleRedirectPage');
-    logger.error('could not parse and send redirect params', { error });
+    logger.error('could not parse and send redirect params', error);
   }
 };
 

@@ -271,6 +271,7 @@ class AuthProvider {
         loginType: handler.loginType,
       });
     } catch (err) {
+      this.logger.error('fetchInfoAndKey', err);
       return Promise.reject(err);
     } finally {
       await handler.cleanup();
