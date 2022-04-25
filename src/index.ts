@@ -29,7 +29,7 @@ class WalletProvider {
   }
 
   private state: State
-  private iframeWrapper: IframeWrapper
+  private iframeWrapper: IframeWrapper | null
   private arcanaProvider: ArcanaProvider
   constructor(private params: LoginParams) {
     this.initializeState()
@@ -48,7 +48,8 @@ class WalletProvider {
         network: this.params.network,
       },
       this.state.iframeUrl,
-      themeConfig
+      themeConfig,
+      this.destroyWalletUI
     )
     this.arcanaProvider = new ArcanaProvider()
     const walletType = await getWalletType(this.params.appId)
@@ -61,12 +62,36 @@ class WalletProvider {
       getThemeConfig: () => {
         return themeConfig
       },
+      sendPendingRequestCount: (count: number) => {
+        this.onReceivingPendingRequestCount(count)
+      },
     })
     this.arcanaProvider.setConnection(communication)
     this.arcanaProvider.setHandlers(
       this.iframeWrapper.show,
       this.iframeWrapper.hide
     )
+  }
+
+  onReceivingPendingRequestCount(count: number) {
+    const reqCountBadgeEl = document.getElementById('req-count-badge')
+    if (!reqCountBadgeEl) {
+      return
+    }
+    if (count > 0) {
+      reqCountBadgeEl.style.display = 'flex'
+      reqCountBadgeEl.textContent = `${count}`
+    } else {
+      reqCountBadgeEl.style.display = 'none'
+    }
+  }
+
+  destroyWalletUI = () => {
+    if (this.iframeWrapper) {
+      this.iframeWrapper.widgetBubble.remove()
+      this.iframeWrapper.widgetIframeContainer.remove()
+    }
+    this.iframeWrapper = null
   }
 
   handleEvents = (t: string, val: unknown) => {

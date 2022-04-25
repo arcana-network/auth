@@ -1,7 +1,7 @@
 const closeButtonImage = {
   light:
     'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACuSURBVHgB7ZTBCYAwDEW/TtBRHMGNHMG6iSO4gW5kN9AUeghiNan1UOiDoNIkj0IiUKkUjTFmoOiUNT1S8IUUB8UulVLeGGrGWE4bO3DObfSYfB+K9U0aJDZ8NkiFGtm3m7Kb+bD4ypM0u+xJ+pssIp1/ld1Ik2Qt9Bzs3VEsUKASXkZ/g3BlkrgbEMnKZJOxs7xSyehnk2r27LOU/bzFo8+kovxYA6us6VGpFM0JJh9YsfU7O7QAAAAASUVORK5CYII=)',
-  dark: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAD6SURBVHgB7ZTNDYIwFIBfK96NP3s4gm7gAoYRHIGygRsYQ7jrBDAQUc4Cfb4STXqh9iEXEr6kCQXKV/p+ACYmRs0ywdMmfW05a9YX3Lmey86FSbUToM9azzJf6TrFCAOd0UYjtrA4znMSxnS58JG2Mq1VO9G1gL7Qn6pV0iCNZ5fUyD7v4PJaKfgXl3RwmUvaR8Y6ayNFkCYhShp3GqG5T7GLH+Fc+XyDHVxLClyZQQIXGaA1K2cB3oABS2invgCRg2fJ9BLaMnOMxVHuOXXKwpWNPnU6mGxwKafOfKXO5m3H7FfqU+9V35g2tThAH8yuue3KbBQmJkbNGx1Y4ubJGgc3AAAAAElFTkSuQmCC)',
+  dark: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACsSURBVHgB7ZTNCcQgEEZHbWhLSEdbwlrKlrAdbEnJRfy5JAoZCCEJMxM9BHwgevDzgc4I0Ok8mhDCO6X04mS89wNIKME85iwdqdIY46dkygwScthSpShbhwUpFGk1GUVaXXYlbSY7kjrnvk1le6lUpoGJ1nrGtVJqMsb8oBXbN8vX+uf2qViG18jp09sypLqUUvrVpJw+uy3Fz5tT+puWIe0/O8AyMwN0Oo9mAWX8dJ7PBgbsAAAAAElFTkSuQmCC)',
 }
 
 const baseWidgetBubbleStyle = {
@@ -34,7 +34,7 @@ const baseHeaderContainerStyle = {
   justifyContent: 'space-between',
   alignItems: 'center',
   padding: '10px 16px',
-  borderRadius: '5px 5px 0px 0px',
+  borderRadius: '10px 10px 0px 0px',
 }
 
 const widgetBubbleStyle = {
@@ -45,6 +45,35 @@ const widgetBubbleStyle = {
   dark: {
     ...baseWidgetBubbleStyle,
     backgroundColor: '#000000',
+  },
+  closeButton: {
+    ...baseCloseButtonStyle,
+    width: '20px',
+    height: '20px',
+
+    position: 'absolute',
+    top: '-15px',
+    right: '0px',
+
+    backgroundImage: closeButtonImage.light,
+    backgroundPosition: 'center',
+  },
+  reqCountBadge: {
+    width: '25px',
+    height: '25px',
+    borderRadius: '50%',
+    background: 'linear-gradient(159.35deg, #F3A2A2 -22.29%, #FFB1B1 102.13%)',
+
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    fontWeight: 600,
+    fontSize: '12px',
+
+    position: 'absolute',
+    top: '-10px',
+    left: '10px',
   },
 }
 
@@ -88,11 +117,12 @@ const widgetIframeStyle = {
   },
   body: {
     flex: 1,
+    display: 'flex',
   },
   iframe: {
-    height: '100%',
-    width: '100%',
-    border: 'none',
+    flex: 1,
+    border: '1px solid #000000',
+    borderRadius: '0px 0px 10px 10px',
   },
 }
 

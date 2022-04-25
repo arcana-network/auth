@@ -50,7 +50,7 @@ const getLogo = (themeConfig: IWidgetThemeConfig, orientation: Orientation) => {
   return assets.logo[theme][orientation]
 }
 
-type elements = 'style' | 'src' | 'onclick'
+type elements = 'style' | 'src' | 'onclick' | 'id'
 
 const createDomElement = (
   type: string,
