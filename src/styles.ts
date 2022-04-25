@@ -120,8 +120,9 @@ const widgetIframeStyle = {
     display: 'flex',
   },
   iframe: {
-    flex: 1,
-    border: '1px solid #000000',
+    width: "100%",
+    height: "100%",
+    border: "none",
     borderRadius: '0px 0px 10px 10px',
   },
 }
