@@ -9,6 +9,7 @@ interface LoginParams {
   appId: string
   network: 'testnet' | 'dev'
   iframeUrl?: string
+  inpageProvider: boolean
 }
 
 interface State {
@@ -71,6 +72,9 @@ class WalletProvider {
       this.iframeWrapper.show,
       this.iframeWrapper.hide
     )
+    if (this.params.inpageProvider) {
+      this.setProvider()
+    }
   }
 
   onReceivingPendingRequestCount(count: number) {
@@ -125,6 +129,17 @@ class WalletProvider {
 
   public getProvider() {
     return this.arcanaProvider
+  }
+
+  private setProvider() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (!(window as Record<string, any>).ethereum) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ;(window as Record<string, any>).ethereum = this.arcanaProvider
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ;(window as Record<string, any>).arcana.provider = this.arcanaProvider
   }
 
   private initializeState() {
