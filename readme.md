@@ -8,10 +8,16 @@ const { WalletProvider } = window.arcana.wallet
 const wallet = new WalletProvider({
   appId: `${appId}`,
   iframeUrl: `${iframeUrl}`,
+  inpageProvider: true,
 })
 
 await wallet.init()
+
 provider = wallet.getProvider()
+// or
+provider = window.arcana.provider
+// or
+provider = window.ethereum
 ```
 
 ## Building the code
