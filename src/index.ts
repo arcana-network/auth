@@ -5,7 +5,7 @@ import { getWalletType } from './utils'
 import { setNetwork } from './config'
 import { IWidgetThemeConfig } from './interfaces'
 
-interface LoginParams {
+interface InitParams {
   appId: string
   network: 'testnet' | 'dev'
   iframeUrl?: string
@@ -32,7 +32,7 @@ class WalletProvider {
   private state: State
   private iframeWrapper: IframeWrapper | null
   private arcanaProvider: ArcanaProvider
-  constructor(private params: LoginParams) {
+  constructor(private params: InitParams) {
     this.initializeState()
     if (this.params.network === 'testnet') {
       setNetwork(this.params.network)
