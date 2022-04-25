@@ -131,16 +131,18 @@ class WalletProvider {
     return this.arcanaProvider
   }
 
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   private setProvider() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (!(window as Record<string, any>).ethereum) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ;(window as Record<string, any>).ethereum = this.arcanaProvider
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (!(window as Record<string, any>).arcana) {
+      ;(window as Record<string, any>).arcana = {}
+    }
     ;(window as Record<string, any>).arcana.provider = this.arcanaProvider
   }
+  /* eslint-enable */
 
   private initializeState() {
     let iframeUrl = 'http://localhost:3000'
