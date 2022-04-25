@@ -1,60 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
-        html,body {
-            margin: 0;
-            padding: 0;
-            font-family: sans-serif;
-        }
-        .container {
-            margin-left: 10px;
-        }
-        .btn {
-            display: block;
-            padding: 10px 15px;
-            width: 150px;
-            text-transform: uppercase;
-            cursor: pointer;
-            border: 2px solid black;
-            background: none;
-            margin-bottom: 4px;
-        }
-        .btn:hover {
-            padding: 10px 15px;
-            width: 150px;
-            text-transform: uppercase;
-            cursor: pointer;
-            /* border: 2px solid white; */
-            background: black;
-            color: white;
-        }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+      }
+      .container {
+        margin-left: 10px;
+      }
+      .btn {
+        display: block;
+        padding: 10px 15px;
+        width: 150px;
+        text-transform: uppercase;
+        cursor: pointer;
+        border: 2px solid black;
+        background: none;
+        margin-bottom: 4px;
+      }
+      .btn:hover {
+        padding: 10px 15px;
+        width: 150px;
+        text-transform: uppercase;
+        cursor: pointer;
+        /* border: 2px solid white; */
+        background: black;
+        color: white;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <h1>Embedded Wallet test</h1>
     <div class="container">
-        <button class="btn" id="init-wallet">Init wallet</button>
-        <button class="btn" id="trigger-login">Trigger google login</button>
-        <button class="btn" id="get-accounts">Get Accounts</button>
-        <button class="btn" id="get-public">Get Public Key</button>
-        <button class="btn" id="request-signature">Request signature</button>
-        <button class="btn" id="encrypt">Do encryption</button>
-        <button class="btn" id="request-decryption">Request decryption</button>
-        <button class="btn" id="request-personal-signature">Request personal signature</button>
-        <button class="btn" id="request-typed-signature">Request typed signature</button>
-        <button class="btn" id="send-transaction">Request send transaction</button>
-        <button class="btn" id="request-transaction-signature">Request transaction signature</button>
+      <button class="btn" id="init-wallet">Init wallet</button>
+      <button class="btn" id="trigger-login">Trigger google login</button>
+      <button class="btn" id="get-accounts">Get Accounts</button>
+      <button class="btn" id="get-public">Get Public Key</button>
+      <button class="btn" id="request-signature">Request signature</button>
+      <button class="btn" id="encrypt">Do encryption</button>
+      <button class="btn" id="request-decryption">Request decryption</button>
+      <button class="btn" id="request-personal-signature">
+        Request personal signature
+      </button>
+      <button class="btn" id="request-typed-signature">
+        Request typed signature
+      </button>
+      <button class="btn" id="send-transaction">
+        Request send transaction
+      </button>
+      <button class="btn" id="request-transaction-signature">
+        Request transaction signature
+      </button>
     </div>
     <!-- <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script> -->
     <script src="../dist/wallet.js"></script>
     <script src="./index.js"></script>
-</body>
-
+  </body>
 </html>

@@ -1,4 +1,4 @@
-import { IConnectionMethods, IMessageParams } from "./interfaces";
+import { IConnectionMethods, IMessageParams } from './interfaces'
 import {
   JsonRpcId,
   JsonRpcVersion,
@@ -8,143 +8,142 @@ import {
   getUniqueId,
   PendingJsonRpcResponse,
   JsonRpcResponse,
-} from "json-rpc-engine";
+} from 'json-rpc-engine'
 import {
   providerFromEngine,
   createFetchMiddleware,
   providerFromMiddleware,
   createBlockRefMiddleware,
-} from "eth-json-rpc-middleware";
-import { createWalletMiddleware } from "./walletMiddleware";
-import { PollingBlockTracker, Provider } from "eth-block-tracker";
-import { Connection } from "penpal";
-import { ethErrors } from "eth-rpc-errors";
-import { SafeEventEmitterProvider } from "eth-json-rpc-middleware/dist/utils/cache";
-import SafeEventEmitter from "@metamask/safe-event-emitter";
+} from 'eth-json-rpc-middleware'
+import { createWalletMiddleware } from './walletMiddleware'
+import { PollingBlockTracker, Provider } from 'eth-block-tracker'
+import { Connection } from 'penpal'
+import { ethErrors } from 'eth-rpc-errors'
+import { SafeEventEmitterProvider } from 'eth-json-rpc-middleware/dist/utils/cache'
+import SafeEventEmitter from '@metamask/safe-event-emitter'
 
 interface RequestArguments {
-  method: string;
-  params?: unknown[] | Record<string, unknown>;
+  method: string
+  params?: unknown[] | Record<string, unknown>
 }
 
 const permissionedCalls = [
-  "eth_sign",
-  "personal_sign",
-  "eth_decrypt",
-  "eth_signTypedData_v4",
-  "eth_signTransaction",
-  "eth_sendTransaction",
-];
+  'eth_sign',
+  'personal_sign',
+  'eth_decrypt',
+  'eth_signTypedData_v4',
+  'eth_signTransaction',
+  'eth_sendTransaction',
+]
 
 class EthereumError extends Error implements JsonRpcError {
-  code: number;
-  message: string;
-  data: string;
-  constructor(code: number, message: string, data: string = "") {
-    super(message);
-    this.code = code;
-    this.message = message;
-    this.data = data;
+  code: number
+  message: string
+  data: string
+  constructor(code: number, message: string, data = '') {
+    super(message)
+    this.code = code
+    this.message = message
+    this.data = data
   }
 }
 
 interface JsonRpcRequestArgs {
-  id?: JsonRpcId;
-  jsonrpc?: JsonRpcVersion;
-  method: string;
-  params?: unknown;
+  id?: JsonRpcId
+  jsonrpc?: JsonRpcVersion
+  method: string
+  params?: unknown
 }
 
 export class ArcanaProvider extends SafeEventEmitter {
-  private jsonRpcEngine: JsonRpcEngine;
-  private provider: SafeEventEmitterProvider;
-  private subscriber: SafeEventEmitter;
-  private communication: Connection<IConnectionMethods>;
-  private iframeOpenHandler: () => void;
-  private iframeCloseHandler: () => void;
+  private jsonRpcEngine: JsonRpcEngine
+  private provider: SafeEventEmitterProvider
+  private subscriber: SafeEventEmitter
+  private communication: Connection<IConnectionMethods>
+  private iframeOpenHandler: () => void
+  private iframeCloseHandler: () => void
   constructor() {
-    super();
-    this.initProvider();
-    this.subscriber = new SafeEventEmitter();
+    super()
+    this.initProvider()
+    this.subscriber = new SafeEventEmitter()
   }
 
   public setConnection(connection: Connection<IConnectionMethods>) {
-    this.communication = connection;
+    this.communication = connection
   }
 
-  public setHandlers(openHandler: () => any, closeHandler: () => any) {
-    this.iframeOpenHandler = openHandler;
-    this.iframeCloseHandler = closeHandler;
+  public setHandlers(openHandler: () => void, closeHandler: () => void) {
+    this.iframeOpenHandler = openHandler
+    this.iframeCloseHandler = closeHandler
   }
 
   public onResponse = (method: string, response: any) => {
-    this.subscriber.emit(`result:${method}:${response.id}`, response);
-  };
+    this.subscriber.emit(`result:${method}:${response.id}`, response)
+  }
 
   public getProvider() {
     if (!this.provider) {
-      this.initProvider();
+      this.initProvider()
     }
-    return this.provider;
+    return this.provider
   }
 
   public async isConnected() {
     try {
-      const c = await this.communication.promise;
-      return c.isLoggedIn();
+      const c = await this.communication.promise
+      return c.isLoggedIn()
     } catch (e) {
-      console.log({ e });
-      return false;
+      console.log({ e })
+      return false
     }
   }
 
   public async triggerLogin(loginType: string) {
-    const c = await this.communication.promise;
-    await c.triggerLogin(loginType);
+    const c = await this.communication.promise
+    await c.triggerLogin(loginType)
   }
 
   private initProvider() {
-    this.initEngine();
-    this.provider = providerFromEngine(this.jsonRpcEngine);
+    this.initEngine()
+    this.provider = providerFromEngine(this.jsonRpcEngine)
   }
 
   private openPermissionScreen(method: string) {
-    if(permissionedCalls.includes(method)) {
+    if (permissionedCalls.includes(method)) {
       this.iframeOpenHandler()
     }
   }
 
   private closePermissionScreen(method: string) {
-    if(permissionedCalls.includes(method)) {
+    if (permissionedCalls.includes(method)) {
       this.iframeCloseHandler()
     }
   }
 
   async request(args: RequestArguments) {
-    if (!args || typeof args !== "object" || Array.isArray(args)) {
+    if (!args || typeof args !== 'object' || Array.isArray(args)) {
       throw ethErrors.rpc.invalidRequest({
-        message: "Invalid request arguments",
+        message: 'Invalid request arguments',
         data: args,
-      });
+      })
     }
-    console.log({ args });
+    console.log({ args })
 
-    const { method, params } = args;
+    const { method, params } = args
     if (!method) {
       throw ethErrors.rpc.invalidRequest({
-        message: "Invalid method argument",
+        message: 'Invalid method argument',
         data: args,
-      });
+      })
     }
 
     this.openPermissionScreen(method)
     const req: JsonRpcRequest<unknown> = {
       method,
       params,
-      jsonrpc: "2.0",
+      jsonrpc: '2.0',
       id: getUniqueId(),
-    };
-
+    }
 
     return new Promise((resolve, reject) => {
       this.rpcRequest(
@@ -154,22 +153,22 @@ export class ArcanaProvider extends SafeEventEmitter {
           response: PendingJsonRpcResponse<{ result: string; error: string }>
         ): void => {
           if (error || response.error) {
-            reject(error || response.error);
+            reject(error || response.error)
           } else {
             if (Array.isArray(response)) {
-              resolve(response);
+              resolve(response)
             }
             if (response.result?.error) {
-              reject(error || response.result?.error);
+              reject(error || response.result?.error)
             } else if (response.result?.result) {
-              resolve(response.result.result);
+              resolve(response.result.result)
             } else {
-              resolve(response.result);
+              resolve(response.result)
             }
           }
         }
-      );
-    });
+      )
+    })
   }
 
   protected rpcRequest(
@@ -180,13 +179,10 @@ export class ArcanaProvider extends SafeEventEmitter {
       return this.jsonRpcEngine.handle<
         unknown,
         JsonRpcResponse<{ result: string; error: string }>
-      >(req as JsonRpcRequest<unknown>, callback);
+      >(req as JsonRpcRequest<unknown>, callback)
     }
 
-    return this.jsonRpcEngine.handle(
-      req as JsonRpcRequest<unknown>[],
-      callback
-    );
+    return this.jsonRpcEngine.handle(req as JsonRpcRequest<unknown>[], callback)
   }
 
   private createRequest(method: string, params: unknown) {
@@ -194,14 +190,14 @@ export class ArcanaProvider extends SafeEventEmitter {
       id: getUniqueId(),
       method,
       params: params,
-      jsonrpc: "2.0",
-    } as JsonRpcRequest<unknown>;
+      jsonrpc: '2.0',
+    } as JsonRpcRequest<unknown>
   }
 
   private initEngine() {
-    this.jsonRpcEngine = new JsonRpcEngine();
-    this.jsonRpcEngine.push(this.getWalletMiddleware());
-    this.jsonRpcEngine.push(this.getBlockRefMiddleware());
+    this.jsonRpcEngine = new JsonRpcEngine()
+    this.jsonRpcEngine.push(this.getWalletMiddleware())
+    this.jsonRpcEngine.push(this.getBlockRefMiddleware())
   }
 
   private getWalletMiddleware() {
@@ -214,136 +210,139 @@ export class ArcanaProvider extends SafeEventEmitter {
       processDecryptMessage: this.decrypt,
       processTypedMessageV4: this.processTypedMessageV4,
       processTransaction: this.processTransaction,
-    });
-    return walletMiddleware;
+    })
+    return walletMiddleware
   }
 
   private getBlockRefMiddleware() {
     const fetchMiddleware = createFetchMiddleware({
-      rpcUrl: "https://blockchain-testnet.arcana.network",
-    });
-    const blockProvider = providerFromMiddleware(fetchMiddleware);
+      rpcUrl: 'https://blockchain-testnet.arcana.network',
+    })
+    const blockProvider = providerFromMiddleware(fetchMiddleware)
     const blockTracker = new PollingBlockTracker({
       provider: blockProvider as Provider,
-    });
-    return createBlockRefMiddleware({ blockTracker, provider: blockProvider });
+    })
+    return createBlockRefMiddleware({ blockTracker, provider: blockProvider })
   }
 
   getAccounts = (): Promise<string[]> => {
-    return new Promise(async (resolve, reject) => {
-      const method = "eth_accounts";
-      const c = await this.communication.promise;
-      const r = this.createRequest(method, undefined);
-      this.getResponse<string[]>(method, r.id).then(resolve, reject);
-      await c.sendRequest(r);
-    });
-  };
+    return new Promise((resolve, reject) => {
+      const method = 'eth_accounts'
+      this.communication.promise.then(async (c) => {
+        const r = this.createRequest(method, undefined)
+        this.getResponse<string[]>(method, r.id).then(resolve, reject)
+        await c.sendRequest(r)
+      })
+    })
+  }
 
   processTransaction = async (
     params: any,
     req: JsonRpcRequest<unknown>
   ): Promise<string> => {
-    return new Promise(async (resolve, reject) => {
-      const method = "eth_sendTransaction";
-      const c = await this.communication.promise;
-      this.getResponse<string>(method, req.id).then(resolve, reject);
-      await c.sendRequest(req);
-    });
-  };
+    return new Promise((resolve, reject) => {
+      const method = 'eth_sendTransaction'
+      this.communication.promise.then(async (c) => {
+        this.getResponse<string>(method, req.id).then(resolve, reject)
+        await c.sendRequest(req)
+      })
+    })
+  }
 
   processTypedMessageV4 = async (
     params: any,
     req: JsonRpcRequest<unknown>
   ): Promise<string> => {
-    console.log({ req });
-    return new Promise(async (resolve, reject) => {
-      const method = "eth_signTypedData_v4";
-      const c = await this.communication.promise;
-      this.getResponse<string>(method, req.id).then(resolve, reject);
-      await c.sendRequest(req);
-    });
-  };
+    console.log({ req })
+    return new Promise((resolve, reject) => {
+      const method = 'eth_signTypedData_v4'
+      this.communication.promise.then(async (c) => {
+        this.getResponse<string>(method, req.id).then(resolve, reject)
+        await c.sendRequest(req)
+      })
+    })
+  }
 
   ethSign = async (
     params: any,
     req: JsonRpcRequest<unknown>
   ): Promise<string> => {
-    return new Promise(async (resolve, reject) => {
-      const method = "eth_sign";
-      const c = await this.communication.promise;
-      this.getResponse<string>(method, req.id).then(resolve, reject);
-      await c.sendRequest(req);
-    });
-  };
+    return new Promise((resolve, reject) => {
+      const method = 'eth_sign'
+      this.communication.promise.then(async (c) => {
+        this.getResponse<string>(method, req.id).then(resolve, reject)
+        await c.sendRequest(req)
+      })
+    })
+  }
 
   getPublicKey = async (address: string, req: any): Promise<string> => {
-    console.log({ req });
-    return new Promise(async (resolve, reject) => {
-      const c = await this.communication.promise;
-      this.getResponse<string>("eth_getEncryptionPublicKey", req.id).then(
-        (res) => {
-          resolve(res);
-        }
-      );
-      await c.sendRequest(req);
-    });
-  };
+    console.log({ req })
+    return new Promise((resolve, reject) => {
+      this.communication.promise.then(async (c) => {
+        this.getResponse<string>('eth_getEncryptionPublicKey', req.id).then(
+          resolve,
+          reject
+        )
+        await c.sendRequest(req)
+      })
+    })
+  }
 
   signTransaction = async (params: any, req: any): Promise<string> => {
-    return new Promise(async (resolve, reject) => {
-      const method = "eth_signTransaction";
-      const c = await this.communication.promise;
-      this.getResponse<string>(method, req.id).then(resolve, reject);
-      await c.sendRequest(req);
-    });
-  };
+    return new Promise((resolve, reject) => {
+      const method = 'eth_signTransaction'
+      this.communication.promise.then(async (c) => {
+        this.getResponse<string>(method, req.id).then(resolve, reject)
+        await c.sendRequest(req)
+      })
+    })
+  }
 
   personalSign = async (
     params: any,
     req: JsonRpcRequest<unknown>
   ): Promise<string> => {
-    console.log({ params, req });
-    return new Promise(async (resolve, reject) => {
-      const c = await this.communication.promise;
-      this.getResponse<string>("personal_sign", req.id).then((res) => {
-        resolve(res);
-      });
-      await c.sendRequest(req);
-    });
-  };
+    console.log({ params, req })
+    return new Promise((resolve, reject) => {
+      this.communication.promise.then(async (c) => {
+        this.getResponse<string>('personal_sign', req.id).then(resolve, reject)
+        await c.sendRequest(req)
+      })
+    })
+  }
 
   decrypt = async (params: IMessageParams, req: any): Promise<string> => {
-    console.log({ req });
-    return new Promise(async (resolve, reject) => {
-      const c = await this.communication.promise;
-      this.getResponse<string>("eth_decrypt", req.id).then((res) => {
-        resolve(res);
-      });
-      await c.sendRequest(req);
-    });
-  };
+    console.log({ req })
+    return new Promise((resolve, reject) => {
+      this.communication.promise.then(async (c) => {
+        this.getResponse<string>('eth_decrypt', req.id).then(resolve, reject)
+        await c.sendRequest(req)
+      })
+    })
+  }
 
   getResponse<U>(method: string, id: JsonRpcId): Promise<U> {
     return new Promise((resolve, reject) => {
       this.subscriber.once(
         `result:${method}:${id}`,
         (params: { error: string; result: U }) => {
-          this.closePermissionScreen(method);
-          console.log("Get response: ", { params });
+          this.closePermissionScreen(method)
+          console.log('Get response: ', { params })
           if (params.error) {
-            return reject(getError(params.error));
+            return reject(getError(params.error))
           }
-          return resolve(params.result);
+          return resolve(params.result)
         }
-      );
-    });
+      )
+    })
   }
 }
 
 const getError = (message: string) => {
-  if (message == "user_deny") {
-    return new EthereumError(4001, "The request was denied by the user");
+  if (message == 'user_deny') {
+    return new EthereumError(4001, 'The request was denied by the user')
   } else {
-    return new EthereumError(-32603, "Internal error");
+    return new EthereumError(-32603, 'Internal error')
   }
-};
+}

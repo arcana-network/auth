@@ -1,8 +1,8 @@
-export type Theme = "light" | "dark"
+export type Theme = 'light' | 'dark'
 
-export type Orientation = "horizontal" | "vertical"
+export type Orientation = 'horizontal' | 'vertical'
 
-export interface iframeWrapperParams {
+export interface IframeWrapperParams {
   appId: string
   network: string
 }
