@@ -1,11 +1,11 @@
 import {
-  iframeWrapperParams,
+  IframeWrapperParams,
   IConnectionMethods,
   IWidgetThemeConfig,
-} from "./interfaces"
-import { connectToChild, Connection } from "penpal"
-import { widgetIframeStyle, widgetBubbleStyle } from "./styles"
-import { WalletTypes } from "./typings"
+} from './interfaces'
+import { connectToChild, Connection } from 'penpal'
+import { widgetIframeStyle, widgetBubbleStyle } from './styles'
+import { WalletTypes } from './typings'
 import {
   createDomElement,
   getLogo,
@@ -13,21 +13,21 @@ import {
   getWalletSize,
   setWalletPosition,
   setWalletSize,
-} from "./utils"
+} from './utils'
 
 const BREAKPOINT_SMALL = 768
 
 export default class IframeWrapper {
   private iframe: HTMLIFrameElement
 
-  private widgetBubble: HTMLButtonElement
-  private widgetIframeContainer: HTMLDivElement
+  public widgetBubble: HTMLButtonElement
+  public widgetIframeContainer: HTMLDivElement
 
   private iframeCommunication: Connection<IConnectionMethods>
   private walletType: number
 
   constructor(
-    private params: iframeWrapperParams,
+    private params: IframeWrapperParams,
     private iframeUrl: string,
     private themeConfig: IWidgetThemeConfig,
     private destroyWalletUI: () => void
@@ -56,7 +56,6 @@ export default class IframeWrapper {
         break
       }
       case WalletTypes.NoUI:
-      case WalletTypes.Disabled:
       default:
         break
     }
@@ -73,7 +72,6 @@ export default class IframeWrapper {
         break
       }
       case WalletTypes.NoUI:
-      case WalletTypes.Disabled:
       default:
         break
     }
@@ -93,7 +91,7 @@ export default class IframeWrapper {
       }
     } catch (error) {
       console.log({ error })
-      throw new Error("Error during createOrGetInstance in IframeWrapper")
+      throw new Error('Error during createOrGetInstance in IframeWrapper')
     }
     return { iframe: this.iframe, communication: this.iframeCommunication }
   }
@@ -103,22 +101,22 @@ export default class IframeWrapper {
       themeConfig: { theme },
     } = this
 
-    const appLogo = createDomElement("img", {
-      src: getLogo(this.themeConfig, "horizontal"),
+    const appLogo = createDomElement('img', {
+      src: getLogo(this.themeConfig, 'horizontal'),
       style: widgetIframeStyle.header.logo,
     })
-    const closeButton = createDomElement("button", {
+    const closeButton = createDomElement('button', {
       onclick: () => this.closeWidgetIframe(),
       style: widgetIframeStyle.header.closeButton[theme],
     })
 
     const widgetIframeHeader = createDomElement(
-      "div",
+      'div',
       { style: widgetIframeStyle.header.container[theme] },
       appLogo,
       closeButton
     )
-    const widgetIframeBody = createDomElement("div", {
+    const widgetIframeBody = createDomElement('div', {
       style: widgetIframeStyle.body,
     })
 
@@ -126,7 +124,7 @@ export default class IframeWrapper {
   }
 
   private createWidgetIframe() {
-    this.iframe = createDomElement("iframe", {
+    this.iframe = createDomElement('iframe', {
       style: widgetIframeStyle.iframe,
       src: `${this.iframeUrl}/${this.params.appId}/login`,
     })
@@ -137,7 +135,7 @@ export default class IframeWrapper {
     widgetIframeBody.appendChild(this.iframe)
 
     return createDomElement(
-      "div",
+      'div',
       { style: widgetIframeStyle.container },
       widgetIframeHeader,
       widgetIframeBody
@@ -149,16 +147,16 @@ export default class IframeWrapper {
       const {
         themeConfig: { theme },
       } = this
-      const buttonLogo = createDomElement("img", {
-        src: getLogo(this.themeConfig, "vertical"),
+      const buttonLogo = createDomElement('img', {
+        src: getLogo(this.themeConfig, 'vertical'),
       })
 
-      const reqCountBadge = createDomElement("p", {
-        id: "req-count-badge",
-        style: {...widgetBubbleStyle.reqCountBadge, display: "none"},
+      const reqCountBadge = createDomElement('p', {
+        id: 'req-count-badge',
+        style: { ...widgetBubbleStyle.reqCountBadge, display: 'none' },
       })
 
-      const closeButton = createDomElement("button", {
+      const closeButton = createDomElement('button', {
         onclick: (event: Event) => {
           event.stopPropagation()
           this.onCloseBubbleClick()
@@ -167,7 +165,7 @@ export default class IframeWrapper {
       })
 
       return createDomElement(
-        "button",
+        'button',
         {
           onclick: () => this.openWidgetIframe(),
           style: widgetBubbleStyle[theme],
@@ -185,9 +183,9 @@ export default class IframeWrapper {
 
     this.resizeWidgetUI()
 
-    window.addEventListener("resize", () => this.resizeWidgetUI())
+    window.addEventListener('resize', () => this.resizeWidgetUI())
 
-    this.widgetIframeContainer.style.display = "none"
+    this.widgetIframeContainer.style.display = 'none'
 
     document.body.appendChild(this.widgetBubble)
     document.body.appendChild(this.widgetIframeContainer)
@@ -214,13 +212,13 @@ export default class IframeWrapper {
   }
 
   private closeWidgetIframe() {
-    this.widgetBubble.style.display = "flex"
-    this.widgetIframeContainer.style.display = "none"
+    this.widgetBubble.style.display = 'flex'
+    this.widgetIframeContainer.style.display = 'none'
   }
 
   private openWidgetIframe() {
-    this.widgetBubble.style.display = "none"
-    this.widgetIframeContainer.style.display = "flex"
+    this.widgetBubble.style.display = 'none'
+    this.widgetIframeContainer.style.display = 'flex'
   }
 
   private async createIframeCommunicationInstance(params: {
@@ -237,8 +235,8 @@ export default class IframeWrapper {
 
   private checkSecureOrigin() {
     const isLocalhost =
-      location.hostname === "localhost" || location.hostname === "127.0.0.1"
-    const isSecureOrigin = location.protocol === "https:"
+      location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+    const isSecureOrigin = location.protocol === 'https:'
     const isSecure = isLocalhost || isSecureOrigin
     if (!isSecure) {
       throw new Error(`Insecure origin`)
