@@ -5,10 +5,11 @@ import { getWalletType } from './utils'
 import { setNetwork } from './config'
 import { IWidgetThemeConfig } from './interfaces'
 
-interface LoginParams {
+interface InitParams {
   appId: string
   network: 'testnet' | 'dev'
   iframeUrl?: string
+  inpageProvider: boolean
 }
 
 interface State {
@@ -31,7 +32,7 @@ class WalletProvider {
   private state: State
   private iframeWrapper: IframeWrapper | null
   private arcanaProvider: ArcanaProvider
-  constructor(private params: LoginParams) {
+  constructor(private params: InitParams) {
     this.initializeState()
     if (this.params.network === 'testnet') {
       setNetwork(this.params.network)
@@ -71,6 +72,9 @@ class WalletProvider {
       this.iframeWrapper.show,
       this.iframeWrapper.hide
     )
+    if (this.params.inpageProvider) {
+      this.setProvider()
+    }
   }
 
   onReceivingPendingRequestCount(count: number) {
@@ -126,6 +130,19 @@ class WalletProvider {
   public getProvider() {
     return this.arcanaProvider
   }
+
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  private setProvider() {
+    if (!(window as Record<string, any>).ethereum) {
+      ;(window as Record<string, any>).ethereum = this.arcanaProvider
+    }
+
+    if (!(window as Record<string, any>).arcana) {
+      ;(window as Record<string, any>).arcana = {}
+    }
+    ;(window as Record<string, any>).arcana.provider = this.arcanaProvider
+  }
+  /* eslint-enable */
 
   private initializeState() {
     let iframeUrl = 'http://localhost:3000'
