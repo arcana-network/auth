@@ -1,4 +1,5 @@
 # Arcana Auth
+
 Arcana SDK to perform logins on your app.
 
 ## Installation
@@ -11,9 +12,11 @@ yarn add @arcana/auth
 ```
 
 ### Using CDN
+
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@arcana/auth"></script>
 ```
+
 ```html
 <script src="https://unpkg.com/@arcana/auth"></script>
 ```
@@ -27,6 +30,7 @@ const { AuthProvider, SocialLoginType } = window.arcana.auth;
 // or
 import { AuthProvider } from '@arcana/auth';
 ```
+
 ### Initialise
 
 ```js
@@ -48,11 +52,14 @@ await auth.loginWithSocial(SocialLoginType.google);
 ```js
 const result = await auth.loginWithOtp(`${emailAddress}`, { withUI: boolean });
 ```
+
 Options:
+
 - `{ withUI: true }` - the user is redirected to `email-sent` or `error` page
 - `{ withUI: false }` - gets a `json` response back with no redirection
 
 ### Get login status
+
 ```js
 const loggedIn = auth.isLoggedIn(); /* boolean response */
 ```
@@ -85,11 +92,13 @@ const publicKey = await auth.getPublicKey({
   id: `${email}`,
 }, output); /* output can be 'point', 'compressed' or 'uncompressed'; */
 ```
+
 Output:
+
 - `point` will be output with `{ x: string, y: string }`
 - `compressed` will be `string` like `0x03...`
 - `uncompressed` will be a `string` like `0x04...`
-- defaults to `uncompressed` 
+- defaults to `uncompressed`
 
 ### Clear login session
 
@@ -97,11 +106,22 @@ Output:
 await auth.logout();
 ```
 
+## Typescript Usage
+
+Exported types:
+
+- InitParams
+- UserInfo
+- PublicKeyOutput
+- SocialLoginType
+- PasswordlessOption
+
 ## Flow modes
 
 ### **Redirect**
 
 `login.js`
+
 ```js
 window.onload = async () => {
   const auth = await AuthProvider.init({
@@ -121,6 +141,7 @@ window.onload = async () => {
 ### **Popup**
 
 `login.js`
+
 ```js
 window.onload = async () => {
   const auth = await AuthProvider.init({
@@ -139,12 +160,14 @@ window.onload = async () => {
 ```
 
 `redirect.js`
+
 ```js
 window.onload = async () => {
   AuthProvider.handleRedirectPage(<origin>);
 };
 ```
+
 ### Variables
 
-* `SocialLoginType` - discord, twitter, github, google, twitch, reddit
-* `origin` - Base url of your app. 
+- `SocialLoginType` - discord, twitter, github, google, twitch, reddit
+- `origin` - Base url of your app.

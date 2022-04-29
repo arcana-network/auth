@@ -441,4 +441,11 @@ const getCurrentConfig = async (gatewayUrl: string): Promise<string> => {
   }
 };
 
-export { AuthProvider, LoginType as SocialLoginType };
+export {
+  InitParams,
+  StoredUserInfo as UserInfo,
+  PublicKeyOutput,
+  AuthProvider,
+  LoginType as SocialLoginType,
+  OtpOptions as PasswordlessOptions,
+};
