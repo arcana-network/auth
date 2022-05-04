@@ -44,15 +44,11 @@ const getPublicBtn = document.getElementById('get-public')
 const encryptBtn = document.getElementById('encrypt')
 const requestSignatureBtn = document.getElementById('request-signature')
 const requestDecryptBtn = document.getElementById('request-decryption')
-const sendTransactionBtn = document.getElementById('send-transaction')
 const requestTypedSignatureBtn = document.getElementById(
   'request-typed-signature'
 )
 const requestPersonalSignatureBtn = document.getElementById(
   'request-personal-signature'
-)
-const requestTransactionSignatureBtn = document.getElementById(
-  'request-transaction-signature'
 )
 const getAccountsBtn = document.getElementById('get-accounts')
 
@@ -150,42 +146,6 @@ requestTypedSignatureBtn.addEventListener('click', async () => {
     params: [from, msgParams],
   })
   console.log({ typedSign })
-})
-sendTransactionBtn.addEventListener('click', async () => {
-  console.log('Requesting send transaction')
-  const plaintext = await provider.request({
-    method: 'eth_sendTransaction',
-    params: [
-      {
-        nonce: '0x00', // ignored by MetaMask
-        gasPrice: '0x09184e72a000', // customizable by user during MetaMask confirmation.
-        gas: '0x2710', // customizable by user during MetaMask confirmation.
-        to: '0x0000000000000000000000000000000000000000', // Required except during contract publications.
-        from, // must match user's active address.
-        value: '0x00', // Only required to send ether to the recipient from the initiating external account.
-        data: '0x7f7465737432000000000000000000000000000000000000000000000000000000600057', // Optional, but used for defining smart contract creation and interaction.
-      },
-    ],
-  })
-  console.log({ plaintext })
-})
-
-requestTransactionSignatureBtn.addEventListener('click', async () => {
-  console.log('Requesting transaction signature')
-  const signature = await provider.request({
-    method: 'eth_signTransaction',
-    params: [
-      {
-        from,
-        gasPrice: '20000000000',
-        gas: '21000',
-        to: '0x3535353535353535353535353535353535353535',
-        value: '1000000000000000000',
-        data: '',
-      },
-    ],
-  })
-  console.log({ transactionSignature: signature })
 })
 
 const msgParams = JSON.stringify({
