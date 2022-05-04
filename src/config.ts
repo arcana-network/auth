@@ -1,7 +1,7 @@
 let config = 'dev'
 
 const DEV_CONFIG = {
-  RPC_URL: 'https://blockchain-dev.arcana.network',
+  RPC_URL: 'https://hardhat.arcana.network',
   GATEWAY_URL: 'https://gateway02.arcana.network',
 }
 

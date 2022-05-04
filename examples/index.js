@@ -1,9 +1,22 @@
-console.log(window)
-
 const { WalletProvider } = window.arcana.wallet
 const wallet = new WalletProvider({
   appId: '20',
 })
+
+let provider
+
+window.onload = async () => {
+  console.log('Init wallet')
+  try {
+    await wallet.init(themeConfig)
+    provider = wallet.getProvider()
+    const connected = await provider.isConnected()
+    console.log({ connected })
+    setHooks()
+  } catch (e) {
+    console.log({ e })
+  }
+}
 
 const themeConfig = {
   assets: {
@@ -25,8 +38,8 @@ const themeConfig = {
 let from = ''
 
 console.log({ wallet })
-const initWalletBtn = document.getElementById('init-wallet')
 const triggerLoginBtn = document.getElementById('trigger-login')
+const triggerPasswordlessLoginBtn = document.getElementById('trigger-p-login')
 const getPublicBtn = document.getElementById('get-public')
 const encryptBtn = document.getElementById('encrypt')
 const requestSignatureBtn = document.getElementById('request-signature')
@@ -42,20 +55,6 @@ const requestTransactionSignatureBtn = document.getElementById(
   'request-transaction-signature'
 )
 const getAccountsBtn = document.getElementById('get-accounts')
-// const requestEncryptionBtn = document.getElementById("request-encryption");
-let provider
-initWalletBtn.addEventListener('click', async () => {
-  console.log('Init wallet')
-  try {
-    await wallet.init(themeConfig)
-    provider = wallet.getProvider()
-    const connected = await provider.isConnected()
-    console.log({ connected })
-    setHooks()
-  } catch (e) {
-    console.log({ e })
-  }
-})
 
 function setHooks() {
   provider.on('connect', async (params) => {
@@ -93,7 +92,12 @@ requestSignatureBtn.addEventListener('click', async () => {
 
 triggerLoginBtn.addEventListener('click', async () => {
   console.log('Requesting login')
-  await wallet.requestLogin('google')
+  await wallet.requestSocialLogin('google')
+  // console.log({ signature });
+})
+triggerPasswordlessLoginBtn.addEventListener('click', async () => {
+  console.log('Requesting passwordlesslogin')
+  await wallet.requestPasswordlessLogin('makyl@newfang.io')
   // console.log({ signature });
 })
 
