@@ -102,7 +102,6 @@ export class ArcanaProvider extends SafeEventEmitter {
     const c = await this.communication.promise
     const url = window.location.origin + window.location.pathname
     const redirectUrl = await c.triggerSocialLogin(loginType, url)
-    console.log({ redirectUrl })
     return redirectUrl
   }
 
