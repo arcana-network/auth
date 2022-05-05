@@ -127,7 +127,7 @@ export default class IframeWrapper {
     this.iframe = createDomElement('iframe', {
       style: widgetIframeStyle.iframe,
       src: `${this.iframeUrl}/${this.params.appId}/login`,
-    })
+    }) as HTMLIFrameElement
 
     const { widgetIframeHeader, widgetIframeBody } =
       this.constructWidgetIframeStructure()
@@ -178,8 +178,8 @@ export default class IframeWrapper {
   }
 
   private initWalletUI() {
-    this.widgetIframeContainer = this.createWidgetIframe()
-    this.widgetBubble = this.createWidgetBubble()
+    this.widgetIframeContainer = this.createWidgetIframe() as HTMLDivElement
+    this.widgetBubble = this.createWidgetBubble() as HTMLButtonElement
 
     this.resizeWidgetUI()
 

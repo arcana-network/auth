@@ -1,7 +1,6 @@
 import { IConnectionMethods, IMessageParams } from './interfaces'
 import {
   JsonRpcId,
-  JsonRpcVersion,
   JsonRpcEngine,
   JsonRpcRequest,
   JsonRpcError,
@@ -15,7 +14,12 @@ import {
   providerFromMiddleware,
   createBlockRefMiddleware,
 } from 'eth-json-rpc-middleware'
-import { createWalletMiddleware } from './walletMiddleware'
+import {
+  createWalletMiddleware,
+  MessageParams,
+  TransactionParams,
+  TypedMessageParams,
+} from './walletMiddleware'
 import { PollingBlockTracker, Provider } from 'eth-block-tracker'
 import { Connection } from 'penpal'
 import { ethErrors } from 'eth-rpc-errors'
@@ -48,13 +52,6 @@ class EthereumError extends Error implements JsonRpcError {
   }
 }
 
-interface JsonRpcRequestArgs {
-  id?: JsonRpcId
-  jsonrpc?: JsonRpcVersion
-  method: string
-  params?: unknown
-}
-
 export class ArcanaProvider extends SafeEventEmitter {
   private jsonRpcEngine: JsonRpcEngine
   private provider: SafeEventEmitterProvider
@@ -77,7 +74,7 @@ export class ArcanaProvider extends SafeEventEmitter {
     this.iframeCloseHandler = closeHandler
   }
 
-  public onResponse = (method: string, response: any) => {
+  public onResponse = (method: string, response: JsonRpcResponse<unknown>) => {
     this.subscriber.emit(`result:${method}:${response.id}`, response)
   }
 
@@ -110,6 +107,12 @@ export class ArcanaProvider extends SafeEventEmitter {
     const url = window.location.origin + window.location.pathname
     const redirectUrl = await c.triggerPasswordlessLogin(email, url)
     return redirectUrl
+  }
+
+  public async getPublicKey(email: string, verifier: string) {
+    const c = await this.communication.promise
+    const pk = await c.getPublicKey(email, verifier)
+    return pk
   }
 
   private initProvider() {
@@ -215,7 +218,7 @@ export class ArcanaProvider extends SafeEventEmitter {
       processEthSignMessage: this.ethSign,
       processPersonalMessage: this.personalSign,
       processSignTransaction: this.signTransaction,
-      processEncryptionPublicKey: this.getPublicKey,
+      processEncryptionPublicKey: this.getEncryptionPublicKey,
       processDecryptMessage: this.decrypt,
       processTypedMessageV4: this.processTypedMessageV4,
       processTransaction: this.processTransaction,
@@ -246,7 +249,7 @@ export class ArcanaProvider extends SafeEventEmitter {
   }
 
   processTransaction = async (
-    params: any,
+    _: TransactionParams,
     req: JsonRpcRequest<unknown>
   ): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -259,7 +262,7 @@ export class ArcanaProvider extends SafeEventEmitter {
   }
 
   processTypedMessageV4 = async (
-    params: any,
+    _: TypedMessageParams,
     req: JsonRpcRequest<unknown>
   ): Promise<string> => {
     console.log({ req })
@@ -273,7 +276,7 @@ export class ArcanaProvider extends SafeEventEmitter {
   }
 
   ethSign = async (
-    params: any,
+    _: TransactionParams,
     req: JsonRpcRequest<unknown>
   ): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -285,7 +288,10 @@ export class ArcanaProvider extends SafeEventEmitter {
     })
   }
 
-  getPublicKey = async (address: string, req: any): Promise<string> => {
+  getEncryptionPublicKey = async (
+    _: string,
+    req: JsonRpcRequest<unknown>
+  ): Promise<string> => {
     console.log({ req })
     return new Promise((resolve, reject) => {
       this.communication.promise.then(async (c) => {
@@ -298,7 +304,10 @@ export class ArcanaProvider extends SafeEventEmitter {
     })
   }
 
-  signTransaction = async (params: any, req: any): Promise<string> => {
+  signTransaction = async (
+    _: TransactionParams,
+    req: JsonRpcRequest<unknown>
+  ): Promise<string> => {
     return new Promise((resolve, reject) => {
       const method = 'eth_signTransaction'
       this.communication.promise.then(async (c) => {
@@ -309,7 +318,7 @@ export class ArcanaProvider extends SafeEventEmitter {
   }
 
   personalSign = async (
-    params: any,
+    params: MessageParams,
     req: JsonRpcRequest<unknown>
   ): Promise<string> => {
     console.log({ params, req })
@@ -321,7 +330,10 @@ export class ArcanaProvider extends SafeEventEmitter {
     })
   }
 
-  decrypt = async (params: IMessageParams, req: any): Promise<string> => {
+  decrypt = async (
+    _: IMessageParams,
+    req: JsonRpcRequest<unknown>
+  ): Promise<string> => {
     console.log({ req })
     return new Promise((resolve, reject) => {
       this.communication.promise.then(async (c) => {

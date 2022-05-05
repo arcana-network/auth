@@ -1,3 +1,5 @@
+import { JsonRpcRequest } from 'json-rpc-engine'
+
 export type Theme = 'light' | 'dark'
 
 export type Orientation = 'horizontal' | 'vertical'
@@ -27,7 +29,8 @@ export interface IConnectionMethods {
   isLoggedIn: () => Promise<boolean>
   triggerSocialLogin: (t: string, url: string) => Promise<string>
   triggerPasswordlessLogin: (email: string, url: string) => Promise<string>
-  sendRequest: (req: any) => Promise<void>
+  sendRequest: (req: JsonRpcRequest<unknown>) => Promise<void>
+  getPublicKey: (email: string, verifier: string) => Promise<string>
 }
 
 export interface ITypedDataMessage {

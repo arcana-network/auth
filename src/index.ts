@@ -4,6 +4,7 @@ import { encryptWithPublicKey, cipher } from 'eth-crypto'
 import { getWalletType } from './utils'
 import { setNetwork } from './config'
 import { IWidgetThemeConfig } from './interfaces'
+import { JsonRpcResponse } from 'json-rpc-engine'
 
 interface InitParams {
   appId: string
@@ -31,7 +32,7 @@ class WalletProvider {
 
   private state: State
   private iframeWrapper: IframeWrapper | null
-  private arcanaProvider: ArcanaProvider
+  private provider: ArcanaProvider
   constructor(private params: InitParams) {
     this.initializeState()
     if (this.params.network === 'testnet') {
@@ -52,13 +53,16 @@ class WalletProvider {
       themeConfig,
       this.destroyWalletUI
     )
-    this.arcanaProvider = new ArcanaProvider()
+    this.provider = new ArcanaProvider()
     const walletType = await getWalletType(this.params.appId)
     this.iframeWrapper.setWalletType(walletType)
     const { communication } = await this.iframeWrapper.getIframeInstance({
       onEvent: this.handleEvents,
-      onMethodResponse: (method: string, response: any) => {
-        this.arcanaProvider.onResponse(method, response)
+      onMethodResponse: (
+        method: string,
+        response: JsonRpcResponse<unknown>
+      ) => {
+        this.provider.onResponse(method, response)
       },
       getThemeConfig: () => {
         return themeConfig
@@ -67,11 +71,8 @@ class WalletProvider {
         this.onReceivingPendingRequestCount(count)
       },
     })
-    this.arcanaProvider.setConnection(communication)
-    this.arcanaProvider.setHandlers(
-      this.iframeWrapper.show,
-      this.iframeWrapper.hide
-    )
+    this.provider.setConnection(communication)
+    this.provider.setHandlers(this.iframeWrapper.show, this.iframeWrapper.hide)
     if (this.params.inpageProvider) {
       this.setProvider()
     }
@@ -102,19 +103,19 @@ class WalletProvider {
     console.log({ t, val })
     switch (t) {
       case 'accountsChanged':
-        this.arcanaProvider.emit(t, [val])
+        this.provider.emit(t, [val])
         break
       case 'chainChanged':
-        this.arcanaProvider.emit('chainChanged', val)
+        this.provider.emit('chainChanged', val)
         break
       case 'connect':
-        this.arcanaProvider.emit('connect', val)
+        this.provider.emit('connect', val)
         break
       case 'disconnect':
-        this.arcanaProvider.emit('disconnect', val)
+        this.provider.emit('disconnect', val)
         break
       case 'message':
-        this.arcanaProvider.emit('message', val)
+        this.provider.emit('message', val)
         break
       default:
         break
@@ -122,8 +123,8 @@ class WalletProvider {
   }
 
   public async requestSocialLogin(loginType: string) {
-    if (this.arcanaProvider) {
-      const u = await this.arcanaProvider.triggerSocialLogin(loginType)
+    if (this.provider) {
+      const u = await this.provider.triggerSocialLogin(loginType)
       console.log({ u })
       if (u) {
         setTimeout(() => (window.location.href = u), 50)
@@ -132,25 +133,31 @@ class WalletProvider {
   }
 
   public requestPasswordlessLogin(email: string) {
-    if (this.arcanaProvider) {
-      this.arcanaProvider.triggerPasswordlessLogin(email)
+    if (this.provider) {
+      this.provider.triggerPasswordlessLogin(email)
+    }
+  }
+
+  public async getPublicKey(email: string, verifier = 'google') {
+    if (this.provider) {
+      return await this.provider.getPublicKey(email, verifier)
     }
   }
 
   public getProvider() {
-    return this.arcanaProvider
+    return this.provider
   }
 
   /* eslint-disable @typescript-eslint/no-explicit-any */
   private setProvider() {
     if (!(window as Record<string, any>).ethereum) {
-      ;(window as Record<string, any>).ethereum = this.arcanaProvider
+      ;(window as Record<string, any>).ethereum = this.provider
     }
 
     if (!(window as Record<string, any>).arcana) {
       ;(window as Record<string, any>).arcana = {}
     }
-    ;(window as Record<string, any>).arcana.provider = this.arcanaProvider
+    ;(window as Record<string, any>).arcana.provider = this.provider
   }
   /* eslint-enable */
 
