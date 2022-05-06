@@ -25,6 +25,7 @@ import { Connection } from 'penpal'
 import { ethErrors } from 'eth-rpc-errors'
 import { SafeEventEmitterProvider } from 'eth-json-rpc-middleware/dist/utils/cache'
 import SafeEventEmitter from '@metamask/safe-event-emitter'
+import { getConfig } from './config'
 
 interface RequestArguments {
   method: string
@@ -228,7 +229,7 @@ export class ArcanaProvider extends SafeEventEmitter {
 
   private getBlockRefMiddleware() {
     const fetchMiddleware = createFetchMiddleware({
-      rpcUrl: 'https://blockchain-testnet.arcana.network',
+      rpcUrl: getConfig().RPC_URL,
     })
     const blockProvider = providerFromMiddleware(fetchMiddleware)
     const blockTracker = new PollingBlockTracker({

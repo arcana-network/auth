@@ -2,21 +2,10 @@ import { ArcanaProvider } from './provider'
 import IframeWrapper from './iframeWrapper'
 import { encryptWithPublicKey, cipher } from 'eth-crypto'
 import { getWalletType } from './utils'
-import { setNetwork } from './config'
+import { setNetwork, getConfig, setIframeDevUrl } from './config'
 import { IWidgetThemeConfig } from './interfaces'
 import { JsonRpcResponse } from 'json-rpc-engine'
-
-interface InitParams {
-  appId: string
-  network: 'testnet' | 'dev'
-  iframeUrl?: string
-  inpageProvider: boolean
-}
-
-interface State {
-  iframeUrl: string
-  redirectUri?: string
-}
+import { InitParams, State } from './typings'
 
 class WalletProvider {
   public static async encryptWithPublicKey({
@@ -74,7 +63,7 @@ class WalletProvider {
     this.provider.setConnection(communication)
     this.provider.setHandlers(this.iframeWrapper.show, this.iframeWrapper.hide)
     if (this.params.inpageProvider) {
-      this.setProvider()
+      this.setInpageProvider()
     }
   }
 
@@ -149,7 +138,7 @@ class WalletProvider {
   }
 
   /* eslint-disable @typescript-eslint/no-explicit-any */
-  private setProvider() {
+  private setInpageProvider() {
     if (!(window as Record<string, any>).ethereum) {
       ;(window as Record<string, any>).ethereum = this.provider
     }
@@ -162,14 +151,13 @@ class WalletProvider {
   /* eslint-enable */
 
   private initializeState() {
-    let iframeUrl = 'http://localhost:3000'
     if (this.params.iframeUrl) {
-      iframeUrl = this.params.iframeUrl
+      setIframeDevUrl(this.params.iframeUrl)
     }
-    // const iframeUrl = "https://arcana-wallet-test.netlify.app";
+    const iframeUrl = getConfig().WALLET_URL
     const redirectUri = `${iframeUrl}/${this.params.appId}/redirect`
     this.state = { iframeUrl, redirectUri }
   }
 }
 
-export { WalletProvider }
+export { WalletProvider, InitParams }
