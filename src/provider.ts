@@ -98,16 +98,21 @@ export class ArcanaProvider extends SafeEventEmitter {
     }
   }
 
+  getCurrentUrl() {
+    const url = window.location.origin + window.location.pathname
+    return url
+  }
+
   public async triggerSocialLogin(loginType: string): Promise<string> {
     const c = await this.communication.promise
-    const url = window.location.origin + window.location.pathname
+    const url = this.getCurrentUrl()
     const redirectUrl = await c.triggerSocialLogin(loginType, url)
     return redirectUrl
   }
 
   public async triggerPasswordlessLogin(email: string) {
     const c = await this.communication.promise
-    const url = window.location.origin + window.location.pathname
+    const url = this.getCurrentUrl()
     const redirectUrl = await c.triggerPasswordlessLogin(email, url)
     return redirectUrl
   }

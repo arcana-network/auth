@@ -66,6 +66,7 @@ class WalletProvider {
       sendPendingRequestCount: (count: number) => {
         this.onReceivingPendingRequestCount(count)
       },
+      getParentUrl: this.arcanaProvider.getCurrentUrl,
     })
     this.arcanaProvider.setConnection(communication)
     this.arcanaProvider.setHandlers(
