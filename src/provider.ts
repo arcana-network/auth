@@ -354,9 +354,12 @@ export class ArcanaProvider extends SafeEventEmitter {
 }
 
 const getError = (message: string) => {
-  if (message == 'user_deny') {
-    return new EthereumError(4001, 'The request was denied by the user')
-  } else {
-    return new EthereumError(-32603, 'Internal error')
+  switch (message) {
+    case 'user_deny':
+      return new EthereumError(4001, 'The request was denied by the user')
+    case 'operation_not_supported':
+      return new EthereumError(4200, 'The request is not supported currently')
+    default:
+      return new EthereumError(-32603, 'Internal error')
   }
 }
