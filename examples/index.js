@@ -1,6 +1,7 @@
 const { WalletProvider } = window.arcana.wallet
 const wallet = new WalletProvider({
   appId: '20',
+  iframeUrl: 'http://localhost:3000',
 })
 
 let provider
@@ -10,7 +11,7 @@ window.onload = async () => {
   try {
     await wallet.init(themeConfig)
     provider = wallet.getProvider()
-    const connected = await provider.isConnected()
+    const connected = await wallet.isLoggedIn()
     console.log({ connected })
     setHooks()
   } catch (e) {
@@ -51,12 +52,13 @@ const requestPersonalSignatureBtn = document.getElementById(
   'request-personal-signature'
 )
 const getAccountsBtn = document.getElementById('get-accounts')
+const logoutBtn = document.getElementById('logout')
 
 function setHooks() {
   provider.on('connect', async (params) => {
     console.log({ type: 'connect', params: params })
-    const connected = await provider.isConnected()
-    console.log({ connected })
+    const isLoggedIn = await wallet.isLoggedIn()
+    console.log({ isLoggedIn })
   })
   provider.on('accountsChanged', (params) => {
     console.log({ type: 'accountsChanged', params: params })
@@ -66,6 +68,14 @@ function setHooks() {
   })
 }
 
+logoutBtn.addEventListener('click', async () => {
+  console.log('Requesting logout')
+  try {
+    await wallet.logout()
+  } catch (e) {
+    console.log({ e })
+  }
+})
 getAccountsBtn.addEventListener('click', async () => {
   console.log('Requesting accounts')
   try {

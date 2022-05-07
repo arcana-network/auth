@@ -41,7 +41,7 @@ const permissionedCalls = [
   'eth_sendTransaction',
 ]
 
-class EthereumError extends Error implements JsonRpcError {
+class ProviderError extends Error implements JsonRpcError {
   code: number
   message: string
   data: string
@@ -86,7 +86,7 @@ export class ArcanaProvider extends SafeEventEmitter {
     return this.provider
   }
 
-  public async isConnected() {
+  public async isLoggedIn() {
     try {
       const c = await this.communication.promise
       return c.isLoggedIn()
@@ -119,6 +119,11 @@ export class ArcanaProvider extends SafeEventEmitter {
     const c = await this.communication.promise
     const pk = await c.getPublicKey(email, verifier)
     return pk
+  }
+
+  public async triggerLogout() {
+    const c = await this.communication.promise
+    await c.triggerLogout()
   }
 
   private initProvider() {
@@ -369,10 +374,10 @@ export class ArcanaProvider extends SafeEventEmitter {
 const getError = (message: string) => {
   switch (message) {
     case 'user_deny':
-      return new EthereumError(4001, 'The request was denied by the user')
+      return new ProviderError(4001, 'The request was denied by the user')
     case 'operation_not_supported':
-      return new EthereumError(4200, 'The request is not supported currently')
+      return new ProviderError(4200, 'The request is not supported currently')
     default:
-      return new EthereumError(-32603, 'Internal error')
+      return new ProviderError(-32603, 'Internal error')
   }
 }

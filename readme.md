@@ -59,7 +59,7 @@ WalletProvider.encryptWithPublicKey({
 })
 ```
 
-### Trigger login
+### Login/logout
 
 Social login
 
@@ -71,6 +71,18 @@ Passwordless login
 
 ```js
 await wallet.requestPasswordlessLogin(`${email}`)
+```
+
+Check is logged in
+
+```js
+const loggedIn = await wallet.isLoggedIn()
+```
+
+Logout
+
+```js
+await wallet.logout()
 ```
 
 ### Get public key

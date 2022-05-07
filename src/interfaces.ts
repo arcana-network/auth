@@ -31,6 +31,7 @@ export interface IConnectionMethods {
   triggerPasswordlessLogin: (email: string, url: string) => Promise<string>
   sendRequest: (req: JsonRpcRequest<unknown>) => Promise<void>
   getPublicKey: (email: string, verifier: string) => Promise<string>
+  triggerLogout: () => Promise<void>
 }
 
 export interface ITypedDataMessage {

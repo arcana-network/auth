@@ -127,6 +127,18 @@ class WalletProvider {
     }
   }
 
+  public isLoggedIn() {
+    if (this.provider) {
+      return this.provider.isLoggedIn()
+    }
+  }
+
+  public logout() {
+    if (this.provider) {
+      this.provider.triggerLogout()
+    }
+  }
+
   public async getPublicKey(email: string, verifier = 'google') {
     if (this.provider) {
       return await this.provider.getPublicKey(email, verifier)
