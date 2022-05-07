@@ -41,8 +41,16 @@ WalletProvider.encryptWithPublicKey({
 
 ### Trigger login
 
+Social login
+
 ```js
-await wallet.requestLogin('google')
+await wallet.requestSocialLogin('google')
+```
+
+Passwordless login
+
+```js
+await wallet.requestPasswordlessLogin(`${email}`)
 ```
 
 ## Events

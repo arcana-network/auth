@@ -66,6 +66,7 @@ class WalletProvider {
       sendPendingRequestCount: (count: number) => {
         this.onReceivingPendingRequestCount(count)
       },
+      getParentUrl: this.arcanaProvider.getCurrentUrl,
     })
     this.arcanaProvider.setConnection(communication)
     this.arcanaProvider.setHandlers(
@@ -121,9 +122,19 @@ class WalletProvider {
     }
   }
 
-  public requestLogin(loginType: string) {
+  public async requestSocialLogin(loginType: string) {
     if (this.arcanaProvider) {
-      this.arcanaProvider.triggerLogin(loginType)
+      const u = await this.arcanaProvider.triggerSocialLogin(loginType)
+      console.log({ u })
+      if (u) {
+        setTimeout(() => (window.location.href = u), 50)
+      }
+    }
+  }
+
+  public requestPasswordlessLogin(email: string) {
+    if (this.arcanaProvider) {
+      this.arcanaProvider.triggerPasswordlessLogin(email)
     }
   }
 

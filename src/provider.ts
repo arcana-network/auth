@@ -98,9 +98,23 @@ export class ArcanaProvider extends SafeEventEmitter {
     }
   }
 
-  public async triggerLogin(loginType: string) {
+  getCurrentUrl() {
+    const url = window.location.origin + window.location.pathname
+    return url
+  }
+
+  public async triggerSocialLogin(loginType: string): Promise<string> {
     const c = await this.communication.promise
-    await c.triggerLogin(loginType)
+    const url = this.getCurrentUrl()
+    const redirectUrl = await c.triggerSocialLogin(loginType, url)
+    return redirectUrl
+  }
+
+  public async triggerPasswordlessLogin(email: string) {
+    const c = await this.communication.promise
+    const url = this.getCurrentUrl()
+    const redirectUrl = await c.triggerPasswordlessLogin(email, url)
+    return redirectUrl
   }
 
   private initProvider() {
@@ -340,9 +354,12 @@ export class ArcanaProvider extends SafeEventEmitter {
 }
 
 const getError = (message: string) => {
-  if (message == 'user_deny') {
-    return new EthereumError(4001, 'The request was denied by the user')
-  } else {
-    return new EthereumError(-32603, 'Internal error')
+  switch (message) {
+    case 'user_deny':
+      return new EthereumError(4001, 'The request was denied by the user')
+    case 'operation_not_supported':
+      return new EthereumError(4200, 'The request is not supported currently')
+    default:
+      return new EthereumError(-32603, 'Internal error')
   }
 }
