@@ -25,7 +25,8 @@ export interface IWidgetThemeConfig {
 
 export interface IConnectionMethods {
   isLoggedIn: () => Promise<boolean>
-  triggerLogin: (t: string) => Promise<void>
+  triggerSocialLogin: (t: string, url: string) => Promise<string>
+  triggerPasswordlessLogin: (email: string, url: string) => Promise<string>
   sendRequest: (req: any) => Promise<void>
 }
 
