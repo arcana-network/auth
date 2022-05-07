@@ -59,6 +59,7 @@ class WalletProvider {
       sendPendingRequestCount: (count: number) => {
         this.onReceivingPendingRequestCount(count)
       },
+      getParentUrl: this.provider.getCurrentUrl,
     })
     this.provider.setConnection(communication)
     this.provider.setHandlers(this.iframeWrapper.show, this.iframeWrapper.hide)
@@ -114,7 +115,6 @@ class WalletProvider {
   public async requestSocialLogin(loginType: string) {
     if (this.provider) {
       const u = await this.provider.triggerSocialLogin(loginType)
-      console.log({ u })
       if (u) {
         setTimeout(() => (window.location.href = u), 50)
       }
