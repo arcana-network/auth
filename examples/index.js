@@ -42,6 +42,7 @@ console.log({ wallet })
 const triggerLoginBtn = document.getElementById('trigger-login')
 const triggerPasswordlessLoginBtn = document.getElementById('trigger-p-login')
 const getPublicBtn = document.getElementById('get-public')
+const getOthersPublicBtn = document.getElementById('get-other-public')
 const encryptBtn = document.getElementById('encrypt')
 const requestSignatureBtn = document.getElementById('request-signature')
 const requestDecryptBtn = document.getElementById('request-decryption')
@@ -136,6 +137,13 @@ getPublicBtn.addEventListener('click', async () => {
     method: 'eth_getEncryptionPublicKey',
     params: [from],
   })
+  console.log({ pk })
+  publicKey = pk
+})
+
+getOthersPublicBtn.addEventListener('click', async () => {
+  console.log('Requesting others public key')
+  const pk = await wallet.requestPublicKey('makyl@newfang.io', 'google')
   console.log({ pk })
   publicKey = pk
 })

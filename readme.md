@@ -64,7 +64,7 @@ WalletProvider.encryptWithPublicKey({
 Social login
 
 ```js
-await wallet.requestSocialLogin('google')
+await wallet.requestSocialLogin(`${verifier}`)
 ```
 
 Passwordless login
@@ -88,7 +88,7 @@ await wallet.logout()
 ### Get public key
 
 ```js
-await wallet.getPublicKey(`${email}`, `${verifier}`)
+await wallet.requestPublicKey(`${email}`, `${verifier}`)
 ```
 
 ## Events

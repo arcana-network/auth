@@ -2,7 +2,7 @@ let config = 'dev'
 
 const DEV_CONFIG = {
   RPC_URL: 'https://blockchain-dev.arcana.network',
-  GATEWAY_URL: 'https://gateway02.arcana.network',
+  GATEWAY_URL: 'https://gateway-dev.arcana.network',
   WALLET_URL: 'https://wallet.dev.arcana.network',
 }
 

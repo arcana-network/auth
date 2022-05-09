@@ -139,7 +139,7 @@ class WalletProvider {
     }
   }
 
-  public async getPublicKey(email: string, verifier = 'google') {
+  public async requestPublicKey(email: string, verifier = 'google') {
     if (this.provider) {
       return await this.provider.getPublicKey(email, verifier)
     }
