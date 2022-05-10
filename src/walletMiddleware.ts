@@ -8,15 +8,15 @@ import {
 import sigUtil from 'eth-sig-util'
 import { ethErrors } from 'eth-rpc-errors'
 
-interface TransactionParams {
+export interface TransactionParams {
   from: string
 }
 
-interface MessageParams extends TransactionParams {
+export interface MessageParams extends TransactionParams {
   data: string
 }
 
-interface TypedMessageParams extends MessageParams {
+export interface TypedMessageParams extends MessageParams {
   version: string
 }
 

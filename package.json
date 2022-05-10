@@ -1,34 +1,41 @@
 {
-  "name": "arcana-provider",
+  "name": "@arcana/wallet",
   "version": "0.0.1",
-  "description": "",
+  "description": "Arcana web wallet",
   "main": "dist/wallet.js",
+  "jsdelivr": "dist/standalone/wallet.min.js",
+  "unpkg": "dist/standalone/wallet.min.js",
+  "types": "types/index.d.ts",
+  "files": [
+    "dist",
+    "types"
+  ],
   "scripts": {
     "test": "jest",
+    "build:web": "node build.js",
+    "build": "npm run build:ts && npm run build:web",
+    "build:ts": "rimraf dist/ && rimraf types/ && tsc --project tsconfig.json",
     "format": "prettier --ignore-path .gitignore --write .",
     "lint": "eslint --ext .ts src",
-    "build": "esbuild src/index.ts --define:global=window --inject:config/esbuild.inject.js --format=iife --global-name=arcana.wallet --bundle --target=chrome58,firefox57,safari11,edge18  --outfile=dist/wallet.js",
+    "dev": "esbuild src/index.ts --define:global=window --inject:config/esbuild.inject.js --format=iife --global-name=arcana.wallet --bundle --target=chrome58,firefox57,safari11,edge18  --outfile=dist/wallet.js",
     "watch": "npm run build -- --watch",
     "prepare": "husky install"
   },
   "author": "makyl",
   "license": "ISC",
-  "browser": {
-    "stream": "stream-browserify",
-    "crypto": "crypto-browserify",
-    "assert": "assert",
-    "events": "events"
-  },
   "devDependencies": {
     "@types/jest": "^27.4.1",
     "@typescript-eslint/eslint-plugin": "^5.18.0",
     "@typescript-eslint/parser": "^5.18.0",
+    "esbuild-plugin-alias": "^0.2.1",
     "eslint": "^8.12.0",
     "eslint-config-prettier": "^8.5.0",
+    "events": "^3.3.0",
     "husky": ">=6",
     "jest": "^27.5.1",
     "jest-environment-jsdom": "^27.5.1",
     "lint-staged": ">=10",
+    "node-stdlib-browser": "^1.2.0",
     "prettier": "^2.6.2",
     "typescript": "^4.3.5"
   },
@@ -43,7 +50,6 @@
     "eth-json-rpc-middleware": "^8.0.1",
     "eth-sig-util": "^3.0.1",
     "ethers": "^5.5.4",
-    "events": "^3.3.0",
     "json-rpc-engine": "^6.1.0",
     "penpal": "^6.0.1",
     "process": "^0.11.10",

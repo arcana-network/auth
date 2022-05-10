@@ -14,7 +14,7 @@ import {
   setWalletPosition,
   setWalletSize,
 } from './utils'
-
+import { getConfig } from './config'
 const BREAKPOINT_SMALL = 768
 
 export default class IframeWrapper {
@@ -36,7 +36,7 @@ export default class IframeWrapper {
   }
 
   public async getIframeInstance(params: {
-    [k: string]: (...args: any) => any
+    [k: string]: (...args: any) => unknown
   }) {
     return await this.createOrGetInstance(params)
   }
@@ -78,16 +78,20 @@ export default class IframeWrapper {
   }
 
   private async createOrGetInstance(params: {
-    [k: string]: (params: any) => any
+    [k: string]: (params: unknown) => unknown
   }) {
     try {
       if (!this.iframe) {
         this.initWalletUI()
       }
       if (!this.iframeCommunication) {
-        this.iframeCommunication = await this.createIframeCommunicationInstance(
-          params
-        )
+        this.iframeCommunication = connectToChild<IConnectionMethods>({
+          iframe: this.iframe,
+          methods: {
+            ...params,
+          },
+          childOrigin: getConfig().WALLET_URL,
+        })
       }
     } catch (error) {
       console.log({ error })
@@ -127,7 +131,7 @@ export default class IframeWrapper {
     this.iframe = createDomElement('iframe', {
       style: widgetIframeStyle.iframe,
       src: `${this.iframeUrl}/${this.params.appId}/login`,
-    })
+    }) as HTMLIFrameElement
 
     const { widgetIframeHeader, widgetIframeBody } =
       this.constructWidgetIframeStructure()
@@ -178,8 +182,8 @@ export default class IframeWrapper {
   }
 
   private initWalletUI() {
-    this.widgetIframeContainer = this.createWidgetIframe()
-    this.widgetBubble = this.createWidgetBubble()
+    this.widgetIframeContainer = this.createWidgetIframe() as HTMLDivElement
+    this.widgetBubble = this.createWidgetBubble() as HTMLButtonElement
 
     this.resizeWidgetUI()
 
@@ -219,18 +223,6 @@ export default class IframeWrapper {
   private openWidgetIframe() {
     this.widgetBubble.style.display = 'none'
     this.widgetIframeContainer.style.display = 'flex'
-  }
-
-  private async createIframeCommunicationInstance(params: {
-    [k: string]: (params: any) => any
-  }) {
-    return connectToChild<IConnectionMethods>({
-      iframe: this.iframe,
-      methods: {
-        ...params,
-      },
-      debug: true,
-    })
   }
 
   private checkSecureOrigin() {

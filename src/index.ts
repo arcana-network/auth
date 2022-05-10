@@ -2,20 +2,10 @@ import { ArcanaProvider } from './provider'
 import IframeWrapper from './iframeWrapper'
 import { encryptWithPublicKey, cipher } from 'eth-crypto'
 import { getWalletType } from './utils'
-import { setNetwork } from './config'
+import { setNetwork, getConfig, setIframeDevUrl } from './config'
 import { IWidgetThemeConfig } from './interfaces'
-
-interface InitParams {
-  appId: string
-  network: 'testnet' | 'dev'
-  iframeUrl?: string
-  inpageProvider: boolean
-}
-
-interface State {
-  iframeUrl: string
-  redirectUri?: string
-}
+import { JsonRpcResponse } from 'json-rpc-engine'
+import { InitParams, State } from './typings'
 
 class WalletProvider {
   public static async encryptWithPublicKey({
@@ -31,7 +21,7 @@ class WalletProvider {
 
   private state: State
   private iframeWrapper: IframeWrapper | null
-  private arcanaProvider: ArcanaProvider
+  private provider: ArcanaProvider
   constructor(private params: InitParams) {
     this.initializeState()
     if (this.params.network === 'testnet') {
@@ -52,13 +42,16 @@ class WalletProvider {
       themeConfig,
       this.destroyWalletUI
     )
-    this.arcanaProvider = new ArcanaProvider()
+    this.provider = new ArcanaProvider()
     const walletType = await getWalletType(this.params.appId)
     this.iframeWrapper.setWalletType(walletType)
     const { communication } = await this.iframeWrapper.getIframeInstance({
       onEvent: this.handleEvents,
-      onMethodResponse: (method: string, response: any) => {
-        this.arcanaProvider.onResponse(method, response)
+      onMethodResponse: (
+        method: string,
+        response: JsonRpcResponse<unknown>
+      ) => {
+        this.provider.onResponse(method, response)
       },
       getThemeConfig: () => {
         return themeConfig
@@ -66,15 +59,12 @@ class WalletProvider {
       sendPendingRequestCount: (count: number) => {
         this.onReceivingPendingRequestCount(count)
       },
-      getParentUrl: this.arcanaProvider.getCurrentUrl,
+      getParentUrl: this.provider.getCurrentUrl,
     })
-    this.arcanaProvider.setConnection(communication)
-    this.arcanaProvider.setHandlers(
-      this.iframeWrapper.show,
-      this.iframeWrapper.hide
-    )
+    this.provider.setConnection(communication)
+    this.provider.setHandlers(this.iframeWrapper.show, this.iframeWrapper.hide)
     if (this.params.inpageProvider) {
-      this.setProvider()
+      this.setInpageProvider()
     }
   }
 
@@ -103,19 +93,19 @@ class WalletProvider {
     console.log({ t, val })
     switch (t) {
       case 'accountsChanged':
-        this.arcanaProvider.emit(t, [val])
+        this.provider.emit(t, [val])
         break
       case 'chainChanged':
-        this.arcanaProvider.emit('chainChanged', val)
+        this.provider.emit('chainChanged', val)
         break
       case 'connect':
-        this.arcanaProvider.emit('connect', val)
+        this.provider.emit('connect', val)
         break
       case 'disconnect':
-        this.arcanaProvider.emit('disconnect', val)
+        this.provider.emit('disconnect', val)
         break
       case 'message':
-        this.arcanaProvider.emit('message', val)
+        this.provider.emit('message', val)
         break
       default:
         break
@@ -123,9 +113,8 @@ class WalletProvider {
   }
 
   public async requestSocialLogin(loginType: string) {
-    if (this.arcanaProvider) {
-      const u = await this.arcanaProvider.triggerSocialLogin(loginType)
-      console.log({ u })
+    if (this.provider) {
+      const u = await this.provider.triggerSocialLogin(loginType)
       if (u) {
         setTimeout(() => (window.location.href = u), 50)
       }
@@ -133,37 +122,54 @@ class WalletProvider {
   }
 
   public requestPasswordlessLogin(email: string) {
-    if (this.arcanaProvider) {
-      this.arcanaProvider.triggerPasswordlessLogin(email)
+    if (this.provider) {
+      this.provider.triggerPasswordlessLogin(email)
+    }
+  }
+
+  public isLoggedIn() {
+    if (this.provider) {
+      return this.provider.isLoggedIn()
+    }
+  }
+
+  public logout() {
+    if (this.provider) {
+      this.provider.triggerLogout()
+    }
+  }
+
+  public async requestPublicKey(email: string, verifier = 'google') {
+    if (this.provider) {
+      return await this.provider.getPublicKey(email, verifier)
     }
   }
 
   public getProvider() {
-    return this.arcanaProvider
+    return this.provider
   }
 
   /* eslint-disable @typescript-eslint/no-explicit-any */
-  private setProvider() {
+  private setInpageProvider() {
     if (!(window as Record<string, any>).ethereum) {
-      ;(window as Record<string, any>).ethereum = this.arcanaProvider
+      ;(window as Record<string, any>).ethereum = this.provider
     }
 
     if (!(window as Record<string, any>).arcana) {
       ;(window as Record<string, any>).arcana = {}
     }
-    ;(window as Record<string, any>).arcana.provider = this.arcanaProvider
+    ;(window as Record<string, any>).arcana.provider = this.provider
   }
   /* eslint-enable */
 
   private initializeState() {
-    let iframeUrl = 'http://localhost:3000'
     if (this.params.iframeUrl) {
-      iframeUrl = this.params.iframeUrl
+      setIframeDevUrl(this.params.iframeUrl)
     }
-    // const iframeUrl = "https://arcana-wallet-test.netlify.app";
+    const iframeUrl = getConfig().WALLET_URL
     const redirectUri = `${iframeUrl}/${this.params.appId}/redirect`
     this.state = { iframeUrl, redirectUri }
   }
 }
 
-export { WalletProvider }
+export { WalletProvider, InitParams }

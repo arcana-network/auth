@@ -1,14 +1,40 @@
 # Arcana Wallet
 
-## Initializing
+## Installation
+
+### Using NPM/Yarn
+
+```sh
+npm install --save @arcana/wallet
+yarn add @arcana/wallet
+```
+
+### Using CDN
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@arcana/wallet"></script>
+```
+
+```html
+<script src="https://unpkg.com/@arcana/wallet"></script>
+```
+
+## Usage
+
+### Import
 
 ```js
 const { WalletProvider } = window.arcana.wallet
+// or
+import { WalletProvider } from '@arcana/wallet'
+```
 
+### Initialize
+
+```js
 const wallet = new WalletProvider({
   appId: `${appId}`,
-  iframeUrl: `${iframeUrl}`,
-  inpageProvider: true,
+  inpageProvider: true /* sets window.arcana.provider and tries to set window.ethereum to the provider */,
 })
 
 await wallet.init()
@@ -20,15 +46,9 @@ provider = window.arcana.provider
 provider = window.ethereum
 ```
 
-## Building the code
-
-```js
-npm run build
-```
-
 ## Wallet API’s
 
-Request encryption
+### Request encryption
 
 ```js
 WalletProvider.encryptWithPublicKey({
@@ -39,18 +59,36 @@ WalletProvider.encryptWithPublicKey({
 })
 ```
 
-### Trigger login
+### Login/logout
 
 Social login
 
 ```js
-await wallet.requestSocialLogin('google')
+await wallet.requestSocialLogin(`${verifier}`)
 ```
 
 Passwordless login
 
 ```js
 await wallet.requestPasswordlessLogin(`${email}`)
+```
+
+Check is logged in
+
+```js
+const loggedIn = await wallet.isLoggedIn()
+```
+
+Logout
+
+```js
+await wallet.logout()
+```
+
+### Get public key
+
+```js
+await wallet.requestPublicKey(`${email}`, `${verifier}`)
 ```
 
 ## Events
@@ -137,7 +175,3 @@ provider
     // Use signature
   })
 ```
-
-## Development
-
-Update `iframeUrl` in `src/index.ts` to your wallet website.
