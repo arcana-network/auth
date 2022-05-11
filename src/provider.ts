@@ -96,6 +96,10 @@ export class ArcanaProvider extends SafeEventEmitter {
     }
   }
 
+  public async isConnected() {
+    return await this.isLoggedIn()
+  }
+
   getCurrentUrl() {
     const url = window.location.origin + window.location.pathname
     return url
