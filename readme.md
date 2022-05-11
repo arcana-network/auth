@@ -93,11 +93,19 @@ await wallet.requestPublicKey(`${email}`, `${verifier}`)
 
 ## Events
 
+Subscribing
+
 ```js
 provider.on('chainChanged', handler: (chainId: number) => void);
 provider.on('accountsChanged', handler: (accounts: string[]) => void);
 provider.on('connect', handler: ({ chainId: number }) => void);
 provider.isConnected(): Promise<boolean>;
+```
+
+Unsubscribing
+
+```js
+provider.removeListener(`${eventName}`, handler)
 ```
 
 ## RPC API’s
