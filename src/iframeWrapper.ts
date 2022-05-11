@@ -92,6 +92,7 @@ export default class IframeWrapper {
           },
           childOrigin: getConfig().WALLET_URL,
         })
+        await this.iframeCommunication.promise
       }
     } catch (error) {
       console.log({ error })
