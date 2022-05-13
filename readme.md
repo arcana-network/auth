@@ -25,8 +25,14 @@ yarn add @arcana/wallet
 
 ```js
 const { WalletProvider } = window.arcana.wallet
-// or
+```
+
+```js
 import { WalletProvider } from '@arcana/wallet'
+```
+
+```js
+import { WalletProvider } from '@arcana/wallet/dist/standalone/wallet.esm.js'
 ```
 
 ### Initialize
