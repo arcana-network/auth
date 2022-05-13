@@ -82,8 +82,8 @@ class WalletProvider {
       ) => {
         this.provider.onResponse(method, response)
       },
-      getThemeConfig: () => {
-        return themeConfig
+      getAppConfig: () => {
+        return appConfig
       },
       sendPendingRequestCount: (count: number) => {
         this.onReceivingPendingRequestCount(count)
