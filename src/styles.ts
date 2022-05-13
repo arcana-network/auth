@@ -46,6 +46,10 @@ const widgetBubbleStyle = {
     ...baseWidgetBubbleStyle,
     backgroundColor: '#000000',
   },
+  bubbleLogo: {
+    width: '40px',
+    height: '40px',
+  },
   closeButton: {
     ...baseCloseButtonStyle,
     width: '20px',
@@ -120,9 +124,9 @@ const widgetIframeStyle = {
     display: 'flex',
   },
   iframe: {
-    width: "100%",
-    height: "100%",
-    border: "none",
+    width: '100%',
+    height: '100%',
+    border: 'none',
     borderRadius: '0px 0px 10px 10px',
   },
 }

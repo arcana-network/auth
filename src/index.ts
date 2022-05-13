@@ -3,9 +3,10 @@ import IframeWrapper from './iframeWrapper'
 import { encryptWithPublicKey, cipher } from 'eth-crypto'
 import { getWalletType } from './utils'
 import { setNetwork, getConfig, setIframeDevUrl } from './config'
-import { IWidgetThemeConfig } from './interfaces'
+import { IAppConfig } from './interfaces'
 import { JsonRpcResponse } from 'json-rpc-engine'
 import { InitParams, State } from './typings'
+import { getAppInfo, getImageUrls } from './network'
 
 class WalletProvider {
   public static async encryptWithPublicKey({
@@ -29,21 +30,41 @@ class WalletProvider {
     }
   }
 
-  public async init(themeConfig: IWidgetThemeConfig) {
+  public async init() {
     if (this.iframeWrapper) {
       return
     }
+
+    const appId = this.params.appId
+
+    const appInfo = await getAppInfo(appId)
+
+    const appImageURLs = getImageUrls(appId, appInfo.theme)
+
+    const appConfig: IAppConfig = {
+      name: appInfo.name,
+      themeConfig: {
+        assets: {
+          logo: {
+            horizontal: appImageURLs.horizontal,
+            vertical: appImageURLs.vertical,
+          },
+        },
+        theme: appInfo.theme,
+      },
+    }
+
     this.iframeWrapper = new IframeWrapper(
       {
-        appId: this.params.appId,
+        appId: appId,
         network: this.params.network,
       },
       this.state.iframeUrl,
-      themeConfig,
+      appConfig,
       this.destroyWalletUI
     )
     this.provider = new ArcanaProvider()
-    const walletType = await getWalletType(this.params.appId)
+    const walletType = await getWalletType(appId)
     this.iframeWrapper.setWalletType(walletType)
     const { communication } = await this.iframeWrapper.getIframeInstance({
       onEvent: this.handleEvents,
@@ -53,8 +74,8 @@ class WalletProvider {
       ) => {
         this.provider.onResponse(method, response)
       },
-      getThemeConfig: () => {
-        return themeConfig
+      getAppConfig: () => {
+        return appConfig
       },
       sendPendingRequestCount: (count: number) => {
         this.onReceivingPendingRequestCount(count)
@@ -172,4 +193,4 @@ class WalletProvider {
   }
 }
 
-export { WalletProvider, InitParams }
+export { WalletProvider, InitParams, IAppConfig }

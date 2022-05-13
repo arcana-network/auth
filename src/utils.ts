@@ -1,11 +1,6 @@
 import { ethers } from 'ethers'
 import { getConfig } from './config'
-import {
-  IWalletPosition,
-  IWalletSize,
-  IWidgetThemeConfig,
-  Orientation,
-} from './interfaces'
+import { IWalletPosition, IWalletSize } from './interfaces'
 
 const getContract = (rpcUrl: string, appAddress: string) => {
   const provider = new ethers.providers.JsonRpcProvider(rpcUrl)
@@ -43,11 +38,6 @@ const getAppAddress = async (id: string) => {
   const json = await res.json()
   const address: string = json?.address
   return address
-}
-
-const getLogo = (themeConfig: IWidgetThemeConfig, orientation: Orientation) => {
-  const { theme, assets } = themeConfig
-  return assets.logo[theme][orientation]
 }
 
 type elements = 'style' | 'src' | 'onclick' | 'id'
@@ -110,7 +100,6 @@ const getWalletPosition = (isViewportSmall: boolean): IWalletPosition => {
 
 export {
   getWalletType,
-  getLogo,
   createDomElement,
   setWalletSize,
   getWalletSize,

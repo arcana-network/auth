@@ -9,7 +9,7 @@ let provider
 window.onload = async () => {
   console.log('Init wallet')
   try {
-    await wallet.init(themeConfig)
+    await wallet.init()
     provider = wallet.getProvider()
     const connected = await wallet.isLoggedIn()
     console.log({ connected })
@@ -17,22 +17,6 @@ window.onload = async () => {
   } catch (e) {
     console.log({ e })
   }
-}
-
-const themeConfig = {
-  assets: {
-    logo: {
-      dark: {
-        horizontal: './assets/images/logo-horizontal-dark.png',
-        vertical: './assets/images/logo-vertical-dark.png',
-      },
-      light: {
-        horizontal: './assets/images/logo-horizontal-light.png',
-        vertical: './assets/images/logo-vertical-light.png',
-      },
-    },
-  },
-  theme: 'dark',
 }
 
 // get from eth_accounts

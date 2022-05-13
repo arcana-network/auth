@@ -12,17 +12,21 @@ export interface IframeWrapperParams {
 export interface IWidgetThemeConfig {
   assets: {
     logo: {
-      dark: {
-        horizontal: string
-        vertical: string
-      }
-      light: {
-        horizontal: string
-        vertical: string
-      }
+      horizontal: string
+      vertical: string
     }
   }
   theme: Theme
+}
+
+export interface AppInfo {
+  name: string
+  theme: Theme
+}
+
+export interface IAppConfig {
+  name: string
+  themeConfig: IWidgetThemeConfig
 }
 
 export interface IConnectionMethods {

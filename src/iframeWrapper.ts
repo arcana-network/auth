@@ -1,14 +1,13 @@
 import {
   IframeWrapperParams,
   IConnectionMethods,
-  IWidgetThemeConfig,
+  IAppConfig,
 } from './interfaces'
 import { connectToChild, Connection } from 'penpal'
 import { widgetIframeStyle, widgetBubbleStyle } from './styles'
 import { WalletTypes } from './typings'
 import {
   createDomElement,
-  getLogo,
   getWalletPosition,
   getWalletSize,
   setWalletPosition,
@@ -29,7 +28,7 @@ export default class IframeWrapper {
   constructor(
     private params: IframeWrapperParams,
     private iframeUrl: string,
-    private themeConfig: IWidgetThemeConfig,
+    private appConfig: IAppConfig,
     private destroyWalletUI: () => void
   ) {
     this.checkSecureOrigin()
@@ -103,11 +102,13 @@ export default class IframeWrapper {
 
   private constructWidgetIframeStructure() {
     const {
-      themeConfig: { theme },
+      appConfig: { themeConfig },
     } = this
 
+    const { theme, assets } = themeConfig
+
     const appLogo = createDomElement('img', {
-      src: getLogo(this.themeConfig, 'horizontal'),
+      src: assets.logo.horizontal,
       style: widgetIframeStyle.header.logo,
     })
     const closeButton = createDomElement('button', {
@@ -150,10 +151,14 @@ export default class IframeWrapper {
   private createWidgetBubble() {
     if (this.walletType === WalletTypes.Full) {
       const {
-        themeConfig: { theme },
+        appConfig: { themeConfig },
       } = this
+
+      const { theme, assets } = themeConfig
+
       const buttonLogo = createDomElement('img', {
-        src: getLogo(this.themeConfig, 'vertical'),
+        src: assets.logo.vertical,
+        style: widgetBubbleStyle.bubbleLogo,
       })
 
       const reqCountBadge = createDomElement('p', {
