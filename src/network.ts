@@ -1,21 +1,35 @@
 import axios from 'axios'
-import { ImagesURLs, Theme } from './interfaces'
+import { AppInfo, Theme } from './interfaces'
+import { getConfig } from './config'
 
-const BASE_URL = 'https://gateway-dev.arcana.network/api/'
+const BASE_URL = getConfig().GATEWAY_URL
 
-function getImageUrls(appId: string, theme: Theme): ImagesURLs {
-  const url = `https://gateway-dev.arcana.network/api/v2/app/${appId}/logo?type=${theme}`
+const gateWay = axios.create({
+  baseURL: BASE_URL,
+  timeout: 5000,
+})
+
+function getImageUrls(
+  appId: string,
+  theme: Theme
+): {
+  horizontal: string
+  vertical: string
+} {
+  const API = '/api/v2/app/'
+  const url = `${BASE_URL}${API}${appId}/logo?type=${theme}`
   return {
     horizontal: `${url}&orientation=horizontal`,
     vertical: `${url}&orientation=vertical`,
   }
 }
 
-const networkInstance = axios.create({
-  baseURL: BASE_URL,
-  timeout: 5000,
-})
+async function getAppInfo(appId: string) {
+  const API = '/api/v1/get-app-theme/'
+  const { data }: { data: AppInfo } = await gateWay.get(API, {
+    params: { id: appId },
+  })
+  return data
+}
 
-export { getImageUrls }
-
-export default networkInstance
+export { getImageUrls, getAppInfo }
