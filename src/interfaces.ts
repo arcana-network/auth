@@ -4,6 +4,11 @@ export type Theme = 'light' | 'dark'
 
 export type Orientation = 'horizontal' | 'vertical'
 
+export type ImagesURLs = {
+  horizontal: string
+  vertical: string
+}
+
 export interface IframeWrapperParams {
   appId: string
   network: string
@@ -12,17 +17,21 @@ export interface IframeWrapperParams {
 export interface IWidgetThemeConfig {
   assets: {
     logo: {
-      dark: {
-        horizontal: string
-        vertical: string
-      }
-      light: {
-        horizontal: string
-        vertical: string
-      }
+      horizontal: string
+      vertical: string
     }
   }
   theme: Theme
+}
+
+export type AppInfo = {
+  name: string
+  theme: Theme
+}
+
+export interface IAppConfig {
+  name: string
+  themeConfig: IWidgetThemeConfig
 }
 
 export interface IConnectionMethods {
