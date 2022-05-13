@@ -6,6 +6,7 @@ import { setNetwork, getConfig, setIframeDevUrl } from './config'
 import { AppInfo, IAppConfig, ImagesURLs } from './interfaces'
 import { JsonRpcResponse } from 'json-rpc-engine'
 import { InitParams, State } from './typings'
+import network, { getImageUrls } from './network'
 
 class WalletProvider {
   public static async encryptWithPublicKey({
