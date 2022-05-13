@@ -4,11 +4,6 @@ export type Theme = 'light' | 'dark'
 
 export type Orientation = 'horizontal' | 'vertical'
 
-export type ImagesURLs = {
-  horizontal: string
-  vertical: string
-}
-
 export interface IframeWrapperParams {
   appId: string
   network: string
