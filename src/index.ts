@@ -30,7 +30,7 @@ class WalletProvider {
     }
   }
 
-  public async init(themeConfig: IWidgetThemeConfig) {
+  public async init() {
     if (this.iframeWrapper) {
       return
     }
