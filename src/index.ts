@@ -64,7 +64,7 @@ class WalletProvider {
 
     this.iframeWrapper = new IframeWrapper(
       {
-        appId: this.params.appId,
+        appId: appId,
         network: this.params.network,
       },
       this.state.iframeUrl,
@@ -72,7 +72,7 @@ class WalletProvider {
       this.destroyWalletUI
     )
     this.provider = new ArcanaProvider()
-    const walletType = await getWalletType(this.params.appId)
+    const walletType = await getWalletType(appId)
     this.iframeWrapper.setWalletType(walletType)
     const { communication } = await this.iframeWrapper.getIframeInstance({
       onEvent: this.handleEvents,
