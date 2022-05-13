@@ -3,10 +3,10 @@ import IframeWrapper from './iframeWrapper'
 import { encryptWithPublicKey, cipher } from 'eth-crypto'
 import { getWalletType } from './utils'
 import { setNetwork, getConfig, setIframeDevUrl } from './config'
-import { AppInfo, IAppConfig, ImagesURLs } from './interfaces'
+import { IAppConfig } from './interfaces'
 import { JsonRpcResponse } from 'json-rpc-engine'
 import { InitParams, State } from './typings'
-import network, { getImageUrls } from './network'
+import { getAppInfo, getImageUrls } from './network'
 
 class WalletProvider {
   public static async encryptWithPublicKey({
@@ -37,17 +37,9 @@ class WalletProvider {
 
     const appId = this.params.appId
 
-    const APP_INFO_API = 'v1/get-app-theme/'
-    const AppInfoApiParams = { id: appId }
+    const appInfo = await getAppInfo(appId)
 
-    const { data: appInfo }: { data: AppInfo } = await network.get(
-      APP_INFO_API,
-      {
-        params: AppInfoApiParams,
-      }
-    )
-
-    const appImageURLs: ImagesURLs = getImageUrls(appId, appInfo.theme)
+    const appImageURLs = getImageUrls(appId, appInfo.theme)
 
     const appConfig: IAppConfig = {
       name: appInfo.name,
