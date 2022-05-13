@@ -3,7 +3,7 @@ import IframeWrapper from './iframeWrapper'
 import { encryptWithPublicKey, cipher } from 'eth-crypto'
 import { getWalletType } from './utils'
 import { setNetwork, getConfig, setIframeDevUrl } from './config'
-import { IWidgetThemeConfig } from './interfaces'
+import { AppInfo, IAppConfig, ImagesURLs } from './interfaces'
 import { JsonRpcResponse } from 'json-rpc-engine'
 import { InitParams, State } from './typings'
 
