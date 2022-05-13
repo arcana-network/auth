@@ -19,7 +19,7 @@ export interface IWidgetThemeConfig {
   theme: Theme
 }
 
-export type AppInfo = {
+export interface AppInfo {
   name: string
   theme: Theme
 }
