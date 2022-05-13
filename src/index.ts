@@ -193,4 +193,4 @@ class WalletProvider {
   }
 }
 
-export { WalletProvider, InitParams }
+export { WalletProvider, InitParams, IAppConfig }
