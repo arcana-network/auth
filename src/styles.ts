@@ -46,6 +46,10 @@ const widgetBubbleStyle = {
     ...baseWidgetBubbleStyle,
     backgroundColor: '#000000',
   },
+  bubbleLogo: {
+    width: '40px',
+    height: '40px',
+  },
   closeButton: {
     ...baseCloseButtonStyle,
     width: '20px',
