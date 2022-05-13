@@ -2,7 +2,7 @@
   "name": "@arcana/wallet",
   "version": "0.0.1",
   "description": "Arcana web wallet",
-  "main": "dist/wallet.js",
+  "main": "dist/index.js",
   "jsdelivr": "dist/standalone/wallet.min.js",
   "unpkg": "dist/standalone/wallet.min.js",
   "types": "types/index.d.ts",
