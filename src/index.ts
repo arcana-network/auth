@@ -68,7 +68,7 @@ class WalletProvider {
         network: this.params.network,
       },
       this.state.iframeUrl,
-      themeConfig,
+      appConfig,
       this.destroyWalletUI
     )
     this.provider = new ArcanaProvider()
