@@ -34,6 +34,34 @@ class WalletProvider {
     if (this.iframeWrapper) {
       return
     }
+
+    const appId = this.params.appId
+
+    const APP_INFO_API = 'v1/get-app-theme/'
+    const AppInfoApiParams = { id: appId }
+
+    const { data: appInfo }: { data: AppInfo } = await network.get(
+      APP_INFO_API,
+      {
+        params: AppInfoApiParams,
+      }
+    )
+
+    const appImageURLs: ImagesURLs = getImageUrls(appId, appInfo.theme)
+
+    const appConfig: IAppConfig = {
+      name: appInfo.name,
+      themeConfig: {
+        assets: {
+          logo: {
+            horizontal: appImageURLs.horizontal,
+            vertical: appImageURLs.vertical,
+          },
+        },
+        theme: appInfo.theme,
+      },
+    }
+
     this.iframeWrapper = new IframeWrapper(
       {
         appId: this.params.appId,
