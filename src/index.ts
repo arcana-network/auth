@@ -7,6 +7,7 @@ import { IAppConfig } from './interfaces'
 import { JsonRpcResponse } from 'json-rpc-engine'
 import { InitParams, State } from './typings'
 import { getAppInfo, getImageUrls } from './network'
+import { WalletNotInitializedError } from './errors'
 
 class WalletProvider {
   public static async encryptWithPublicKey({
@@ -139,31 +140,44 @@ class WalletProvider {
       if (u) {
         setTimeout(() => (window.location.href = u), 50)
       }
+      return
     }
+    throw WalletNotInitializedError
   }
 
   public requestPasswordlessLogin(email: string) {
     if (this.provider) {
-      this.provider.triggerPasswordlessLogin(email)
+      return this.provider.triggerPasswordlessLogin(email)
     }
+    throw WalletNotInitializedError
+  }
+
+  public requestUserInfo() {
+    if (this.provider) {
+      return this.provider.requestUserInfo()
+    }
+    throw WalletNotInitializedError
   }
 
   public isLoggedIn() {
     if (this.provider) {
       return this.provider.isLoggedIn()
     }
+    throw WalletNotInitializedError
   }
 
   public logout() {
     if (this.provider) {
-      this.provider.triggerLogout()
+      return this.provider.triggerLogout()
     }
+    throw WalletNotInitializedError
   }
 
   public async requestPublicKey(email: string, verifier = 'google') {
     if (this.provider) {
       return await this.provider.getPublicKey(email, verifier)
     }
+    throw WalletNotInitializedError
   }
 
   public getProvider() {

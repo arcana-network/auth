@@ -26,6 +26,7 @@ import { ethErrors } from 'eth-rpc-errors'
 import { SafeEventEmitterProvider } from 'eth-json-rpc-middleware/dist/utils/cache'
 import SafeEventEmitter from '@metamask/safe-event-emitter'
 import { getConfig } from './config'
+import { UserNotLoggedInError } from './errors'
 
 interface RequestArguments {
   method: string
@@ -117,6 +118,16 @@ export class ArcanaProvider extends SafeEventEmitter {
     const url = this.getCurrentUrl()
     const redirectUrl = await c.triggerPasswordlessLogin(email, url)
     return redirectUrl
+  }
+
+  public async requestUserInfo() {
+    const c = await this.communication.promise
+    const isLoggedIn = await c.isLoggedIn()
+    if (!isLoggedIn) {
+      throw UserNotLoggedInError
+    }
+    const info = await c.getUserInfo()
+    return info
   }
 
   public async getPublicKey(email: string, verifier: string) {
