@@ -7,12 +7,18 @@ import {
   getUniqueId,
   PendingJsonRpcResponse,
   JsonRpcResponse,
+  createScaffoldMiddleware,
+  JsonRpcMiddleware,
 } from 'json-rpc-engine'
 import {
   providerFromEngine,
   createFetchMiddleware,
   providerFromMiddleware,
   createBlockRefMiddleware,
+  createRetryOnEmptyMiddleware,
+  createInflightCacheMiddleware,
+  createBlockCacheMiddleware,
+  createBlockTrackerInspectorMiddleware,
 } from 'eth-json-rpc-middleware'
 import {
   createWalletMiddleware,
@@ -234,12 +240,18 @@ export class ArcanaProvider extends SafeEventEmitter {
 
   private initEngine() {
     this.jsonRpcEngine = new JsonRpcEngine()
-    this.jsonRpcEngine.push(this.getWalletMiddleware())
-    this.jsonRpcEngine.push(this.getBlockRefMiddleware())
+    const { s, b } = this.getMiddlewares()
+    for (const m of s) {
+      this.jsonRpcEngine.push(m)
+    }
+    for (const m of b) {
+      this.jsonRpcEngine.push(m)
+    }
   }
 
   private getWalletMiddleware() {
     const walletMiddleware = createWalletMiddleware({
+      requestAccounts: this.requestAccounts,
       getAccounts: this.getAccounts,
       processEthSignMessage: this.ethSign,
       processPersonalMessage: this.personalSign,
@@ -252,15 +264,46 @@ export class ArcanaProvider extends SafeEventEmitter {
     return walletMiddleware
   }
 
-  private getBlockRefMiddleware() {
+  private getMiddlewares() {
     const fetchMiddleware = createFetchMiddleware({
       rpcUrl: getConfig().RPC_URL,
     })
     const blockProvider = providerFromMiddleware(fetchMiddleware)
     const blockTracker = new PollingBlockTracker({
       provider: blockProvider as Provider,
+      pollingInterval: 1000,
     })
-    return createBlockRefMiddleware({ blockTracker, provider: blockProvider })
+    const blockRefM = createBlockRefMiddleware({
+      blockTracker,
+      provider: blockProvider,
+    })
+    const blockRetryOnEmptyM = createRetryOnEmptyMiddleware({
+      blockTracker,
+      provider: blockProvider,
+    })
+    const cacheM = createInflightCacheMiddleware()
+    const blockCacheM = createBlockCacheMiddleware({ blockTracker })
+    const blockTrackM = createBlockTrackerInspectorMiddleware({ blockTracker })
+    const networkM = this.getNetAndChainMiddleware()
+    const walletM = this.getWalletMiddleware()
+    return {
+      s: [walletM, networkM],
+      b: [
+        fetchMiddleware,
+        blockRefM,
+        blockRetryOnEmptyM,
+        cacheM,
+        blockCacheM,
+        blockTrackM,
+      ],
+    }
+  }
+
+  private getNetAndChainMiddleware() {
+    return createScaffoldMiddleware({
+      eth_chainId: getConfig().CHAIN_ID,
+      net_version: getConfig().NET_VERSION,
+    }) as JsonRpcMiddleware<string, unknown>
   }
 
   getAccounts = (): Promise<string[]> => {
@@ -271,6 +314,13 @@ export class ArcanaProvider extends SafeEventEmitter {
         this.getResponse<string[]>(method, r.id).then(resolve, reject)
         await c.sendRequest(r)
       })
+    })
+  }
+
+  requestAccounts = (): Promise<string[]> => {
+    return new Promise((resolve) => {
+      const accounts = this.getAccounts()
+      resolve(accounts)
     })
   }
 

@@ -96,7 +96,7 @@ requestPersonalSignatureBtn.addEventListener('click', async () => {
   console.log('Requesting personal signature')
   const personalSign = await provider.request({
     method: 'personal_sign',
-    params: ['some personal data', from],
+    params: ['0', from],
   })
   console.log({ personalSign })
 })

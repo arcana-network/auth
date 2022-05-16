@@ -22,6 +22,7 @@ export interface TypedMessageParams extends MessageParams {
 
 interface WalletMiddlewareOptions {
   getAccounts: (req: JsonRpcRequest<unknown>) => Promise<string[]>
+  requestAccounts: (req: JsonRpcRequest<unknown>) => Promise<string[]>
   processDecryptMessage?: (
     msgParams: MessageParams,
     req: JsonRpcRequest<unknown>
@@ -64,6 +65,7 @@ interface WalletMiddlewareOptions {
 }
 
 export function createWalletMiddleware({
+  requestAccounts,
   getAccounts,
   processDecryptMessage,
   processEncryptionPublicKey,
@@ -81,6 +83,7 @@ export function createWalletMiddleware({
 
   return createScaffoldMiddleware({
     // account lookups
+    eth_requestAccounts: createAsyncMiddleware(permissionedLookupAccounts),
     eth_accounts: createAsyncMiddleware(lookupAccounts),
     eth_coinbase: createAsyncMiddleware(lookupDefaultAccount),
     // tx signatures
@@ -106,6 +109,12 @@ export function createWalletMiddleware({
     res: PendingJsonRpcResponse<unknown>
   ): Promise<void> {
     res.result = await getAccounts(req)
+  }
+  async function permissionedLookupAccounts(
+    req: JsonRpcRequest<unknown>,
+    res: PendingJsonRpcResponse<unknown>
+  ): Promise<void> {
+    res.result = await requestAccounts(req)
   }
 
   async function lookupDefaultAccount(
