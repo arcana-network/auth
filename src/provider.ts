@@ -7,6 +7,7 @@ import {
   getUniqueId,
   PendingJsonRpcResponse,
   JsonRpcResponse,
+  createScaffoldMiddleware,
 } from 'json-rpc-engine'
 import {
   providerFromEngine,
@@ -236,10 +237,12 @@ export class ArcanaProvider extends SafeEventEmitter {
     this.jsonRpcEngine = new JsonRpcEngine()
     this.jsonRpcEngine.push(this.getWalletMiddleware())
     this.jsonRpcEngine.push(this.getBlockRefMiddleware())
+    this.jsonRpcEngine.push(this.getNetAndChainMiddleware())
   }
 
   private getWalletMiddleware() {
     const walletMiddleware = createWalletMiddleware({
+      requestAccounts: this.requestAccounts,
       getAccounts: this.getAccounts,
       processEthSignMessage: this.ethSign,
       processPersonalMessage: this.personalSign,
@@ -263,6 +266,13 @@ export class ArcanaProvider extends SafeEventEmitter {
     return createBlockRefMiddleware({ blockTracker, provider: blockProvider })
   }
 
+  private getNetAndChainMiddleware() {
+    return createScaffoldMiddleware({
+      eth_chainId: getConfig().CHAIN_ID,
+      net_version: getConfig().NET_VERSION,
+    })
+  }
+
   getAccounts = (): Promise<string[]> => {
     return new Promise((resolve, reject) => {
       const method = 'eth_accounts'
@@ -271,6 +281,13 @@ export class ArcanaProvider extends SafeEventEmitter {
         this.getResponse<string[]>(method, r.id).then(resolve, reject)
         await c.sendRequest(r)
       })
+    })
+  }
+
+  requestAccounts = (): Promise<string[]> => {
+    return new Promise((resolve) => {
+      const accounts = this.getAccounts()
+      resolve(accounts)
     })
   }
 

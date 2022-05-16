@@ -2,12 +2,16 @@ let config = 'dev'
 
 const DEV_CONFIG = {
   RPC_URL: 'https://blockchain-dev.arcana.network',
+  CHAIN_ID: '0x9dd4',
+  NET_VERSION: '40404',
   GATEWAY_URL: 'https://gateway-dev.arcana.network',
   WALLET_URL: 'https://wallet.dev.arcana.network',
 }
 
 const TESTNET_CONFIG = {
   RPC_URL: 'https://blockchain-testnet.arcana.network',
+  CHAIN_ID: '0x9dd4',
+  NET_VERSION: '40404',
   GATEWAY_URL: 'https://gateway-testnet.arcana.network',
   WALLET_URL: 'https://wallet.arcana.network',
 }
