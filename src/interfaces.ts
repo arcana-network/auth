@@ -29,6 +29,13 @@ export interface IAppConfig {
   themeConfig: IWidgetThemeConfig
 }
 
+export interface UserInfo {
+  id: string
+  email?: string
+  name?: string
+  picture?: string
+}
+
 export interface IConnectionMethods {
   isLoggedIn: () => Promise<boolean>
   triggerSocialLogin: (t: string, url: string) => Promise<string>
@@ -36,6 +43,7 @@ export interface IConnectionMethods {
   sendRequest: (req: JsonRpcRequest<unknown>) => Promise<void>
   getPublicKey: (email: string, verifier: string) => Promise<string>
   triggerLogout: () => Promise<void>
+  getUserInfo: () => Promise<UserInfo>
 }
 
 export interface ITypedDataMessage {

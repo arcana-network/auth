@@ -79,6 +79,20 @@ Check is logged in
 const loggedIn = await wallet.isLoggedIn()
 ```
 
+User Info
+
+```js
+const info = await wallet.requestUserInfo()
+/* 
+interface UserInfo {
+  id: string
+  email?: string
+  name?: string
+  picture?: string
+}
+*/
+```
+
 Logout
 
 ```js
