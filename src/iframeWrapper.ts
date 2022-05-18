@@ -5,7 +5,7 @@ import {
 } from './interfaces'
 import { connectToChild, Connection } from 'penpal'
 import { widgetIframeStyle, widgetBubbleStyle } from './styles'
-import { AppMode, WalletTypes } from './typings'
+import { AppMode, WalletType } from './typings'
 import {
   createDomElement,
   getWalletPosition,
@@ -25,7 +25,6 @@ export default class IframeWrapper {
   public appMode: AppMode
 
   private iframeCommunication: Connection<IConnectionMethods>
-  private walletType: WalletTypes
   constructor(
     private params: IframeWrapperParams,
     private iframeUrl: string,
@@ -41,8 +40,7 @@ export default class IframeWrapper {
     return await this.createOrGetInstance(params)
   }
 
-  public setWalletType(walletType: WalletTypes, appMode: AppMode | undefined) {
-    this.walletType = walletType
+  public setWalletType(walletType: WalletType, appMode: AppMode | undefined) {
     this.appMode = verifyMode(walletType, appMode)
   }
 
