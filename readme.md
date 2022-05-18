@@ -32,12 +32,13 @@ import { WalletProvider } from '@arcana/wallet'
 ### Initialize
 
 ```js
+import { AppMode } from '@arcana/wallet'
 const wallet = new WalletProvider({
   appId: `${appId}`,
   inpageProvider: true /* sets window.arcana.provider and tries to set window.ethereum to the provider */,
 })
 
-await wallet.init()
+await wallet.init({ appMode: AppMode.Widget })
 
 provider = wallet.getProvider()
 // or
