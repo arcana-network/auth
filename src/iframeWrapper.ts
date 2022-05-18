@@ -25,7 +25,7 @@ export default class IframeWrapper {
   public appMode: AppMode
 
   private iframeCommunication: Connection<IConnectionMethods>
-  private walletType: number
+  private walletType: WalletTypes
   constructor(
     private params: IframeWrapperParams,
     private iframeUrl: string,
@@ -47,7 +47,7 @@ export default class IframeWrapper {
   }
 
   show = () => {
-    switch (this.walletType) {
+    switch (this.appMode) {
       case AppMode.Full: {
         this.openWidgetIframe()
         break
@@ -56,14 +56,14 @@ export default class IframeWrapper {
         this.openWidgetIframe()
         break
       }
-      case WalletTypes.NoUI:
+      case AppMode.NoUI:
       default:
         break
     }
   }
 
   hide = () => {
-    switch (this.walletType) {
+    switch (this.appMode) {
       case AppMode.Full: {
         this.closeWidgetIframe()
         break
@@ -72,7 +72,7 @@ export default class IframeWrapper {
         this.closeWidgetIframe()
         break
       }
-      case WalletTypes.NoUI:
+      case AppMode.NoUI:
       default:
         break
     }
@@ -151,7 +151,7 @@ export default class IframeWrapper {
   }
 
   private createWidgetBubble() {
-    if (this.walletType === AppMode.Full) {
+    if (this.appMode === AppMode.Full) {
       const {
         appConfig: { themeConfig },
       } = this
