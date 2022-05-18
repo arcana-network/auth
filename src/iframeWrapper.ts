@@ -5,13 +5,14 @@ import {
 } from './interfaces'
 import { connectToChild, Connection } from 'penpal'
 import { widgetIframeStyle, widgetBubbleStyle } from './styles'
-import { WalletTypes } from './typings'
+import { AppMode, WalletTypes } from './typings'
 import {
   createDomElement,
   getWalletPosition,
   getWalletSize,
   setWalletPosition,
   setWalletSize,
+  verifyMode,
 } from './utils'
 import { getConfig } from './config'
 const BREAKPOINT_SMALL = 768
@@ -21,10 +22,10 @@ export default class IframeWrapper {
 
   public widgetBubble: HTMLButtonElement
   public widgetIframeContainer: HTMLDivElement
+  public appMode: AppMode
 
   private iframeCommunication: Connection<IConnectionMethods>
   private walletType: number
-
   constructor(
     private params: IframeWrapperParams,
     private iframeUrl: string,
@@ -40,17 +41,18 @@ export default class IframeWrapper {
     return await this.createOrGetInstance(params)
   }
 
-  public setWalletType(walletType: number) {
+  public setWalletType(walletType: WalletTypes, appMode: AppMode | undefined) {
     this.walletType = walletType
+    this.appMode = verifyMode(walletType, appMode)
   }
 
   show = () => {
     switch (this.walletType) {
-      case WalletTypes.Full: {
+      case AppMode.Full: {
         this.openWidgetIframe()
         break
       }
-      case WalletTypes.Partial: {
+      case AppMode.Widget: {
         this.openWidgetIframe()
         break
       }
@@ -62,11 +64,11 @@ export default class IframeWrapper {
 
   hide = () => {
     switch (this.walletType) {
-      case WalletTypes.Full: {
+      case AppMode.Full: {
         this.closeWidgetIframe()
         break
       }
-      case WalletTypes.Partial: {
+      case AppMode.Widget: {
         this.closeWidgetIframe()
         break
       }
@@ -149,7 +151,7 @@ export default class IframeWrapper {
   }
 
   private createWidgetBubble() {
-    if (this.walletType === WalletTypes.Full) {
+    if (this.walletType === AppMode.Full) {
       const {
         appConfig: { themeConfig },
       } = this
