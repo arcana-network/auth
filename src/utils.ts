@@ -101,7 +101,7 @@ const getWalletPosition = (isViewportSmall: boolean): IWalletPosition => {
 
 export function verifyMode(w: WalletTypes, a: AppMode | undefined): AppMode {
   const allowedModes = ModeWalletTypeRelation[w]
-  if (a) {
+  if (a !== undefined) {
     if (!allowedModes.includes(a)) {
       return allowedModes[0]
     }
