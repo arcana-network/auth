@@ -5,7 +5,7 @@ import { getWalletType } from './utils'
 import { setNetwork, getConfig, setIframeDevUrl } from './config'
 import { IAppConfig, Position } from './interfaces'
 import { JsonRpcResponse } from 'json-rpc-engine'
-import { InitParams, State } from './typings'
+import { InitParams, State, AppMode } from './typings'
 import { getAppInfo, getImageUrls } from './network'
 import { WalletNotInitializedError } from './errors'
 
@@ -31,7 +31,13 @@ class WalletProvider {
     }
   }
 
-  public async init({ position }: { position: Position }) {
+  public async init({
+    appMode,
+    position,
+  }: {
+    appMode: AppMode | undefined
+    position: Position
+  }) {
     if (this.iframeWrapper) {
       return
     }
@@ -67,7 +73,7 @@ class WalletProvider {
     )
     this.provider = new ArcanaProvider()
     const walletType = await getWalletType(appId)
-    this.iframeWrapper.setWalletType(walletType)
+    this.iframeWrapper.setWalletType(walletType, appMode)
     const { communication } = await this.iframeWrapper.getIframeInstance({
       onEvent: this.handleEvents,
       onMethodResponse: (
@@ -78,6 +84,9 @@ class WalletProvider {
       },
       getAppConfig: () => {
         return appConfig
+      },
+      getAppMode: () => {
+        return this.iframeWrapper?.appMode
       },
       sendPendingRequestCount: (count: number) => {
         this.onReceivingPendingRequestCount(count)
@@ -208,4 +217,4 @@ class WalletProvider {
   }
 }
 
-export { WalletProvider, InitParams, IAppConfig }
+export { WalletProvider, InitParams, IAppConfig, AppMode }

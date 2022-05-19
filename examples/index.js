@@ -8,7 +8,7 @@ let provider
 
 window.onload = async () => {
   console.log('Init wallet')
-  const position = 'left'
+  const position = 'right'
   try {
     await wallet.init({ position })
     provider = wallet.getProvider()
