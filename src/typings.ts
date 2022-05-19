@@ -1,7 +1,17 @@
-export const WalletTypes = {
-  Full: 0,
-  Partial: 1,
-  NoUI: 2,
+export enum WalletType {
+  UI = 1,
+  NoUI = 2,
+}
+
+export enum AppMode {
+  Full = 0,
+  Widget = 1,
+  NoUI = 2,
+}
+
+export const ModeWalletTypeRelation = {
+  [WalletType.UI]: [AppMode.Widget, AppMode.Full],
+  [WalletType.NoUI]: [AppMode.NoUI],
 }
 
 export interface InitParams {

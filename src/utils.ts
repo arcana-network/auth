@@ -1,6 +1,7 @@
 import { ethers } from 'ethers'
 import { getConfig } from './config'
 import { IWalletPosition, IWalletSize } from './interfaces'
+import { AppMode, ModeWalletTypeRelation, WalletType } from './typings'
 
 const getContract = (rpcUrl: string, appAddress: string) => {
   const provider = new ethers.providers.JsonRpcProvider(rpcUrl)
@@ -96,6 +97,18 @@ const getWalletPosition = (isViewportSmall: boolean): IWalletPosition => {
     position.bottom = '30px'
   }
   return position
+}
+
+export function verifyMode(w: WalletType, a: AppMode | undefined): AppMode {
+  const allowedModes = ModeWalletTypeRelation[w]
+  if (a !== undefined) {
+    if (!allowedModes.includes(a)) {
+      return allowedModes[0]
+    }
+    return a
+  } else {
+    return allowedModes[0]
+  }
 }
 
 export {
