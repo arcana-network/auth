@@ -3,7 +3,7 @@ import IframeWrapper from './iframeWrapper'
 import { encryptWithPublicKey, cipher } from 'eth-crypto'
 import { getWalletType } from './utils'
 import { setNetwork, getConfig, setIframeDevUrl } from './config'
-import { IAppConfig } from './interfaces'
+import { IAppConfig, Position } from './interfaces'
 import { JsonRpcResponse } from 'json-rpc-engine'
 import { InitParams, State } from './typings'
 import { getAppInfo, getImageUrls } from './network'
@@ -31,7 +31,7 @@ class WalletProvider {
     }
   }
 
-  public async init() {
+  public async init({ position }: { position: Position }) {
     if (this.iframeWrapper) {
       return
     }
@@ -62,6 +62,7 @@ class WalletProvider {
       },
       this.state.iframeUrl,
       appConfig,
+      position,
       this.destroyWalletUI
     )
     this.provider = new ArcanaProvider()
