@@ -210,18 +210,18 @@ export default class IframeWrapper {
   // Todo: add remove event listener for "resize" event
 
   private resizeWidgetUI() {
-    const { matches: isViewPortSmall } = window.matchMedia(
+    const { matches: isViewportSmall } = window.matchMedia(
       `(max-width: ${BREAKPOINT_SMALL}px)`
     )
 
-    setWalletSize(this.widgetIframeContainer, getWalletSize(isViewPortSmall))
+    setWalletSize(this.widgetIframeContainer, getWalletSize(isViewportSmall))
     setWalletPosition(
       this.widgetBubble,
-      getWalletPosition(isViewPortSmall, this.position)
+      getWalletPosition(isViewportSmall, this.position)
     )
     setWalletPosition(
       this.widgetIframeContainer,
-      getWalletPosition(isViewPortSmall, this.position)
+      getWalletPosition(isViewportSmall, this.position)
     )
   }
 
