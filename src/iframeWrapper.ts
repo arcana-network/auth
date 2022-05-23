@@ -100,7 +100,7 @@ export default class IframeWrapper {
     return { iframe: this.iframe, communication: this.iframeCommunication }
   }
 
-  private constructWidgetIframeStructure() {
+  private constructWidgetIframeStructure(isFullMode: boolean) {
     const {
       appConfig: { themeConfig },
     } = this
@@ -119,9 +119,11 @@ export default class IframeWrapper {
     const widgetIframeHeader = createDomElement(
       'div',
       { style: widgetIframeStyle.header.container[theme] },
-      appLogo,
-      closeButton
+      appLogo
     )
+
+    if (isFullMode) widgetIframeHeader.appendChild(closeButton)
+
     const widgetIframeBody = createDomElement('div', {
       style: widgetIframeStyle.body,
     })
@@ -130,13 +132,14 @@ export default class IframeWrapper {
   }
 
   private createWidgetIframe() {
+    const isFullMode = this.appMode === AppMode.Full
     this.iframe = createDomElement('iframe', {
       style: widgetIframeStyle.iframe,
       src: `${this.iframeUrl}/${this.params.appId}/login`,
     }) as HTMLIFrameElement
 
     const { widgetIframeHeader, widgetIframeBody } =
-      this.constructWidgetIframeStructure()
+      this.constructWidgetIframeStructure(isFullMode)
 
     widgetIframeBody.appendChild(this.iframe)
 
@@ -188,6 +191,7 @@ export default class IframeWrapper {
   }
 
   private initWalletUI() {
+    const isFullMode = this.appMode === AppMode.Full
     this.widgetIframeContainer = this.createWidgetIframe() as HTMLDivElement
     this.widgetBubble = this.createWidgetBubble() as HTMLButtonElement
 
@@ -197,7 +201,7 @@ export default class IframeWrapper {
 
     this.widgetIframeContainer.style.display = 'none'
 
-    document.body.appendChild(this.widgetBubble)
+    if (isFullMode) document.body.appendChild(this.widgetBubble)
     document.body.appendChild(this.widgetIframeContainer)
   }
 
@@ -213,7 +217,8 @@ export default class IframeWrapper {
     )
 
     setWalletSize(this.widgetIframeContainer, getWalletSize(isViewPortSmall))
-    setWalletPosition(this.widgetBubble, getWalletPosition(isViewPortSmall))
+    if (this.widgetBubble)
+      setWalletPosition(this.widgetBubble, getWalletPosition(isViewPortSmall))
 
     setWalletPosition(
       this.widgetIframeContainer,
@@ -222,12 +227,12 @@ export default class IframeWrapper {
   }
 
   private closeWidgetIframe() {
-    this.widgetBubble.style.display = 'flex'
+    if (this.widgetBubble) this.widgetBubble.style.display = 'flex'
     this.widgetIframeContainer.style.display = 'none'
   }
 
   private openWidgetIframe() {
-    this.widgetBubble.style.display = 'none'
+    if (this.widgetBubble) this.widgetBubble.style.display = 'none'
     this.widgetIframeContainer.style.display = 'flex'
   }
 
