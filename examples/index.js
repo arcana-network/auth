@@ -8,8 +8,9 @@ let provider
 
 window.onload = async () => {
   console.log('Init wallet')
+  const position = 'right'
   try {
-    await wallet.init({ appMode: AppMode.Widget })
+    await wallet.init({ appMode: AppMode.Widget, position })
     provider = wallet.getProvider()
     const connected = await wallet.isLoggedIn()
     console.log({ connected })

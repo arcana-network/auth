@@ -2,6 +2,7 @@ import {
   IframeWrapperParams,
   IConnectionMethods,
   IAppConfig,
+  Position,
 } from './interfaces'
 import { connectToChild, Connection } from 'penpal'
 import { widgetIframeStyle, widgetBubbleStyle } from './styles'
@@ -29,6 +30,7 @@ export default class IframeWrapper {
     private params: IframeWrapperParams,
     private iframeUrl: string,
     private appConfig: IAppConfig,
+    private position: Position,
     private destroyWalletUI: () => void
   ) {
     this.checkSecureOrigin()
@@ -212,17 +214,21 @@ export default class IframeWrapper {
   // Todo: add remove event listener for "resize" event
 
   private resizeWidgetUI() {
-    const { matches: isViewPortSmall } = window.matchMedia(
+    const { matches: isViewportSmall } = window.matchMedia(
       `(max-width: ${BREAKPOINT_SMALL}px)`
     )
 
-    setWalletSize(this.widgetIframeContainer, getWalletSize(isViewPortSmall))
+    setWalletSize(this.widgetIframeContainer, getWalletSize(isViewportSmall))
+
     if (this.widgetBubble)
-      setWalletPosition(this.widgetBubble, getWalletPosition(isViewPortSmall))
+      setWalletPosition(
+        this.widgetBubble,
+        getWalletPosition(isViewportSmall, this.position)
+      )
 
     setWalletPosition(
       this.widgetIframeContainer,
-      getWalletPosition(isViewPortSmall)
+      getWalletPosition(isViewportSmall, this.position)
     )
   }
 

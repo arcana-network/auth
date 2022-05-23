@@ -1,6 +1,6 @@
 import { ethers } from 'ethers'
 import { getConfig } from './config'
-import { IWalletPosition, IWalletSize } from './interfaces'
+import { IWalletPosition, IWalletSize, Position } from './interfaces'
 import { AppMode, ModeWalletTypeRelation, WalletType } from './typings'
 
 const getContract = (rpcUrl: string, appAddress: string) => {
@@ -70,8 +70,9 @@ const setWalletPosition = (
   element: HTMLElement,
   position: IWalletPosition
 ): void => {
-  const { right, bottom } = position
-  element.style.right = right
+  const { right, bottom, left } = position
+  if (right) element.style.right = right
+  if (left) element.style.left = left
   element.style.bottom = bottom
 }
 
@@ -87,16 +88,12 @@ const getWalletSize = (isViewportSmall: boolean): IWalletSize => {
   return sizes
 }
 
-const getWalletPosition = (isViewportSmall: boolean): IWalletPosition => {
-  const position = { right: '', bottom: '' }
-  if (isViewportSmall) {
-    position.right = '20px'
-    position.bottom = '20px'
-  } else {
-    position.right = '30px'
-    position.bottom = '30px'
-  }
-  return position
+const getWalletPosition = (
+  isViewportSmall: boolean,
+  position: Position
+): IWalletPosition => {
+  const positionDistance = isViewportSmall ? '20px' : '30px'
+  return { bottom: positionDistance, [position]: positionDistance }
 }
 
 export function verifyMode(w: WalletType, a: AppMode | undefined): AppMode {
