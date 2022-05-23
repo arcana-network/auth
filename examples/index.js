@@ -1,6 +1,6 @@
-const { WalletProvider } = window.arcana.wallet
+const { WalletProvider, AppMode } = window.arcana.wallet
 const wallet = new WalletProvider({
-  appId: '20',
+  appId: '253',
   iframeUrl: 'http://localhost:3000',
 })
 
@@ -9,7 +9,7 @@ let provider
 window.onload = async () => {
   console.log('Init wallet')
   try {
-    await wallet.init()
+    await wallet.init({ appMode: AppMode.Widget })
     provider = wallet.getProvider()
     const connected = await wallet.isLoggedIn()
     console.log({ connected })
