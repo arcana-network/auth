@@ -4,6 +4,8 @@ export type Theme = 'light' | 'dark'
 
 export type Orientation = 'horizontal' | 'vertical'
 
+export type Position = 'right' | 'left'
+
 export interface IframeWrapperParams {
   appId: string
   network: string
@@ -63,6 +65,7 @@ export interface IWalletSize {
 }
 
 export interface IWalletPosition {
-  right: string
+  right?: string
+  left?: string
   bottom: string
 }

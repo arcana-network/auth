@@ -38,7 +38,9 @@ const wallet = new WalletProvider({
   inpageProvider: true /* sets window.arcana.provider and tries to set window.ethereum to the provider */,
 })
 
-await wallet.init({ appMode: AppMode.Widget })
+const position = 'left' // values - 'left' or 'right'
+
+await wallet.init({ appMode: AppMode.Widget, position })
 
 provider = wallet.getProvider()
 // or
