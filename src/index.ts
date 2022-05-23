@@ -33,10 +33,10 @@ class WalletProvider {
 
   public async init({
     appMode,
-    position,
+    position = 'right',
   }: {
     appMode: AppMode | undefined
-    position: Position
+    position?: Position
   }) {
     if (this.iframeWrapper) {
       return
