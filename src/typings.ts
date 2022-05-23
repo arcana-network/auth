@@ -1,6 +1,6 @@
 export enum WalletType {
-  UI = 1,
-  NoUI = 2,
+  UI = 0,
+  NoUI = 1,
 }
 
 export enum AppMode {
