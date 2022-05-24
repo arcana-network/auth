@@ -44,6 +44,9 @@ import { LocalStore } from './localStore';
 import { ArcanaAuthException } from './errors';
 
 class AuthProvider {
+  /**
+   * helper function to initialize the AuthProvider, should be the starting point
+   */
   public static async init(params: InitParams): Promise<AuthProvider> {
     const provider = new AuthProvider(params);
     if (provider.params.flow == 'redirect') {
@@ -51,7 +54,12 @@ class AuthProvider {
     }
     return provider;
   }
-  public static handleRedirectPage = handleRedirectPage;
+  /**
+   * helper function to handle redirect params on popup mode
+   */
+  public static handleRedirectPage(origin: string): void {
+    return handleRedirectPage(origin);
+  }
   private params: StateParams;
   private oauthStore: OAuthFetcher;
   private store: Store;
@@ -78,6 +86,10 @@ class AuthProvider {
     }
   }
 
+  /**
+   * A method to trigger social login
+   * @returns returns OAuth URL if autoRedirect is set to false
+   */
   public async loginWithSocial(loginType: LoginType): Promise<void | string> {
     if (this.checkAlreadyLoggedIn(loginType)) {
       return;
@@ -118,6 +130,10 @@ class AuthProvider {
     await this.fetchInfoAndKey(loginHandler, params);
   }
 
+  /**
+   * A method to trigger passwordless login
+   * @returns returns OAuth URL if autoRedirect is set to false, object if withUI is set to false
+   */
   public async loginWithOtp(
     email: string,
     options: OtpOptions = { withUI: true }
@@ -160,11 +176,17 @@ class AuthProvider {
     }
   }
 
+  /**
+   * A helper method to get list of available logins
+   */
   public async getAvailableLogins(): Promise<string[]> {
     await this.init();
     return this.oauthStore.getLogins();
   }
 
+  /**
+   * A method to get user info, if logged in
+   */
   public getUserInfo(): GetInfoOutput {
     const userInfo = this.store.get(StoreIndex.LOGGED_IN);
     if (userInfo) {
@@ -178,19 +200,33 @@ class AuthProvider {
     }
   }
 
+  /**
+   * A helper method to determine whether user is logged in
+   * @returns returns OAuth URL if autoRedirect is set to false
+   */
   public isLoggedIn(): boolean {
     const userExists = this.store.get(StoreIndex.LOGGED_IN);
     return userExists ? true : false;
   }
 
+  /**
+   * A method to logout the user
+   */
   public logout(): void {
     this.store.clear();
   }
 
+  /**
+   * @internal
+   */
   public unload(): void {
     this.store.unload();
   }
 
+  /**
+   * A method to get public key for other users
+   * @returns returns object or string based on option provided
+   */
   public async getPublicKey(
     input: KeystoreInput,
     output: PublicKeyOutput = PublicKeyOutput.uncompressed
