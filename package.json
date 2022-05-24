@@ -1,6 +1,6 @@
 {
   "name": "@arcana/auth",
-  "version": "0.0.10",
+  "version": "0.0.9-beta5",
   "description": "Arcana auth SDK for easier logins",
   "main": "dist/index.js",
   "jsdelivr": "dist/standalone/auth.min.js",
@@ -16,6 +16,7 @@
     "dev": "esbuild src/index.ts --define:global=window --watch --inject:config/esbuild.inject.js --format=iife --global-name=arcana.auth --bundle --target=chrome58,firefox57,safari11,edge18  --outfile=dist/standalone/auth.min.js",
     "build:ts": "rimraf dist/ && rimraf types/ && tsc --project tsconfig.json",
     "test": "jest --verbose",
+    "docs": "typedoc --options typedoc.json",
     "test:coverage": "jest --coverage",
     "lint": "eslint ./src",
     "prepare": "husky install",
@@ -50,6 +51,7 @@
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.24.0",
+    "eslint-plugin-tsdoc": "^0.2.16",
     "husky": "^7.0.2",
     "jest": "^27.0.6",
     "jest-environment-jsdom": "^27.2.4",
@@ -59,6 +61,8 @@
     "rimraf": "^3.0.2",
     "stream-browserify": "^3.0.0",
     "ts-loader": "^9.2.6",
+    "typedoc": "^0.22.15",
+    "typedoc-plugin-markdown": "^3.12.1",
     "typescript": "^4.4.4",
     "util": "^0.12.4"
   }

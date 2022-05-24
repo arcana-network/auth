@@ -18,8 +18,8 @@ const alias = require('esbuild-plugin-alias');
           buffer: require.resolve('buffer/'),
           crypto: require.resolve('crypto-browserify'),
           stream: require.resolve('stream-browserify'),
-          util: require.resolve('util/')
-        })
+          util: require.resolve('util/'),
+        }),
       ],
       define: {
         global: 'window',

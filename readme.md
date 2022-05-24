@@ -23,7 +23,7 @@ yarn add @arcana/auth
 
 ## Usage
 
-### Import 
+### Import
 
 ```js
 const { AuthProvider, SocialLoginType } = window.arcana.auth;
@@ -36,8 +36,8 @@ import { AuthProvider } from '@arcana/auth';
 ```js
 const auth = await AuthProvider.init({
    appId: `${appId}`,
-   flow: 'redirect', // 'popup' or 'redirect'
-   redirectUri:'' // Can be ignored for redirect flow if same as login page
+   flow: 'redirect', /* can be 'popup' or 'redirect' */
+   redirectUri:''    /* can be ignored for redirect flow if same as login page */
 });
 ```
 
@@ -50,13 +50,14 @@ await auth.loginWithSocial(SocialLoginType.google);
 ### Initiate passwordless login
 
 ```js
-const result = await auth.loginWithOtp(`${emailAddress}`, { withUI: boolean });
+const result = await auth.loginWithOtp(`${emailAddress}`, PasswordlessOptions);
 ```
 
-Options:
+PasswordlessOptions:
 
 - `{ withUI: true }` - the user is redirected to `email-sent` or `error` page
 - `{ withUI: false }` - gets a `json` response back with no redirection
+- defaults to `{ withUI: true }`
 
 ### Get login status
 
@@ -90,14 +91,15 @@ const userInfo = auth.getUserInfo();
 const publicKey = await auth.getPublicKey({
   verifier: SocialLoginType.google,
   id: `${email}`,
-}, output); /* output can be 'point', 'compressed' or 'uncompressed'; */
+}, PublickeyOutput); 
 ```
 
-Output:
+PublickeyOutput:
 
-- `point` will be output with `{ x: string, y: string }`
-- `compressed` will be `string` like `0x03...`
-- `uncompressed` will be a `string` like `0x04...`
+- value can be 'point', 'compressed' or 'uncompressed'
+- `point` output will be an object with `{ x: string, y: string }`
+- `compressed` output will be a `string` like `0x03...`
+- `uncompressed` output will be a `string` like `0x04...`
 - defaults to `uncompressed`
 
 ### Clear login session
@@ -108,13 +110,60 @@ await auth.logout();
 
 ## Typescript Usage
 
-Exported types:
+### Exported enums
 
-- InitParams
-- UserInfo
-- PublicKeyOutput
-- SocialLoginType
-- PasswordlessOption
+```ts
+
+enum PublicKeyOutput {
+  point = 'point',
+  compressed = 'compressed',
+  uncompressed = 'uncompressed',
+}
+
+enum SocialLoginType {
+  google = 'google',
+  reddit = 'reddit',
+  discord = 'discord',
+  twitch = 'twitch',
+  github = 'github',
+  twitter = 'twitter',
+  passwordless = 'passwordless',
+}
+
+```
+
+### Exported types
+
+```ts
+
+interface KeystoreInput {
+  id: string;
+  verifier: LoginType;
+}
+
+interface InitParams {
+  appId: string;
+  network?: 'dev' | 'testnet'; /* defaults to testnet  */
+  flow?: 'popup' | 'redirect'; /* defaults to redirect */
+  debug?: boolean;             /* defaults to false    */
+}
+
+interface GetInfoOutput {
+  loginType: SocialLoginType;
+  userInfo: UserInfo {
+    id: string;
+    email?: string;
+    name?: string;
+    picture?: string;
+  };
+  privateKey: string;
+}
+
+interface PasswordlessOptions {
+  withUI?: boolean;
+}
+
+```
 
 ## Flow modes
 
@@ -136,7 +185,45 @@ window.onload = async () => {
 }
 ```
 
-- Skip `redirectUri` in params if the it is same as login page.
+`redirect.js`
+
+```js
+window.onload = async () => {
+  const auth = await AuthProvider.init({
+    appId: `${appId}`,
+    flow: 'redirect',
+    redirectUri:'path/to/redirect' 
+  });
+
+  
+  if(auth.isLoggedIn()) {
+    const info = auth.getUserInfo();
+  }
+}
+```
+
+- Skip `redirectUri` in params if the it is same as login page. For example:
+  
+  `index.js`
+
+  ```js
+  window.onload = async () => {
+    const auth = await AuthProvider.init({
+      appId: `${appId}`,
+      flow: 'redirect',
+    });
+
+    if(auth.isLoggedIn()) {
+      /* already logged in, get user info and use */
+      const info = auth.getUserInfo();
+    } else {
+      /* add handler to handle login function */
+      googleLoginBtn.addEventListener('click', async () => {
+        await auth.loginWithSocial(SocialLoginType.google);
+      });
+    }
+  }
+  ```
 
 ### **Popup**
 
@@ -169,5 +256,4 @@ window.onload = async () => {
 
 ### Variables
 
-- `SocialLoginType` - discord, twitter, github, google, twitch, reddit
 - `origin` - Base url of your app.

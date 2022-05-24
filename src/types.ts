@@ -8,6 +8,12 @@ export enum LoginType {
   passwordless = 'passwordless',
 }
 
+export enum PublicKeyOutput {
+  point = 'point',
+  compressed = 'compressed',
+  uncompressed = 'uncompressed',
+}
+
 export interface OtpOptions {
   withUI?: boolean;
 }
@@ -19,7 +25,7 @@ export interface UserInfo {
   picture?: string;
 }
 
-export interface StoredUserInfo {
+export interface GetInfoOutput {
   loginType: LoginType;
   userInfo: UserInfo;
   privateKey: string;
@@ -33,9 +39,11 @@ export interface InitParams {
   rpcUrl?: string;
   flow?: 'popup' | 'redirect';
   debug?: boolean;
+  autoRedirect: boolean;
 }
 
 export interface StateParams {
+  autoRedirect: boolean;
   appId: string;
   redirectUri: string;
   network: 'dev' | 'testnet';
@@ -67,4 +75,9 @@ export interface InternalConfig {
   gatewayUrl: string;
   passwordlessUrl: string;
   sentryDsn: string;
+}
+
+export interface KeystoreInput {
+  id: string;
+  verifier: LoginType;
 }

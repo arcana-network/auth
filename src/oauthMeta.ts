@@ -17,6 +17,9 @@ export class OAuthContractMeta implements OAuthFetcher {
 
   public async getClientID(loginType: LoginType): Promise<string> {
     try {
+      if (loginType == LoginType.passwordless) {
+        return this.appContract.address;
+      }
       if (!this.clientIDs[loginType]) {
         const clientID: string[] = await this.appContract.functions.clientID(
           loginType

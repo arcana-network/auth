@@ -2,12 +2,15 @@ import {
   LoginType,
   OAuthFetcher,
   Store,
-  StoredUserInfo,
+  GetInfoOutput,
+  UserInfo,
   InitParams,
   StateParams,
   StoreIndex,
   InternalConfig,
   OtpOptions,
+  PublicKeyOutput,
+  KeystoreInput,
 } from './types';
 import {
   handleRedirectPage,
@@ -39,8 +42,6 @@ import { getConfig, setConfigEnv } from './config';
 import { OAuthContractMeta } from './oauthMeta';
 import { LocalStore } from './localStore';
 import { ArcanaAuthException } from './errors';
-
-type PublicKeyOutput = 'point' | 'compressed' | 'uncompressed';
 
 class AuthProvider {
   public static async init(params: InitParams): Promise<AuthProvider> {
@@ -77,7 +78,7 @@ class AuthProvider {
     }
   }
 
-  public async loginWithSocial(loginType: LoginType): Promise<void> {
+  public async loginWithSocial(loginType: LoginType): Promise<void | string> {
     if (this.checkAlreadyLoggedIn(loginType)) {
       return;
     }
@@ -100,6 +101,9 @@ class AuthProvider {
     if (this.params.flow == 'redirect') {
       this.localstore.set<LoginType>(StoreIndex.LOGIN_TYPE, loginType);
       this.localstore.set<string>(StoreIndex.STATE, state);
+      if (!this.params.autoRedirect) {
+        return url;
+      }
       this.redirectTo(url);
       return;
     }
@@ -117,7 +121,7 @@ class AuthProvider {
   public async loginWithOtp(
     email: string,
     options: OtpOptions = { withUI: true }
-  ): Promise<void | OtpLoginResponse> {
+  ): Promise<void | string | OtpLoginResponse> {
     if (this.checkAlreadyLoggedIn(LoginType.passwordless)) {
       return;
     }
@@ -126,8 +130,8 @@ class AuthProvider {
 
     const loginHandler = getLoginHandler(
       LoginType.passwordless,
-      this.appAddress,
-      ''
+      this.params.appId,
+      this.appAddress
     );
 
     const state = generateID();
@@ -148,6 +152,9 @@ class AuthProvider {
       const response = await passwordlessAuthorizeWrapper(url);
       return response;
     } else {
+      if (!this.params.autoRedirect) {
+        return url;
+      }
       this.redirectTo(url);
       return;
     }
@@ -158,10 +165,10 @@ class AuthProvider {
     return this.oauthStore.getLogins();
   }
 
-  public getUserInfo(): StoredUserInfo {
+  public getUserInfo(): GetInfoOutput {
     const userInfo = this.store.get(StoreIndex.LOGGED_IN);
     if (userInfo) {
-      const info: StoredUserInfo = JSON.parse(userInfo);
+      const info: GetInfoOutput = JSON.parse(userInfo);
       return info;
     } else {
       this.logger.error('Error: getUserInfo');
@@ -185,16 +192,11 @@ class AuthProvider {
   }
 
   public async getPublicKey(
-    {
-      id,
-      verifier,
-    }: {
-      id: string;
-      verifier: LoginType;
-    },
-    output: PublicKeyOutput = 'uncompressed'
+    input: KeystoreInput,
+    output: PublicKeyOutput = PublicKeyOutput.uncompressed
   ): Promise<{ x: string; y: string } | string> {
     await this.initKeyReconstructor();
+    const { id, verifier } = input;
     const { X, Y } = await this.keyReconstructor.getPublicKey({ id, verifier });
     if (output == 'point') {
       return { x: X.padStart(64, '0'), y: Y.padStart(64, '0') };
@@ -205,7 +207,7 @@ class AuthProvider {
     }
   }
 
-  public async checkRedirectMode(): Promise<void> {
+  private async checkRedirectMode(): Promise<void> {
     await this.init();
     const loginType = this.localstore.get<LoginType>(StoreIndex.LOGIN_TYPE);
     if (!loginType) {
@@ -240,6 +242,7 @@ class AuthProvider {
         : window.location.origin + window.location.pathname,
       flow: p.flow ? p.flow : 'popup',
       network: p.network ? p.network : 'testnet',
+      autoRedirect: p.autoRedirect !== undefined ? p.autoRedirect : true,
     };
     return params;
   }
@@ -364,7 +367,7 @@ class AuthProvider {
     return false;
   }
 
-  private setKeyAndUserInfo(userInfo: StoredUserInfo) {
+  private setKeyAndUserInfo(userInfo: GetInfoOutput) {
     this.store.set(StoreIndex.LOGGED_IN, JSON.stringify(userInfo));
   }
 
@@ -443,9 +446,12 @@ const getCurrentConfig = async (gatewayUrl: string): Promise<string> => {
 
 export {
   InitParams,
-  StoredUserInfo as UserInfo,
+  GetInfoOutput,
+  UserInfo,
   PublicKeyOutput,
   AuthProvider,
   LoginType as SocialLoginType,
   OtpOptions as PasswordlessOptions,
+  OtpLoginResponse,
+  KeystoreInput,
 };
