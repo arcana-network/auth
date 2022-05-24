@@ -115,16 +115,17 @@ export default class IframeWrapper {
     })
     const closeButton = createDomElement('button', {
       onclick: () => this.closeWidgetIframe(),
-      style: widgetIframeStyle.header.closeButton[theme],
+      style: isFullMode
+        ? widgetIframeStyle.header.closeButton[theme]
+        : { display: 'none' },
     })
 
     const widgetIframeHeader = createDomElement(
       'div',
       { style: widgetIframeStyle.header.container[theme] },
-      appLogo
+      appLogo,
+      closeButton
     )
-
-    if (isFullMode) widgetIframeHeader.appendChild(closeButton)
 
     const widgetIframeBody = createDomElement('div', {
       style: widgetIframeStyle.body,
@@ -133,8 +134,7 @@ export default class IframeWrapper {
     return { widgetIframeHeader, widgetIframeBody }
   }
 
-  private createWidgetIframe() {
-    const isFullMode = this.appMode === AppMode.Full
+  private createWidgetIframe(isFullMode: boolean) {
     this.iframe = createDomElement('iframe', {
       style: widgetIframeStyle.iframe,
       src: `${this.iframeUrl}/${this.params.appId}/login`,
@@ -153,49 +153,51 @@ export default class IframeWrapper {
     )
   }
 
-  private createWidgetBubble() {
-    if (this.appMode === AppMode.Full) {
-      const {
-        appConfig: { themeConfig },
-      } = this
+  private createWidgetBubble(isFullMode: boolean) {
+    const {
+      appConfig: { themeConfig },
+    } = this
 
-      const { theme, assets } = themeConfig
+    const { theme, assets } = themeConfig
 
-      const buttonLogo = createDomElement('img', {
-        src: assets.logo.vertical,
-        style: widgetBubbleStyle.bubbleLogo,
-      })
+    const buttonLogo = createDomElement('img', {
+      src: assets.logo.vertical,
+      style: widgetBubbleStyle.bubbleLogo,
+    })
 
-      const reqCountBadge = createDomElement('p', {
-        id: 'req-count-badge',
-        style: { ...widgetBubbleStyle.reqCountBadge, display: 'none' },
-      })
+    const reqCountBadge = createDomElement('p', {
+      id: 'req-count-badge',
+      style: { ...widgetBubbleStyle.reqCountBadge, display: 'none' },
+    })
 
-      const closeButton = createDomElement('button', {
-        onclick: (event: Event) => {
-          event.stopPropagation()
-          this.onCloseBubbleClick()
-        },
-        style: widgetBubbleStyle.closeButton,
-      })
+    const closeButton = createDomElement('button', {
+      onclick: (event: Event) => {
+        event.stopPropagation()
+        this.onCloseBubbleClick()
+      },
+      style: widgetBubbleStyle.closeButton,
+    })
 
-      return createDomElement(
-        'button',
-        {
-          onclick: () => this.openWidgetIframe(),
-          style: widgetBubbleStyle[theme],
-        },
-        reqCountBadge,
-        buttonLogo,
-        closeButton
-      )
-    }
+    return createDomElement(
+      'button',
+      {
+        onclick: () => this.openWidgetIframe(),
+        style: isFullMode ? widgetBubbleStyle[theme] : { display: 'none' },
+      },
+      reqCountBadge,
+      buttonLogo,
+      closeButton
+    )
   }
 
   private initWalletUI() {
     const isFullMode = this.appMode === AppMode.Full
-    this.widgetIframeContainer = this.createWidgetIframe() as HTMLDivElement
-    this.widgetBubble = this.createWidgetBubble() as HTMLButtonElement
+
+    this.widgetIframeContainer = this.createWidgetIframe(
+      isFullMode
+    ) as HTMLDivElement
+
+    this.widgetBubble = this.createWidgetBubble(isFullMode) as HTMLButtonElement
 
     this.resizeWidgetUI()
 
@@ -203,7 +205,7 @@ export default class IframeWrapper {
 
     this.widgetIframeContainer.style.display = 'none'
 
-    if (isFullMode) document.body.appendChild(this.widgetBubble)
+    document.body.appendChild(this.widgetBubble)
     document.body.appendChild(this.widgetIframeContainer)
   }
 
@@ -220,11 +222,10 @@ export default class IframeWrapper {
 
     setWalletSize(this.widgetIframeContainer, getWalletSize(isViewportSmall))
 
-    if (this.widgetBubble)
-      setWalletPosition(
-        this.widgetBubble,
-        getWalletPosition(isViewportSmall, this.position)
-      )
+    setWalletPosition(
+      this.widgetBubble,
+      getWalletPosition(isViewportSmall, this.position)
+    )
 
     setWalletPosition(
       this.widgetIframeContainer,
@@ -233,12 +234,12 @@ export default class IframeWrapper {
   }
 
   private closeWidgetIframe() {
-    if (this.widgetBubble) this.widgetBubble.style.display = 'flex'
+    this.widgetBubble.style.display = 'flex'
     this.widgetIframeContainer.style.display = 'none'
   }
 
   private openWidgetIframe() {
-    if (this.widgetBubble) this.widgetBubble.style.display = 'none'
+    this.widgetBubble.style.display = 'none'
     this.widgetIframeContainer.style.display = 'flex'
   }
 
