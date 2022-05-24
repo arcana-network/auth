@@ -3,41 +3,63 @@ import IframeWrapper from './iframeWrapper'
 import { encryptWithPublicKey, cipher } from 'eth-crypto'
 import { getWalletType } from './utils'
 import { setNetwork, getConfig, setIframeDevUrl } from './config'
-import { IAppConfig, Position } from './interfaces'
+import {
+  IAppConfig,
+  Position,
+  UserInfo,
+  IWidgetThemeConfig,
+  Theme,
+} from './interfaces'
 import { JsonRpcResponse } from 'json-rpc-engine'
-import { InitParams, State, AppMode } from './typings'
+import { InitParams, State, AppMode, EncryptInput } from './typings'
 import { getAppInfo, getImageUrls } from './network'
-import { WalletNotInitializedError } from './errors'
+import { WalletNotInitializedError, InvalidClassParams } from './errors'
+
+interface InitInput {
+  appMode: AppMode | undefined
+  position?: Position
+}
 
 class WalletProvider {
-  public static async encryptWithPublicKey({
-    message,
-    publicKey,
-  }: {
-    message: string
-    publicKey: string
-  }): Promise<string> {
-    const ciphertext = await encryptWithPublicKey(publicKey, message)
+  /**
+   * A helper function to encrypt supplied message with supplied public key
+   * @returns ciphertext of the message
+   *
+   */
+  public static async encryptWithPublicKey(
+    input: EncryptInput
+  ): Promise<string> {
+    const ciphertext = await encryptWithPublicKey(
+      input.publicKey,
+      input.message
+    )
     return cipher.stringify(ciphertext)
   }
 
   private state: State
   private iframeWrapper: IframeWrapper | null
   private provider: ArcanaProvider
-  constructor(private params: InitParams) {
+  constructor(
+    private params: InitParams = {
+      ...params,
+      network: 'testnet',
+      inpageProvider: false,
+    }
+  ) {
+    if (!params.appId) {
+      throw InvalidClassParams
+    }
     this.initializeState()
     if (this.params.network === 'testnet') {
       setNetwork(this.params.network)
     }
   }
 
-  public async init({
-    appMode,
-    position = 'right',
-  }: {
-    appMode: AppMode | undefined
-    position?: Position
-  }) {
+  /**
+   * A function to initialize the wallet, should be called before getting provider
+   */
+  public async init(input: InitInput) {
+    const { appMode, position = 'right' } = input
     if (this.iframeWrapper) {
       return
     }
@@ -100,7 +122,7 @@ class WalletProvider {
     }
   }
 
-  onReceivingPendingRequestCount(count: number) {
+  private onReceivingPendingRequestCount(count: number) {
     const reqCountBadgeEl = document.getElementById('req-count-badge')
     if (!reqCountBadgeEl) {
       return
@@ -113,6 +135,9 @@ class WalletProvider {
     }
   }
 
+  /**
+   * @internal
+   */
   destroyWalletUI = () => {
     if (this.iframeWrapper) {
       this.iframeWrapper.widgetBubble.remove()
@@ -121,6 +146,9 @@ class WalletProvider {
     this.iframeWrapper = null
   }
 
+  /**
+   * @internal
+   */
   handleEvents = (t: string, val: unknown) => {
     console.log({ t, val })
     switch (t) {
@@ -144,6 +172,9 @@ class WalletProvider {
     }
   }
 
+  /**
+   * A function to trigger social login in the wallet
+   */
   public async requestSocialLogin(loginType: string) {
     if (this.provider) {
       const u = await this.provider.triggerSocialLogin(loginType)
@@ -155,6 +186,9 @@ class WalletProvider {
     throw WalletNotInitializedError
   }
 
+  /**
+   * A function to trigger passwordless login in the wallet
+   */
   public requestPasswordlessLogin(email: string) {
     if (this.provider) {
       return this.provider.triggerPasswordlessLogin(email)
@@ -162,13 +196,20 @@ class WalletProvider {
     throw WalletNotInitializedError
   }
 
-  public requestUserInfo() {
+  /**
+   * A function to get user info for logged in user
+   * @returns available user info
+   */
+  public requestUserInfo(): Promise<UserInfo> {
     if (this.provider) {
       return this.provider.requestUserInfo()
     }
     throw WalletNotInitializedError
   }
 
+  /**
+   * A function to determine whether user is logged in
+   */
   public isLoggedIn() {
     if (this.provider) {
       return this.provider.isLoggedIn()
@@ -176,6 +217,9 @@ class WalletProvider {
     throw WalletNotInitializedError
   }
 
+  /**
+   * A function to logout the user
+   */
   public logout() {
     if (this.provider) {
       return this.provider.triggerLogout()
@@ -183,6 +227,9 @@ class WalletProvider {
     throw WalletNotInitializedError
   }
 
+  /**
+   * A function to request public key of different users
+   */
   public async requestPublicKey(email: string, verifier = 'google') {
     if (this.provider) {
       return await this.provider.getPublicKey(email, verifier)
@@ -190,6 +237,9 @@ class WalletProvider {
     throw WalletNotInitializedError
   }
 
+  /**
+   * A function to get web3 provider
+   */
   public getProvider() {
     return this.provider
   }
@@ -217,4 +267,15 @@ class WalletProvider {
   }
 }
 
-export { WalletProvider, InitParams, IAppConfig, AppMode }
+export {
+  WalletProvider,
+  InitParams,
+  IAppConfig,
+  Theme,
+  AppMode,
+  Position,
+  EncryptInput,
+  UserInfo,
+  IWidgetThemeConfig,
+  InitInput,
+}
