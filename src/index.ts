@@ -202,7 +202,6 @@ class AuthProvider {
 
   /**
    * A helper method to determine whether user is logged in
-   * @returns returns OAuth URL if autoRedirect is set to false
    */
   public isLoggedIn(): boolean {
     const userExists = this.store.get(StoreIndex.LOGGED_IN);
@@ -225,7 +224,7 @@ class AuthProvider {
 
   /**
    * A method to get public key for other users
-   * @returns returns object or string based on option provided
+   * @returns returns object or string based on output option provided
    */
   public async getPublicKey(
     input: KeystoreInput,
