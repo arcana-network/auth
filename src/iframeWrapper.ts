@@ -96,7 +96,6 @@ export default class IframeWrapper {
         await this.iframeCommunication.promise
       }
     } catch (error) {
-      console.log({ error })
       throw new Error('Error during createOrGetInstance in IframeWrapper')
     }
     return { iframe: this.iframe, communication: this.iframeCommunication }

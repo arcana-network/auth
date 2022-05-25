@@ -1,7 +1,7 @@
 const { WalletProvider, AppMode } = window.arcana.wallet
 const wallet = new WalletProvider({
-  appId: '253',
-  iframeUrl: 'http://localhost:3000',
+  appId: '264',
+  network: 'dev',
 })
 
 let provider

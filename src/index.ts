@@ -3,41 +3,63 @@ import IframeWrapper from './iframeWrapper'
 import { encryptWithPublicKey, cipher } from 'eth-crypto'
 import { getWalletType } from './utils'
 import { setNetwork, getConfig, setIframeDevUrl } from './config'
-import { IAppConfig, Position } from './interfaces'
+import {
+  IAppConfig,
+  Position,
+  UserInfo,
+  IWidgetThemeConfig,
+  Theme,
+} from './interfaces'
 import { JsonRpcResponse } from 'json-rpc-engine'
-import { InitParams, State, AppMode } from './typings'
+import { InitParams, State, AppMode, EncryptInput } from './typings'
 import { getAppInfo, getImageUrls } from './network'
-import { WalletNotInitializedError } from './errors'
+import { WalletNotInitializedError, InvalidClassParams } from './errors'
+
+interface InitInput {
+  appMode: AppMode | undefined
+  position?: Position
+}
 
 class WalletProvider {
-  public static async encryptWithPublicKey({
-    message,
-    publicKey,
-  }: {
-    message: string
-    publicKey: string
-  }): Promise<string> {
-    const ciphertext = await encryptWithPublicKey(publicKey, message)
+  /**
+   * A helper function to encrypt supplied message with supplied public key
+   * @returns ciphertext of the message
+   *
+   */
+  public static async encryptWithPublicKey(
+    input: EncryptInput
+  ): Promise<string> {
+    const ciphertext = await encryptWithPublicKey(
+      input.publicKey,
+      input.message
+    )
     return cipher.stringify(ciphertext)
   }
 
   private state: State
   private iframeWrapper: IframeWrapper | null
-  private provider: ArcanaProvider
-  constructor(private params: InitParams) {
+  private _provider: ArcanaProvider
+  constructor(
+    private params: InitParams = {
+      ...params,
+      network: 'testnet',
+      inpageProvider: false,
+    }
+  ) {
+    if (!params.appId) {
+      throw InvalidClassParams
+    }
     this.initializeState()
     if (this.params.network === 'testnet') {
       setNetwork(this.params.network)
     }
   }
 
-  public async init({
-    appMode,
-    position = 'right',
-  }: {
-    appMode: AppMode | undefined
-    position?: Position
-  }) {
+  /**
+   * A function to initialize the wallet, should be called before getting provider
+   */
+  public async init(input: InitInput) {
+    const { appMode, position = 'right' } = input
     if (this.iframeWrapper) {
       return
     }
@@ -71,7 +93,7 @@ class WalletProvider {
       position,
       this.destroyWalletUI
     )
-    this.provider = new ArcanaProvider()
+    this._provider = new ArcanaProvider()
     const walletType = await getWalletType(appId)
     this.iframeWrapper.setWalletType(walletType, appMode)
     const { communication } = await this.iframeWrapper.getIframeInstance({
@@ -80,7 +102,7 @@ class WalletProvider {
         method: string,
         response: JsonRpcResponse<unknown>
       ) => {
-        this.provider.onResponse(method, response)
+        this._provider.onResponse(method, response)
       },
       getAppConfig: () => {
         return appConfig
@@ -91,16 +113,16 @@ class WalletProvider {
       sendPendingRequestCount: (count: number) => {
         this.onReceivingPendingRequestCount(count)
       },
-      getParentUrl: this.provider.getCurrentUrl,
+      getParentUrl: this._provider.getCurrentUrl,
     })
-    this.provider.setConnection(communication)
-    this.provider.setHandlers(this.iframeWrapper.show, this.iframeWrapper.hide)
+    this._provider.setConnection(communication)
+    this._provider.setHandlers(this.iframeWrapper.show, this.iframeWrapper.hide)
     if (this.params.inpageProvider) {
       this.setInpageProvider()
     }
   }
 
-  onReceivingPendingRequestCount(count: number) {
+  private onReceivingPendingRequestCount(count: number) {
     const reqCountBadgeEl = document.getElementById('req-count-badge')
     if (!reqCountBadgeEl) {
       return
@@ -113,6 +135,9 @@ class WalletProvider {
     }
   }
 
+  /**
+   * @internal
+   */
   destroyWalletUI = () => {
     if (this.iframeWrapper) {
       this.iframeWrapper.widgetBubble.remove()
@@ -121,32 +146,37 @@ class WalletProvider {
     this.iframeWrapper = null
   }
 
+  /**
+   * @internal
+   */
   handleEvents = (t: string, val: unknown) => {
-    console.log({ t, val })
     switch (t) {
       case 'accountsChanged':
-        this.provider.emit(t, [val])
+        this._provider.emit(t, [val])
         break
       case 'chainChanged':
-        this.provider.emit('chainChanged', val)
+        this._provider.emit('chainChanged', val)
         break
       case 'connect':
-        this.provider.emit('connect', val)
+        this._provider.emit('connect', val)
         break
       case 'disconnect':
-        this.provider.emit('disconnect', val)
+        this._provider.emit('disconnect', val)
         break
       case 'message':
-        this.provider.emit('message', val)
+        this._provider.emit('message', val)
         break
       default:
         break
     }
   }
 
+  /**
+   * A function to trigger social login in the wallet
+   */
   public async requestSocialLogin(loginType: string) {
-    if (this.provider) {
-      const u = await this.provider.triggerSocialLogin(loginType)
+    if (this._provider) {
+      const u = await this._provider.triggerSocialLogin(loginType)
       if (u) {
         setTimeout(() => (window.location.href = u), 50)
       }
@@ -155,55 +185,85 @@ class WalletProvider {
     throw WalletNotInitializedError
   }
 
+  /**
+   * A function to trigger passwordless login in the wallet
+   */
   public requestPasswordlessLogin(email: string) {
-    if (this.provider) {
-      return this.provider.triggerPasswordlessLogin(email)
+    if (this._provider) {
+      return this._provider.triggerPasswordlessLogin(email)
     }
     throw WalletNotInitializedError
   }
 
-  public requestUserInfo() {
-    if (this.provider) {
-      return this.provider.requestUserInfo()
+  /**
+   * A function to get user info for logged in user
+   * @returns available user info
+   */
+  public requestUserInfo(): Promise<UserInfo> {
+    if (this._provider) {
+      return this._provider.requestUserInfo()
     }
     throw WalletNotInitializedError
   }
 
+  /**
+   * A function to determine whether user is logged in
+   */
   public isLoggedIn() {
-    if (this.provider) {
-      return this.provider.isLoggedIn()
+    if (this._provider) {
+      return this._provider.isLoggedIn()
     }
     throw WalletNotInitializedError
   }
 
+  /**
+   * A function to logout the user
+   */
   public logout() {
-    if (this.provider) {
-      return this.provider.triggerLogout()
+    if (this._provider) {
+      return this._provider.triggerLogout()
     }
     throw WalletNotInitializedError
   }
 
+  /**
+   * A function to request public key of different users
+   */
   public async requestPublicKey(email: string, verifier = 'google') {
-    if (this.provider) {
-      return await this.provider.getPublicKey(email, verifier)
+    if (this._provider) {
+      return await this._provider.getPublicKey(email, verifier)
     }
     throw WalletNotInitializedError
   }
 
+  /**
+   * A function to get web3 provider
+   * @deprecated
+   */
   public getProvider() {
-    return this.provider
+    if (this._provider) {
+      return this._provider
+    }
+    throw WalletNotInitializedError
+  }
+
+  get provider() {
+    if (this._provider) {
+      return this._provider
+    }
+    throw WalletNotInitializedError
   }
 
   /* eslint-disable @typescript-eslint/no-explicit-any */
   private setInpageProvider() {
     if (!(window as Record<string, any>).ethereum) {
-      ;(window as Record<string, any>).ethereum = this.provider
+      ;(window as Record<string, any>).ethereum = this._provider
     }
 
     if (!(window as Record<string, any>).arcana) {
       ;(window as Record<string, any>).arcana = {}
     }
-    ;(window as Record<string, any>).arcana.provider = this.provider
+    ;(window as Record<string, any>).arcana.provider = this._provider
   }
   /* eslint-enable */
 
@@ -217,4 +277,15 @@ class WalletProvider {
   }
 }
 
-export { WalletProvider, InitParams, IAppConfig, AppMode }
+export {
+  WalletProvider,
+  InitParams,
+  IAppConfig,
+  Theme,
+  AppMode,
+  Position,
+  EncryptInput,
+  UserInfo,
+  IWidgetThemeConfig,
+  InitInput,
+}

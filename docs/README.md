@@ -1,3 +1,5 @@
+@arcana/wallet / [Exports](modules.md)
+
 # Arcana Wallet
 
 ## Installation
