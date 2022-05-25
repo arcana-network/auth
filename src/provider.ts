@@ -152,6 +152,18 @@ export class ArcanaProvider extends SafeEventEmitter {
     this.provider = providerFromEngine(this.jsonRpcEngine)
   }
 
+  private throwDisconnectedMessage() {
+    throw getError('all_disconnected')
+  }
+
+  private async getCommunication() {
+    const c = await this.communication.promise
+    if (!c.sendRequest) {
+      this.throwDisconnectedMessage()
+    }
+    return c
+  }
+
   private openPermissionScreen(method: string) {
     if (permissionedCalls.includes(method)) {
       this.iframeOpenHandler()
@@ -309,7 +321,7 @@ export class ArcanaProvider extends SafeEventEmitter {
   getAccounts = (): Promise<string[]> => {
     return new Promise((resolve, reject) => {
       const method = 'eth_accounts'
-      this.communication.promise.then(async (c) => {
+      this.getCommunication().then(async (c) => {
         const r = this.createRequest(method, undefined)
         this.getResponse<string[]>(method, r.id).then(resolve, reject)
         await c.sendRequest(r)
@@ -330,7 +342,7 @@ export class ArcanaProvider extends SafeEventEmitter {
   ): Promise<string> => {
     return new Promise((resolve, reject) => {
       const method = 'eth_sendTransaction'
-      this.communication.promise.then(async (c) => {
+      this.getCommunication().then(async (c) => {
         this.getResponse<string>(method, req.id).then(resolve, reject)
         await c.sendRequest(req)
       })
@@ -344,7 +356,7 @@ export class ArcanaProvider extends SafeEventEmitter {
     console.log({ req })
     return new Promise((resolve, reject) => {
       const method = 'eth_signTypedData_v4'
-      this.communication.promise.then(async (c) => {
+      this.getCommunication().then(async (c) => {
         this.getResponse<string>(method, req.id).then(resolve, reject)
         await c.sendRequest(req)
       })
@@ -357,7 +369,7 @@ export class ArcanaProvider extends SafeEventEmitter {
   ): Promise<string> => {
     return new Promise((resolve, reject) => {
       const method = 'eth_sign'
-      this.communication.promise.then(async (c) => {
+      this.getCommunication().then(async (c) => {
         this.getResponse<string>(method, req.id).then(resolve, reject)
         await c.sendRequest(req)
       })
@@ -370,7 +382,7 @@ export class ArcanaProvider extends SafeEventEmitter {
   ): Promise<string> => {
     console.log({ req })
     return new Promise((resolve, reject) => {
-      this.communication.promise.then(async (c) => {
+      this.getCommunication().then(async (c) => {
         this.getResponse<string>('eth_getEncryptionPublicKey', req.id).then(
           resolve,
           reject
@@ -386,7 +398,7 @@ export class ArcanaProvider extends SafeEventEmitter {
   ): Promise<string> => {
     return new Promise((resolve, reject) => {
       const method = 'eth_signTransaction'
-      this.communication.promise.then(async (c) => {
+      this.getCommunication().then(async (c) => {
         this.getResponse<string>(method, req.id).then(resolve, reject)
         await c.sendRequest(req)
       })
@@ -399,7 +411,7 @@ export class ArcanaProvider extends SafeEventEmitter {
   ): Promise<string> => {
     console.log({ params, req })
     return new Promise((resolve, reject) => {
-      this.communication.promise.then(async (c) => {
+      this.getCommunication().then(async (c) => {
         this.getResponse<string>('personal_sign', req.id).then(resolve, reject)
         await c.sendRequest(req)
       })
@@ -412,7 +424,7 @@ export class ArcanaProvider extends SafeEventEmitter {
   ): Promise<string> => {
     console.log({ req })
     return new Promise((resolve, reject) => {
-      this.communication.promise.then(async (c) => {
+      this.getCommunication().then(async (c) => {
         this.getResponse<string>('eth_decrypt', req.id).then(resolve, reject)
         await c.sendRequest(req)
       })
@@ -442,6 +454,11 @@ const getError = (message: string) => {
       return new ProviderError(4001, 'The request was denied by the user')
     case 'operation_not_supported':
       return new ProviderError(4200, 'The request is not supported currently')
+    case 'all_disconnected':
+      return new ProviderError(
+        4900,
+        'The provider is disconnected from all chains'
+      )
     default:
       return new ProviderError(-32603, 'Internal error')
   }
