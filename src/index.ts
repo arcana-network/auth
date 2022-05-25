@@ -239,16 +239,17 @@ class WalletProvider {
 
   /**
    * A function to get web3 provider
+   * @deprecated
    */
   public getProvider() {
-    if (this.provider) {
+    if (this._provider) {
       return this._provider
     }
     throw WalletNotInitializedError
   }
 
   get provider() {
-    if (this.provider) {
+    if (this._provider) {
       return this._provider
     }
     throw WalletNotInitializedError
