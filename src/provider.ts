@@ -457,7 +457,7 @@ const getError = (message: string) => {
     case 'all_disconnected':
       return new ProviderError(
         4900,
-        'The provider is disconnected from all chains'
+        'The provider is disconnected from all chains, login pending'
       )
     default:
       return new ProviderError(-32603, 'Internal error')
