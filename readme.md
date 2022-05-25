@@ -42,7 +42,7 @@ const position = 'left' // values - 'left' or 'right'
 
 await wallet.init({ appMode: AppMode.Widget, position })
 
-provider = wallet.getProvider()
+provider = wallet.provider
 // or
 provider = window.arcana.provider
 // or
@@ -123,6 +123,48 @@ Unsubscribing
 
 ```js
 provider.removeListener(`${eventName}`, handler)
+```
+
+## Using with web3/ethers
+
+### Ethers JS
+
+Installation
+
+```sh
+npm install --save ethers
+```
+
+Usage
+
+```js
+import { ethers } from 'ethers'
+
+const provider = new ethers.providers.Web3Provider(wallet.provider)
+
+const signer = provider.getSigner()
+
+const signedMessage = await signer.signMessage(originalMessage)
+```
+
+### Web3 JS
+
+Installation
+
+```sh
+npm install --save web3
+```
+
+Usage
+
+```js
+import Web3 from 'web3'
+
+const provider = new Web3(wallet.provider)
+
+const signer = provider.getSigner()
+
+const signedMessage = await signer.signMessage(originalMessage)
 ```
 
 ## RPC API’s

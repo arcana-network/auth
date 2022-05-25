@@ -38,7 +38,7 @@ class WalletProvider {
 
   private state: State
   private iframeWrapper: IframeWrapper | null
-  private provider: ArcanaProvider
+  private _provider: ArcanaProvider
   constructor(
     private params: InitParams = {
       ...params,
@@ -93,7 +93,7 @@ class WalletProvider {
       position,
       this.destroyWalletUI
     )
-    this.provider = new ArcanaProvider()
+    this._provider = new ArcanaProvider()
     const walletType = await getWalletType(appId)
     this.iframeWrapper.setWalletType(walletType, appMode)
     const { communication } = await this.iframeWrapper.getIframeInstance({
@@ -241,7 +241,17 @@ class WalletProvider {
    * A function to get web3 provider
    */
   public getProvider() {
-    return this.provider
+    if (this.provider) {
+      return this._provider
+    }
+    throw WalletNotInitializedError
+  }
+
+  get provider() {
+    if (this.provider) {
+      return this._provider
+    }
+    throw WalletNotInitializedError
   }
 
   /* eslint-disable @typescript-eslint/no-explicit-any */

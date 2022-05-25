@@ -10,7 +10,7 @@ const UserNotLoggedInError = new ArcanaWalletError(
 )
 const WalletNotInitializedError = new ArcanaWalletError(
   'wallet_not_initialized',
-  'Wallet is not initialized. Please run `await wallet.init()` before calling functions'
+  'Wallet is not initialized. Please run `await wallet.init(...)` before calling functions'
 )
 
 const InvalidClassParams = new ArcanaWalletError(
