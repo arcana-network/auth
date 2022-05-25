@@ -18,7 +18,7 @@
 
 #### Defined in
 
-[typings.ts:7](https://github.com/arcana-network/wallet/blob/e97339a/src/typings.ts#L7)
+[typings.ts:7](https://github.com/arcana-network/wallet/blob/a7c20fa/src/typings.ts#L7)
 
 ---
 
@@ -28,7 +28,7 @@
 
 #### Defined in
 
-[typings.ts:9](https://github.com/arcana-network/wallet/blob/e97339a/src/typings.ts#L9)
+[typings.ts:9](https://github.com/arcana-network/wallet/blob/a7c20fa/src/typings.ts#L9)
 
 ---
 
@@ -38,4 +38,4 @@
 
 #### Defined in
 
-[typings.ts:8](https://github.com/arcana-network/wallet/blob/e97339a/src/typings.ts#L8)
+[typings.ts:8](https://github.com/arcana-network/wallet/blob/a7c20fa/src/typings.ts#L8)

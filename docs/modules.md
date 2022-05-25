@@ -34,7 +34,7 @@
 
 #### Defined in
 
-[interfaces.ts:7](https://github.com/arcana-network/wallet/blob/e97339a/src/interfaces.ts#L7)
+[interfaces.ts:7](https://github.com/arcana-network/wallet/blob/a7c20fa/src/interfaces.ts#L7)
 
 ---
 
@@ -44,4 +44,4 @@
 
 #### Defined in
 
-[interfaces.ts:3](https://github.com/arcana-network/wallet/blob/e97339a/src/interfaces.ts#L3)
+[interfaces.ts:3](https://github.com/arcana-network/wallet/blob/a7c20fa/src/interfaces.ts#L3)
