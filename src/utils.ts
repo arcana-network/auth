@@ -19,7 +19,6 @@ const getWalletType = async (appId: string) => {
 
   const appAddress = await getAppAddress(appId)
   if (!appAddress) {
-    console.log('App address not found')
     return null
   }
   const c = getContract(config.RPC_URL, appAddress)
@@ -28,7 +27,6 @@ const getWalletType = async (appId: string) => {
     const walletType = res[0].toNumber()
     return walletType
   } catch (e) {
-    console.log({ e })
     return null
   }
 }

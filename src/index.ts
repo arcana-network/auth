@@ -150,7 +150,6 @@ class WalletProvider {
    * @internal
    */
   handleEvents = (t: string, val: unknown) => {
-    console.log({ t, val })
     switch (t) {
       case 'accountsChanged':
         this._provider.emit(t, [val])

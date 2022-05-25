@@ -98,7 +98,6 @@ export class ArcanaProvider extends SafeEventEmitter {
       const c = await this.communication.promise
       return c.isLoggedIn()
     } catch (e) {
-      console.log({ e })
       return false
     }
   }
@@ -183,7 +182,6 @@ export class ArcanaProvider extends SafeEventEmitter {
         data: args,
       })
     }
-    console.log({ args })
 
     const { method, params } = args
     if (!method) {
@@ -353,7 +351,6 @@ export class ArcanaProvider extends SafeEventEmitter {
     _: TypedMessageParams,
     req: JsonRpcRequest<unknown>
   ): Promise<string> => {
-    console.log({ req })
     return new Promise((resolve, reject) => {
       const method = 'eth_signTypedData_v4'
       this.getCommunication().then(async (c) => {
@@ -380,7 +377,6 @@ export class ArcanaProvider extends SafeEventEmitter {
     _: string,
     req: JsonRpcRequest<unknown>
   ): Promise<string> => {
-    console.log({ req })
     return new Promise((resolve, reject) => {
       this.getCommunication().then(async (c) => {
         this.getResponse<string>('eth_getEncryptionPublicKey', req.id).then(
@@ -409,7 +405,6 @@ export class ArcanaProvider extends SafeEventEmitter {
     params: MessageParams,
     req: JsonRpcRequest<unknown>
   ): Promise<string> => {
-    console.log({ params, req })
     return new Promise((resolve, reject) => {
       this.getCommunication().then(async (c) => {
         this.getResponse<string>('personal_sign', req.id).then(resolve, reject)
@@ -422,7 +417,6 @@ export class ArcanaProvider extends SafeEventEmitter {
     _: IMessageParams,
     req: JsonRpcRequest<unknown>
   ): Promise<string> => {
-    console.log({ req })
     return new Promise((resolve, reject) => {
       this.getCommunication().then(async (c) => {
         this.getResponse<string>('eth_decrypt', req.id).then(resolve, reject)
@@ -437,7 +431,6 @@ export class ArcanaProvider extends SafeEventEmitter {
         `result:${method}:${id}`,
         (params: { error: string; result: U }) => {
           this.closePermissionScreen(method)
-          console.log('Get response: ', { params })
           if (params.error) {
             return reject(getError(params.error))
           }
