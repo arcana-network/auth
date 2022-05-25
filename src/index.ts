@@ -102,7 +102,7 @@ class WalletProvider {
         method: string,
         response: JsonRpcResponse<unknown>
       ) => {
-        this.provider.onResponse(method, response)
+        this._provider.onResponse(method, response)
       },
       getAppConfig: () => {
         return appConfig
@@ -113,10 +113,10 @@ class WalletProvider {
       sendPendingRequestCount: (count: number) => {
         this.onReceivingPendingRequestCount(count)
       },
-      getParentUrl: this.provider.getCurrentUrl,
+      getParentUrl: this._provider.getCurrentUrl,
     })
-    this.provider.setConnection(communication)
-    this.provider.setHandlers(this.iframeWrapper.show, this.iframeWrapper.hide)
+    this._provider.setConnection(communication)
+    this._provider.setHandlers(this.iframeWrapper.show, this.iframeWrapper.hide)
     if (this.params.inpageProvider) {
       this.setInpageProvider()
     }
@@ -153,19 +153,19 @@ class WalletProvider {
     console.log({ t, val })
     switch (t) {
       case 'accountsChanged':
-        this.provider.emit(t, [val])
+        this._provider.emit(t, [val])
         break
       case 'chainChanged':
-        this.provider.emit('chainChanged', val)
+        this._provider.emit('chainChanged', val)
         break
       case 'connect':
-        this.provider.emit('connect', val)
+        this._provider.emit('connect', val)
         break
       case 'disconnect':
-        this.provider.emit('disconnect', val)
+        this._provider.emit('disconnect', val)
         break
       case 'message':
-        this.provider.emit('message', val)
+        this._provider.emit('message', val)
         break
       default:
         break
@@ -176,8 +176,8 @@ class WalletProvider {
    * A function to trigger social login in the wallet
    */
   public async requestSocialLogin(loginType: string) {
-    if (this.provider) {
-      const u = await this.provider.triggerSocialLogin(loginType)
+    if (this._provider) {
+      const u = await this._provider.triggerSocialLogin(loginType)
       if (u) {
         setTimeout(() => (window.location.href = u), 50)
       }
@@ -190,8 +190,8 @@ class WalletProvider {
    * A function to trigger passwordless login in the wallet
    */
   public requestPasswordlessLogin(email: string) {
-    if (this.provider) {
-      return this.provider.triggerPasswordlessLogin(email)
+    if (this._provider) {
+      return this._provider.triggerPasswordlessLogin(email)
     }
     throw WalletNotInitializedError
   }
@@ -201,8 +201,8 @@ class WalletProvider {
    * @returns available user info
    */
   public requestUserInfo(): Promise<UserInfo> {
-    if (this.provider) {
-      return this.provider.requestUserInfo()
+    if (this._provider) {
+      return this._provider.requestUserInfo()
     }
     throw WalletNotInitializedError
   }
@@ -211,8 +211,8 @@ class WalletProvider {
    * A function to determine whether user is logged in
    */
   public isLoggedIn() {
-    if (this.provider) {
-      return this.provider.isLoggedIn()
+    if (this._provider) {
+      return this._provider.isLoggedIn()
     }
     throw WalletNotInitializedError
   }
@@ -221,8 +221,8 @@ class WalletProvider {
    * A function to logout the user
    */
   public logout() {
-    if (this.provider) {
-      return this.provider.triggerLogout()
+    if (this._provider) {
+      return this._provider.triggerLogout()
     }
     throw WalletNotInitializedError
   }
@@ -231,8 +231,8 @@ class WalletProvider {
    * A function to request public key of different users
    */
   public async requestPublicKey(email: string, verifier = 'google') {
-    if (this.provider) {
-      return await this.provider.getPublicKey(email, verifier)
+    if (this._provider) {
+      return await this._provider.getPublicKey(email, verifier)
     }
     throw WalletNotInitializedError
   }
@@ -258,13 +258,13 @@ class WalletProvider {
   /* eslint-disable @typescript-eslint/no-explicit-any */
   private setInpageProvider() {
     if (!(window as Record<string, any>).ethereum) {
-      ;(window as Record<string, any>).ethereum = this.provider
+      ;(window as Record<string, any>).ethereum = this._provider
     }
 
     if (!(window as Record<string, any>).arcana) {
       ;(window as Record<string, any>).arcana = {}
     }
-    ;(window as Record<string, any>).arcana.provider = this.provider
+    ;(window as Record<string, any>).arcana.provider = this._provider
   }
   /* eslint-enable */
 
