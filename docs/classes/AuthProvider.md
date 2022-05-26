@@ -1,4 +1,4 @@
-[@arcana/auth](../README.md) / [Exports](../modules.md) / AuthProvider
+[Auth SDK Reference Guide - v0.0.9-beta5](../README.md) / [Exports](../modules.md) / AuthProvider
 
 # Class: AuthProvider
 
@@ -34,7 +34,7 @@
 
 #### Defined in
 
-[index.ts:71](https://github.com/arcana-network/auth/blob/efb5efe/src/index.ts#L71)
+[index.ts:71](https://github.com/arcana-network/auth/blob/ca90bd2/src/index.ts#L71)
 
 ## Methods
 
@@ -50,7 +50,7 @@ A helper method to get list of available logins
 
 #### Defined in
 
-[index.ts:182](https://github.com/arcana-network/auth/blob/efb5efe/src/index.ts#L182)
+[index.ts:182](https://github.com/arcana-network/auth/blob/ca90bd2/src/index.ts#L182)
 
 ___
 
@@ -71,11 +71,11 @@ A method to get public key for other users
 
 `Promise`<`string` \| { `x`: `string` ; `y`: `string`  }\>
 
-returns object or string based on option provided
+returns object or string based on output option provided
 
 #### Defined in
 
-[index.ts:230](https://github.com/arcana-network/auth/blob/efb5efe/src/index.ts#L230)
+[index.ts:229](https://github.com/arcana-network/auth/blob/ca90bd2/src/index.ts#L229)
 
 ___
 
@@ -91,7 +91,7 @@ A method to get user info, if logged in
 
 #### Defined in
 
-[index.ts:190](https://github.com/arcana-network/auth/blob/efb5efe/src/index.ts#L190)
+[index.ts:190](https://github.com/arcana-network/auth/blob/ca90bd2/src/index.ts#L190)
 
 ___
 
@@ -105,11 +105,9 @@ A helper method to determine whether user is logged in
 
 `boolean`
 
-returns OAuth URL if autoRedirect is set to false
-
 #### Defined in
 
-[index.ts:207](https://github.com/arcana-network/auth/blob/efb5efe/src/index.ts#L207)
+[index.ts:206](https://github.com/arcana-network/auth/blob/ca90bd2/src/index.ts#L206)
 
 ___
 
@@ -134,7 +132,7 @@ returns OAuth URL if autoRedirect is set to false, object if withUI is set to fa
 
 #### Defined in
 
-[index.ts:137](https://github.com/arcana-network/auth/blob/efb5efe/src/index.ts#L137)
+[index.ts:137](https://github.com/arcana-network/auth/blob/ca90bd2/src/index.ts#L137)
 
 ___
 
@@ -158,7 +156,7 @@ returns OAuth URL if autoRedirect is set to false
 
 #### Defined in
 
-[index.ts:93](https://github.com/arcana-network/auth/blob/efb5efe/src/index.ts#L93)
+[index.ts:93](https://github.com/arcana-network/auth/blob/ca90bd2/src/index.ts#L93)
 
 ___
 
@@ -174,7 +172,7 @@ A method to logout the user
 
 #### Defined in
 
-[index.ts:215](https://github.com/arcana-network/auth/blob/efb5efe/src/index.ts#L215)
+[index.ts:214](https://github.com/arcana-network/auth/blob/ca90bd2/src/index.ts#L214)
 
 ___
 
@@ -196,7 +194,7 @@ helper function to handle redirect params on popup mode
 
 #### Defined in
 
-[index.ts:60](https://github.com/arcana-network/auth/blob/efb5efe/src/index.ts#L60)
+[index.ts:60](https://github.com/arcana-network/auth/blob/ca90bd2/src/index.ts#L60)
 
 ___
 
@@ -218,4 +216,4 @@ helper function to initialize the AuthProvider, should be the starting point
 
 #### Defined in
 
-[index.ts:50](https://github.com/arcana-network/auth/blob/efb5efe/src/index.ts#L50)
+[index.ts:50](https://github.com/arcana-network/auth/blob/ca90bd2/src/index.ts#L50)

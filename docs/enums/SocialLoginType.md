@@ -1,4 +1,4 @@
-[@arcana/auth](../README.md) / [Exports](../modules.md) / SocialLoginType
+[Auth SDK Reference Guide - v0.0.9-beta5](../README.md) / [Exports](../modules.md) / SocialLoginType
 
 # Enumeration: SocialLoginType
 
@@ -22,7 +22,7 @@
 
 #### Defined in
 
-[types.ts:4](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L4)
+[types.ts:4](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L4)
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 #### Defined in
 
-[types.ts:6](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L6)
+[types.ts:6](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L6)
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 #### Defined in
 
-[types.ts:2](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L2)
+[types.ts:2](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L2)
 
 ___
 
@@ -52,7 +52,7 @@ ___
 
 #### Defined in
 
-[types.ts:8](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L8)
+[types.ts:8](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L8)
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 #### Defined in
 
-[types.ts:3](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L3)
+[types.ts:3](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L3)
 
 ___
 
@@ -72,7 +72,7 @@ ___
 
 #### Defined in
 
-[types.ts:5](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L5)
+[types.ts:5](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L5)
 
 ___
 
@@ -82,4 +82,4 @@ ___
 
 #### Defined in
 
-[types.ts:7](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L7)
+[types.ts:7](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L7)

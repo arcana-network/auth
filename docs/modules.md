@@ -1,6 +1,6 @@
-[@arcana/auth](README.md) / Exports
+[Auth SDK Reference Guide - v0.0.9-beta5](README.md) / Exports
 
-# @arcana/auth
+# Auth SDK Reference Guide - v0.0.9-beta5
 
 ## Table of contents
 

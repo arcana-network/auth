@@ -1,4 +1,4 @@
-[@arcana/auth](../README.md) / [Exports](../modules.md) / KeystoreInput
+[Auth SDK Reference Guide - v0.0.9-beta5](../README.md) / [Exports](../modules.md) / KeystoreInput
 
 # Interface: KeystoreInput
 
@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[types.ts:81](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L81)
+[types.ts:81](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L81)
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 #### Defined in
 
-[types.ts:82](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L82)
+[types.ts:82](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L82)

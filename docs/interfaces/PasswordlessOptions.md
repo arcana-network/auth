@@ -1,4 +1,4 @@
-[@arcana/auth](../README.md) / [Exports](../modules.md) / PasswordlessOptions
+[Auth SDK Reference Guide - v0.0.9-beta5](../README.md) / [Exports](../modules.md) / PasswordlessOptions
 
 # Interface: PasswordlessOptions
 
@@ -16,4 +16,4 @@
 
 #### Defined in
 
-[types.ts:18](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L18)
+[types.ts:18](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L18)

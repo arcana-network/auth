@@ -1,4 +1,4 @@
-[@arcana/auth](../README.md) / [Exports](../modules.md) / PublicKeyOutput
+[Auth SDK Reference Guide - v0.0.9-beta5](../README.md) / [Exports](../modules.md) / PublicKeyOutput
 
 # Enumeration: PublicKeyOutput
 
@@ -18,7 +18,7 @@
 
 #### Defined in
 
-[types.ts:13](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L13)
+[types.ts:13](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L13)
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 #### Defined in
 
-[types.ts:12](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L12)
+[types.ts:12](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L12)
 
 ___
 
@@ -38,4 +38,4 @@ ___
 
 #### Defined in
 
-[types.ts:14](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L14)
+[types.ts:14](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L14)

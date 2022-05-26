@@ -1,4 +1,4 @@
-[@arcana/auth](../README.md) / [Exports](../modules.md) / InitParams
+[Auth SDK Reference Guide - v0.0.9-beta5](../README.md) / [Exports](../modules.md) / InitParams
 
 # Interface: InitParams
 
@@ -23,7 +23,7 @@
 
 #### Defined in
 
-[types.ts:36](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L36)
+[types.ts:36](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L36)
 
 ___
 
@@ -33,7 +33,7 @@ ___
 
 #### Defined in
 
-[types.ts:35](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L35)
+[types.ts:35](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L35)
 
 ___
 
@@ -43,7 +43,7 @@ ___
 
 #### Defined in
 
-[types.ts:42](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L42)
+[types.ts:42](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L42)
 
 ___
 
@@ -53,7 +53,7 @@ ___
 
 #### Defined in
 
-[types.ts:41](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L41)
+[types.ts:41](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L41)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[types.ts:40](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L40)
+[types.ts:40](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L40)
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-[types.ts:38](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L38)
+[types.ts:38](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L38)
 
 ___
 
@@ -83,7 +83,7 @@ ___
 
 #### Defined in
 
-[types.ts:37](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L37)
+[types.ts:37](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L37)
 
 ___
 
@@ -93,4 +93,4 @@ ___
 
 #### Defined in
 
-[types.ts:39](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L39)
+[types.ts:39](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L39)

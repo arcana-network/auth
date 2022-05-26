@@ -1,4 +1,4 @@
-[@arcana/auth](../README.md) / [Exports](../modules.md) / UserInfo
+[Auth SDK Reference Guide - v0.0.9-beta5](../README.md) / [Exports](../modules.md) / UserInfo
 
 # Interface: UserInfo
 
@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[types.ts:23](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L23)
+[types.ts:23](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L23)
 
 ___
 
@@ -29,7 +29,7 @@ ___
 
 #### Defined in
 
-[types.ts:22](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L22)
+[types.ts:22](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L22)
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 #### Defined in
 
-[types.ts:24](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L24)
+[types.ts:24](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L24)
 
 ___
 
@@ -49,4 +49,4 @@ ___
 
 #### Defined in
 
-[types.ts:25](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L25)
+[types.ts:25](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L25)
