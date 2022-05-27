@@ -94,7 +94,7 @@ const getWalletPosition = (
   return { bottom: positionDistance, [position]: positionDistance }
 }
 
-export function verifyMode(w: WalletType, a: AppMode | undefined): AppMode {
+function verifyMode(w: WalletType, a: AppMode | undefined): AppMode {
   const allowedModes = ModeWalletTypeRelation[w]
   if (a !== undefined) {
     if (!allowedModes.includes(a)) {
@@ -106,11 +106,17 @@ export function verifyMode(w: WalletType, a: AppMode | undefined): AppMode {
   }
 }
 
+function computeAddress(publicKey: string) {
+  return ethers.utils.computeAddress(publicKey)
+}
+
 export {
-  getWalletType,
+  computeAddress,
   createDomElement,
+  getWalletType,
   setWalletSize,
   getWalletSize,
   setWalletPosition,
   getWalletPosition,
+  verifyMode,
 }

@@ -1,7 +1,7 @@
 import { ArcanaProvider } from './provider'
 import IframeWrapper from './iframeWrapper'
 import { encryptWithPublicKey, cipher } from 'eth-crypto'
-import { getWalletType } from './utils'
+import { getWalletType, computeAddress } from './utils'
 import { setNetwork, getConfig, setIframeDevUrl } from './config'
 import {
   IAppConfig,
@@ -34,6 +34,10 @@ class WalletProvider {
       input.message
     )
     return cipher.stringify(ciphertext)
+  }
+
+  public static computeAddress(publicKey: string): string {
+    return computeAddress(publicKey)
   }
 
   private state: State
