@@ -62,6 +62,12 @@ WalletProvider.encryptWithPublicKey({
 })
 ```
 
+### Compute Address
+
+```ts
+const address = WalletProvider.computeAddress(publicKey: string);
+```
+
 ### Login/logout
 
 Social login
