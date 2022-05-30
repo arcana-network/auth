@@ -51,23 +51,6 @@ provider = window.ethereum
 
 ## Wallet API’s
 
-### Request encryption
-
-```js
-WalletProvider.encryptWithPublicKey({
-  publicKey: '',
-  message: plaintext,
-}).then((ciphertext) => {
-  // Do something with ciphertext
-})
-```
-
-### Compute Address
-
-```ts
-const address = WalletProvider.computeAddress(publicKey: string);
-```
-
 ### Login/logout
 
 Social login
@@ -112,6 +95,29 @@ await wallet.logout()
 
 ```js
 await wallet.requestPublicKey(`${email}`, `${verifier}`)
+```
+
+## Utils
+
+### ECIES encryption
+
+```js
+import { encryptWithPublicKey } from '@arcana/wallet'
+
+encryptWithPublicKey({
+  publicKey: '',
+  message: 'test-message',
+}).then((ciphertext) => {
+  // Do something with ciphertext
+})
+```
+
+### Compute Address
+
+```ts
+import { computeAddress } from '@arcana/wallet'
+
+const address = computeAddress(publicKey: string);
 ```
 
 ## Events
