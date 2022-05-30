@@ -12,7 +12,6 @@ const getContract = (rpcUrl: string, appAddress: string) => {
     ['function walletType() view returns (uint)'],
     provider
   )
-
   return appContract
 }
 
@@ -106,6 +105,10 @@ function verifyMode(w: WalletType, a: AppMode | undefined): AppMode {
   const allowedModes = ModeWalletTypeRelation[w]
   if (a !== undefined) {
     if (!allowedModes.includes(a)) {
+      getLogger('WalletProvider').error('verifyMode-mismtch', {
+        a,
+        allowedModes,
+      })
       return allowedModes[0]
     }
     return a
@@ -129,6 +132,8 @@ const getSentryErrorReporter = (dsn: string): ((m: string) => void) => {
   }
 }
 
+const isDefined = (arg: any) => arg !== undefined && arg !== null
+
 export {
   computeAddress,
   createDomElement,
@@ -139,4 +144,5 @@ export {
   getWalletPosition,
   verifyMode,
   getSentryErrorReporter,
+  isDefined,
 }

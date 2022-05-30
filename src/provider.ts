@@ -132,6 +132,7 @@ export class ArcanaProvider extends SafeEventEmitter {
     const c = await this.communication.promise
     const isLoggedIn = await c.isLoggedIn()
     if (!isLoggedIn) {
+      this.logger.error('requestUserInfo', UserNotLoggedInError)
       throw UserNotLoggedInError
     }
     const info = await c.getUserInfo()
