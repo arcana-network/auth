@@ -106,12 +106,7 @@ function verifyMode(w: WalletType, a: AppMode | undefined): AppMode {
   }
 }
 
-function computeAddress(publicKey: string) {
-  return ethers.utils.computeAddress(publicKey)
-}
-
 export {
-  computeAddress,
   createDomElement,
   getWalletType,
   setWalletSize,

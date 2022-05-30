@@ -1,7 +1,8 @@
 import { ArcanaProvider } from './provider'
 import IframeWrapper from './iframeWrapper'
-import { encryptWithPublicKey, cipher } from 'eth-crypto'
-import { getWalletType, computeAddress } from './utils'
+import EthCrypto from 'eth-crypto'
+import { ethers } from 'ethers'
+import { getWalletType } from './utils'
 import { setNetwork, getConfig, setIframeDevUrl } from './config'
 import {
   IAppConfig,
@@ -21,25 +22,6 @@ interface InitInput {
 }
 
 class WalletProvider {
-  /**
-   * A helper function to encrypt supplied message with supplied public key
-   * @returns ciphertext of the message
-   *
-   */
-  public static async encryptWithPublicKey(
-    input: EncryptInput
-  ): Promise<string> {
-    const ciphertext = await encryptWithPublicKey(
-      input.publicKey,
-      input.message
-    )
-    return cipher.stringify(ciphertext)
-  }
-
-  public static computeAddress(publicKey: string): string {
-    return computeAddress(publicKey)
-  }
-
   private state: State
   private iframeWrapper: IframeWrapper | null
   private _provider: ArcanaProvider
@@ -279,6 +261,20 @@ class WalletProvider {
     const redirectUri = `${iframeUrl}/${this.params.appId}/redirect`
     this.state = { iframeUrl, redirectUri }
   }
+}
+
+export async function encryptWithPublicKey(
+  input: EncryptInput
+): Promise<string> {
+  const ciphertext = await EthCrypto.encryptWithPublicKey(
+    input.publicKey,
+    input.message
+  )
+  return EthCrypto.cipher.stringify(ciphertext)
+}
+
+export function computeAddress(publicKey: string): string {
+  return ethers.utils.computeAddress(publicKey)
 }
 
 export {
