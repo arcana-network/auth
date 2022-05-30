@@ -1,12 +1,12 @@
 export enum WalletType {
-  UI = 0,
-  NoUI = 1,
+  NoUI = 0,
+  UI = 1,
 }
 
 export enum AppMode {
-  Full = 0,
+  NoUI = 0,
   Widget = 1,
-  NoUI = 2,
+  Full = 2,
 }
 
 export const ModeWalletTypeRelation = {
