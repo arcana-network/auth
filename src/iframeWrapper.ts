@@ -233,7 +233,8 @@ export default class IframeWrapper {
   }
 
   private closeWidgetIframe() {
-    this.widgetBubble.style.display = 'flex'
+    const isFullMode = this.appMode === AppMode.Full
+    this.widgetBubble.style.display = isFullMode ? 'flex' : 'none'
     this.widgetIframeContainer.style.display = 'none'
   }
 
