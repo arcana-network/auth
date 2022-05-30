@@ -1422,6 +1422,69 @@
     "@nodelib/fs.scandir" "2.1.5"
     "fastq" "^1.6.0"
 
+"@sentry/browser@^6.19.7":
+  "integrity" "sha512-oDbklp4O3MtAM4mtuwyZLrgO1qDVYIujzNJQzXmi9YzymJCuzMLSRDvhY83NNDCRxf0pds4DShgYeZdbSyKraA=="
+  "resolved" "https://registry.npmjs.org/@sentry/browser/-/browser-6.19.7.tgz"
+  "version" "6.19.7"
+  dependencies:
+    "@sentry/core" "6.19.7"
+    "@sentry/types" "6.19.7"
+    "@sentry/utils" "6.19.7"
+    "tslib" "^1.9.3"
+
+"@sentry/core@6.19.7":
+  "integrity" "sha512-tOfZ/umqB2AcHPGbIrsFLcvApdTm9ggpi/kQZFkej7kMphjT+SGBiQfYtjyg9jcRW+ilAR4JXC9BGKsdEQ+8Vw=="
+  "resolved" "https://registry.npmjs.org/@sentry/core/-/core-6.19.7.tgz"
+  "version" "6.19.7"
+  dependencies:
+    "@sentry/hub" "6.19.7"
+    "@sentry/minimal" "6.19.7"
+    "@sentry/types" "6.19.7"
+    "@sentry/utils" "6.19.7"
+    "tslib" "^1.9.3"
+
+"@sentry/hub@6.19.7":
+  "integrity" "sha512-y3OtbYFAqKHCWezF0EGGr5lcyI2KbaXW2Ik7Xp8Mu9TxbSTuwTe4rTntwg8ngPjUQU3SUHzgjqVB8qjiGqFXCA=="
+  "resolved" "https://registry.npmjs.org/@sentry/hub/-/hub-6.19.7.tgz"
+  "version" "6.19.7"
+  dependencies:
+    "@sentry/types" "6.19.7"
+    "@sentry/utils" "6.19.7"
+    "tslib" "^1.9.3"
+
+"@sentry/minimal@6.19.7":
+  "integrity" "sha512-wcYmSJOdvk6VAPx8IcmZgN08XTXRwRtB1aOLZm+MVHjIZIhHoBGZJYTVQS/BWjldsamj2cX3YGbGXNunaCfYJQ=="
+  "resolved" "https://registry.npmjs.org/@sentry/minimal/-/minimal-6.19.7.tgz"
+  "version" "6.19.7"
+  dependencies:
+    "@sentry/hub" "6.19.7"
+    "@sentry/types" "6.19.7"
+    "tslib" "^1.9.3"
+
+"@sentry/tracing@^6.19.7":
+  "integrity" "sha512-ol4TupNnv9Zd+bZei7B6Ygnr9N3Gp1PUrNI761QSlHtPC25xXC5ssSD3GMhBgyQrcvpuRcCFHVNNM97tN5cZiA=="
+  "resolved" "https://registry.npmjs.org/@sentry/tracing/-/tracing-6.19.7.tgz"
+  "version" "6.19.7"
+  dependencies:
+    "@sentry/hub" "6.19.7"
+    "@sentry/minimal" "6.19.7"
+    "@sentry/types" "6.19.7"
+    "@sentry/utils" "6.19.7"
+    "tslib" "^1.9.3"
+
+"@sentry/types@6.19.7":
+  "integrity" "sha512-jH84pDYE+hHIbVnab3Hr+ZXr1v8QABfhx39KknxqKWr2l0oEItzepV0URvbEhB446lk/S/59230dlUUIBGsXbg=="
+  "resolved" "https://registry.npmjs.org/@sentry/types/-/types-6.19.7.tgz"
+  "version" "6.19.7"
+
+"@sentry/utils@6.19.7":
+  "integrity" "sha512-z95ECmE3i9pbWoXQrD/7PgkBAzJYR+iXtPuTkpBjDKs86O3mT+PXOT3BAn79w2wkn7/i3vOGD2xVr1uiMl26dA=="
+  "resolved" "https://registry.npmjs.org/@sentry/utils/-/utils-6.19.7.tgz"
+  "version" "6.19.7"
+  dependencies:
+    "@sentry/types" "6.19.7"
+    "tslib" "^1.9.3"
+
 "@sinonjs/commons@^1.7.0":
   "integrity" "sha512-xkNcLAn/wZaX14RPlwizcKicDk9G3F8m2nU3L7Ukm5zBgTwiT0wsoFAHx9Jq56fJA1z/7uKGtCRu16sOUCLIHQ=="
   "resolved" "https://registry.npmjs.org/@sinonjs/commons/-/commons-1.8.3.tgz"
@@ -5556,7 +5619,7 @@
   "resolved" "https://registry.npmjs.org/tr46/-/tr46-0.0.3.tgz"
   "version" "0.0.3"
 
-"tslib@^1.8.1":
+"tslib@^1.8.1", "tslib@^1.9.3":
   "integrity" "sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg=="
   "resolved" "https://registry.npmjs.org/tslib/-/tslib-1.14.1.tgz"
   "version" "1.14.1"

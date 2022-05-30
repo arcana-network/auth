@@ -16,6 +16,7 @@ import {
   verifyMode,
 } from './utils'
 import { getConfig } from './config'
+import { getLogger } from './logger'
 const BREAKPOINT_SMALL = 768
 
 export default class IframeWrapper {
@@ -96,6 +97,7 @@ export default class IframeWrapper {
         await this.iframeCommunication.promise
       }
     } catch (error) {
+      getLogger('IframeWrapper').error('createOrGetInstance', error)
       throw new Error('Error during createOrGetInstance in IframeWrapper')
     }
     return { iframe: this.iframe, communication: this.iframeCommunication }

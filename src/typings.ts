@@ -19,6 +19,7 @@ export interface InitParams {
   network: 'testnet' | 'dev'
   iframeUrl?: string
   inpageProvider: boolean
+  debug: boolean
 }
 
 export interface State {

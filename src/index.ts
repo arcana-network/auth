@@ -1,7 +1,7 @@
 import { ArcanaProvider } from './provider'
 import IframeWrapper from './iframeWrapper'
 import { encryptWithPublicKey, cipher } from 'eth-crypto'
-import { getWalletType, computeAddress } from './utils'
+import { getWalletType, computeAddress, getSentryErrorReporter } from './utils'
 import { setNetwork, getConfig, setIframeDevUrl } from './config'
 import {
   IAppConfig,
@@ -14,6 +14,13 @@ import { JsonRpcResponse } from 'json-rpc-engine'
 import { InitParams, State, AppMode, EncryptInput } from './typings'
 import { getAppInfo, getImageUrls } from './network'
 import { WalletNotInitializedError, InvalidClassParams } from './errors'
+import {
+  getLogger,
+  Logger,
+  LOG_LEVEL,
+  setExceptionReporter,
+  setLogLevel,
+} from './logger'
 
 interface InitInput {
   appMode: AppMode | undefined
@@ -41,6 +48,7 @@ class WalletProvider {
   }
 
   private state: State
+  private logger: Logger
   private iframeWrapper: IframeWrapper | null
   private _provider: ArcanaProvider
   constructor(
@@ -48,14 +56,22 @@ class WalletProvider {
       ...params,
       network: 'testnet',
       inpageProvider: false,
+      debug: false,
     }
   ) {
     if (!params.appId) {
       throw InvalidClassParams
     }
+    this.logger = getLogger('WalletProvider')
     this.initializeState()
-    if (this.params.network === 'testnet') {
+    if (params.network === 'testnet') {
       setNetwork(this.params.network)
+    }
+    if (params.debug) {
+      setLogLevel(LOG_LEVEL.DEBUG)
+      setExceptionReporter(getSentryErrorReporter(getConfig().SENTRY_DSN))
+    } else {
+      setLogLevel(LOG_LEVEL.NOLOGS)
     }
   }
 

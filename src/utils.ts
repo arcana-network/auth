@@ -2,6 +2,8 @@ import { ethers } from 'ethers'
 import { getConfig } from './config'
 import { IWalletPosition, IWalletSize, Position } from './interfaces'
 import { AppMode, ModeWalletTypeRelation, WalletType } from './typings'
+import * as Sentry from '@sentry/browser'
+import { getLogger } from './logger'
 
 const getContract = (rpcUrl: string, appAddress: string) => {
   const provider = new ethers.providers.JsonRpcProvider(rpcUrl)
@@ -27,16 +29,22 @@ const getWalletType = async (appId: string) => {
     const walletType = res[0].toNumber()
     return walletType
   } catch (e) {
+    getLogger('WalletProvider').error('getWalletType', e)
     return null
   }
 }
 
 const getAppAddress = async (id: string) => {
-  const config = getConfig()
-  const res = await fetch(`${config.GATEWAY_URL}/get-address/?id=` + id)
-  const json = await res.json()
-  const address: string = json?.address
-  return address
+  try {
+    const config = getConfig()
+    const res = await fetch(`${config.GATEWAY_URL}/get-address/?id=` + id)
+    const json = await res.json()
+    const address: string = json?.address
+    return address
+  } catch (e) {
+    getLogger('WalletProvider').error('getAppAddress', e)
+    throw e
+  }
 }
 
 type elements = 'style' | 'src' | 'onclick' | 'id'
@@ -110,6 +118,17 @@ function computeAddress(publicKey: string) {
   return ethers.utils.computeAddress(publicKey)
 }
 
+const getSentryErrorReporter = (dsn: string): ((m: string) => void) => {
+  Sentry.init({
+    dsn,
+    maxBreadcrumbs: 5,
+    debug: true,
+  })
+  return (msg: string) => {
+    Sentry.captureMessage(msg)
+  }
+}
+
 export {
   computeAddress,
   createDomElement,
@@ -119,4 +138,5 @@ export {
   setWalletPosition,
   getWalletPosition,
   verifyMode,
+  getSentryErrorReporter,
 }
