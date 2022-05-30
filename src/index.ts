@@ -263,9 +263,7 @@ class WalletProvider {
   }
 }
 
-export async function encryptWithPublicKey(
-  input: EncryptInput
-): Promise<string> {
+const encryptWithPublicKey = async (input: EncryptInput): Promise<string> => {
   const ciphertext = await EthCrypto.encryptWithPublicKey(
     input.publicKey,
     input.message
@@ -273,7 +271,7 @@ export async function encryptWithPublicKey(
   return EthCrypto.cipher.stringify(ciphertext)
 }
 
-export function computeAddress(publicKey: string): string {
+const computeAddress = (publicKey: string): string => {
   return ethers.utils.computeAddress(publicKey)
 }
 
@@ -288,4 +286,6 @@ export {
   UserInfo,
   IWidgetThemeConfig,
   InitInput,
+  computeAddress,
+  encryptWithPublicKey,
 }
