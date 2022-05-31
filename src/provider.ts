@@ -29,7 +29,7 @@ import {
 import { PollingBlockTracker, Provider } from 'eth-block-tracker'
 import { Connection } from 'penpal'
 import { ethErrors } from 'eth-rpc-errors'
-import { SafeEventEmitterProvider } from 'eth-json-rpc-middleware/dist/utils/cache'
+import { SafeEventEmitterProvider } from 'eth-json-rpc-middleware'
 import SafeEventEmitter from '@metamask/safe-event-emitter'
 import { getConfig } from './config'
 import { UserNotLoggedInError } from './errors'
