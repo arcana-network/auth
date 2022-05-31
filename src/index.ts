@@ -2,7 +2,7 @@ import { ArcanaProvider } from './provider'
 import IframeWrapper from './iframeWrapper'
 import EthCrypto from 'eth-crypto'
 import { ethers } from 'ethers'
-import { getWalletType } from './utils'
+import { getWalletType, isDefined, getSentryErrorReporter } from './utils'
 import { setNetwork, getConfig, setIframeDevUrl } from './config'
 import {
   IAppConfig,
@@ -14,7 +14,14 @@ import {
 import { JsonRpcResponse } from 'json-rpc-engine'
 import { InitParams, State, AppMode, EncryptInput } from './typings'
 import { getAppInfo, getImageUrls } from './network'
-import { WalletNotInitializedError, InvalidClassParams } from './errors'
+import { WalletNotInitializedError } from './errors'
+import {
+  getLogger,
+  Logger,
+  LOG_LEVEL,
+  setExceptionReporter,
+  setLogLevel,
+} from './logger'
 
 interface InitInput {
   appMode: AppMode | undefined
@@ -23,6 +30,7 @@ interface InitInput {
 
 class WalletProvider {
   private state: State
+  private logger: Logger
   private iframeWrapper: IframeWrapper | null
   private _provider: ArcanaProvider
   constructor(
@@ -30,14 +38,22 @@ class WalletProvider {
       ...params,
       network: 'testnet',
       inpageProvider: false,
+      debug: false,
     }
   ) {
-    if (!params.appId) {
-      throw InvalidClassParams
+    if (!isDefined(params.appId)) {
+      throw new Error('appId is required in params')
     }
+    this.logger = getLogger('WalletProvider')
     this.initializeState()
-    if (this.params.network === 'testnet') {
+    if (params.network === 'testnet') {
       setNetwork(this.params.network)
+    }
+    if (params.debug) {
+      setLogLevel(LOG_LEVEL.DEBUG)
+      setExceptionReporter(getSentryErrorReporter(getConfig().SENTRY_DSN))
+    } else {
+      setLogLevel(LOG_LEVEL.NOLOGS)
     }
   }
 
@@ -168,6 +184,7 @@ class WalletProvider {
       }
       return
     }
+    this.logger.error('requestSocialLogin', WalletNotInitializedError)
     throw WalletNotInitializedError
   }
 
@@ -178,6 +195,7 @@ class WalletProvider {
     if (this._provider) {
       return this._provider.triggerPasswordlessLogin(email)
     }
+    this.logger.error('requestPasswordlessLogin', WalletNotInitializedError)
     throw WalletNotInitializedError
   }
 
@@ -189,6 +207,7 @@ class WalletProvider {
     if (this._provider) {
       return this._provider.requestUserInfo()
     }
+    this.logger.error('requestUserInfo', WalletNotInitializedError)
     throw WalletNotInitializedError
   }
 
@@ -199,6 +218,7 @@ class WalletProvider {
     if (this._provider) {
       return this._provider.isLoggedIn()
     }
+    this.logger.error('isLoggedIn', WalletNotInitializedError)
     throw WalletNotInitializedError
   }
 
@@ -209,6 +229,7 @@ class WalletProvider {
     if (this._provider) {
       return this._provider.triggerLogout()
     }
+    this.logger.error('logout', WalletNotInitializedError)
     throw WalletNotInitializedError
   }
 
@@ -219,6 +240,7 @@ class WalletProvider {
     if (this._provider) {
       return await this._provider.getPublicKey(email, verifier)
     }
+    this.logger.error('requestPublicKey', WalletNotInitializedError)
     throw WalletNotInitializedError
   }
 
@@ -230,6 +252,7 @@ class WalletProvider {
     if (this._provider) {
       return this._provider
     }
+    this.logger.error('getProvider', WalletNotInitializedError)
     throw WalletNotInitializedError
   }
 
@@ -237,6 +260,7 @@ class WalletProvider {
     if (this._provider) {
       return this._provider
     }
+    this.logger.error('provider', WalletNotInitializedError)
     throw WalletNotInitializedError
   }
 

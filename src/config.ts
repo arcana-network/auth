@@ -6,6 +6,8 @@ const DEV_CONFIG = {
   NET_VERSION: '40404',
   GATEWAY_URL: 'https://gateway-dev.arcana.network',
   WALLET_URL: 'https://wallet.dev.arcana.network',
+  SENTRY_DSN:
+    'https://68615fda056a4337bcc9b7e3062562c3@o1011868.ingest.sentry.io/6449849',
 }
 
 const TESTNET_CONFIG = {
@@ -14,6 +16,8 @@ const TESTNET_CONFIG = {
   NET_VERSION: '40404',
   GATEWAY_URL: 'https://gateway-testnet.arcana.network',
   WALLET_URL: 'https://wallet.arcana.network',
+  SENTRY_DSN:
+    'https://4e27545e4faf43318301625d79a6dc34@o1011868.ingest.sentry.io/6451353',
 }
 
 const getConfig = () => {

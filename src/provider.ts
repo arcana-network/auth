@@ -33,6 +33,7 @@ import { SafeEventEmitterProvider } from 'eth-json-rpc-middleware'
 import SafeEventEmitter from '@metamask/safe-event-emitter'
 import { getConfig } from './config'
 import { UserNotLoggedInError } from './errors'
+import { getLogger, Logger } from './logger'
 
 interface RequestArguments {
   method: string
@@ -65,6 +66,7 @@ export class ArcanaProvider extends SafeEventEmitter {
   private provider: SafeEventEmitterProvider
   private subscriber: SafeEventEmitter
   private communication: Connection<IConnectionMethods>
+  private logger: Logger = getLogger('ArcanaProvider')
   private iframeOpenHandler: () => void
   private iframeCloseHandler: () => void
   constructor() {
@@ -98,6 +100,7 @@ export class ArcanaProvider extends SafeEventEmitter {
       const c = await this.communication.promise
       return c.isLoggedIn()
     } catch (e) {
+      this.logger.error('isLoggedIn', e)
       return false
     }
   }
@@ -129,6 +132,7 @@ export class ArcanaProvider extends SafeEventEmitter {
     const c = await this.communication.promise
     const isLoggedIn = await c.isLoggedIn()
     if (!isLoggedIn) {
+      this.logger.error('requestUserInfo', UserNotLoggedInError)
       throw UserNotLoggedInError
     }
     const info = await c.getUserInfo()
@@ -402,7 +406,7 @@ export class ArcanaProvider extends SafeEventEmitter {
   }
 
   personalSign = async (
-    params: MessageParams,
+    _: MessageParams,
     req: JsonRpcRequest<unknown>
   ): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -442,6 +446,7 @@ export class ArcanaProvider extends SafeEventEmitter {
 }
 
 const getError = (message: string) => {
+  getLogger('ArcanaProvider').error('getError', message)
   switch (message) {
     case 'user_deny':
       return new ProviderError(4001, 'The request was denied by the user')
