@@ -1,12 +1,8 @@
 import { ArcanaProvider } from './provider'
 import IframeWrapper from './iframeWrapper'
-import { encryptWithPublicKey, cipher } from 'eth-crypto'
-import {
-  getWalletType,
-  computeAddress,
-  getSentryErrorReporter,
-  isDefined,
-} from './utils'
+import EthCrypto from 'eth-crypto'
+import { ethers } from 'ethers'
+import { getWalletType, isDefined, getSentryErrorReporter } from './utils'
 import { setNetwork, getConfig, setIframeDevUrl } from './config'
 import {
   IAppConfig,
@@ -18,7 +14,7 @@ import {
 import { JsonRpcResponse } from 'json-rpc-engine'
 import { InitParams, State, AppMode, EncryptInput } from './typings'
 import { getAppInfo, getImageUrls } from './network'
-import { WalletNotInitializedError, InvalidClassParams } from './errors'
+import { WalletNotInitializedError } from './errors'
 import {
   getLogger,
   Logger,
@@ -33,25 +29,6 @@ interface InitInput {
 }
 
 class WalletProvider {
-  /**
-   * A helper function to encrypt supplied message with supplied public key
-   * @returns ciphertext of the message
-   *
-   */
-  public static async encryptWithPublicKey(
-    input: EncryptInput
-  ): Promise<string> {
-    const ciphertext = await encryptWithPublicKey(
-      input.publicKey,
-      input.message
-    )
-    return cipher.stringify(ciphertext)
-  }
-
-  public static computeAddress(publicKey: string): string {
-    return computeAddress(publicKey)
-  }
-
   private state: State
   private logger: Logger
   private iframeWrapper: IframeWrapper | null
@@ -310,6 +287,18 @@ class WalletProvider {
   }
 }
 
+const encryptWithPublicKey = async (input: EncryptInput): Promise<string> => {
+  const ciphertext = await EthCrypto.encryptWithPublicKey(
+    input.publicKey,
+    input.message
+  )
+  return EthCrypto.cipher.stringify(ciphertext)
+}
+
+const computeAddress = (publicKey: string): string => {
+  return ethers.utils.computeAddress(publicKey)
+}
+
 export {
   WalletProvider,
   InitParams,
@@ -321,4 +310,6 @@ export {
   UserInfo,
   IWidgetThemeConfig,
   InitInput,
+  computeAddress,
+  encryptWithPublicKey,
 }

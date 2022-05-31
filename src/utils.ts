@@ -117,10 +117,6 @@ function verifyMode(w: WalletType, a: AppMode | undefined): AppMode {
   }
 }
 
-function computeAddress(publicKey: string) {
-  return ethers.utils.computeAddress(publicKey)
-}
-
 const getSentryErrorReporter = (dsn: string): ((m: string) => void) => {
   Sentry.init({
     dsn,
@@ -135,7 +131,6 @@ const getSentryErrorReporter = (dsn: string): ((m: string) => void) => {
 const isDefined = (arg: any) => arg !== undefined && arg !== null
 
 export {
-  computeAddress,
   createDomElement,
   getWalletType,
   setWalletSize,
