@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[index.ts:27](https://github.com/arcana-network/wallet/blob/fc05803/src/index.ts#L27)
+[index.ts:27](https://github.com/arcana-network/wallet/blob/99cb3f4/src/index.ts#L27)
 
 ---
 
@@ -27,4 +27,4 @@
 
 #### Defined in
 
-[index.ts:28](https://github.com/arcana-network/wallet/blob/fc05803/src/index.ts#L28)
+[index.ts:28](https://github.com/arcana-network/wallet/blob/99cb3f4/src/index.ts#L28)
