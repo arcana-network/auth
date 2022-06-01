@@ -1,4 +1,4 @@
-[@arcana/auth](../README.md) / [Exports](../modules.md) / GetInfoOutput
+[Auth SDK Reference Guide - v0.0.9-beta5](../README.md) / [Exports](../modules.md) / GetInfoOutput
 
 # Interface: GetInfoOutput
 
@@ -18,7 +18,7 @@
 
 #### Defined in
 
-[types.ts:29](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L29)
+[types.ts:29](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L29)
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 #### Defined in
 
-[types.ts:31](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L31)
+[types.ts:31](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L31)
 
 ___
 
@@ -38,4 +38,4 @@ ___
 
 #### Defined in
 
-[types.ts:30](https://github.com/arcana-network/auth/blob/efb5efe/src/types.ts#L30)
+[types.ts:30](https://github.com/arcana-network/auth/blob/ca90bd2/src/types.ts#L30)

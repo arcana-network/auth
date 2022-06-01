@@ -1,4 +1,4 @@
-@arcana/auth / [Exports](modules.md)
+Auth SDK Reference Guide - v0.0.9-beta5 / [Exports](modules.md)
 
 # Arcana Auth
 

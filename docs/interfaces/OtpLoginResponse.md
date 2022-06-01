@@ -1,4 +1,4 @@
-[@arcana/auth](../README.md) / [Exports](../modules.md) / OtpLoginResponse
+[Auth SDK Reference Guide - v0.0.9-beta5](../README.md) / [Exports](../modules.md) / OtpLoginResponse
 
 # Interface: OtpLoginResponse
 
@@ -16,4 +16,4 @@
 
 #### Defined in
 
-[oauthHandlers.ts:508](https://github.com/arcana-network/auth/blob/efb5efe/src/oauthHandlers.ts#L508)
+[oauthHandlers.ts:508](https://github.com/arcana-network/auth/blob/ca90bd2/src/oauthHandlers.ts#L508)
