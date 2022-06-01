@@ -22,7 +22,6 @@
 - [requestPublicKey](WalletProvider.md#requestpublickey)
 - [requestSocialLogin](WalletProvider.md#requestsociallogin)
 - [requestUserInfo](WalletProvider.md#requestuserinfo)
-- [encryptWithPublicKey](WalletProvider.md#encryptwithpublickey)
 
 ## Constructors
 
@@ -38,7 +37,7 @@
 
 #### Defined in
 
-[index.ts:42](https://github.com/arcana-network/wallet/blob/a7c20fa/src/index.ts#L42)
+[index.ts:36](https://github.com/arcana-network/wallet/blob/fc05803/src/index.ts#L36)
 
 ## Accessors
 
@@ -52,7 +51,7 @@
 
 #### Defined in
 
-[index.ts:251](https://github.com/arcana-network/wallet/blob/a7c20fa/src/index.ts#L251)
+[index.ts:259](https://github.com/arcana-network/wallet/blob/fc05803/src/index.ts#L259)
 
 ## Methods
 
@@ -70,7 +69,7 @@ A function to get web3 provider
 
 #### Defined in
 
-[index.ts:244](https://github.com/arcana-network/wallet/blob/a7c20fa/src/index.ts#L244)
+[index.ts:251](https://github.com/arcana-network/wallet/blob/fc05803/src/index.ts#L251)
 
 ---
 
@@ -92,7 +91,7 @@ A function to initialize the wallet, should be called before getting provider
 
 #### Defined in
 
-[index.ts:61](https://github.com/arcana-network/wallet/blob/a7c20fa/src/index.ts#L61)
+[index.ts:63](https://github.com/arcana-network/wallet/blob/fc05803/src/index.ts#L63)
 
 ---
 
@@ -108,7 +107,7 @@ A function to determine whether user is logged in
 
 #### Defined in
 
-[index.ts:213](https://github.com/arcana-network/wallet/blob/a7c20fa/src/index.ts#L213)
+[index.ts:217](https://github.com/arcana-network/wallet/blob/fc05803/src/index.ts#L217)
 
 ---
 
@@ -124,7 +123,7 @@ A function to logout the user
 
 #### Defined in
 
-[index.ts:223](https://github.com/arcana-network/wallet/blob/a7c20fa/src/index.ts#L223)
+[index.ts:228](https://github.com/arcana-network/wallet/blob/fc05803/src/index.ts#L228)
 
 ---
 
@@ -146,7 +145,7 @@ A function to trigger passwordless login in the wallet
 
 #### Defined in
 
-[index.ts:192](https://github.com/arcana-network/wallet/blob/a7c20fa/src/index.ts#L192)
+[index.ts:194](https://github.com/arcana-network/wallet/blob/fc05803/src/index.ts#L194)
 
 ---
 
@@ -169,7 +168,7 @@ A function to request public key of different users
 
 #### Defined in
 
-[index.ts:233](https://github.com/arcana-network/wallet/blob/a7c20fa/src/index.ts#L233)
+[index.ts:239](https://github.com/arcana-network/wallet/blob/fc05803/src/index.ts#L239)
 
 ---
 
@@ -191,7 +190,7 @@ A function to trigger social login in the wallet
 
 #### Defined in
 
-[index.ts:178](https://github.com/arcana-network/wallet/blob/a7c20fa/src/index.ts#L178)
+[index.ts:179](https://github.com/arcana-network/wallet/blob/fc05803/src/index.ts#L179)
 
 ---
 
@@ -209,28 +208,4 @@ available user info
 
 #### Defined in
 
-[index.ts:203](https://github.com/arcana-network/wallet/blob/a7c20fa/src/index.ts#L203)
-
----
-
-### encryptWithPublicKey
-
-▸ `Static` **encryptWithPublicKey**(`input`): `Promise`<`string`\>
-
-A helper function to encrypt supplied message with supplied public key
-
-#### Parameters
-
-| Name    | Type                                            |
-| :------ | :---------------------------------------------- |
-| `input` | [`EncryptInput`](../interfaces/EncryptInput.md) |
-
-#### Returns
-
-`Promise`<`string`\>
-
-ciphertext of the message
-
-#### Defined in
-
-[index.ts:29](https://github.com/arcana-network/wallet/blob/a7c20fa/src/index.ts#L29)
+[index.ts:206](https://github.com/arcana-network/wallet/blob/fc05803/src/index.ts#L206)

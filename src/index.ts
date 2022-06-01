@@ -287,6 +287,9 @@ class WalletProvider {
   }
 }
 
+/**
+ * A function to ECIES encrypt message using public key
+ */
 const encryptWithPublicKey = async (input: EncryptInput): Promise<string> => {
   const ciphertext = await EthCrypto.encryptWithPublicKey(
     input.publicKey,
@@ -295,6 +298,9 @@ const encryptWithPublicKey = async (input: EncryptInput): Promise<string> => {
   return EthCrypto.cipher.stringify(ciphertext)
 }
 
+/**
+ * A function to compute address from public key
+ */
 const computeAddress = (publicKey: string): string => {
   return ethers.utils.computeAddress(publicKey)
 }

@@ -4,38 +4,38 @@
 
 ## Table of contents
 
-### Enumeration members
+### Enumeration Members
 
 - [Full](AppMode.md#full)
 - [NoUI](AppMode.md#noui)
 - [Widget](AppMode.md#widget)
 
-## Enumeration members
+## Enumeration Members
 
 ### Full
 
-• **Full** = `0`
+• **Full**
 
 #### Defined in
 
-[typings.ts:7](https://github.com/arcana-network/wallet/blob/a7c20fa/src/typings.ts#L7)
+[typings.ts:9](https://github.com/arcana-network/wallet/blob/fc05803/src/typings.ts#L9)
 
 ---
 
 ### NoUI
 
-• **NoUI** = `2`
+• **NoUI**
 
 #### Defined in
 
-[typings.ts:9](https://github.com/arcana-network/wallet/blob/a7c20fa/src/typings.ts#L9)
+[typings.ts:7](https://github.com/arcana-network/wallet/blob/fc05803/src/typings.ts#L7)
 
 ---
 
 ### Widget
 
-• **Widget** = `1`
+• **Widget**
 
 #### Defined in
 
-[typings.ts:8](https://github.com/arcana-network/wallet/blob/a7c20fa/src/typings.ts#L8)
+[typings.ts:8](https://github.com/arcana-network/wallet/blob/fc05803/src/typings.ts#L8)
