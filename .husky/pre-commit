@@ -1,6 +1,6 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
+yarn docs
 npx lint-staged
-npm test
-npm run docs
+yarn test

@@ -39,7 +39,7 @@
 
 #### Defined in
 
-[interfaces.ts:7](https://github.com/arcana-network/wallet/blob/fc05803/src/interfaces.ts#L7)
+[interfaces.ts:7](https://github.com/arcana-network/wallet/blob/99cb3f4/src/interfaces.ts#L7)
 
 ---
 
@@ -49,7 +49,7 @@
 
 #### Defined in
 
-[interfaces.ts:3](https://github.com/arcana-network/wallet/blob/fc05803/src/interfaces.ts#L3)
+[interfaces.ts:3](https://github.com/arcana-network/wallet/blob/99cb3f4/src/interfaces.ts#L3)
 
 ## Functions
 
@@ -71,7 +71,7 @@ A function to compute address from public key
 
 #### Defined in
 
-[index.ts:304](https://github.com/arcana-network/wallet/blob/fc05803/src/index.ts#L304)
+[index.ts:304](https://github.com/arcana-network/wallet/blob/99cb3f4/src/index.ts#L304)
 
 ---
 
@@ -93,4 +93,4 @@ A function to ECIES encrypt message using public key
 
 #### Defined in
 
-[index.ts:293](https://github.com/arcana-network/wallet/blob/fc05803/src/index.ts#L293)
+[index.ts:293](https://github.com/arcana-network/wallet/blob/99cb3f4/src/index.ts#L293)
