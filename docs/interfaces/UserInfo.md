@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[interfaces.ts:36](https://github.com/arcana-network/wallet/blob/a7c20fa/src/interfaces.ts#L36)
+[interfaces.ts:36](https://github.com/arcana-network/wallet/blob/fc05803/src/interfaces.ts#L36)
 
 ---
 
@@ -29,7 +29,7 @@
 
 #### Defined in
 
-[interfaces.ts:35](https://github.com/arcana-network/wallet/blob/a7c20fa/src/interfaces.ts#L35)
+[interfaces.ts:35](https://github.com/arcana-network/wallet/blob/fc05803/src/interfaces.ts#L35)
 
 ---
 
@@ -39,7 +39,7 @@
 
 #### Defined in
 
-[interfaces.ts:37](https://github.com/arcana-network/wallet/blob/a7c20fa/src/interfaces.ts#L37)
+[interfaces.ts:37](https://github.com/arcana-network/wallet/blob/fc05803/src/interfaces.ts#L37)
 
 ---
 
@@ -49,4 +49,4 @@
 
 #### Defined in
 
-[interfaces.ts:38](https://github.com/arcana-network/wallet/blob/a7c20fa/src/interfaces.ts#L38)
+[interfaces.ts:38](https://github.com/arcana-network/wallet/blob/fc05803/src/interfaces.ts#L38)

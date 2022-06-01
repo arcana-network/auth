@@ -21,12 +21,17 @@
 - [InitParams](interfaces/InitParams.md)
 - [UserInfo](interfaces/UserInfo.md)
 
-### Type aliases
+### Type Aliases
 
 - [Position](modules.md#position)
 - [Theme](modules.md#theme)
 
-## Type aliases
+### Functions
+
+- [computeAddress](modules.md#computeaddress)
+- [encryptWithPublicKey](modules.md#encryptwithpublickey)
+
+## Type Aliases
 
 ### Position
 
@@ -34,7 +39,7 @@
 
 #### Defined in
 
-[interfaces.ts:7](https://github.com/arcana-network/wallet/blob/a7c20fa/src/interfaces.ts#L7)
+[interfaces.ts:7](https://github.com/arcana-network/wallet/blob/fc05803/src/interfaces.ts#L7)
 
 ---
 
@@ -44,4 +49,48 @@
 
 #### Defined in
 
-[interfaces.ts:3](https://github.com/arcana-network/wallet/blob/a7c20fa/src/interfaces.ts#L3)
+[interfaces.ts:3](https://github.com/arcana-network/wallet/blob/fc05803/src/interfaces.ts#L3)
+
+## Functions
+
+### computeAddress
+
+▸ **computeAddress**(`publicKey`): `string`
+
+A function to compute address from public key
+
+#### Parameters
+
+| Name        | Type     |
+| :---------- | :------- |
+| `publicKey` | `string` |
+
+#### Returns
+
+`string`
+
+#### Defined in
+
+[index.ts:304](https://github.com/arcana-network/wallet/blob/fc05803/src/index.ts#L304)
+
+---
+
+### encryptWithPublicKey
+
+▸ **encryptWithPublicKey**(`input`): `Promise`<`string`\>
+
+A function to ECIES encrypt message using public key
+
+#### Parameters
+
+| Name    | Type                                         |
+| :------ | :------------------------------------------- |
+| `input` | [`EncryptInput`](interfaces/EncryptInput.md) |
+
+#### Returns
+
+`Promise`<`string`\>
+
+#### Defined in
+
+[index.ts:293](https://github.com/arcana-network/wallet/blob/fc05803/src/index.ts#L293)

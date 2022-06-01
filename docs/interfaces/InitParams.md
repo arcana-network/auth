@@ -7,6 +7,7 @@
 ### Properties
 
 - [appId](InitParams.md#appid)
+- [debug](InitParams.md#debug)
 - [iframeUrl](InitParams.md#iframeurl)
 - [inpageProvider](InitParams.md#inpageprovider)
 - [network](InitParams.md#network)
@@ -19,7 +20,17 @@
 
 #### Defined in
 
-[typings.ts:18](https://github.com/arcana-network/wallet/blob/a7c20fa/src/typings.ts#L18)
+[typings.ts:18](https://github.com/arcana-network/wallet/blob/fc05803/src/typings.ts#L18)
+
+---
+
+### debug
+
+• **debug**: `boolean`
+
+#### Defined in
+
+[typings.ts:22](https://github.com/arcana-network/wallet/blob/fc05803/src/typings.ts#L22)
 
 ---
 
@@ -29,7 +40,7 @@
 
 #### Defined in
 
-[typings.ts:20](https://github.com/arcana-network/wallet/blob/a7c20fa/src/typings.ts#L20)
+[typings.ts:20](https://github.com/arcana-network/wallet/blob/fc05803/src/typings.ts#L20)
 
 ---
 
@@ -39,14 +50,14 @@
 
 #### Defined in
 
-[typings.ts:21](https://github.com/arcana-network/wallet/blob/a7c20fa/src/typings.ts#L21)
+[typings.ts:21](https://github.com/arcana-network/wallet/blob/fc05803/src/typings.ts#L21)
 
 ---
 
 ### network
 
-• **network**: `"testnet"` \| `"dev"`
+• **network**: `"dev"` \| `"testnet"`
 
 #### Defined in
 
-[typings.ts:19](https://github.com/arcana-network/wallet/blob/a7c20fa/src/typings.ts#L19)
+[typings.ts:19](https://github.com/arcana-network/wallet/blob/fc05803/src/typings.ts#L19)
