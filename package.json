@@ -18,6 +18,7 @@
     "build:ts": "rimraf dist/ && rimraf types/ && tsc --project tsconfig.json",
     "test": "jest --verbose",
     "docs": "typedoc --options typedoc.json",
+    "htmldocs": "typedoc --options typedochtml.json",
     "test:coverage": "jest --coverage",
     "lint": "eslint ./src",
     "prepare": "husky install",
@@ -63,6 +64,7 @@
     "stream-browserify": "^3.0.0",
     "ts-loader": "^9.2.6",
     "typedoc": "^0.22.15",
+    "typedoc-plugin-extras": "^2.2.3",
     "typedoc-plugin-markdown": "^3.12.1",
     "typescript": "^4.4.4",
     "util": "^0.12.4"
