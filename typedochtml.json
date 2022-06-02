@@ -1,11 +1,11 @@
 {
   "entryPoints": ["src/index.ts"],
   "name": "Wallet SDK Reference Guide",
-  "out": "docs",
+  "out": "htmldocs",
   "excludePrivate": true,
   "excludeProtected": true,
   "excludeInternal": true,
-  "includeVersion": true,
-  "hideGenerator": true,
-  "plugin": ["typedoc-plugin-markdown"]
+  "footerDate": true,
+  "footerTime": true,
+  "plugin": ["typedoc-plugin-extras"]
 }
