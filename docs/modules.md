@@ -1,6 +1,6 @@
-[@arcana/wallet](README.md) / Exports
+[Wallet SDK Reference Guide - v0.0.5-beta1](README.md) / Exports
 
-# @arcana/wallet
+# Wallet SDK Reference Guide - v0.0.5-beta1
 
 ## Table of contents
 
@@ -21,7 +21,7 @@
 - [InitParams](interfaces/InitParams.md)
 - [UserInfo](interfaces/UserInfo.md)
 
-### Type Aliases
+### Type aliases
 
 - [Position](modules.md#position)
 - [Theme](modules.md#theme)
@@ -31,7 +31,7 @@
 - [computeAddress](modules.md#computeaddress)
 - [encryptWithPublicKey](modules.md#encryptwithpublickey)
 
-## Type Aliases
+## Type aliases
 
 ### Position
 
@@ -39,7 +39,7 @@
 
 #### Defined in
 
-[interfaces.ts:7](https://github.com/arcana-network/wallet/blob/99cb3f4/src/interfaces.ts#L7)
+[interfaces.ts:7](https://github.com/arcana-network/wallet/blob/f7a8dce/src/interfaces.ts#L7)
 
 ---
 
@@ -49,7 +49,7 @@
 
 #### Defined in
 
-[interfaces.ts:3](https://github.com/arcana-network/wallet/blob/99cb3f4/src/interfaces.ts#L3)
+[interfaces.ts:3](https://github.com/arcana-network/wallet/blob/f7a8dce/src/interfaces.ts#L3)
 
 ## Functions
 
@@ -71,7 +71,7 @@ A function to compute address from public key
 
 #### Defined in
 
-[index.ts:304](https://github.com/arcana-network/wallet/blob/99cb3f4/src/index.ts#L304)
+[index.ts:310](https://github.com/arcana-network/wallet/blob/f7a8dce/src/index.ts#L310)
 
 ---
 
@@ -93,4 +93,4 @@ A function to ECIES encrypt message using public key
 
 #### Defined in
 
-[index.ts:293](https://github.com/arcana-network/wallet/blob/99cb3f4/src/index.ts#L293)
+[index.ts:299](https://github.com/arcana-network/wallet/blob/f7a8dce/src/index.ts#L299)

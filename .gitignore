@@ -5,3 +5,4 @@ types
 .eslintcache
 package.json
 *.log
+htmldocs/

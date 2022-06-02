@@ -1,4 +1,4 @@
-[@arcana/wallet](../README.md) / [Exports](../modules.md) / InitInput
+[Wallet SDK Reference Guide - v0.0.5-beta1](../README.md) / [Exports](../modules.md) / InitInput
 
 # Interface: InitInput
 
@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[index.ts:27](https://github.com/arcana-network/wallet/blob/99cb3f4/src/index.ts#L27)
+[index.ts:33](https://github.com/arcana-network/wallet/blob/f7a8dce/src/index.ts#L33)
 
 ---
 
@@ -27,4 +27,4 @@
 
 #### Defined in
 
-[index.ts:28](https://github.com/arcana-network/wallet/blob/99cb3f4/src/index.ts#L28)
+[index.ts:34](https://github.com/arcana-network/wallet/blob/f7a8dce/src/index.ts#L34)
