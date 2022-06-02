@@ -130,6 +130,14 @@ const getSentryErrorReporter = (dsn: string): ((m: string) => void) => {
 
 const isDefined = (arg: any) => arg !== undefined && arg !== null
 
+const HEX_PREFIX = '0x'
+
+const addHexPrefix = (i: string) =>
+  i.startsWith(HEX_PREFIX) ? i : `${HEX_PREFIX}${i}`
+
+const removeHexPrefix = (i: string) =>
+  i.startsWith(HEX_PREFIX) ? i.substring(2) : i
+
 export {
   createDomElement,
   getWalletType,
@@ -140,4 +148,6 @@ export {
   verifyMode,
   getSentryErrorReporter,
   isDefined,
+  addHexPrefix,
+  removeHexPrefix,
 }
