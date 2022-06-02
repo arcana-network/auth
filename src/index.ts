@@ -6,8 +6,8 @@ import {
   getWalletType,
   isDefined,
   getSentryErrorReporter,
-  prepend0x,
-  remove0x,
+  prependHexPrefix,
+  removeHexPrefix,
 } from './utils'
 import { setNetwork, getConfig, setIframeDevUrl } from './config'
 import {
@@ -298,7 +298,7 @@ class WalletProvider {
  */
 const encryptWithPublicKey = async (input: EncryptInput): Promise<string> => {
   const ciphertext = await EthCrypto.encryptWithPublicKey(
-    remove0x(input.publicKey),
+    removeHexPrefix(input.publicKey),
     input.message
   )
   return EthCrypto.cipher.stringify(ciphertext)
@@ -308,7 +308,7 @@ const encryptWithPublicKey = async (input: EncryptInput): Promise<string> => {
  * A function to compute address from public key
  */
 const computeAddress = (publicKey: string): string => {
-  return ethers.utils.computeAddress(prepend0x(publicKey))
+  return ethers.utils.computeAddress(prependHexPrefix(publicKey))
 }
 
 export {
