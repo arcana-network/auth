@@ -6,7 +6,7 @@ import {
   getWalletType,
   isDefined,
   getSentryErrorReporter,
-  prependHexPrefix,
+  addHexPrefix,
   removeHexPrefix,
 } from './utils'
 import { setNetwork, getConfig, setIframeDevUrl } from './config'
@@ -308,7 +308,7 @@ const encryptWithPublicKey = async (input: EncryptInput): Promise<string> => {
  * A function to compute address from public key
  */
 const computeAddress = (publicKey: string): string => {
-  return ethers.utils.computeAddress(prependHexPrefix(publicKey))
+  return ethers.utils.computeAddress(addHexPrefix(publicKey))
 }
 
 export {

@@ -132,7 +132,7 @@ const isDefined = (arg: any) => arg !== undefined && arg !== null
 
 const HEX_PREFIX = '0x'
 
-const prependHexPrefix = (i: string) =>
+const addHexPrefix = (i: string) =>
   i.startsWith(HEX_PREFIX) ? i : `${HEX_PREFIX}${i}`
 
 const removeHexPrefix = (i: string) =>
@@ -148,6 +148,6 @@ export {
   verifyMode,
   getSentryErrorReporter,
   isDefined,
-  prependHexPrefix,
+  addHexPrefix,
   removeHexPrefix,
 }
