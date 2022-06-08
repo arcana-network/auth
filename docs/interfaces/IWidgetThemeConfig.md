@@ -1,4 +1,4 @@
-[@arcana/wallet](../README.md) / [Exports](../modules.md) / IWidgetThemeConfig
+[Wallet SDK Reference Guide - v0.0.5-beta1](../README.md) / [Exports](../modules.md) / IWidgetThemeConfig
 
 # Interface: IWidgetThemeConfig
 
@@ -25,7 +25,7 @@
 
 #### Defined in
 
-[interfaces.ts:15](https://github.com/arcana-network/wallet/blob/99cb3f4/src/interfaces.ts#L15)
+[interfaces.ts:15](https://github.com/arcana-network/wallet/blob/f7a8dce/src/interfaces.ts#L15)
 
 ---
 
@@ -35,4 +35,4 @@
 
 #### Defined in
 
-[interfaces.ts:21](https://github.com/arcana-network/wallet/blob/99cb3f4/src/interfaces.ts#L21)
+[interfaces.ts:21](https://github.com/arcana-network/wallet/blob/f7a8dce/src/interfaces.ts#L21)

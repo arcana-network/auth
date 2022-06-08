@@ -1,4 +1,4 @@
-@arcana/wallet / [Exports](modules.md)
+Wallet SDK Reference Guide - v0.0.5-beta1 / [Exports](modules.md)
 
 # Arcana Wallet
 
