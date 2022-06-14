@@ -349,7 +349,7 @@ class AuthProvider {
     if (!this.keyReconstructor) {
       this.keyReconstructor = new KeyReconstructor(
         {
-          appID: this.appAddress,
+          appId: this.appAddress,
           network: 'testnet',
         },
         fetcher

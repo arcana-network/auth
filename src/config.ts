@@ -26,8 +26,8 @@ const DEV_CONFIG: InternalConfig = {
 };
 
 const TESTNET_CONFIG: InternalConfig = {
-  signatureUrl: 'https://oauth01-pro-testnet.arcana.network/oauth',
-  gatewayUrl: 'https://gateway-testnet.arcana.network',
-  passwordlessUrl: 'https://passwordless.dev.arcana.network',
+  signatureUrl: 'https://oauth-testnet.arcana.network/oauth',
+  gatewayUrl: 'https://gateway001-testnet.arcana.network',
+  passwordlessUrl: 'https://passwordless001-testnet.arcana.network',
   sentryDsn,
 };

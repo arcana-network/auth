@@ -2,7 +2,9 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const esbuild = require('esbuild');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const alias = require('esbuild-plugin-alias');
+const plugin = require('node-stdlib-browser/helpers/esbuild/plugin');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const stdLibBrowser = require('node-stdlib-browser');
 
 (async () => {
   console.time('IIFE Build time');
@@ -12,17 +14,12 @@ const alias = require('esbuild-plugin-alias');
       bundle: true,
       target: ['chrome58', 'firefox57', 'safari11', 'edge18'],
       globalName: 'arcana.auth',
-      plugins: [
-        alias({
-          assert: require.resolve('assert/'),
-          buffer: require.resolve('buffer/'),
-          crypto: require.resolve('crypto-browserify'),
-          stream: require.resolve('stream-browserify'),
-          util: require.resolve('util/'),
-        }),
-      ],
+      inject: [require.resolve('node-stdlib-browser/helpers/esbuild/shim')],
+      plugins: [plugin(stdLibBrowser)],
       define: {
         global: 'window',
+        process: 'process',
+        Buffer: 'Buffer',
       },
       format: 'iife',
       outfile: 'dist/standalone/auth.min.js',
@@ -51,17 +48,12 @@ const alias = require('esbuild-plugin-alias');
       bundle: true,
       target: ['chrome58', 'firefox57', 'safari11', 'edge18'],
       globalName: 'arcana.auth',
-      plugins: [
-        alias({
-          assert: require.resolve('assert/'),
-          buffer: require.resolve('buffer/'),
-          crypto: require.resolve('crypto-browserify'),
-          stream: require.resolve('stream-browserify'),
-          util: require.resolve('util/'),
-        }),
-      ],
+      inject: [require.resolve('node-stdlib-browser/helpers/esbuild/shim')],
+      plugins: [plugin(stdLibBrowser)],
       define: {
         global: 'window',
+        process: 'process',
+        Buffer: 'Buffer',
       },
       format: 'esm',
       outfile: 'dist/standalone/auth.esm.js',

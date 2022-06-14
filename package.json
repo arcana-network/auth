@@ -1,6 +1,6 @@
 {
-  "name": "@arcana/auth",
-  "version": "0.0.9-beta5",
+  "name": "@arcana/auth-core",
+  "version": "0.0.3-beta",
   "description": "Arcana auth SDK for easier logins",
   "main": "dist/index.js",
   "module": "dist/standalone/auth.esm.js",
@@ -30,9 +30,9 @@
     "yarn": false
   },
   "author": "makyl<makyl@newfang.io>",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
-    "@arcana/keystore": "^0.0.6",
+    "@arcana/keystore": "^0.0.7-beta",
     "@stablelib/base64": "^1.0.1",
     "ethers": "^5.5.1"
   },
@@ -58,6 +58,7 @@
     "jest": "^27.0.6",
     "jest-environment-jsdom": "^27.2.4",
     "jest-fetch-mock": "^3.0.3",
+    "node-stdlib-browser": "^1.2.0",
     "prettier": "^2.6.1",
     "process": "^0.11.10",
     "rimraf": "^3.0.2",
