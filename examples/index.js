@@ -1,7 +1,7 @@
 const { WalletProvider, AppMode } = window.arcana.wallet
 const wallet = new WalletProvider({
-  appId: '264',
-  network: 'dev',
+  appId: '3',
+  network: 'testnet',
 })
 
 let provider
