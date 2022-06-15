@@ -50,11 +50,12 @@ class WalletProvider {
     if (!isDefined(params.appId)) {
       throw new Error('appId is required in params')
     }
-    this.logger = getLogger('WalletProvider')
-    this.initializeState()
-    if (params.network === 'testnet') {
-      setNetwork(this.params.network)
+    if (!['dev', 'testnet'].includes(params.network)) {
+      throw new Error('network is invalid in params')
     }
+    this.logger = getLogger('WalletProvider')
+    setNetwork(params.network)
+    this.initializeState()
     if (params.debug) {
       setLogLevel(LOG_LEVEL.DEBUG)
       setExceptionReporter(getSentryErrorReporter(getConfig().SENTRY_DSN))
@@ -71,7 +72,7 @@ class WalletProvider {
     if (this.iframeWrapper) {
       return
     }
-
+    console.log(getConfig())
     const appId = this.params.appId
 
     const appInfo = await getAppInfo(appId)
