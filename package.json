@@ -1,6 +1,6 @@
 {
   "name": "@arcana/wallet",
-  "version": "0.0.7-beta",
+  "version": "0.0.7-beta1",
   "description": "Arcana web wallet",
   "main": "dist/index.js",
   "jsdelivr": "dist/standalone/wallet.min.js",

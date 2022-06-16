@@ -72,7 +72,7 @@ class WalletProvider {
     if (this.iframeWrapper) {
       return
     }
-    console.log(getConfig())
+
     const appId = this.params.appId
 
     const appInfo = await getAppInfo(appId)

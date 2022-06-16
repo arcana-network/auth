@@ -36,7 +36,8 @@ const getWalletType = async (appId: string) => {
 const getAppAddress = async (id: string) => {
   try {
     const config = getConfig()
-    const res = await fetch(`${config.GATEWAY_URL}/get-address/?id=` + id)
+    const u = new URL(`/get-address/?id=${id}`, config.GATEWAY_URL)
+    const res = await fetch(u.toString())
     const json = await res.json()
     const address: string = json?.address
     return address
