@@ -4,6 +4,7 @@ import { IWalletPosition, IWalletSize, Position } from './interfaces'
 import { AppMode, ModeWalletTypeRelation, WalletType } from './typings'
 import * as Sentry from '@sentry/browser'
 import { getLogger } from './logger'
+import { InvalidAppId } from './errors'
 
 const getContract = (rpcUrl: string, appAddress: string) => {
   const provider = new ethers.providers.JsonRpcProvider(rpcUrl)
@@ -20,7 +21,7 @@ const getWalletType = async (appId: string) => {
 
   const appAddress = await getAppAddress(appId)
   if (!appAddress) {
-    return null
+    throw InvalidAppId
   }
   const c = getContract(config.RPC_URL, appAddress)
   try {

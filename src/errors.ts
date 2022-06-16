@@ -13,12 +13,12 @@ const WalletNotInitializedError = new ArcanaWalletError(
   'Wallet is not initialized. Please run `await wallet.init(...)` before calling functions'
 )
 
-const InvalidClassParams = new ArcanaWalletError(
+const InvalidAppId = new ArcanaWalletError(
   'invalid_constructor_params',
-  'App Id is missing in constructor params'
+  'App Id is invalid.'
 )
 export {
-  InvalidClassParams,
+  InvalidAppId,
   UserNotLoggedInError,
   WalletNotInitializedError,
   ArcanaWalletError,
