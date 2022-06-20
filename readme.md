@@ -1,3 +1,17 @@
+<p align="center">
+<a href="#start"><img height="30rem" src="https://raw.githubusercontent.com/arcana-network/branding/main/an_logo_light_temp.png"></a>
+<h2 align="center"> <a href="https://arcana.network/">Arcana Network Auth SDK </a></h2>
+</p>
+<br>
+<p id="banner" align="center">
+<br>
+<a title="License BSL 1.1" href="https://github.com/arcana-network/license/blob/main/LICENSE.md"><img src="https://img.shields.io/badge/License-BSL%201.1-purple"></a>
+<a title="Beta release" href="https://github.com/arcana-network/wallet/releases"><img src="https://img.shields.io/github/v/release/arcana-network/wallet?style=flat-square&color=28A745"></a>
+<a title="Twitter" href="https://twitter.com/ArcanaNetwork"><img alt="Twitter URL" src="https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2FArcanaNetwork"></a>
+</p><p id="start" align="center">
+<a href="https://docs.dev.arcana.network/docs/wallet_qs/#using-auth-sdk"><img src="https://raw.githubusercontent.com/arcana-network/branding/main/an_banner_temp.png" alt="Arcana Auth SDK"></a>
+</p>
+
 # Arcana Auth
 
 ## Installation
