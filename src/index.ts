@@ -98,7 +98,7 @@ class AuthProvider {
     this.iframeWrapper.setWalletType(walletType, appMode)
 
     this._provider = new ArcanaProvider(this.iframeWrapper)
-    this._provider.init()
+    await this._provider.init()
     this.setProviders()
   }
 
