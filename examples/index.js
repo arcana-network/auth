@@ -1,4 +1,4 @@
-const { AuthProvider, AppMode, encryptWithPublicKey } = window.arcana.wallet
+const { AuthProvider, AppMode, encryptWithPublicKey } = window.arcana.auth
 const auth = new AuthProvider('3')
 
 let provider
