@@ -1,7 +1,5 @@
-import { AppInfo, Theme } from './interfaces'
+import { AppInfo, Theme } from './typings'
 import { getConfig } from './config'
-
-const BASE_URL = getConfig().GATEWAY_URL
 
 function getImageUrls(
   appId: string,
@@ -11,7 +9,7 @@ function getImageUrls(
   vertical: string
 } {
   const API = '/api/v2/app/'
-  const URL = `${BASE_URL}${API}${appId}/logo?type=${theme}`
+  const URL = `${getConfig().GATEWAY_URL}${API}${appId}/logo?type=${theme}`
   return {
     horizontal: `${URL}&orientation=horizontal`,
     vertical: `${URL}&orientation=vertical`,
@@ -20,7 +18,7 @@ function getImageUrls(
 
 async function getAppInfo(appId: string) {
   const API = '/api/v1/get-app-theme/'
-  const URL = `${BASE_URL}${API}?id=${appId}`
+  const URL = `${getConfig().GATEWAY_URL}${API}?id=${appId}`
   const appInfo: AppInfo = await (await fetch(URL)).json()
   return appInfo
 }

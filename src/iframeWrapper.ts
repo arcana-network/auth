@@ -1,12 +1,12 @@
 import {
   IframeWrapperParams,
-  IConnectionMethods,
-  IAppConfig,
-  Position,
-} from './interfaces'
+  AppMode,
+  WalletType,
+  ChildMethods,
+  ParentMethods,
+} from './typings'
 import { connectToChild, Connection } from 'penpal'
 import { widgetIframeStyle, widgetBubbleStyle } from './styles'
-import { AppMode, WalletType } from './typings'
 import {
   createDomElement,
   getWalletPosition,
@@ -21,30 +21,56 @@ const BREAKPOINT_SMALL = 768
 
 export default class IframeWrapper {
   private iframe: HTMLIFrameElement
-
   public widgetBubble: HTMLButtonElement
   public widgetIframeContainer: HTMLDivElement
   public appMode: AppMode
 
-  private iframeCommunication: Connection<IConnectionMethods>
-  constructor(
-    private params: IframeWrapperParams,
-    private iframeUrl: string,
-    private appConfig: IAppConfig,
-    private position: Position,
-    private destroyWalletUI: () => void
-  ) {
+  private iframeCommunication: Connection<ChildMethods>
+  constructor(private params: IframeWrapperParams) {
     this.checkSecureOrigin()
+    this.initWalletUI()
   }
 
-  public async getIframeInstance(params: {
-    [k: string]: (...args: any) => unknown
-  }) {
-    return await this.createOrGetInstance(params)
+  public async setConnectionMethods(methods: ParentMethods) {
+    try {
+      if (!this.iframeCommunication) {
+        this.iframeCommunication = connectToChild<ChildMethods>({
+          iframe: this.iframe,
+          methods: { ...methods },
+          childOrigin: getConfig().WALLET_URL,
+        })
+        await this.iframeCommunication.promise
+      }
+      return { iframe: this.iframe, communication: this.iframeCommunication }
+    } catch (error) {
+      throw new Error('Could not set connection methods')
+    }
   }
 
   public setWalletType(walletType: WalletType, appMode: AppMode | undefined) {
     this.appMode = verifyMode(walletType, appMode)
+  }
+
+  public destroyUIElements() {
+    this.widgetBubble.remove()
+    this.widgetIframeContainer.remove()
+  }
+
+  public onReceivingPendingRequestCount(count: number) {
+    const reqCountBadgeEl = document.getElementById('req-count-badge')
+    if (!reqCountBadgeEl) {
+      return
+    }
+    if (count > 0) {
+      reqCountBadgeEl.style.display = 'flex'
+      reqCountBadgeEl.textContent = `${count}`
+    } else {
+      reqCountBadgeEl.style.display = 'none'
+    }
+  }
+
+  getAppConfig = () => {
+    return this.params.appConfig
   }
 
   show = () => {
@@ -87,7 +113,7 @@ export default class IframeWrapper {
         this.initWalletUI()
       }
       if (!this.iframeCommunication) {
-        this.iframeCommunication = connectToChild<IConnectionMethods>({
+        this.iframeCommunication = connectToChild<ChildMethods>({
           iframe: this.iframe,
           methods: {
             ...params,
@@ -106,7 +132,7 @@ export default class IframeWrapper {
   private constructWidgetIframeStructure(isFullMode: boolean) {
     const {
       appConfig: { themeConfig },
-    } = this
+    } = this.params
 
     const { theme, assets } = themeConfig
 
@@ -138,7 +164,7 @@ export default class IframeWrapper {
   private createWidgetIframe(isFullMode: boolean) {
     this.iframe = createDomElement('iframe', {
       style: widgetIframeStyle.iframe,
-      src: `${this.iframeUrl}/${this.params.appId}/login`,
+      src: `${this.params.iframeUrl}/${this.params.appId}/login`,
     }) as HTMLIFrameElement
 
     const { widgetIframeHeader, widgetIframeBody } =
@@ -157,7 +183,7 @@ export default class IframeWrapper {
   private createWidgetBubble(isFullMode: boolean) {
     const {
       appConfig: { themeConfig },
-    } = this
+    } = this.params
 
     const { theme, assets } = themeConfig
 
@@ -211,7 +237,7 @@ export default class IframeWrapper {
   }
 
   private onCloseBubbleClick() {
-    this.destroyWalletUI()
+    this.params.destroyWalletUI()
   }
 
   // Todo: add remove event listener for "resize" event
@@ -225,12 +251,12 @@ export default class IframeWrapper {
 
     setWalletPosition(
       this.widgetBubble,
-      getWalletPosition(isViewportSmall, this.position)
+      getWalletPosition(isViewportSmall, this.params.position)
     )
 
     setWalletPosition(
       this.widgetIframeContainer,
-      getWalletPosition(isViewportSmall, this.position)
+      getWalletPosition(isViewportSmall, this.params.position)
     )
   }
 

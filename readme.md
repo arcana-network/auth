@@ -1,22 +1,22 @@
-# Arcana Wallet
+# Arcana Auth
 
 ## Installation
 
 ### Using NPM/Yarn
 
 ```sh
-npm install --save @arcana/wallet
-yarn add @arcana/wallet
+npm install --save @arcana/auth
+yarn add @arcana/auth
 ```
 
 ### Using CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@arcana/wallet"></script>
+<script src="https://cdn.jsdelivr.net/npm/@arcana/auth"></script>
 ```
 
 ```html
-<script src="https://unpkg.com/@arcana/wallet"></script>
+<script src="https://unpkg.com/@arcana/auth"></script>
 ```
 
 ## Usage
@@ -24,57 +24,54 @@ yarn add @arcana/wallet
 ### Import
 
 ```js
-const { WalletProvider } = window.arcana.wallet
+const { AuthProvider } = window.arcana.auth
 // or
-import { WalletProvider } from '@arcana/wallet'
+import { AuthProvider } from '@arcana/auth'
 ```
 
 ### Initialize
 
 ```js
-import { AppMode } from '@arcana/wallet'
-const wallet = new WalletProvider({
-  appId: `${appId}`,
-  inpageProvider: true /* sets window.arcana.provider and tries to set window.ethereum to the provider */,
-})
+import { AppMode } from '@arcana/auth'
+const auth = new AuthProvider(`${appId}`)
 
 const position = 'left' // values - 'left' or 'right'
 
-await wallet.init({ appMode: AppMode.Widget, position })
+await auth.init({ appMode: AppMode.Widget, position })
 
-provider = wallet.provider
+provider = auth.provider
 // or
 provider = window.arcana.provider
 // or
 provider = window.ethereum
 ```
 
-## Wallet API’s
+## Auth API’s
 
 ### Login/logout
 
 Social login
 
 ```js
-await wallet.requestSocialLogin(`${verifier}`)
+await auth.loginWithSocial(`${verifier}`)
 ```
 
-Passwordless login
+Email link login
 
 ```js
-await wallet.requestPasswordlessLogin(`${email}`)
+await auth.loginWithLink(`${email}`)
 ```
 
 Check is logged in
 
 ```js
-const loggedIn = await wallet.isLoggedIn()
+const loggedIn = await auth.isLoggedIn()
 ```
 
 User Info
 
 ```js
-const info = await wallet.requestUserInfo()
+const info = await auth.getUser()
 /* 
 interface UserInfo {
   id: string
@@ -88,13 +85,13 @@ interface UserInfo {
 Logout
 
 ```js
-await wallet.logout()
+await auth.logout()
 ```
 
 ### Get public key
 
 ```js
-await wallet.requestPublicKey(`${email}`, `${verifier}`)
+await auth.getPublicKey(`${email}`)
 ```
 
 ## Utils
@@ -102,7 +99,7 @@ await wallet.requestPublicKey(`${email}`, `${verifier}`)
 ### ECIES encryption
 
 ```js
-import { encryptWithPublicKey } from '@arcana/wallet'
+import { encryptWithPublicKey } from '@arcana/auth'
 
 encryptWithPublicKey({
   publicKey: '',
@@ -115,7 +112,7 @@ encryptWithPublicKey({
 ### Compute Address
 
 ```ts
-import { computeAddress } from '@arcana/wallet'
+import { computeAddress } from '@arcana/auth'
 
 const address = computeAddress(publicKey: string);
 ```
@@ -152,10 +149,11 @@ Usage
 ```js
 import { ethers } from 'ethers'
 
-const provider = new ethers.providers.Web3Provider(wallet.provider)
+const provider = new ethers.providers.Web3Provider(auth.provider)
 
 const signer = provider.getSigner()
-const signedMessage = await signer.signMessage(originalMessage)
+
+const signedMessage = await signer.signMessage('sample_message')
 ```
 
 ### Web3 JS
@@ -171,11 +169,11 @@ Usage
 ```js
 import Web3 from 'web3'
 
-const provider = new Web3(wallet.provider)
+const provider = new Web3(auth.provider)
 
 const signer = provider.getSigner()
 
-const signedMessage = await signer.signMessage(originalMessage)
+const signedMessage = await signer.signMessage('sample_message')
 ```
 
 ## RPC API’s

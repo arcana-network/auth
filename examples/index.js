@@ -1,8 +1,5 @@
-const { WalletProvider, AppMode } = window.arcana.wallet
-const wallet = new WalletProvider({
-  appId: '264',
-  network: 'dev',
-})
+const { AuthProvider, AppMode, encryptWithPublicKey } = window.arcana.wallet
+const auth = new AuthProvider('3')
 
 let provider
 
@@ -10,9 +7,9 @@ window.onload = async () => {
   console.log('Init wallet')
   const position = 'right'
   try {
-    await wallet.init({ appMode: AppMode.Widget, position })
-    provider = wallet.getProvider()
-    const connected = await wallet.isLoggedIn()
+    await auth.init({ appMode: AppMode.NoUI, position })
+    provider = auth.provider
+    const connected = await auth.isLoggedIn()
     console.log({ connected })
     setHooks()
   } catch (e) {
@@ -23,7 +20,7 @@ window.onload = async () => {
 // get from eth_accounts
 let from = ''
 
-console.log({ wallet })
+console.log({ auth })
 const triggerLoginBtn = document.getElementById('trigger-login')
 const triggerPasswordlessLoginBtn = document.getElementById('trigger-p-login')
 const getPublicBtn = document.getElementById('get-public')
@@ -43,7 +40,7 @@ const logoutBtn = document.getElementById('logout')
 function setHooks() {
   provider.on('connect', async (params) => {
     console.log({ type: 'connect', params: params })
-    const isLoggedIn = await wallet.isLoggedIn()
+    const isLoggedIn = await auth.isLoggedIn()
     console.log({ isLoggedIn })
   })
   provider.on('accountsChanged', (params) => {
@@ -57,7 +54,7 @@ function setHooks() {
 logoutBtn.addEventListener('click', async () => {
   console.log('Requesting logout')
   try {
-    await wallet.logout()
+    await auth.logout()
   } catch (e) {
     console.log({ e })
   }
@@ -69,6 +66,7 @@ getAccountsBtn.addEventListener('click', async () => {
     console.log({ accounts })
     from = accounts[0]
   } catch (e) {
+    console.log(e)
     console.log({ e })
   }
 })
@@ -84,12 +82,12 @@ requestSignatureBtn.addEventListener('click', async () => {
 
 triggerLoginBtn.addEventListener('click', async () => {
   console.log('Requesting login')
-  await wallet.requestSocialLogin('google')
+  await auth.loginWithSocial('google')
   // console.log({ signature });
 })
 triggerPasswordlessLoginBtn.addEventListener('click', async () => {
   console.log('Requesting passwordlesslogin')
-  await wallet.requestPasswordlessLogin('makyl@newfang.io')
+  await auth.loginWithLink('makyl@newfang.io')
   // console.log({ signature });
 })
 
@@ -107,7 +105,7 @@ let ciphertext
 let publicKey
 encryptBtn.addEventListener('click', async () => {
   console.log('Doing encryption')
-  const c = await WalletProvider.encryptWithPublicKey({
+  const c = await encryptWithPublicKey({
     publicKey,
     message: plaintext,
   })
@@ -128,7 +126,7 @@ getPublicBtn.addEventListener('click', async () => {
 
 getOthersPublicBtn.addEventListener('click', async () => {
   console.log('Requesting others public key')
-  const pk = await wallet.requestPublicKey('makyl@newfang.io', 'google')
+  const pk = await auth.getPublicKey('makyl@newfang.io')
   console.log({ pk })
   publicKey = pk
 })

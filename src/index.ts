@@ -1,24 +1,30 @@
 import { ArcanaProvider } from './provider'
 import IframeWrapper from './iframeWrapper'
-import EthCrypto from 'eth-crypto'
-import { ethers } from 'ethers'
 import {
   getWalletType,
   isDefined,
   getSentryErrorReporter,
-  addHexPrefix,
-  removeHexPrefix,
+  computeAddress,
+  encryptWithPublicKey,
 } from './utils'
-import { setNetwork, getConfig, setIframeDevUrl } from './config'
 import {
-  IAppConfig,
+  setNetwork,
+  getConfig,
+  isNetworkConfig,
+  setCustomConfig,
+} from './config'
+import {
+  AppConfig,
   Position,
   UserInfo,
-  IWidgetThemeConfig,
+  ThemeConfig,
   Theme,
-} from './interfaces'
-import { JsonRpcResponse } from 'json-rpc-engine'
-import { InitParams, State, AppMode, EncryptInput } from './typings'
+  InitParams,
+  State,
+  AppMode,
+  EncryptInput,
+  InitInput,
+} from './typings'
 import { getAppInfo, getImageUrls } from './network'
 import { WalletNotInitializedError } from './errors'
 import {
@@ -29,32 +35,35 @@ import {
   setLogLevel,
 } from './logger'
 
-interface InitInput {
-  appMode: AppMode | undefined
-  position?: Position
-}
-
-class WalletProvider {
+class AuthProvider {
+  private appId: string
+  private appConfig: AppConfig
   private state: State
   private logger: Logger
   private iframeWrapper: IframeWrapper | null
   private _provider: ArcanaProvider
   constructor(
+    appId: string,
     private params: InitParams = {
-      ...params,
       network: 'testnet',
       inpageProvider: false,
       debug: false,
     }
   ) {
-    if (!isDefined(params.appId)) {
+    if (!isDefined(appId)) {
       throw new Error('appId is required in params')
     }
+    this.appId = appId
+    if (isNetworkConfig(params.network)) {
+      setCustomConfig(params.network)
+    } else if (!['dev', 'testnet'].includes(params.network)) {
+      throw new Error('network is invalid in params')
+    } else {
+      setNetwork(params.network)
+    }
+
     this.logger = getLogger('WalletProvider')
     this.initializeState()
-    if (params.network === 'testnet') {
-      setNetwork(this.params.network)
-    }
     if (params.debug) {
       setLogLevel(LOG_LEVEL.DEBUG)
       setExceptionReporter(getSentryErrorReporter(getConfig().SENTRY_DSN))
@@ -72,122 +81,34 @@ class WalletProvider {
       return
     }
 
-    const appId = this.params.appId
+    await this.setAppConfig()
 
-    const appInfo = await getAppInfo(appId)
-
-    const appImageURLs = getImageUrls(appId, appInfo.theme)
-
-    const appConfig: IAppConfig = {
-      name: appInfo.name,
-      themeConfig: {
-        assets: {
-          logo: {
-            horizontal: appImageURLs.horizontal,
-            vertical: appImageURLs.vertical,
-          },
-        },
-        theme: appInfo.theme,
-      },
-    }
-
-    this.iframeWrapper = new IframeWrapper(
-      {
-        appId: appId,
-        network: this.params.network,
-      },
-      this.state.iframeUrl,
-      appConfig,
-      position,
-      this.destroyWalletUI
-    )
-    this._provider = new ArcanaProvider()
-    const walletType = await getWalletType(appId)
-    this.iframeWrapper.setWalletType(walletType, appMode)
-    const { communication } = await this.iframeWrapper.getIframeInstance({
-      onEvent: this.handleEvents,
-      onMethodResponse: (
-        method: string,
-        response: JsonRpcResponse<unknown>
-      ) => {
-        this._provider.onResponse(method, response)
-      },
-      getAppConfig: () => {
-        return appConfig
-      },
-      getAppMode: () => {
-        return this.iframeWrapper?.appMode
-      },
-      sendPendingRequestCount: (count: number) => {
-        this.onReceivingPendingRequestCount(count)
-      },
-      getParentUrl: this._provider.getCurrentUrl,
+    this.iframeWrapper = new IframeWrapper({
+      appId: this.appId,
+      iframeUrl: this.state.iframeUrl,
+      appConfig: this.appConfig,
+      position: position,
+      destroyWalletUI: this.destroyWalletUI,
     })
-    this._provider.setConnection(communication)
-    this._provider.setHandlers(this.iframeWrapper.show, this.iframeWrapper.hide)
+
+    const walletType = await getWalletType(this.appId)
+    this.iframeWrapper.setWalletType(walletType, appMode)
+
+    this._provider = new ArcanaProvider(this.iframeWrapper)
+    this._provider.init()
+
     if (this.params.inpageProvider) {
       this.setInpageProvider()
-    }
-  }
-
-  private onReceivingPendingRequestCount(count: number) {
-    const reqCountBadgeEl = document.getElementById('req-count-badge')
-    if (!reqCountBadgeEl) {
-      return
-    }
-    if (count > 0) {
-      reqCountBadgeEl.style.display = 'flex'
-      reqCountBadgeEl.textContent = `${count}`
-    } else {
-      reqCountBadgeEl.style.display = 'none'
-    }
-  }
-
-  /**
-   * @internal
-   */
-  destroyWalletUI = () => {
-    if (this.iframeWrapper) {
-      this.iframeWrapper.widgetBubble.remove()
-      this.iframeWrapper.widgetIframeContainer.remove()
-    }
-    this.iframeWrapper = null
-  }
-
-  /**
-   * @internal
-   */
-  handleEvents = (t: string, val: unknown) => {
-    switch (t) {
-      case 'accountsChanged':
-        this._provider.emit(t, [val])
-        break
-      case 'chainChanged':
-        this._provider.emit('chainChanged', val)
-        break
-      case 'connect':
-        this._provider.emit('connect', val)
-        break
-      case 'disconnect':
-        this._provider.emit('disconnect', val)
-        break
-      case 'message':
-        this._provider.emit('message', val)
-        break
-      default:
-        break
     }
   }
 
   /**
    * A function to trigger social login in the wallet
    */
-  public async requestSocialLogin(loginType: string) {
+  public async loginWithSocial(loginType: string) {
     if (this._provider) {
-      const u = await this._provider.triggerSocialLogin(loginType)
-      if (u) {
-        setTimeout(() => (window.location.href = u), 50)
-      }
+      const redirectUrl = await this._provider.triggerSocialLogin(loginType)
+      this.redirectTo(redirectUrl)
       return
     }
     this.logger.error('requestSocialLogin', WalletNotInitializedError)
@@ -197,9 +118,11 @@ class WalletProvider {
   /**
    * A function to trigger passwordless login in the wallet
    */
-  public requestPasswordlessLogin(email: string) {
+  public async loginWithLink(email: string) {
     if (this._provider) {
-      return this._provider.triggerPasswordlessLogin(email)
+      const redirectUrl = await this._provider.triggerPasswordlessLogin(email)
+      this.redirectTo(redirectUrl)
+      return
     }
     this.logger.error('requestPasswordlessLogin', WalletNotInitializedError)
     throw WalletNotInitializedError
@@ -209,7 +132,7 @@ class WalletProvider {
    * A function to get user info for logged in user
    * @returns available user info
    */
-  public requestUserInfo(): Promise<UserInfo> {
+  public getUser(): Promise<UserInfo> {
     if (this._provider) {
       return this._provider.requestUserInfo()
     }
@@ -242,9 +165,9 @@ class WalletProvider {
   /**
    * A function to request public key of different users
    */
-  public async requestPublicKey(email: string, verifier = 'google') {
+  public async getPublicKey(email: string) {
     if (this._provider) {
-      return await this._provider.getPublicKey(email, verifier)
+      return await this._provider.getPublicKey(email, 'google')
     }
     this.logger.error('requestPublicKey', WalletNotInitializedError)
     throw WalletNotInitializedError
@@ -252,7 +175,7 @@ class WalletProvider {
 
   /**
    * A function to get web3 provider
-   * @deprecated
+   * @deprecated use .provider instead
    */
   public getProvider() {
     if (this._provider) {
@@ -260,6 +183,40 @@ class WalletProvider {
     }
     this.logger.error('getProvider', WalletNotInitializedError)
     throw WalletNotInitializedError
+  }
+
+  private redirectTo(url: string) {
+    if (url) {
+      setTimeout(() => (window.location.href = url), 50)
+    }
+    return
+  }
+
+  private async setAppConfig() {
+    const appInfo = await getAppInfo(this.appId)
+    const appImageURLs = getImageUrls(this.appId, appInfo.theme)
+    this.appConfig = {
+      name: appInfo.name,
+      themeConfig: {
+        assets: {
+          logo: {
+            horizontal: appImageURLs.horizontal,
+            vertical: appImageURLs.vertical,
+          },
+        },
+        theme: appInfo.theme,
+      },
+    }
+  }
+
+  /**
+   * @internal
+   */
+  destroyWalletUI = () => {
+    if (this.iframeWrapper) {
+      this.iframeWrapper.destroyUIElements()
+    }
+    this.iframeWrapper = null
   }
 
   get provider() {
@@ -284,43 +241,22 @@ class WalletProvider {
   /* eslint-enable */
 
   private initializeState() {
-    if (this.params.iframeUrl) {
-      setIframeDevUrl(this.params.iframeUrl)
-    }
     const iframeUrl = getConfig().WALLET_URL
-    const redirectUri = `${iframeUrl}/${this.params.appId}/redirect`
+    const redirectUri = `${iframeUrl}/${this.appId}/redirect`
     this.state = { iframeUrl, redirectUri }
   }
 }
 
-/**
- * A function to ECIES encrypt message using public key
- */
-const encryptWithPublicKey = async (input: EncryptInput): Promise<string> => {
-  const ciphertext = await EthCrypto.encryptWithPublicKey(
-    removeHexPrefix(input.publicKey),
-    input.message
-  )
-  return EthCrypto.cipher.stringify(ciphertext)
-}
-
-/**
- * A function to compute address from public key
- */
-const computeAddress = (publicKey: string): string => {
-  return ethers.utils.computeAddress(addHexPrefix(publicKey))
-}
-
 export {
-  WalletProvider,
+  AuthProvider,
   InitParams,
-  IAppConfig,
+  AppConfig,
   Theme,
   AppMode,
   Position,
   EncryptInput,
   UserInfo,
-  IWidgetThemeConfig,
+  ThemeConfig,
   InitInput,
   computeAddress,
   encryptWithPublicKey,
