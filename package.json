@@ -1,10 +1,11 @@
 {
-  "name": "@arcana/wallet",
-  "version": "0.0.7-beta1",
-  "description": "Arcana web wallet",
+  "name": "@arcana/auth",
+  "version": "0.0.9-beta5",
+  "description": "Arcana Auth",
   "main": "dist/index.js",
-  "jsdelivr": "dist/standalone/wallet.min.js",
-  "unpkg": "dist/standalone/wallet.min.js",
+  "module": "dist/standalone/auth.esm.js",
+  "jsdelivr": "dist/standalone/auth.min.js",
+  "unpkg": "dist/standalone/auth.min.js",
   "types": "types/index.d.ts",
   "files": [
     "dist",
