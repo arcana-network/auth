@@ -25,7 +25,7 @@
     "prepare": "husky install"
   },
   "author": "makyl",
-  "license": "ISC",
+  "license": "MIT",
   "keywords": [
     "oauth",
     "social",

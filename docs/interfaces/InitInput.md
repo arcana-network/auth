@@ -1,4 +1,4 @@
-[Wallet SDK Reference Guide - v0.0.5-beta1](../README.md) / [Exports](../modules.md) / InitInput
+[Wallet SDK Reference Guide - v0.0.9-beta5](../README.md) / [Exports](../modules.md) / InitInput
 
 # Interface: InitInput
 
@@ -13,18 +13,18 @@
 
 ### appMode
 
-• **appMode**: `undefined` \| [`AppMode`](../enums/AppMode.md)
+• **appMode**: [`AppMode`](../enums/AppMode.md)
 
 #### Defined in
 
-[index.ts:33](https://github.com/arcana-network/wallet/blob/f7a8dce/src/index.ts#L33)
+[typings.ts:18](https://github.com/arcana-network/wallet/blob/6f4dd20/src/typings.ts#L18)
 
 ---
 
 ### position
 
-• `Optional` **position**: [`Position`](../modules.md#position)
+• **position**: [`Position`](../modules.md#position)
 
 #### Defined in
 
-[index.ts:34](https://github.com/arcana-network/wallet/blob/f7a8dce/src/index.ts#L34)
+[typings.ts:19](https://github.com/arcana-network/wallet/blob/6f4dd20/src/typings.ts#L19)

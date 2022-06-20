@@ -1,4 +1,4 @@
-[Wallet SDK Reference Guide - v0.0.5-beta1](../README.md) / [Exports](../modules.md) / UserInfo
+[Wallet SDK Reference Guide - v0.0.9-beta5](../README.md) / [Exports](../modules.md) / UserInfo
 
 # Interface: UserInfo
 
@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[interfaces.ts:36](https://github.com/arcana-network/wallet/blob/f7a8dce/src/interfaces.ts#L36)
+[typings.ts:44](https://github.com/arcana-network/wallet/blob/6f4dd20/src/typings.ts#L44)
 
 ---
 
@@ -29,7 +29,7 @@
 
 #### Defined in
 
-[interfaces.ts:35](https://github.com/arcana-network/wallet/blob/f7a8dce/src/interfaces.ts#L35)
+[typings.ts:43](https://github.com/arcana-network/wallet/blob/6f4dd20/src/typings.ts#L43)
 
 ---
 
@@ -39,7 +39,7 @@
 
 #### Defined in
 
-[interfaces.ts:37](https://github.com/arcana-network/wallet/blob/f7a8dce/src/interfaces.ts#L37)
+[typings.ts:45](https://github.com/arcana-network/wallet/blob/6f4dd20/src/typings.ts#L45)
 
 ---
 
@@ -49,4 +49,4 @@
 
 #### Defined in
 
-[interfaces.ts:38](https://github.com/arcana-network/wallet/blob/f7a8dce/src/interfaces.ts#L38)
+[typings.ts:46](https://github.com/arcana-network/wallet/blob/6f4dd20/src/typings.ts#L46)

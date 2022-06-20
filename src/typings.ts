@@ -15,8 +15,8 @@ export interface IframeWrapperParams {
 }
 
 export interface InitInput {
-  appMode: AppMode | undefined
-  position?: Position
+  appMode: AppMode
+  position: Position
 }
 
 export interface ThemeConfig {
