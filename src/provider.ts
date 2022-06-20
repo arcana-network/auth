@@ -1,4 +1,4 @@
-import { IConnectionMethods, IMessageParams } from './interfaces'
+import { ChildMethods } from './typings'
 import {
   JsonRpcId,
   JsonRpcEngine,
@@ -34,6 +34,7 @@ import SafeEventEmitter from '@metamask/safe-event-emitter'
 import { getConfig } from './config'
 import { UserNotLoggedInError } from './errors'
 import { getLogger, Logger } from './logger'
+import IframeWrapper from './iframeWrapper'
 
 interface RequestArguments {
   method: string
@@ -65,23 +66,31 @@ export class ArcanaProvider extends SafeEventEmitter {
   private jsonRpcEngine: JsonRpcEngine
   private provider: SafeEventEmitterProvider
   private subscriber: SafeEventEmitter
-  private communication: Connection<IConnectionMethods>
+  private communication: Connection<ChildMethods>
   private logger: Logger = getLogger('ArcanaProvider')
-  private iframeOpenHandler: () => void
-  private iframeCloseHandler: () => void
-  constructor() {
+  constructor(private iframe: IframeWrapper) {
     super()
     this.initProvider()
     this.subscriber = new SafeEventEmitter()
   }
 
-  public setConnection(connection: Connection<IConnectionMethods>) {
-    this.communication = connection
-  }
-
-  public setHandlers(openHandler: () => void, closeHandler: () => void) {
-    this.iframeOpenHandler = openHandler
-    this.iframeCloseHandler = closeHandler
+  public async init() {
+    const { communication } = await this.iframe.setConnectionMethods({
+      onEvent: this.handleEvents,
+      onMethodResponse: (
+        method: string,
+        response: JsonRpcResponse<unknown>
+      ) => {
+        this.onResponse(method, response)
+      },
+      getParentUrl: this.getCurrentUrl,
+      getAppMode: () => {
+        return this.iframe?.appMode
+      },
+      getAppConfig: this.iframe.getAppConfig,
+      sendPendingRequestCount: this.iframe.onReceivingPendingRequestCount,
+    })
+    this.communication = communication
   }
 
   public onResponse = (method: string, response: JsonRpcResponse<unknown>) => {
@@ -161,6 +170,7 @@ export class ArcanaProvider extends SafeEventEmitter {
 
   private async getCommunication() {
     const c = await this.communication.promise
+    console.log({ c })
     if (!c.sendRequest) {
       this.throwDisconnectedMessage()
     }
@@ -169,13 +179,13 @@ export class ArcanaProvider extends SafeEventEmitter {
 
   private openPermissionScreen(method: string) {
     if (permissionedCalls.includes(method)) {
-      this.iframeOpenHandler()
+      this.iframe.show()
     }
   }
 
   private closePermissionScreen(method: string) {
     if (permissionedCalls.includes(method)) {
-      this.iframeCloseHandler()
+      this.iframe.hide()
     }
   }
 
@@ -253,14 +263,7 @@ export class ArcanaProvider extends SafeEventEmitter {
   }
 
   private initEngine() {
-    this.jsonRpcEngine = new JsonRpcEngine()
-    const { s, b } = this.getMiddlewares()
-    for (const m of s) {
-      this.jsonRpcEngine.push(m)
-    }
-    for (const m of b) {
-      this.jsonRpcEngine.push(m)
-    }
+    this.jsonRpcEngine = this.getRpcEngine()
   }
 
   private getWalletMiddleware() {
@@ -278,39 +281,50 @@ export class ArcanaProvider extends SafeEventEmitter {
     return walletMiddleware
   }
 
-  private getMiddlewares() {
+  private getRpcEngine() {
+    const engine = new JsonRpcEngine()
+
+    const networkMiddleware = this.getNetAndChainMiddleware()
+    engine.push(networkMiddleware)
+
+    const walletMiddleware = this.getWalletMiddleware()
+    engine.push(walletMiddleware)
+
     const fetchMiddleware = createFetchMiddleware({
       rpcUrl: getConfig().RPC_URL,
     })
+    engine.push(fetchMiddleware)
+
     const blockProvider = providerFromMiddleware(fetchMiddleware)
     const blockTracker = new PollingBlockTracker({
       provider: blockProvider as Provider,
       pollingInterval: 1000,
     })
-    const blockRefM = createBlockRefMiddleware({
+
+    const blockRefMiddleware = createBlockRefMiddleware({
       blockTracker,
       provider: blockProvider,
     })
-    const blockRetryOnEmptyM = createRetryOnEmptyMiddleware({
+    engine.push(blockRefMiddleware)
+
+    const blockRetryOnEmptyMiddleware = createRetryOnEmptyMiddleware({
       blockTracker,
       provider: blockProvider,
     })
-    const cacheM = createInflightCacheMiddleware()
-    const blockCacheM = createBlockCacheMiddleware({ blockTracker })
-    const blockTrackM = createBlockTrackerInspectorMiddleware({ blockTracker })
-    const networkM = this.getNetAndChainMiddleware()
-    const walletM = this.getWalletMiddleware()
-    return {
-      s: [walletM, networkM],
-      b: [
-        fetchMiddleware,
-        blockRefM,
-        blockRetryOnEmptyM,
-        cacheM,
-        blockCacheM,
-        blockTrackM,
-      ],
-    }
+    engine.push(blockRetryOnEmptyMiddleware)
+
+    const cacheMiddleware = createInflightCacheMiddleware()
+    engine.push(cacheMiddleware)
+
+    const blockCacheMiddleware = createBlockCacheMiddleware({ blockTracker })
+    engine.push(blockCacheMiddleware)
+
+    const blockTrackMiddleware = createBlockTrackerInspectorMiddleware({
+      blockTracker,
+    })
+    engine.push(blockTrackMiddleware)
+
+    return engine
   }
 
   private getNetAndChainMiddleware() {
@@ -418,7 +432,7 @@ export class ArcanaProvider extends SafeEventEmitter {
   }
 
   decrypt = async (
-    _: IMessageParams,
+    _: MessageParams,
     req: JsonRpcRequest<unknown>
   ): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -442,6 +456,28 @@ export class ArcanaProvider extends SafeEventEmitter {
         }
       )
     })
+  }
+
+  handleEvents = (t: string, val: unknown) => {
+    switch (t) {
+      case 'accountsChanged':
+        this.emit(t, [val])
+        break
+      case 'chainChanged':
+        this.emit('chainChanged', val)
+        break
+      case 'connect':
+        this.emit('connect', val)
+        break
+      case 'disconnect':
+        this.emit('disconnect', val)
+        break
+      case 'message':
+        this.emit('message', val)
+        break
+      default:
+        break
+    }
   }
 }
 

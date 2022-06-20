@@ -1,6 +1,7 @@
+import EthCrypto from 'eth-crypto'
 import { ethers } from 'ethers'
 import { getConfig } from './config'
-import { IWalletPosition, IWalletSize, Position } from './interfaces'
+import { EncryptInput, WalletPosition, WalletSize, Position } from './typings'
 import { AppMode, ModeWalletTypeRelation, WalletType } from './typings'
 import * as Sentry from '@sentry/browser'
 import { getLogger } from './logger'
@@ -26,11 +27,11 @@ const getWalletType = async (appId: string) => {
   const c = getContract(config.RPC_URL, appAddress)
   try {
     const res = await c.functions.walletType()
-    const walletType = res[0].toNumber()
+    const walletType: WalletType = res[0].toNumber()
     return walletType
   } catch (e) {
     getLogger('WalletProvider').error('getWalletType', e)
-    return null
+    throw new Error('Wallet Type not found in contract')
   }
 }
 
@@ -67,23 +68,25 @@ const createDomElement = (
   return dom
 }
 
-const setWalletSize = (element: HTMLElement, sizes: IWalletSize): void => {
-  const { height, width } = sizes
-  element.style.height = height
-  element.style.width = width
+const setWalletSize = (element: HTMLElement, sizes: WalletSize): void => {
+  element.style.height = sizes.height
+  element.style.width = sizes.width
 }
 
 const setWalletPosition = (
   element: HTMLElement,
-  position: IWalletPosition
+  position: WalletPosition
 ): void => {
-  const { right, bottom, left } = position
-  if (right) element.style.right = right
-  if (left) element.style.left = left
-  element.style.bottom = bottom
+  if (position.right) {
+    element.style.right = position.right
+  }
+  if (position.left) {
+    element.style.left = position.left
+  }
+  element.style.bottom = position.bottom
 }
 
-const getWalletSize = (isViewportSmall: boolean): IWalletSize => {
+const getWalletSize = (isViewportSmall: boolean): WalletSize => {
   const sizes = { height: '', width: '' }
   if (isViewportSmall) {
     sizes.height = '375px'
@@ -98,7 +101,7 @@ const getWalletSize = (isViewportSmall: boolean): IWalletSize => {
 const getWalletPosition = (
   isViewportSmall: boolean,
   position: Position
-): IWalletPosition => {
+): WalletPosition => {
   const positionDistance = isViewportSmall ? '20px' : '30px'
   return { bottom: positionDistance, [position]: positionDistance }
 }
@@ -140,7 +143,27 @@ const addHexPrefix = (i: string) =>
 const removeHexPrefix = (i: string) =>
   i.startsWith(HEX_PREFIX) ? i.substring(2) : i
 
+/**
+ * A function to ECIES encrypt message using public key
+ */
+const encryptWithPublicKey = async (input: EncryptInput): Promise<string> => {
+  const ciphertext = await EthCrypto.encryptWithPublicKey(
+    removeHexPrefix(input.publicKey),
+    input.message
+  )
+  return EthCrypto.cipher.stringify(ciphertext)
+}
+
+/**
+ * A function to compute address from public key
+ */
+const computeAddress = (publicKey: string): string => {
+  return ethers.utils.computeAddress(addHexPrefix(publicKey))
+}
+
 export {
+  computeAddress,
+  encryptWithPublicKey,
   createDomElement,
   getWalletType,
   setWalletSize,

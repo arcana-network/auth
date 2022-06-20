@@ -10,7 +10,7 @@ const stdLibBrowser = require('node-stdlib-browser')
       entryPoints: ['src/index.ts'],
       bundle: true,
       target: ['chrome58', 'firefox57', 'safari11', 'edge18'],
-      globalName: 'arcana.wallet',
+      globalName: 'arcana.auth',
       inject: [require.resolve('node-stdlib-browser/helpers/esbuild/shim')],
       plugins: [plugin(stdLibBrowser)],
       define: {
@@ -18,8 +18,9 @@ const stdLibBrowser = require('node-stdlib-browser')
         process: 'process',
         Buffer: 'Buffer',
       },
+      sourcemap: true,
       format: 'iife',
-      outfile: 'dist/standalone/wallet.min.js',
+      outfile: 'dist/standalone/auth.min.js',
       minify: true,
     })
     .catch((e) => {
@@ -43,7 +44,7 @@ const stdLibBrowser = require('node-stdlib-browser')
       entryPoints: ['src/index.ts'],
       bundle: true,
       target: ['chrome58', 'firefox57', 'safari11', 'edge18'],
-      globalName: 'arcana.wallet',
+      globalName: 'arcana.auth',
       inject: [require.resolve('node-stdlib-browser/helpers/esbuild/shim')],
       plugins: [plugin(stdLibBrowser)],
       define: {
@@ -52,7 +53,7 @@ const stdLibBrowser = require('node-stdlib-browser')
         Buffer: 'Buffer',
       },
       format: 'esm',
-      outfile: 'dist/standalone/wallet.esm.js',
+      outfile: 'dist/standalone/auth.esm.js',
       minify: true,
     })
     .catch((e) => {

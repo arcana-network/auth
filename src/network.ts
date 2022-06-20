@@ -1,4 +1,4 @@
-import { AppInfo, Theme } from './interfaces'
+import { AppInfo, Theme } from './typings'
 import { getConfig } from './config'
 
 function getImageUrls(
