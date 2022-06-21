@@ -1,6 +1,6 @@
 {
   "name": "@arcana/auth-core",
-  "version": "0.0.3-beta",
+  "version": "0.0.3-beta1",
   "description": "Arcana auth SDK for easier logins",
   "main": "dist/index.js",
   "module": "dist/standalone/auth.esm.js",

@@ -4,8 +4,6 @@ import { generateID, RedirectParams } from './utils';
 import { getConfig } from './config';
 import { ArcanaAuthException } from './errors';
 
-const config = getConfig();
-
 interface OauthParams {
   redirectUri: string;
   state: string;
@@ -33,9 +31,7 @@ export const request = async <T>(
     return data as T;
   } else {
     logger.error('error_during_request', { err: data });
-    throw new ArcanaAuthException(
-      `Error during API call: ${JSON.stringify(data)}`
-    );
+    throw new ArcanaAuthException(`Error during API call`, data);
   }
 };
 
@@ -331,10 +327,11 @@ export class GithubHandler implements OauthHandler {
   public readonly loginType = LoginType.github;
   private url = 'https://api.github.com/user';
   private oauthUrl = 'https://github.com/login/oauth/authorize';
-  private sigUrl = `${config.signatureUrl}/github`;
+  private sigUrl: string;
   private responseType = 'token id_token';
   private scope = 'read:user user:email';
   constructor(private appID: string, private clientId: string) {
+    this.sigUrl = `${getConfig().signatureUrl}/github`;
     return;
   }
 
@@ -409,11 +406,13 @@ interface TwitterInternalResponse {
 export class TwitterHandler implements OauthHandler {
   public readonly loginType = LoginType.twitter;
   private oauthToken: string;
-  private sigUrl = `${config.signatureUrl}/twitter`;
+  private sigUrl: string;
   private oauthTokenSecret: string;
   private oauthUrl = 'https://api.twitter.com/oauth/authorize?oauth_token=';
 
-  constructor(private appID: string, private clientId: string) {}
+  constructor(private appID: string, private clientId: string) {
+    this.sigUrl = `${getConfig().signatureUrl}/twitter`;
+  }
 
   public async getRequestToken(): Promise<TwitterInternalResponse> {
     const url = new URL(`${this.sigUrl}/${this.appID}/requestToken`);
@@ -531,10 +530,12 @@ interface PasswordlessInfoResponse {
 
 export class PasswordlessHandler implements OauthHandler {
   public readonly loginType = LoginType.passwordless;
-  private oauthUrl = `${config.passwordlessUrl}/oauth/authorize`;
-  private userInfoUrl = `${config.passwordlessUrl}/api/token/verify`;
+  private oauthUrl: string;
+  private userInfoUrl: string;
 
   constructor(private appID: string, private clientId: string) {
+    this.oauthUrl = `${getConfig().passwordlessUrl}/oauth/authorize`;
+    this.userInfoUrl = `${getConfig().passwordlessUrl}/api/token/verify`;
     return;
   }
 

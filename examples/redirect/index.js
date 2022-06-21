@@ -19,8 +19,8 @@ window.onload = async function () {
   let auth;
   try {
     auth = await AuthProvider.init({
-      appId: '20',
-      network: 'dev',
+      appId: '16',
+      network: 'testnet',
       flow: 'redirect',
       // Skip redirectUri if it is same as current url
     });
