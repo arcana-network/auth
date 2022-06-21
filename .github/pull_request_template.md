@@ -1,16 +1,19 @@
-# PR
+# Pull Request Template
 
-## Describe your changes
+Resolves or continues [AR-XXX](...).
+
+## Blocking dependencies
+
+- [AR-YYY](...)
+- [AR-ZZZ](...)
+
+## Changes
 
 Please include a summary of the changes and any relavant context not convered in the issue ticket. You can assume that reviewers will begin by reading the description of the linked issue.
 
-## Issue ticket number and link
+When making primarily visual changes, it's helpful to include before and after screenshots.
 
-- [AR-XXX](https://team-1624093970686.atlassian.net/browse/AR-XXX)
-- [XXXX](https://github.com/arcana-network/wallet/issues/XXXX)
+## Checklist
 
-## Checklist before requesting a review
-
-- [ ] You have performed a self-review of your own code
-- [ ] You are using approved terminology
-- [ ] Your code builds clean without any errors or warnings
+- [ ] The branch name follows the format: `developer/AR-XXX-issue-name`.
+- [ ] The changes have been tested locally.

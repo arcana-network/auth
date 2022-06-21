@@ -1,0 +1,99 @@
+name: Arcana Auth SDK Bug Report
+description: File an bug report for Arcana Auth SDK
+title: "[Auth_SDK_Issuecw]: "
+labels: ["docs", "bug", "triage"]
+assignees:
+  - sauravkanchan
+body:
+  - type: markdown
+    attributes:
+      value: |
+
+        :wave:  **Hey, there!**
+        *Thank you for using Arcana Auth SDK.*
+        Help us timely address and prioritize your issue by going through this checklist and providing all the requisite issue details.
+  - type: checkboxes
+    id: issue-checklist
+    attributes:
+      label: Issue Checklist
+      description: Before you submit the issue, verify it is indeed a bug and not a question.
+      options:
+        - label: Is this something you can **debug and fix**? Send a pull request! Your contributions are valuable to us.
+          required: false
+        - label: Have a **usage question**? Ask your question on [StackOverflow](https://stackoverflow.com/search?q=%22arcana+network%22%2B%22XAR%22) or [Discord channel](https://discord.com/invite/w6ej4FtqYS). We use GitHub solely for bugs and feature enhancement requests.
+          required: false
+        - label: Is this a support query related to your specific use case? Contact us at [support@arcana.network](mailto:support@arcana.network).
+          required: false
+  - type: markdown
+    attributes:
+      value: "## Create GitHub Issue for Arcana Auth SDK"
+  - type: markdown
+    attributes:
+      value: |
+
+        Make sure to add all the information needed to understand the bug or your feature request.
+
+        If the info is missing we'll add the 'Needs more information' label and prioritize it only when there is enough information provided.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the scenario and the bug.
+      placeholder: Tell us what you see!
+      value: "Something did not work when you tried..."
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: Tell us, what did you expect to happen?
+      placeholder: Tell us about the expected behavior!
+      value: "This error should show up or this value should be returned, etc."
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: "## Help us Recreate the Bug"
+  - type: textarea
+    id: steps
+    attributes:
+      label: List the Steps
+      description: Describe how to reproduce the bug step by step.
+      placeholder: Details
+      value: |
+         1. Do this...
+         2. Next do this...
+         3. ...
+    validations:
+        required: true
+  - type: markdown
+    attributes:
+      value: |
+        * Provide screenshots where appropriate
+        * Provide a minimal code snippet / [rnplay](https://rnplay.org/) example that reproduces the bug.
+  - type: textarea
+    id: dev-env
+    attributes:
+      label: Development Environment
+      description: Describe your development environment package version and other details.
+      placeholder: placeholder data
+      value: |
+        * What version of Arcana Dashboard you are using?
+        * List Arcana Auth SDK Version, configuration settings such wallet ui mode during SDK initialization, dashboard wallet UI setting etc.
+        * Have you enabled social OAuth and/or passwordless login in your dApp?
+        * Are you only using Auth SDK or also integrating with Arcana Storage SDK? In that case mention the version details of Storage SDK used.
+        * What's the version of React Native / Vue / JavaScript / TypeScript you're using in your dApp?
+        * Does this issue show up on iOS, Android or both mobileplatforms?
+        * Are you using Mac, Linux or Windows desktop platform?
+        * Which browser / version you were using to access the Dashboard? 
+    validations:
+        required: false
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details
+      description: How can we get in touch with you if we need more information about your bug?
+      placeholder: ex. youremail@youremailprovider.com
+    validations:
+      required: false

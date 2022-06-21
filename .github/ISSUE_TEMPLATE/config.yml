@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Arcana Forum
+    url: https://forum.arcana.network/
+    about: Please ask your questions here.
+  - name: Arcana Discord
+    url: https://discord.gg/w6ej4FtqYS
+    about: Discuss about Arcana Network here.
+  - name: Telegram
+    url: https://t.me/ArcanaNetwork
+    about: Discuss about Arcana Network here.
+  - name: Twitter
+    url: https://twitter.com/arcananetwork
+    about: Discuss about Arcana Network here.
