@@ -1,6 +1,6 @@
-[Wallet SDK Reference Guide - v0.0.5-beta1](README.md) / Exports
+[Wallet SDK Reference Guide - v0.0.9-beta5](README.md) / Exports
 
-# Wallet SDK Reference Guide - v0.0.5-beta1
+# Wallet SDK Reference Guide - v0.0.9-beta5
 
 ## Table of contents
 
@@ -10,18 +10,19 @@
 
 ### Classes
 
-- [WalletProvider](classes/WalletProvider.md)
+- [AuthProvider](classes/AuthProvider.md)
 
 ### Interfaces
 
+- [AppConfig](interfaces/AppConfig.md)
 - [EncryptInput](interfaces/EncryptInput.md)
-- [IAppConfig](interfaces/IAppConfig.md)
-- [IWidgetThemeConfig](interfaces/IWidgetThemeConfig.md)
 - [InitInput](interfaces/InitInput.md)
 - [InitParams](interfaces/InitParams.md)
+- [NetworkConfig](interfaces/NetworkConfig.md)
+- [ThemeConfig](interfaces/ThemeConfig.md)
 - [UserInfo](interfaces/UserInfo.md)
 
-### Type aliases
+### Type Aliases
 
 - [Position](modules.md#position)
 - [Theme](modules.md#theme)
@@ -31,7 +32,7 @@
 - [computeAddress](modules.md#computeaddress)
 - [encryptWithPublicKey](modules.md#encryptwithpublickey)
 
-## Type aliases
+## Type Aliases
 
 ### Position
 
@@ -39,7 +40,7 @@
 
 #### Defined in
 
-[interfaces.ts:7](https://github.com/arcana-network/wallet/blob/f7a8dce/src/interfaces.ts#L7)
+[typings.ts:7](https://github.com/arcana-network/wallet/blob/6f4dd20/src/typings.ts#L7)
 
 ---
 
@@ -49,7 +50,7 @@
 
 #### Defined in
 
-[interfaces.ts:3](https://github.com/arcana-network/wallet/blob/f7a8dce/src/interfaces.ts#L3)
+[typings.ts:3](https://github.com/arcana-network/wallet/blob/6f4dd20/src/typings.ts#L3)
 
 ## Functions
 
@@ -71,7 +72,7 @@ A function to compute address from public key
 
 #### Defined in
 
-[index.ts:310](https://github.com/arcana-network/wallet/blob/f7a8dce/src/index.ts#L310)
+[utils.ts:160](https://github.com/arcana-network/wallet/blob/6f4dd20/src/utils.ts#L160)
 
 ---
 
@@ -93,4 +94,4 @@ A function to ECIES encrypt message using public key
 
 #### Defined in
 
-[index.ts:299](https://github.com/arcana-network/wallet/blob/f7a8dce/src/index.ts#L299)
+[utils.ts:149](https://github.com/arcana-network/wallet/blob/6f4dd20/src/utils.ts#L149)

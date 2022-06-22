@@ -25,7 +25,18 @@
     "prepare": "husky install"
   },
   "author": "makyl",
-  "license": "ISC",
+  "license": "MIT",
+  "keywords": [
+    "oauth",
+    "social",
+    "authentication",
+    "passwordless",
+    "sign up",
+    "login",
+    "web3",
+    "encrypt",
+    "wallet"
+  ],
   "devDependencies": {
     "@types/jest": "^27.4.1",
     "@typescript-eslint/eslint-plugin": "^5.18.0",

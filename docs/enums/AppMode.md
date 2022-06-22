@@ -1,41 +1,41 @@
-[Wallet SDK Reference Guide - v0.0.5-beta1](../README.md) / [Exports](../modules.md) / AppMode
+[Wallet SDK Reference Guide - v0.0.9-beta5](../README.md) / [Exports](../modules.md) / AppMode
 
 # Enumeration: AppMode
 
 ## Table of contents
 
-### Enumeration members
+### Enumeration Members
 
 - [Full](AppMode.md#full)
 - [NoUI](AppMode.md#noui)
 - [Widget](AppMode.md#widget)
 
-## Enumeration members
+## Enumeration Members
 
 ### Full
 
-• **Full** = `2`
+• **Full**
 
 #### Defined in
 
-[typings.ts:9](https://github.com/arcana-network/wallet/blob/f7a8dce/src/typings.ts#L9)
+[typings.ts:102](https://github.com/arcana-network/wallet/blob/6f4dd20/src/typings.ts#L102)
 
 ---
 
 ### NoUI
 
-• **NoUI** = `0`
+• **NoUI**
 
 #### Defined in
 
-[typings.ts:7](https://github.com/arcana-network/wallet/blob/f7a8dce/src/typings.ts#L7)
+[typings.ts:100](https://github.com/arcana-network/wallet/blob/6f4dd20/src/typings.ts#L100)
 
 ---
 
 ### Widget
 
-• **Widget** = `1`
+• **Widget**
 
 #### Defined in
 
-[typings.ts:8](https://github.com/arcana-network/wallet/blob/f7a8dce/src/typings.ts#L8)
+[typings.ts:101](https://github.com/arcana-network/wallet/blob/6f4dd20/src/typings.ts#L101)

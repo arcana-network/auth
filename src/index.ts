@@ -1,29 +1,30 @@
 import { ArcanaProvider } from './provider'
 import IframeWrapper from './iframeWrapper'
 import {
-  getWalletType,
-  isDefined,
-  getSentryErrorReporter,
   computeAddress,
   encryptWithPublicKey,
+  getWalletType,
+  getSentryErrorReporter,
+  isDefined,
 } from './utils'
 import {
-  setNetwork,
-  getConfig,
   isNetworkConfig,
   setCustomConfig,
+  setNetwork,
+  getConfig,
 } from './config'
 import {
   AppConfig,
-  Position,
-  UserInfo,
-  ThemeConfig,
-  Theme,
-  InitParams,
-  State,
   AppMode,
   EncryptInput,
   InitInput,
+  InitParams,
+  NetworkConfig,
+  Position,
+  State,
+  Theme,
+  ThemeConfig,
+  UserInfo,
 } from './typings'
 import { getAppInfo, getImageUrls } from './network'
 import { WalletNotInitializedError } from './errors'
@@ -75,8 +76,10 @@ class AuthProvider {
   /**
    * A function to initialize the wallet, should be called before getting provider
    */
-  public async init(input: InitInput) {
-    const { appMode, position = 'right' } = input
+  public async init(
+    input: InitInput = { appMode: AppMode.NoUI, position: 'right' }
+  ) {
+    const { appMode, position } = input
     if (this.iframeWrapper) {
       return
     }
@@ -95,11 +98,8 @@ class AuthProvider {
     this.iframeWrapper.setWalletType(walletType, appMode)
 
     this._provider = new ArcanaProvider(this.iframeWrapper)
-    this._provider.init()
-
-    if (this.params.inpageProvider) {
-      this.setInpageProvider()
-    }
+    await this._provider.init()
+    this.setProviders()
   }
 
   /**
@@ -228,9 +228,11 @@ class AuthProvider {
   }
 
   /* eslint-disable @typescript-eslint/no-explicit-any */
-  private setInpageProvider() {
-    if (!(window as Record<string, any>).ethereum) {
-      ;(window as Record<string, any>).ethereum = this._provider
+  private setProviders() {
+    if (this.params.inpageProvider) {
+      if (!(window as Record<string, any>).ethereum) {
+        ;(window as Record<string, any>).ethereum = this._provider
+      }
     }
 
     if (!(window as Record<string, any>).arcana) {
@@ -258,6 +260,7 @@ export {
   UserInfo,
   ThemeConfig,
   InitInput,
+  NetworkConfig,
   computeAddress,
   encryptWithPublicKey,
 }
