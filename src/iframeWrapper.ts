@@ -28,7 +28,6 @@ export default class IframeWrapper {
   private iframeCommunication: Connection<ChildMethods>
   constructor(private params: IframeWrapperParams) {
     this.checkSecureOrigin()
-    this.initWalletUI()
   }
 
   public async setConnectionMethods(methods: ParentMethods) {
@@ -49,6 +48,7 @@ export default class IframeWrapper {
 
   public setWalletType(walletType: WalletType, appMode: AppMode | undefined) {
     this.appMode = verifyMode(walletType, appMode)
+    this.initWalletUI()
   }
 
   public destroyUIElements() {
