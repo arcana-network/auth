@@ -9,7 +9,7 @@ export const LOG_LEVEL: { [k: string]: number } = {
 
 const loggers: { [key: string]: Logger } = {}
 
-let logLevel = LOG_LEVEL.ERROR
+let logLevel = LOG_LEVEL.NOLOGS
 let logLevelFrozen = false
 
 let exceptionReporter: null | ((msg: string) => void) = null

@@ -1,14 +1,13 @@
 const { AuthProvider, AppMode, encryptWithPublicKey } = window.arcana.auth
-const auth = new AuthProvider('3')
+const auth = new AuthProvider('43')
 
 let provider
 
 window.onload = async () => {
   console.log('Init wallet')
-  test()
   const position = 'right'
   try {
-    await auth.init({ appMode: AppMode.NoUI, position })
+    await auth.init({ appMode: AppMode.Full, position })
     provider = auth.provider
     const connected = await auth.isLoggedIn()
     console.log({ connected })
@@ -218,12 +217,3 @@ const msgParams = JSON.stringify({
     ],
   },
 })
-
-const test = async () => {
-  const res = await fetch(
-    'https://passwordless001-testnet.arcana.network/oauth/authorize?client_id=E9E3Efe708261C6A088075d06C38Ec389845e15e&email=makyl@newfang.io&state=aaa&redirect_uri=https://verify.beta.arcana.network/verify/16&json=false',
-    { redirect: 'redirect' }
-  )
-  console.log(res)
-  console.log(res.headers.get('Location'))
-}
