@@ -3,7 +3,7 @@ description: File an bug report for Arcana Auth SDK
 title: "[Auth_SDK_Issuecw]: "
 labels: ["docs", "bug", "triage"]
 assignees:
-  - sauravkanchan
+  - makylfang
 body:
   - type: markdown
     attributes:
