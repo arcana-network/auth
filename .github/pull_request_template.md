@@ -13,4 +13,5 @@ Please include a summary of the changes and any relavant context not convered in
 
 - [ ] You have performed a self-review of your own code
 - [ ] You are using approved terminology
+- [ ] Your changes have been tested locally
 - [ ] Your code builds clean without any errors or warnings
