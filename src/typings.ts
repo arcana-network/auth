@@ -83,12 +83,14 @@ export interface WalletPosition {
 }
 
 export interface NetworkConfig {
-  RPC_URL: string
-  CHAIN_ID: string
-  NET_VERSION: string
-  GATEWAY_URL: string
-  WALLET_URL: string
-  SENTRY_DSN: string
+  gatewayUrl: string
+  walletUrl: string
+  sentryDsn?: string
+}
+
+export interface RpcConfig {
+  rpcUrl: string
+  chainId: number
 }
 
 export enum WalletType {
@@ -109,13 +111,9 @@ export const ModeWalletTypeRelation = {
 
 export interface InitParams {
   network: ('testnet' | 'dev') | NetworkConfig
+  rpcConfig?: RpcConfig
   inpageProvider: boolean
   debug: boolean
-}
-
-export interface State {
-  iframeUrl: string
-  redirectUri?: string
 }
 
 export interface EncryptInput {

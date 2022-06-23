@@ -1,55 +1,72 @@
-import { NetworkConfig } from './typings'
+import { NetworkConfig, RpcConfig } from './typings'
 
 let network: 'dev' | 'testnet' | 'custom' = 'dev'
 
-let customConfig: NetworkConfig
+let customNetworkConfig: NetworkConfig
+let rpcConfig: RpcConfig
 
 const DEFAULT_SENTRY_DSN =
   'https://4e27545e4faf43318301625d79a6dc34@o1011868.ingest.sentry.io/6451353'
 
-const DEV_CONFIG: NetworkConfig = {
-  RPC_URL: 'https://blockchain-dev.arcana.network',
-  CHAIN_ID: '0x9dd4',
-  NET_VERSION: '40404',
-  GATEWAY_URL: 'https://gateway-dev.arcana.network',
-  WALLET_URL: 'https://wallet.dev.arcana.network',
-  SENTRY_DSN:
+const DEV_NETWORK_CONFIG: NetworkConfig = {
+  gatewayUrl: 'https://gateway-dev.arcana.network',
+  walletUrl: 'https://wallet.dev.arcana.network',
+  sentryDsn:
     'https://68615fda056a4337bcc9b7e3062562c3@o1011868.ingest.sentry.io/6449849',
 }
 
-const TESTNET_CONFIG: NetworkConfig = {
-  RPC_URL: 'https://blockchain001-testnet.arcana.network/',
-  CHAIN_ID: '0x9dd5',
-  NET_VERSION: '40405',
-  GATEWAY_URL: 'https://gateway001-testnet.arcana.network',
-  WALLET_URL: 'https://wallet.beta.arcana.network',
-  SENTRY_DSN:
-    'https://4e27545e4faf43318301625d79a6dc34@o1011868.ingest.sentry.io/6451353',
+const DEV_RPC_CONFIG: RpcConfig = {
+  rpcUrl: 'https://blockchain-dev.arcana.network',
+  chainId: 40404,
 }
 
-const getConfig = () => {
+const TESTNET_NETWORK_CONFIG: NetworkConfig = {
+  gatewayUrl: 'https://gateway001-testnet.arcana.network',
+  walletUrl: 'https://wallet.beta.arcana.network',
+  sentryDsn: DEFAULT_SENTRY_DSN,
+}
+const TESTNET_RPC_CONFIG: RpcConfig = {
+  rpcUrl: 'https://blockchain001-testnet.arcana.network/',
+  chainId: 40405,
+}
+
+const getRpcConfig = () => {
+  return rpcConfig
+}
+
+const getNetworkConfig = () => {
   switch (network) {
     case 'dev':
-      return DEV_CONFIG
+      return DEV_NETWORK_CONFIG
     case 'testnet':
-      return TESTNET_CONFIG
+      return TESTNET_NETWORK_CONFIG
     case 'custom':
-      return customConfig
+      return customNetworkConfig
   }
 }
 
-function setCustomConfig(n: NetworkConfig) {
-  network = 'custom'
-  customConfig = n
-  customConfig.SENTRY_DSN = DEFAULT_SENTRY_DSN
+const setRpcConfig = (c: RpcConfig) => {
+  rpcConfig = c
 }
 
-const setIframeDevUrl = (url: string) => {
-  DEV_CONFIG.WALLET_URL = url
+function setCustomNetworkConfig(n: NetworkConfig) {
+  network = 'custom'
+  customNetworkConfig = n
+  customNetworkConfig.sentryDsn = DEFAULT_SENTRY_DSN
 }
 
 const setNetwork = (n: 'testnet' | 'dev') => {
   network = n
+  switch (network) {
+    case 'dev': {
+      rpcConfig = DEV_RPC_CONFIG
+      break
+    }
+    case 'testnet': {
+      rpcConfig = TESTNET_RPC_CONFIG
+      break
+    }
+  }
 }
 
 function isNetworkConfig(
@@ -58,28 +75,20 @@ function isNetworkConfig(
   if (typeof network === 'string') {
     return false
   }
-  if (!(typeof network == 'object' && network.RPC_URL)) {
+  if (!(typeof network == 'object' && network.gatewayUrl)) {
     return false
   }
-  if (!(typeof network == 'object' && network.CHAIN_ID)) {
-    return false
-  }
-  if (!(typeof network == 'object' && network.NET_VERSION)) {
-    return false
-  }
-  if (!(typeof network == 'object' && network.GATEWAY_URL)) {
-    return false
-  }
-  if (!(typeof network !== 'object' || !network.WALLET_URL)) {
+  if (!(typeof network !== 'object' || !network.walletUrl)) {
     return false
   }
   return true
 }
 
 export {
-  getConfig,
-  setCustomConfig,
   setNetwork,
-  setIframeDevUrl,
+  getNetworkConfig,
+  setCustomNetworkConfig,
+  setRpcConfig,
+  getRpcConfig,
   isNetworkConfig,
 }

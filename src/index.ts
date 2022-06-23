@@ -9,9 +9,10 @@ import {
 } from './utils'
 import {
   isNetworkConfig,
-  setCustomConfig,
+  setCustomNetworkConfig,
   setNetwork,
-  getConfig,
+  getNetworkConfig,
+  setRpcConfig,
 } from './config'
 import {
   AppConfig,
@@ -21,7 +22,6 @@ import {
   InitParams,
   NetworkConfig,
   Position,
-  State,
   Theme,
   ThemeConfig,
   UserInfo,
@@ -39,7 +39,6 @@ import {
 class AuthProvider {
   private appId: string
   private appConfig: AppConfig
-  private state: State
   private logger: Logger
   private iframeWrapper: IframeWrapper | null
   private _provider: ArcanaProvider
@@ -56,18 +55,24 @@ class AuthProvider {
     }
     this.appId = appId
     if (isNetworkConfig(params.network)) {
-      setCustomConfig(params.network)
+      setCustomNetworkConfig(params.network)
     } else if (!['dev', 'testnet'].includes(params.network)) {
       throw new Error('network is invalid in params')
     } else {
       setNetwork(params.network)
     }
 
+    if (params.rpcConfig) {
+      setRpcConfig(params.rpcConfig)
+    }
+
     this.logger = getLogger('WalletProvider')
-    this.initializeState()
     if (params.debug) {
       setLogLevel(LOG_LEVEL.DEBUG)
-      setExceptionReporter(getSentryErrorReporter(getConfig().SENTRY_DSN))
+      const dsn = getNetworkConfig().sentryDsn
+      if (dsn) {
+        setExceptionReporter(getSentryErrorReporter(dsn))
+      }
     } else {
       setLogLevel(LOG_LEVEL.NOLOGS)
     }
@@ -88,7 +93,7 @@ class AuthProvider {
 
     this.iframeWrapper = new IframeWrapper({
       appId: this.appId,
-      iframeUrl: this.state.iframeUrl,
+      iframeUrl: getNetworkConfig().walletUrl,
       appConfig: this.appConfig,
       position: position,
       destroyWalletUI: this.destroyWalletUI,
@@ -241,12 +246,6 @@ class AuthProvider {
     ;(window as Record<string, any>).arcana.provider = this._provider
   }
   /* eslint-enable */
-
-  private initializeState() {
-    const iframeUrl = getConfig().WALLET_URL
-    const redirectUri = `${iframeUrl}/${this.appId}/redirect`
-    this.state = { iframeUrl, redirectUri }
-  }
 }
 
 export {

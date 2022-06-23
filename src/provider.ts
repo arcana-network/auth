@@ -31,10 +31,11 @@ import { Connection } from 'penpal'
 import { ethErrors } from 'eth-rpc-errors'
 import { SafeEventEmitterProvider } from 'eth-json-rpc-middleware'
 import SafeEventEmitter from '@metamask/safe-event-emitter'
-import { getConfig } from './config'
+import { getRpcConfig } from './config'
 import { UserNotLoggedInError } from './errors'
 import { getLogger, Logger } from './logger'
 import IframeWrapper from './iframeWrapper'
+import { getHexFromNumber } from './utils'
 
 interface RequestArguments {
   method: string
@@ -291,7 +292,7 @@ export class ArcanaProvider extends SafeEventEmitter {
     engine.push(walletMiddleware)
 
     const fetchMiddleware = createFetchMiddleware({
-      rpcUrl: getConfig().RPC_URL,
+      rpcUrl: getRpcConfig().rpcUrl,
     })
     engine.push(fetchMiddleware)
 
@@ -328,9 +329,10 @@ export class ArcanaProvider extends SafeEventEmitter {
   }
 
   private getNetAndChainMiddleware() {
+    const hexChainId = getHexFromNumber(getRpcConfig().chainId)
     return createScaffoldMiddleware({
-      eth_chainId: getConfig().CHAIN_ID,
-      net_version: getConfig().NET_VERSION,
+      eth_chainId: hexChainId,
+      net_version: getRpcConfig().chainId,
     }) as JsonRpcMiddleware<string, unknown>
   }
 

@@ -1,6 +1,6 @@
 {
   "entryPoints": ["src/index.ts"],
-  "name": "Wallet SDK Reference Guide",
+  "name": "Auth SDK Reference Guide",
   "out": "htmldocs",
   "excludePrivate": true,
   "excludeProtected": true,

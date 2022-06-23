@@ -1,6 +1,6 @@
 import EthCrypto from 'eth-crypto'
 import { ethers } from 'ethers'
-import { getConfig } from './config'
+import { getRpcConfig, getNetworkConfig } from './config'
 import { EncryptInput, WalletPosition, WalletSize, Position } from './typings'
 import { AppMode, ModeWalletTypeRelation, WalletType } from './typings'
 import * as Sentry from '@sentry/browser'
@@ -18,13 +18,13 @@ const getContract = (rpcUrl: string, appAddress: string) => {
 }
 
 const getWalletType = async (appId: string) => {
-  const config = getConfig()
+  const config = getRpcConfig()
 
   const appAddress = await getAppAddress(appId)
   if (!appAddress) {
     throw InvalidAppId
   }
-  const c = getContract(config.RPC_URL, appAddress)
+  const c = getContract(config.rpcUrl, appAddress)
   try {
     const res = await c.functions.walletType()
     const walletType: WalletType = res[0].toNumber()
@@ -37,8 +37,8 @@ const getWalletType = async (appId: string) => {
 
 const getAppAddress = async (id: string) => {
   try {
-    const config = getConfig()
-    const u = new URL(`/get-address/?id=${id}`, config.GATEWAY_URL)
+    const config = getNetworkConfig()
+    const u = new URL(`/get-address/?id=${id}`, config.gatewayUrl)
     const res = await fetch(u.toString())
     const json = await res.json()
     const address: string = json?.address
@@ -143,6 +143,11 @@ const addHexPrefix = (i: string) =>
 const removeHexPrefix = (i: string) =>
   i.startsWith(HEX_PREFIX) ? i.substring(2) : i
 
+const getHexFromNumber = (n: number, prefix = true): string => {
+  const h = n.toString(16)
+  return prefix ? addHexPrefix(h) : removeHexPrefix(h)
+}
+
 /**
  * A function to ECIES encrypt message using public key
  */
@@ -170,6 +175,7 @@ export {
   getWalletSize,
   setWalletPosition,
   getWalletPosition,
+  getHexFromNumber,
   verifyMode,
   getSentryErrorReporter,
   isDefined,
