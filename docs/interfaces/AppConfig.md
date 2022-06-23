@@ -1,4 +1,4 @@
-[Wallet SDK Reference Guide - v0.0.9-beta5](../README.md) / [Exports](../modules.md) / AppConfig
+[Auth SDK Reference Guide - v0.0.9-beta8](../README.md) / [Exports](../modules.md) / AppConfig
 
 # Interface: AppConfig
 
@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[typings.ts:38](https://github.com/arcana-network/wallet/blob/6f4dd20/src/typings.ts#L38)
+[typings.ts:38](https://github.com/arcana-network/auth/blob/0d1ad75/src/typings.ts#L38)
 
 ---
 
@@ -27,4 +27,4 @@
 
 #### Defined in
 
-[typings.ts:39](https://github.com/arcana-network/wallet/blob/6f4dd20/src/typings.ts#L39)
+[typings.ts:39](https://github.com/arcana-network/auth/blob/0d1ad75/src/typings.ts#L39)
