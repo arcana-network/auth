@@ -22,7 +22,7 @@ import {
   ThemeConfig,
   UserInfo,
 } from './typings'
-import { getAppInfo, getImageUrls } from './network'
+import { getAppInfo, getImageUrls } from './appConfig'
 import { WalletNotInitializedError } from './errors'
 import {
   getLogger,
@@ -190,8 +190,12 @@ class AuthProvider {
   }
 
   private async setAppConfig() {
-    const appInfo = await getAppInfo(this.appId)
-    const appImageURLs = getImageUrls(this.appId, appInfo.theme)
+    const appInfo = await getAppInfo(this.appId, this.networkConfig.gatewayUrl)
+    const appImageURLs = getImageUrls(
+      this.appId,
+      appInfo.theme,
+      this.networkConfig.gatewayUrl
+    )
     this.appConfig = {
       name: appInfo.name,
       themeConfig: {

@@ -85,9 +85,8 @@ export class ArcanaProvider extends SafeEventEmitter {
         this.onResponse(method, response)
       },
       getParentUrl: this.getCurrentUrl,
-      getAppMode: () => {
-        return this.iframe?.appMode
-      },
+      getAppMode: () => this.iframe.appMode,
+      getRpcConfig: () => this.rpcConfig,
       getAppConfig: this.iframe.getAppConfig,
       sendPendingRequestCount: this.iframe.onReceivingPendingRequestCount,
     })

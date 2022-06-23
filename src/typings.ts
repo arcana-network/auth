@@ -66,6 +66,7 @@ export interface ParentMethods {
   onMethodResponse: (method: string, response: JsonRpcResponse<unknown>) => void
   getAppConfig: () => AppConfig
   getAppMode: () => AppMode
+  getRpcConfig: () => RpcConfig
   sendPendingRequestCount: (count: number) => void
   getParentUrl: () => string
 }
