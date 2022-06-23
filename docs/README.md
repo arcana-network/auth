@@ -75,7 +75,7 @@ A unique **AppId** will be assigned to your dApp and you need the same to initia
 
 # 📚 Documentation
 
-Check out [Arcana Network documentation](https://docs.dev.arcana.network/) for [Auth SDK Quick Start Guide](https://docs.dev.arcana.network/docs/wallet_qs), [Usage Guide](https://docs.dev.arcana.network/docs/wallet_usage) and [API reference Guide](https://docs.dev.arcana.network/docs/wallet_ref).
+Check out [Arcana Network documentation](https://docs.dev.arcana.network/) for [Auth SDK Quick Start Guide](https://docs.dev.arcana.network/docs/auth_qs), [Usage Guide](https://docs.dev.arcana.network/docs/auth_usage) and [API reference Guide](https://docs.dev.arcana.network/docs/auth_ref).
 
 Refer to the [sample code](https://docs.dev.arcana.network/docs/demo-app) or the [How To Guides](https://docs.dev.arcana.network/docs/config_dapp) for examples related to specific use cases. For example, configuring Arcana Auth SDK, encrypting or decrypting data, signing transactions and more.
 

@@ -70,7 +70,7 @@ function isNetworkConfig(
   if (!(typeof network == 'object' && network.GATEWAY_URL)) {
     return false
   }
-  if (!(typeof network !== 'object' || !network.WALLET_URL)) {
+  if (!(typeof network == 'object' && network.WALLET_URL)) {
     return false
   }
   return true
