@@ -18,7 +18,7 @@ You can integrate your application with Arcana Network Auth SDK to securely sign
 
 Auth SDK enables secure [Ethereum provider](https://eips.ethereum.org/EIPS/eip-1193) for dApps. If the dApp requires to provide blockchain enabled secure and private file storage and access functionality, Auth SDK seamlessly works with [Arcana Storage SDK](https://github.com/arcana-network/storage) to enable file based transaction signing and approval by the user.
 
-If your application use case requires you to have a **secure, private file store for user data** while managing your own keys, or using your own wallet, or a third party wallet, then you can directly integrate your application with Storage SDK. Otherwise, it is recommended that you use Arcana Auth SDK and Storage SDK together for a seamless experience.  
+If your application use case requires you to have a **secure, private file store for user data** while managing your own keys, or using your own wallet, or a third party wallet, then you can directly integrate your application with Storage SDK. Otherwise, it is recommended that you use Arcana Auth SDK and Storage SDK together for a seamless experience.
 
 Following authentication mechanisms are supported:
 
