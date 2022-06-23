@@ -7,7 +7,7 @@ Please include a summary of the changes and any relavant context not convered in
 ## Issue ticket number and link
 
 - [AR-XXX](https://team-1624093970686.atlassian.net/browse/AR-XXX)
-- [XXXX](https://github.com/arcana-network/wallet/issues/XXXX)
+- [XXXX](https://github.com/arcana-network/auth/issues/XXXX)
 
 ## Checklist before requesting a review
 
