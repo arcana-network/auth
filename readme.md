@@ -1,15 +1,15 @@
 <p align="center">
-<a href="#start"><img height="30rem" src="https://raw.githubusercontent.com/arcana-network/branding/main/an_logo_light_temp.png"></a>
+<a href="#start"><img height="30rem" src="https://raw.githubusercontent.com/arcana-network/branding/main/an_logo_light_temp.png"/></a>
 <h2 align="center"> <a href="https://arcana.network/">Arcana Network Auth SDK </a></h2>
 </p>
 <br>
 <p id="banner" align="center">
 <br>
-<a title="MIT License" href="https://github.com/arcana-network/license/blob/main/LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-blue"></a>
-<a title="Beta release" href="https://github.com/arcana-network/auth/releases"><img src="https://img.shields.io/github/v/release/arcana-network/auth?style=flat-square&color=28A745"></a>
-<a title="Twitter" href="https://twitter.com/ArcanaNetwork"><img alt="Twitter URL" src="https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2FArcanaNetwork"></a>
+<a title="MIT License" href="https://github.com/arcana-network/license/blob/main/LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-blue"/></a>
+<a title="Beta release" href="https://github.com/arcana-network/auth/releases"><img src="https://img.shields.io/github/v/release/arcana-network/auth?style=flat-square&color=28A745"/></a>
+<a title="Twitter" href="https://twitter.com/ArcanaNetwork"><img alt="Twitter URL" src="https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2FArcanaNetwork"/></a>
 </p><p id="start" align="center">
-<a href="https://docs.dev.arcana.network/"><img src="https://raw.githubusercontent.com/arcana-network/branding/main/an_banner_temp.png" alt="Arcana Auth SDK"></a>
+<a href="https://docs.dev.arcana.network/"><img src="https://raw.githubusercontent.com/arcana-network/branding/main/an_banner_temp.png" alt="Arcana Auth SDK"/></a>
 </p>
 
 # What is Auth SDK?
@@ -18,12 +18,11 @@ You can integrate your application with Arcana Network Auth SDK to securely sign
 
 Auth SDK enables secure [Ethereum provider](https://eips.ethereum.org/EIPS/eip-1193) for dApps. If the dApp requires to provide blockchain enabled secure and private file storage and access functionality, Auth SDK seamlessly works with [Arcana Storage SDK](https://github.com/arcana-network/storage) to enable file based transaction signing and approval by the user.
 
-If your application use case requires you to have a **secure, private file store for user data** while managing your own keys, or using your own wallet, or a third party wallet, then you can directly integrate your application with Storage SDK. Otherwise, it is recommended that you use Arcana Auth SDK and Storage SDK together for a seamless experience.
+If your application use case requires you to have a **secure, private file store for user data** while managing your own keys, or using your own wallet, or a third party wallet, then you can directly integrate your application with Storage SDK. Otherwise, it is recommended that you use Arcana Auth SDK and Storage SDK together for a seamless experience.  
 
 Following authentication mechanisms are supported:
 
-- Social OAuth
-
+* Social OAuth
   - Discord
   - GitHub
   - Google
@@ -31,7 +30,7 @@ Following authentication mechanisms are supported:
   - Twitter
   - Twitch
 
-- Passwordless authentication
+* Passwordless authentication
 
 # 💪 Key Features
 
