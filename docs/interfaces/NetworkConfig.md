@@ -1,4 +1,4 @@
-[Wallet SDK Reference Guide - v0.0.9-beta5](../README.md) / [Exports](../modules.md) / NetworkConfig
+[Auth SDK Reference Guide - v0.0.9-beta8](../README.md) / [Exports](../modules.md) / NetworkConfig
 
 # Interface: NetworkConfig
 
@@ -21,7 +21,7 @@
 
 #### Defined in
 
-[typings.ts:87](https://github.com/arcana-network/wallet/blob/6f4dd20/src/typings.ts#L87)
+[typings.ts:87](https://github.com/arcana-network/auth/blob/0d1ad75/src/typings.ts#L87)
 
 ---
 
@@ -31,7 +31,7 @@
 
 #### Defined in
 
-[typings.ts:89](https://github.com/arcana-network/wallet/blob/6f4dd20/src/typings.ts#L89)
+[typings.ts:89](https://github.com/arcana-network/auth/blob/0d1ad75/src/typings.ts#L89)
 
 ---
 
@@ -41,7 +41,7 @@
 
 #### Defined in
 
-[typings.ts:88](https://github.com/arcana-network/wallet/blob/6f4dd20/src/typings.ts#L88)
+[typings.ts:88](https://github.com/arcana-network/auth/blob/0d1ad75/src/typings.ts#L88)
 
 ---
 
@@ -51,7 +51,7 @@
 
 #### Defined in
 
-[typings.ts:86](https://github.com/arcana-network/wallet/blob/6f4dd20/src/typings.ts#L86)
+[typings.ts:86](https://github.com/arcana-network/auth/blob/0d1ad75/src/typings.ts#L86)
 
 ---
 
@@ -61,7 +61,7 @@
 
 #### Defined in
 
-[typings.ts:91](https://github.com/arcana-network/wallet/blob/6f4dd20/src/typings.ts#L91)
+[typings.ts:91](https://github.com/arcana-network/auth/blob/0d1ad75/src/typings.ts#L91)
 
 ---
 
@@ -71,4 +71,4 @@
 
 #### Defined in
 
-[typings.ts:90](https://github.com/arcana-network/wallet/blob/6f4dd20/src/typings.ts#L90)
+[typings.ts:90](https://github.com/arcana-network/auth/blob/0d1ad75/src/typings.ts#L90)

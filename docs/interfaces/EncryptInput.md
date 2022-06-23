@@ -1,4 +1,4 @@
-[Wallet SDK Reference Guide - v0.0.9-beta5](../README.md) / [Exports](../modules.md) / EncryptInput
+[Auth SDK Reference Guide - v0.0.9-beta8](../README.md) / [Exports](../modules.md) / EncryptInput
 
 # Interface: EncryptInput
 
@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[typings.ts:122](https://github.com/arcana-network/wallet/blob/6f4dd20/src/typings.ts#L122)
+[typings.ts:122](https://github.com/arcana-network/auth/blob/0d1ad75/src/typings.ts#L122)
 
 ---
 
@@ -27,4 +27,4 @@
 
 #### Defined in
 
-[typings.ts:123](https://github.com/arcana-network/wallet/blob/6f4dd20/src/typings.ts#L123)
+[typings.ts:123](https://github.com/arcana-network/auth/blob/0d1ad75/src/typings.ts#L123)

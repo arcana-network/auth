@@ -1,4 +1,4 @@
-[Wallet SDK Reference Guide - v0.0.9-beta5](../README.md) / [Exports](../modules.md) / InitInput
+[Auth SDK Reference Guide - v0.0.9-beta8](../README.md) / [Exports](../modules.md) / InitInput
 
 # Interface: InitInput
 
@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[typings.ts:18](https://github.com/arcana-network/wallet/blob/6f4dd20/src/typings.ts#L18)
+[typings.ts:18](https://github.com/arcana-network/auth/blob/0d1ad75/src/typings.ts#L18)
 
 ---
 
@@ -27,4 +27,4 @@
 
 #### Defined in
 
-[typings.ts:19](https://github.com/arcana-network/wallet/blob/6f4dd20/src/typings.ts#L19)
+[typings.ts:19](https://github.com/arcana-network/auth/blob/0d1ad75/src/typings.ts#L19)

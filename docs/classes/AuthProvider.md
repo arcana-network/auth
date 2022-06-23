@@ -1,4 +1,4 @@
-[Wallet SDK Reference Guide - v0.0.9-beta5](../README.md) / [Exports](../modules.md) / AuthProvider
+[Auth SDK Reference Guide - v0.0.9-beta8](../README.md) / [Exports](../modules.md) / AuthProvider
 
 # Class: AuthProvider
 
@@ -38,7 +38,7 @@
 
 #### Defined in
 
-[index.ts:46](https://github.com/arcana-network/wallet/blob/6f4dd20/src/index.ts#L46)
+[index.ts:46](https://github.com/arcana-network/auth/blob/0d1ad75/src/index.ts#L46)
 
 ## Accessors
 
@@ -52,7 +52,7 @@
 
 #### Defined in
 
-[index.ts:222](https://github.com/arcana-network/wallet/blob/6f4dd20/src/index.ts#L222)
+[index.ts:222](https://github.com/arcana-network/auth/blob/0d1ad75/src/index.ts#L222)
 
 ## Methods
 
@@ -70,7 +70,7 @@ A function to get web3 provider
 
 #### Defined in
 
-[index.ts:180](https://github.com/arcana-network/wallet/blob/6f4dd20/src/index.ts#L180)
+[index.ts:180](https://github.com/arcana-network/auth/blob/0d1ad75/src/index.ts#L180)
 
 ---
 
@@ -92,7 +92,7 @@ A function to request public key of different users
 
 #### Defined in
 
-[index.ts:168](https://github.com/arcana-network/wallet/blob/6f4dd20/src/index.ts#L168)
+[index.ts:168](https://github.com/arcana-network/auth/blob/0d1ad75/src/index.ts#L168)
 
 ---
 
@@ -110,7 +110,7 @@ available user info
 
 #### Defined in
 
-[index.ts:135](https://github.com/arcana-network/wallet/blob/6f4dd20/src/index.ts#L135)
+[index.ts:135](https://github.com/arcana-network/auth/blob/0d1ad75/src/index.ts#L135)
 
 ---
 
@@ -132,7 +132,7 @@ A function to initialize the wallet, should be called before getting provider
 
 #### Defined in
 
-[index.ts:79](https://github.com/arcana-network/wallet/blob/6f4dd20/src/index.ts#L79)
+[index.ts:79](https://github.com/arcana-network/auth/blob/0d1ad75/src/index.ts#L79)
 
 ---
 
@@ -148,7 +148,7 @@ A function to determine whether user is logged in
 
 #### Defined in
 
-[index.ts:146](https://github.com/arcana-network/wallet/blob/6f4dd20/src/index.ts#L146)
+[index.ts:146](https://github.com/arcana-network/auth/blob/0d1ad75/src/index.ts#L146)
 
 ---
 
@@ -170,7 +170,7 @@ A function to trigger passwordless login in the wallet
 
 #### Defined in
 
-[index.ts:121](https://github.com/arcana-network/wallet/blob/6f4dd20/src/index.ts#L121)
+[index.ts:121](https://github.com/arcana-network/auth/blob/0d1ad75/src/index.ts#L121)
 
 ---
 
@@ -192,7 +192,7 @@ A function to trigger social login in the wallet
 
 #### Defined in
 
-[index.ts:108](https://github.com/arcana-network/wallet/blob/6f4dd20/src/index.ts#L108)
+[index.ts:108](https://github.com/arcana-network/auth/blob/0d1ad75/src/index.ts#L108)
 
 ---
 
@@ -208,4 +208,4 @@ A function to logout the user
 
 #### Defined in
 
-[index.ts:157](https://github.com/arcana-network/wallet/blob/6f4dd20/src/index.ts#L157)
+[index.ts:157](https://github.com/arcana-network/auth/blob/0d1ad75/src/index.ts#L157)

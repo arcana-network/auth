@@ -44,7 +44,7 @@ export const getLogger = (name: string): Logger => {
 }
 
 export class Logger {
-  private prefix = '[ARCANA_WALLET]'
+  private prefix = '[ARCANA_AUTH]'
   constructor(public logLevel: number, prefix: string) {
     if (prefix) {
       this.prefix += `[${prefix}]`

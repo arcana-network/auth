@@ -63,7 +63,7 @@ class AuthProvider {
       setNetwork(params.network)
     }
 
-    this.logger = getLogger('WalletProvider')
+    this.logger = getLogger('AuthProvider')
     this.initializeState()
     if (params.debug) {
       setLogLevel(LOG_LEVEL.DEBUG)
