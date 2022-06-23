@@ -1,4 +1,4 @@
-import { ChildMethods } from './typings'
+import { ChildMethods, RpcConfig } from './typings'
 import {
   JsonRpcId,
   JsonRpcEngine,
@@ -69,7 +69,7 @@ export class ArcanaProvider extends SafeEventEmitter {
   private subscriber: SafeEventEmitter
   private communication: Connection<ChildMethods>
   private logger: Logger = getLogger('ArcanaProvider')
-  constructor(private iframe: IframeWrapper) {
+  constructor(private iframe: IframeWrapper, private rpcConfig: RpcConfig) {
     super()
     this.initProvider()
     this.subscriber = new SafeEventEmitter()
@@ -292,7 +292,7 @@ export class ArcanaProvider extends SafeEventEmitter {
     engine.push(walletMiddleware)
 
     const fetchMiddleware = createFetchMiddleware({
-      rpcUrl: getRpcConfig().rpcUrl,
+      rpcUrl: this.rpcConfig.rpcUrl,
     })
     engine.push(fetchMiddleware)
 
@@ -329,10 +329,10 @@ export class ArcanaProvider extends SafeEventEmitter {
   }
 
   private getNetAndChainMiddleware() {
-    const hexChainId = getHexFromNumber(getRpcConfig().chainId)
+    const hexChainId = getHexFromNumber(this.rpcConfig.chainId)
     return createScaffoldMiddleware({
       eth_chainId: hexChainId,
-      net_version: getRpcConfig().chainId,
+      net_version: this.rpcConfig.chainId,
     }) as JsonRpcMiddleware<string, unknown>
   }
 

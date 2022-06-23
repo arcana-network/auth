@@ -6,6 +6,11 @@ export type Orientation = 'horizontal' | 'vertical'
 
 export type Position = 'right' | 'left'
 
+export enum NetworkEnum {
+  dev = 'dev',
+  testnet = 'testnet',
+}
+
 export interface IframeWrapperParams {
   appId: string
   iframeUrl: string
@@ -110,7 +115,7 @@ export const ModeWalletTypeRelation = {
 }
 
 export interface InitParams {
-  network: ('testnet' | 'dev') | NetworkConfig
+  network: NetworkEnum | NetworkConfig
   rpcConfig?: RpcConfig
   inpageProvider: boolean
   debug: boolean

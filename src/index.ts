@@ -7,13 +7,7 @@ import {
   getSentryErrorReporter,
   isDefined,
 } from './utils'
-import {
-  isNetworkConfig,
-  setCustomNetworkConfig,
-  setNetwork,
-  getNetworkConfig,
-  setRpcConfig,
-} from './config'
+import { getNetworkConfig, getRpcConfig } from './config'
 import {
   AppConfig,
   AppMode,
@@ -21,7 +15,9 @@ import {
   InitInput,
   InitParams,
   NetworkConfig,
+  NetworkEnum,
   Position,
+  RpcConfig,
   Theme,
   ThemeConfig,
   UserInfo,
@@ -42,10 +38,12 @@ class AuthProvider {
   private logger: Logger
   private iframeWrapper: IframeWrapper | null
   private _provider: ArcanaProvider
+  private networkConfig: NetworkConfig
+  private rpcConfig: RpcConfig
   constructor(
     appId: string,
     private params: InitParams = {
-      network: 'testnet',
+      network: NetworkEnum.testnet,
       inpageProvider: false,
       debug: false,
     }
@@ -54,22 +52,13 @@ class AuthProvider {
       throw new Error('appId is required in params')
     }
     this.appId = appId
-    if (isNetworkConfig(params.network)) {
-      setCustomNetworkConfig(params.network)
-    } else if (!['dev', 'testnet'].includes(params.network)) {
-      throw new Error('network is invalid in params')
-    } else {
-      setNetwork(params.network)
-    }
+    this.networkConfig = getNetworkConfig(params.network)
+    this.rpcConfig = getRpcConfig(params.rpcConfig, params.network)
 
-    if (params.rpcConfig) {
-      setRpcConfig(params.rpcConfig)
-    }
-
-    this.logger = getLogger('WalletProvider')
+    this.logger = getLogger('AuthProvider')
     if (params.debug) {
       setLogLevel(LOG_LEVEL.DEBUG)
-      const dsn = getNetworkConfig().sentryDsn
+      const dsn = this.networkConfig.sentryDsn
       if (dsn) {
         setExceptionReporter(getSentryErrorReporter(dsn))
       }
@@ -93,16 +82,19 @@ class AuthProvider {
 
     this.iframeWrapper = new IframeWrapper({
       appId: this.appId,
-      iframeUrl: getNetworkConfig().walletUrl,
+      iframeUrl: this.networkConfig.walletUrl,
       appConfig: this.appConfig,
       position: position,
       destroyWalletUI: this.destroyWalletUI,
     })
 
-    const walletType = await getWalletType(this.appId)
+    const walletType = await getWalletType(
+      this.appId,
+      this.networkConfig.gatewayUrl
+    )
     this.iframeWrapper.setWalletType(walletType, appMode)
 
-    this._provider = new ArcanaProvider(this.iframeWrapper)
+    this._provider = new ArcanaProvider(this.iframeWrapper, this.rpcConfig)
     await this._provider.init()
     this.setProviders()
   }
@@ -260,6 +252,7 @@ export {
   ThemeConfig,
   InitInput,
   NetworkConfig,
+  NetworkEnum,
   computeAddress,
   encryptWithPublicKey,
 }
