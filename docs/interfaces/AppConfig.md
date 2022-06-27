@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[typings.ts:38](https://github.com/arcana-network/auth/blob/0d1ad75/src/typings.ts#L38)
+[typings.ts:37](https://github.com/arcana-network/auth/blob/main/src/typings.ts#L37)
 
 ---
 
@@ -27,4 +27,4 @@
 
 #### Defined in
 
-[typings.ts:39](https://github.com/arcana-network/auth/blob/0d1ad75/src/typings.ts#L39)
+[typings.ts:38](https://github.com/arcana-network/auth/blob/main/src/typings.ts#L38)

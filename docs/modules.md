@@ -40,7 +40,7 @@
 
 #### Defined in
 
-[typings.ts:7](https://github.com/arcana-network/auth/blob/0d1ad75/src/typings.ts#L7)
+[typings.ts:7](https://github.com/arcana-network/auth/blob/main/src/typings.ts#L7)
 
 ---
 
@@ -50,7 +50,7 @@
 
 #### Defined in
 
-[typings.ts:3](https://github.com/arcana-network/auth/blob/0d1ad75/src/typings.ts#L3)
+[typings.ts:3](https://github.com/arcana-network/auth/blob/main/src/typings.ts#L3)
 
 ## Functions
 
@@ -72,7 +72,7 @@ A function to compute address from public key
 
 #### Defined in
 
-[utils.ts:160](https://github.com/arcana-network/auth/blob/0d1ad75/src/utils.ts#L160)
+[utils.ts:160](https://github.com/arcana-network/auth/blob/main/src/utils.ts#L160)
 
 ---
 
@@ -94,4 +94,4 @@ A function to ECIES encrypt message using public key
 
 #### Defined in
 
-[utils.ts:149](https://github.com/arcana-network/auth/blob/0d1ad75/src/utils.ts#L149)
+[utils.ts:149](https://github.com/arcana-network/auth/blob/main/src/utils.ts#L149)

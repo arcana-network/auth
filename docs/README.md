@@ -4,9 +4,9 @@ Auth SDK Reference Guide - v0.0.9-beta8 / [Exports](modules.md)
 <a href="#start"><img height="30rem" src="https://raw.githubusercontent.com/arcana-network/branding/main/an_logo_light_temp.png"/></a>
 <h2 align="center"> <a href="https://arcana.network/">Arcana Network Auth SDK </a></h2>
 </p>
-<br/>
+<br>
 <p id="banner" align="center">
-<br/>
+<br>
 <a title="MIT License" href="https://github.com/arcana-network/license/blob/main/LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-blue"/></a>
 <a title="Beta release" href="https://github.com/arcana-network/auth/releases"><img src="https://img.shields.io/github/v/release/arcana-network/auth?style=flat-square&color=28A745"/></a>
 <a title="Twitter" href="https://twitter.com/ArcanaNetwork"><img alt="Twitter URL" src="https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2FArcanaNetwork"/></a>

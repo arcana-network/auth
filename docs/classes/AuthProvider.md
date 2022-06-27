@@ -8,10 +8,6 @@
 
 - [constructor](AuthProvider.md#constructor)
 
-### Accessors
-
-- [provider](AuthProvider.md#provider)
-
 ### Methods
 
 - [getProvider](AuthProvider.md#getprovider)
@@ -27,32 +23,18 @@
 
 ### constructor
 
-• **new AuthProvider**(`appId`, `params?`)
+• **new AuthProvider**(`appId`, `p?`)
 
 #### Parameters
 
-| Name     | Type                                        |
-| :------- | :------------------------------------------ |
-| `appId`  | `string`                                    |
-| `params` | [`InitParams`](../interfaces/InitParams.md) |
+| Name    | Type                                        |
+| :------ | :------------------------------------------ |
+| `appId` | `string`                                    |
+| `p?`    | [`InitParams`](../interfaces/InitParams.md) |
 
 #### Defined in
 
-[index.ts:46](https://github.com/arcana-network/auth/blob/0d1ad75/src/index.ts#L46)
-
-## Accessors
-
-### provider
-
-• `get` **provider**(): `ArcanaProvider`
-
-#### Returns
-
-`ArcanaProvider`
-
-#### Defined in
-
-[index.ts:222](https://github.com/arcana-network/auth/blob/0d1ad75/src/index.ts#L222)
+[index.ts:65](https://github.com/arcana-network/auth/blob/main/src/index.ts#L65)
 
 ## Methods
 
@@ -70,7 +52,7 @@ A function to get web3 provider
 
 #### Defined in
 
-[index.ts:180](https://github.com/arcana-network/auth/blob/0d1ad75/src/index.ts#L180)
+[index.ts:192](https://github.com/arcana-network/auth/blob/main/src/index.ts#L192)
 
 ---
 
@@ -92,7 +74,7 @@ A function to request public key of different users
 
 #### Defined in
 
-[index.ts:168](https://github.com/arcana-network/auth/blob/0d1ad75/src/index.ts#L168)
+[index.ts:180](https://github.com/arcana-network/auth/blob/main/src/index.ts#L180)
 
 ---
 
@@ -110,7 +92,7 @@ available user info
 
 #### Defined in
 
-[index.ts:135](https://github.com/arcana-network/auth/blob/0d1ad75/src/index.ts#L135)
+[index.ts:147](https://github.com/arcana-network/auth/blob/main/src/index.ts#L147)
 
 ---
 
@@ -132,7 +114,7 @@ A function to initialize the wallet, should be called before getting provider
 
 #### Defined in
 
-[index.ts:79](https://github.com/arcana-network/auth/blob/0d1ad75/src/index.ts#L79)
+[index.ts:92](https://github.com/arcana-network/auth/blob/main/src/index.ts#L92)
 
 ---
 
@@ -148,7 +130,7 @@ A function to determine whether user is logged in
 
 #### Defined in
 
-[index.ts:146](https://github.com/arcana-network/auth/blob/0d1ad75/src/index.ts#L146)
+[index.ts:158](https://github.com/arcana-network/auth/blob/main/src/index.ts#L158)
 
 ---
 
@@ -170,7 +152,7 @@ A function to trigger passwordless login in the wallet
 
 #### Defined in
 
-[index.ts:121](https://github.com/arcana-network/auth/blob/0d1ad75/src/index.ts#L121)
+[index.ts:133](https://github.com/arcana-network/auth/blob/main/src/index.ts#L133)
 
 ---
 
@@ -192,7 +174,7 @@ A function to trigger social login in the wallet
 
 #### Defined in
 
-[index.ts:108](https://github.com/arcana-network/auth/blob/0d1ad75/src/index.ts#L108)
+[index.ts:120](https://github.com/arcana-network/auth/blob/main/src/index.ts#L120)
 
 ---
 
@@ -208,4 +190,4 @@ A function to logout the user
 
 #### Defined in
 
-[index.ts:157](https://github.com/arcana-network/auth/blob/0d1ad75/src/index.ts#L157)
+[index.ts:169](https://github.com/arcana-network/auth/blob/main/src/index.ts#L169)
