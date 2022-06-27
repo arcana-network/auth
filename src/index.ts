@@ -104,7 +104,6 @@ class AuthProvider {
       iframeUrl: this.state.iframeUrl,
       appConfig: this.appConfig,
       position: position,
-      destroyWalletUI: this.destroyWalletUI,
     })
 
     const walletType = await getWalletType(this.appId)
@@ -225,13 +224,6 @@ class AuthProvider {
   /**
    * @internal
    */
-  destroyWalletUI = () => {
-    if (this.iframeWrapper) {
-      this.iframeWrapper.destroyUIElements()
-    }
-    this.iframeWrapper = null
-  }
-
   get provider() {
     if (this._provider) {
       return this._provider
