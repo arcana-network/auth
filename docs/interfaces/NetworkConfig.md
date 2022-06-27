@@ -21,7 +21,7 @@
 
 #### Defined in
 
-[typings.ts:87](https://github.com/arcana-network/auth/blob/0d1ad75/src/typings.ts#L87)
+[typings.ts:86](https://github.com/arcana-network/auth/blob/main/src/typings.ts#L86)
 
 ---
 
@@ -31,7 +31,7 @@
 
 #### Defined in
 
-[typings.ts:89](https://github.com/arcana-network/auth/blob/0d1ad75/src/typings.ts#L89)
+[typings.ts:88](https://github.com/arcana-network/auth/blob/main/src/typings.ts#L88)
 
 ---
 
@@ -41,7 +41,7 @@
 
 #### Defined in
 
-[typings.ts:88](https://github.com/arcana-network/auth/blob/0d1ad75/src/typings.ts#L88)
+[typings.ts:87](https://github.com/arcana-network/auth/blob/main/src/typings.ts#L87)
 
 ---
 
@@ -51,7 +51,7 @@
 
 #### Defined in
 
-[typings.ts:86](https://github.com/arcana-network/auth/blob/0d1ad75/src/typings.ts#L86)
+[typings.ts:85](https://github.com/arcana-network/auth/blob/main/src/typings.ts#L85)
 
 ---
 
@@ -61,7 +61,7 @@
 
 #### Defined in
 
-[typings.ts:91](https://github.com/arcana-network/auth/blob/0d1ad75/src/typings.ts#L91)
+[typings.ts:90](https://github.com/arcana-network/auth/blob/main/src/typings.ts#L90)
 
 ---
 
@@ -71,4 +71,4 @@
 
 #### Defined in
 
-[typings.ts:90](https://github.com/arcana-network/auth/blob/0d1ad75/src/typings.ts#L90)
+[typings.ts:89](https://github.com/arcana-network/auth/blob/main/src/typings.ts#L89)

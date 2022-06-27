@@ -4,6 +4,7 @@
   "out": "docs",
   "excludePrivate": true,
   "excludeProtected": true,
+  "gitRevision": "main",
   "excludeInternal": true,
   "includeVersion": true,
   "hideGenerator": true,
