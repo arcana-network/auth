@@ -232,7 +232,7 @@ export default class IframeWrapper {
   }
 
   private onCloseBubbleClick() {
-    this.params.destroyWalletUI()
+    this.widgetBubble.style.display = 'none'
   }
 
   // Todo: add remove event listener for "resize" event
