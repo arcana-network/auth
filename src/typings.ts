@@ -11,7 +11,6 @@ export interface IframeWrapperParams {
   iframeUrl: string
   appConfig: AppConfig
   position: Position
-  destroyWalletUI: () => void
 }
 
 export interface InitInput {

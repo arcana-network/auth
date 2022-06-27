@@ -51,11 +51,6 @@ export default class IframeWrapper {
     this.initWalletUI()
   }
 
-  public destroyUIElements() {
-    this.widgetBubble.remove()
-    this.widgetIframeContainer.remove()
-  }
-
   public onReceivingPendingRequestCount(count: number) {
     const reqCountBadgeEl = document.getElementById('req-count-badge')
     if (!reqCountBadgeEl) {
