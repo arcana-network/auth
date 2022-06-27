@@ -36,36 +36,49 @@ import {
   setLogLevel,
 } from './logger'
 
+const getDefaultInitParams = (initParams?: InitParams) => {
+  const p: InitParams = {
+    network: 'testnet',
+    inpageProvider: false,
+    debug: false,
+  }
+  if (initParams?.network) {
+    p.network = initParams.network
+  }
+  if (initParams?.inpageProvider !== undefined) {
+    p.inpageProvider = initParams.inpageProvider
+  }
+  if (initParams?.debug !== undefined) {
+    p.debug = initParams.debug
+  }
+  return p
+}
+
 class AuthProvider {
   private appId: string
+  private params: InitParams
   private appConfig: AppConfig
   private state: State
   private logger: Logger
   private iframeWrapper: IframeWrapper | null
   private _provider: ArcanaProvider
-  constructor(
-    appId: string,
-    private params: InitParams = {
-      network: 'testnet',
-      inpageProvider: false,
-      debug: false,
-    }
-  ) {
+  constructor(appId: string, p?: InitParams) {
     if (!isDefined(appId)) {
-      throw new Error('appId is required in params')
+      throw new Error('appId is required')
     }
     this.appId = appId
-    if (isNetworkConfig(params.network)) {
-      setCustomConfig(params.network)
-    } else if (!['dev', 'testnet'].includes(params.network)) {
+    this.params = getDefaultInitParams(p)
+    if (isNetworkConfig(this.params.network)) {
+      setCustomConfig(this.params.network)
+    } else if (!['dev', 'testnet'].includes(this.params.network)) {
       throw new Error('network is invalid in params')
     } else {
-      setNetwork(params.network)
+      setNetwork(this.params.network)
     }
 
     this.logger = getLogger('AuthProvider')
     this.initializeState()
-    if (params.debug) {
+    if (this.params.debug) {
       setLogLevel(LOG_LEVEL.DEBUG)
       setExceptionReporter(getSentryErrorReporter(getConfig().SENTRY_DSN))
     } else {
