@@ -7,6 +7,13 @@
   "jsdelivr": "dist/standalone/auth.min.js",
   "unpkg": "dist/standalone/auth.min.js",
   "types": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/standalone/auth.esm.js",
+      "types": "./types/index.d.ts"
+    }
+  },
   "files": [
     "dist",
     "types"
