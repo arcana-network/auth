@@ -1,6 +1,6 @@
 {
   "name": "@arcana/auth",
-  "version": "0.0.9-beta9",
+  "version": "0.0.9-beta10",
   "description": "Arcana Auth",
   "main": "dist/index.js",
   "jsdelivr": "dist/standalone/auth.min.js",
@@ -52,6 +52,7 @@
     "lint-staged": ">=10",
     "node-stdlib-browser": "^1.2.0",
     "prettier": "^2.6.2",
+    "rimraf": "^3.0.2",
     "typedoc": "^0.22.15",
     "typedoc-plugin-extras": "^2.2.3",
     "typedoc-plugin-markdown": "^3.12.1",
