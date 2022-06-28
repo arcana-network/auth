@@ -1,9 +1,8 @@
 {
   "name": "@arcana/auth",
-  "version": "0.0.9-beta9",
+  "version": "0.0.9-beta10",
   "description": "Arcana Auth",
   "main": "dist/index.js",
-  "module": "dist/standalone/auth.esm.js",
   "jsdelivr": "dist/standalone/auth.min.js",
   "unpkg": "dist/standalone/auth.min.js",
   "types": "types/index.d.ts",
@@ -22,7 +21,8 @@
     "lint": "eslint --ext .ts src",
     "dev": "esbuild src/index.ts --define:global=window --inject:config/esbuild.inject.js --format=iife --global-name=arcana.wallet --bundle --target=chrome58,firefox57,safari11,edge18  --outfile=dist/wallet.js",
     "watch": "yarn run build -- --watch",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "prepublishOnly": "yarn run build"
   },
   "author": "makyl",
   "license": "MIT",
@@ -52,6 +52,7 @@
     "lint-staged": ">=10",
     "node-stdlib-browser": "^1.2.0",
     "prettier": "^2.6.2",
+    "rimraf": "^3.0.2",
     "typedoc": "^0.22.15",
     "typedoc-plugin-extras": "^2.2.3",
     "typedoc-plugin-markdown": "^3.12.1",
