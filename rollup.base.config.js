@@ -3,17 +3,13 @@ import typescript from '@rollup/plugin-typescript'
 import nodePolyfills from 'rollup-plugin-polyfill-node'
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
+import { terser } from 'rollup-plugin-terser'
 
-export default {
+const baseConfig = {
   input: './src/index.ts',
-  output: {
-    file: 'dist/standalone/auth.esm.js',
-    format: 'es',
-  },
   plugins: [
     resolve({
       browser: true,
-      //   extensions: ['.ts'],
       preferBuiltins: false,
     }),
     typescript(),
@@ -23,7 +19,9 @@ export default {
     }),
     nodePolyfills({
       include: null,
-      //   exclude: 'node_modules/eccrypto/*',
     }),
+    terser(),
   ],
 }
+
+export default baseConfig

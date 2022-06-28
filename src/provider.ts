@@ -170,7 +170,6 @@ export class ArcanaProvider extends SafeEventEmitter {
 
   private async getCommunication() {
     const c = await this.communication.promise
-    console.log({ c })
     if (!c.sendRequest) {
       this.throwDisconnectedMessage()
     }

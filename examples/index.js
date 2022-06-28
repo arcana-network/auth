@@ -6,7 +6,6 @@ import {
 } from '../dist/standalone/auth.esm.js'
 
 const auth = new AuthProvider('43')
-
 let provider
 
 window.onload = async () => {
