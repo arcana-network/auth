@@ -1,8 +1,9 @@
 {
   "compilerOptions": {                       
     "lib": ["dom", "es2018"],
-    "target": "es5",
-    "module": "commonjs",                          
+    "target": "esnext",
+    "module": "esnext",     
+    "moduleResolution": "node",                     
     "declaration": true,                         
     "declarationDir": "types",
     "outDir": "dist", 
