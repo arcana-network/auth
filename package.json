@@ -3,17 +3,9 @@
   "version": "0.0.9-beta9",
   "description": "Arcana Auth",
   "main": "dist/index.js",
-  "module": "dist/standalone/auth.esm.js",
   "jsdelivr": "dist/standalone/auth.min.js",
   "unpkg": "dist/standalone/auth.min.js",
   "types": "types/index.d.ts",
-  "exports": {
-    ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/standalone/auth.esm.js",
-      "types": "./types/index.d.ts"
-    }
-  },
   "files": [
     "dist",
     "types"
@@ -29,7 +21,8 @@
     "lint": "eslint --ext .ts src",
     "dev": "esbuild src/index.ts --define:global=window --inject:config/esbuild.inject.js --format=iife --global-name=arcana.wallet --bundle --target=chrome58,firefox57,safari11,edge18  --outfile=dist/wallet.js",
     "watch": "yarn run build -- --watch",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "prepublishOnly": "yarn run build"
   },
   "author": "makyl",
   "license": "MIT",
