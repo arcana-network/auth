@@ -14,9 +14,11 @@ import {
   setWalletPosition,
   setWalletSize,
   verifyMode,
+  setFallbackImage
 } from './utils'
 import { getConfig } from './config'
 import { getLogger } from './logger'
+
 const BREAKPOINT_SMALL = 768
 
 export default class IframeWrapper {
@@ -134,7 +136,9 @@ export default class IframeWrapper {
     const appLogo = createDomElement('img', {
       src: assets.logo.horizontal,
       style: widgetIframeStyle.header.logo,
+      onerror: setFallbackImage
     })
+
     const closeButton = createDomElement('button', {
       onclick: () => this.closeWidgetIframe(),
       style: isFullMode
@@ -185,6 +189,7 @@ export default class IframeWrapper {
     const buttonLogo = createDomElement('img', {
       src: assets.logo.vertical,
       style: widgetBubbleStyle.bubbleLogo,
+      onerror: setFallbackImage
     })
 
     const reqCountBadge = createDomElement('p', {
