@@ -27,6 +27,7 @@ const baseCloseButtonStyle = {
   background: 'transparent',
   border: 'none',
   cursor: 'pointer',
+  marginLeft: '5px'
 }
 
 const baseHeaderContainerStyle = {
@@ -105,7 +106,6 @@ const widgetIframeStyle = {
       },
     },
     logo: {
-      width: '126px',
       height: '25px',
     },
     closeButton: {
