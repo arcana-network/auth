@@ -7,6 +7,8 @@ import * as Sentry from '@sentry/browser'
 import { getLogger } from './logger'
 import { InvalidAppId } from './errors'
 
+const fallbackLogo = '../images/fallback-logo.svg'
+
 const getContract = (rpcUrl: string, appAddress: string) => {
   const provider = new ethers.providers.JsonRpcProvider(rpcUrl)
   const appContract = new ethers.Contract(
@@ -49,7 +51,7 @@ const getAppAddress = async (id: string) => {
   }
 }
 
-type elements = 'style' | 'src' | 'onclick' | 'id'
+type elements = 'style' | 'src' | 'onclick' | 'id' | 'onerror'
 
 const createDomElement = (
   type: string,
@@ -161,6 +163,11 @@ const computeAddress = (publicKey: string): string => {
   return ethers.utils.computeAddress(addHexPrefix(publicKey))
 }
 
+const setFallbackImage = (e: Event): void => {
+  const target = e.target as HTMLImageElement
+  target.src = fallbackLogo
+}
+
 export {
   computeAddress,
   encryptWithPublicKey,
@@ -175,4 +182,5 @@ export {
   isDefined,
   addHexPrefix,
   removeHexPrefix,
+  setFallbackImage
 }
