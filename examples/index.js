@@ -1,6 +1,11 @@
-const { AuthProvider, AppMode, encryptWithPublicKey } = window.arcana.auth
-const auth = new AuthProvider('43')
+// const { AuthProvider, AppMode, encryptWithPublicKey } = window.arcana.auth
+import {
+  AuthProvider,
+  AppMode,
+  encryptWithPublicKey,
+} from '../dist/standalone/auth.esm.js'
 
+const auth = new AuthProvider('43')
 let provider
 
 window.onload = async () => {
@@ -14,6 +19,7 @@ window.onload = async () => {
     setHooks()
   } catch (e) {
     console.log({ e })
+    console.log(e)
   }
 }
 
