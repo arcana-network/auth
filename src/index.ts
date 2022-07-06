@@ -119,8 +119,7 @@ class AuthProvider {
    */
   public async loginWithSocial(loginType: string) {
     if (this._provider) {
-      const redirectUrl = await this._provider.triggerSocialLogin(loginType)
-      this.redirectTo(redirectUrl)
+      this._provider.triggerSocialLogin(loginType)
       return
     }
     this.logger.error('requestSocialLogin', WalletNotInitializedError)
@@ -132,9 +131,7 @@ class AuthProvider {
    */
   public async loginWithLink(email: string) {
     if (this._provider) {
-      const redirectUrl = await this._provider.triggerPasswordlessLogin(email)
-      this.redirectTo(redirectUrl)
-      return
+      this._provider.triggerPasswordlessLogin(email)
     }
     this.logger.error('requestPasswordlessLogin', WalletNotInitializedError)
     throw WalletNotInitializedError
@@ -195,13 +192,6 @@ class AuthProvider {
     }
     this.logger.error('getProvider', WalletNotInitializedError)
     throw WalletNotInitializedError
-  }
-
-  private redirectTo(url: string) {
-    if (url) {
-      setTimeout(() => (window.location.href = url), 50)
-    }
-    return
   }
 
   private async setAppConfig() {

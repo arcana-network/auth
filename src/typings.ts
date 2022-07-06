@@ -47,6 +47,7 @@ export interface UserInfo {
 
 export interface ChildMethods {
   isLoggedIn: () => Promise<boolean>
+  isLoginAvailable: (type: string) => Promise<boolean>
   triggerSocialLogin: (t: string, url: string) => Promise<string>
   triggerPasswordlessLogin: (email: string, url: string) => Promise<string>
   sendRequest: (req: JsonRpcRequest<unknown>) => Promise<void>
@@ -62,6 +63,8 @@ export interface ParentMethods {
   getAppMode: () => AppMode
   sendPendingRequestCount: (count: number) => void
   getParentUrl: () => string
+  triggerSocialLogin: (type: string) => void
+  triggerPasswordlessLogin: (email: string) => void
 }
 
 export interface TypedDataMessage {
@@ -82,6 +85,7 @@ export interface WalletPosition {
 }
 
 export interface NetworkConfig {
+  AUTH_URL: string
   RPC_URL: string
   CHAIN_ID: string
   NET_VERSION: string
