@@ -91,7 +91,7 @@ export interface NetworkConfig {
   NET_VERSION: string
   GATEWAY_URL: string
   WALLET_URL: string
-  SENTRY_DSN: string
+  SENTRY_DSN?: string
 }
 
 export enum WalletType {
@@ -112,7 +112,6 @@ export const ModeWalletTypeRelation = {
 
 export interface InitParams {
   network: ('testnet' | 'dev') | NetworkConfig
-  inpageProvider: boolean
   debug: boolean
 }
 

@@ -39,14 +39,10 @@ import {
 const getDefaultInitParams = (initParams?: InitParams) => {
   const p: InitParams = {
     network: 'testnet',
-    inpageProvider: false,
     debug: false,
   }
   if (initParams?.network) {
     p.network = initParams.network
-  }
-  if (initParams?.inpageProvider !== undefined) {
-    p.inpageProvider = initParams.inpageProvider
   }
   if (initParams?.debug !== undefined) {
     p.debug = initParams.debug
@@ -80,7 +76,10 @@ class AuthProvider {
     this.initializeState()
     if (this.params.debug) {
       setLogLevel(LOG_LEVEL.DEBUG)
-      setExceptionReporter(getSentryErrorReporter(getConfig().SENTRY_DSN))
+      const sentryDsn = getConfig().SENTRY_DSN
+      if (sentryDsn) {
+        setExceptionReporter(getSentryErrorReporter(sentryDsn))
+      }
     } else {
       setLogLevel(LOG_LEVEL.NOLOGS)
     }
@@ -224,12 +223,6 @@ class AuthProvider {
 
   /* eslint-disable @typescript-eslint/no-explicit-any */
   private setProviders() {
-    if (this.params.inpageProvider) {
-      if (!(window as Record<string, any>).ethereum) {
-        ;(window as Record<string, any>).ethereum = this._provider
-      }
-    }
-
     if (!(window as Record<string, any>).arcana) {
       ;(window as Record<string, any>).arcana = {}
     }
