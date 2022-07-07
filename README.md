@@ -33,6 +33,9 @@ Following authentication mechanisms are supported:
 
 - Passwordless authentication
 
+| :warning: Caution: Arcana Network SDKs and apps (Beta Release), not recommended for production usage. |
+| ----------------------------------------------------------------------------------------------------- |
+
 # 💪 Key Features
 
 <p>🗝️ &nbsp; Enables secure Ethereum provider access to dApps</p>
