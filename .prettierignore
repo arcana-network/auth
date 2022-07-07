@@ -1,0 +1,4 @@
+.github/*
+.eslintrc.json
+README.md
+ansible/*
