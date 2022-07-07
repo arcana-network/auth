@@ -182,5 +182,5 @@ export {
   isDefined,
   addHexPrefix,
   removeHexPrefix,
-  setFallbackImage
+  setFallbackImage,
 }

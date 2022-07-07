@@ -27,7 +27,7 @@ const baseCloseButtonStyle = {
   background: 'transparent',
   border: 'none',
   cursor: 'pointer',
-  marginLeft: '5px'
+  marginLeft: '5px',
 }
 
 const baseHeaderContainerStyle = {
