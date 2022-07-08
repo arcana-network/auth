@@ -6,4 +6,4 @@ types
 package.json
 *.log
 htmldocs/
-coverage
+coverage/
