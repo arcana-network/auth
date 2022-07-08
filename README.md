@@ -1,3 +1,4 @@
+[![codecov](https://codecov.io/gh/arcana-network/auth/branch/dev/graph/badge.svg?token=KmdjEs3enL)](https://codecov.io/gh/arcana-network/auth)
 <p align="center">
 <a href="#start"><img height="30rem" src="https://raw.githubusercontent.com/arcana-network/branding/main/an_logo_light_temp.png"/></a>
 <h2 align="center"> <a href="https://arcana.network/">Arcana Network Auth SDK </a></h2>
