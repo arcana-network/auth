@@ -13,7 +13,8 @@ on:
       - 'feature/*'
 
 jobs:
-  ci-job:
+
+  lint:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -32,8 +33,18 @@ jobs:
         prettier_dir: src/
         eslint_dir: src/
         eslint_extensions: js,ts
-    - name: Build
-      run: npm run build --if-present
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Set up NodeJS
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.0
+    - name: Install dependencies
+      run: npm install
     - name: Test
       run: npm test
     - name: Upload test coverage
@@ -43,4 +54,26 @@ jobs:
         files: /coverage/cobertura-coverage.xml
         fail_ci_if_error: true
         verbose: true
-        
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Set up NodeJS
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.0
+    - name: Install dependencies
+      run: npm install
+    - name: Build
+      run: npm run build --if-present
+
+  branch-name:
+    runs-on: ubuntu-latest
+    name: Check branch name  
+    steps:
+      - uses: deepakputhraya/action-branch-name@master
+        with:
+          regex: '\w+\/(?:feature-|hotfix-)?AR-\d+-.+'
+          ignore: main,dev
