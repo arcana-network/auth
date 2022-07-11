@@ -9,7 +9,7 @@
 <a title="Beta release" href="https://github.com/arcana-network/auth/releases"><img src="https://img.shields.io/github/v/release/arcana-network/auth?style=flat-square&color=28A745"/></a>
 <a title="Twitter" href="https://twitter.com/ArcanaNetwork"><img alt="Twitter URL" src="https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2FArcanaNetwork"/></a>
 </p><p id="start" align="center">
-<a href="https://docs.beta.arcana.network/"><img src="https://raw.githubusercontent.com/arcana-network/branding/main/an_banner_temp.png" alt="Arcana Auth SDK"/></a>
+<a href="https://docs.beta.arcana.network/"><img src="https://raw.githubusercontent.com/arcana-network/branding/main/an_banner_docs.png" alt="Arcana Auth SDK"/></a>
 </p>
 
 # What is Auth SDK?
@@ -32,6 +32,9 @@ Following authentication mechanisms are supported:
   - Twitch
 
 - Passwordless authentication
+
+| :warning: Caution: Arcana Network SDKs and apps (Beta Release), not recommended for production usage. |
+| ----------------------------------------------------------------------------------------------------- |
 
 # 💪 Key Features
 
