@@ -1,6 +1,6 @@
 {
   "name": "@arcana/auth",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Arcana Auth",
   "main": "dist/index.js",
   "module": "dist/standalone/auth.esm.js",
