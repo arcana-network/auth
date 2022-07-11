@@ -129,6 +129,7 @@ const getSentryErrorReporter = (dsn: string): ((m: string) => void) => {
     dsn,
     maxBreadcrumbs: 5,
     debug: true,
+    defaultIntegrations: false,
   })
   return (msg: string) => {
     Sentry.captureMessage(msg)
@@ -182,5 +183,5 @@ export {
   isDefined,
   addHexPrefix,
   removeHexPrefix,
-  setFallbackImage
+  setFallbackImage,
 }
