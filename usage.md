@@ -96,19 +96,6 @@ await auth.getPublicKey(`${email}`)
 
 ## Utils
 
-### ECIES encryption
-
-```js
-import { encryptWithPublicKey } from '@arcana/auth'
-
-encryptWithPublicKey({
-  publicKey: '',
-  message: 'test-message',
-}).then((ciphertext) => {
-  // Do something with ciphertext
-})
-```
-
 ### Compute Address
 
 ```ts
@@ -227,6 +214,16 @@ provider
 ```
 
 ### eth_decrypt
+
+For encryption use
+
+```js
+import EthCrypto from 'eth-crypto'
+
+const cipherObj = await EthCrypto.encryptWithPublicKey(publicKey, plaintext)
+const ciphertext = EthCrypto.cipher.stringify(cipherObj)
+// store ciphertext
+```
 
 ```js
 provider
