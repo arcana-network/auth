@@ -1,0 +1,79 @@
+name: CI
+
+on: 
+  pull_request:
+    branches:
+      - dev
+      - main
+      - 'feature/*'
+  push:
+    branches:
+      - dev
+      - main
+      - 'feature/*'
+
+jobs:
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Set up NodeJS
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.0
+    - name: Install dependencies
+      run: npm install        
+    - name: Run linters
+      uses: wearerequired/lint-action@v2
+      with:
+        eslint: true
+        prettier: true
+        prettier_dir: src/
+        eslint_dir: src/
+        eslint_extensions: js,ts
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Set up NodeJS
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.0
+    - name: Install dependencies
+      run: npm install
+    - name: Test
+      run: npm test
+    - name: Upload test coverage
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: /coverage/cobertura-coverage.xml
+        fail_ci_if_error: true
+        verbose: true
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Set up NodeJS
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.0
+    - name: Install dependencies
+      run: npm install
+    - name: Build
+      run: npm run build --if-present
+
+  branch-name:
+    runs-on: ubuntu-latest
+    name: Check branch name  
+    steps:
+      - uses: deepakputhraya/action-branch-name@master
+        with:
+          regex: '\w+\/(?:feature-|hotfix-)?AR-\d+-.+'
+          ignore: main,dev
