@@ -74,7 +74,6 @@
     "@sentry/browser": "^6.19.7",
     "@sentry/tracing": "^6.19.7",
     "eth-block-tracker": "^5.0.1",
-    "eth-crypto": "^2.1.0",
     "eth-json-rpc-middleware": "^8.0.1",
     "eth-sig-util": "^3.0.1",
     "ethers": "^5.5.4",

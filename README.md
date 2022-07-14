@@ -11,7 +11,7 @@
 <a title="CodeCov" href="https://codecov.io/gh/arcana-network/auth"> 
  <img src="https://codecov.io/gh/arcana-network/auth/branch/dev/graph/badge.svg?token=KmdjEs3enL"/></a>
 </p><p id="start" align="center">
-<a href="https://docs.beta.arcana.network/"><img src="https://raw.githubusercontent.com/arcana-network/branding/main/an_banner_temp.png" alt="Arcana Auth SDK"/></a>
+<a href="https://docs.beta.arcana.network/"><img src="https://raw.githubusercontent.com/arcana-network/branding/main/an_banner_docs.png" alt="Arcana Auth SDK"/></a>
 </p>
 
 # What is Auth SDK?
