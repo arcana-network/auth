@@ -14,7 +14,7 @@ import {
   setWalletPosition,
   setWalletSize,
   verifyMode,
-  setFallbackImage
+  setFallbackImage,
 } from './utils'
 import { getConfig } from './config'
 import { getLogger } from './logger'
@@ -136,7 +136,7 @@ export default class IframeWrapper {
     const appLogo = createDomElement('img', {
       src: assets.logo.horizontal,
       style: widgetIframeStyle.header.logo,
-      onerror: setFallbackImage
+      onerror: setFallbackImage,
     })
 
     const closeButton = createDomElement('button', {
@@ -189,7 +189,7 @@ export default class IframeWrapper {
     const buttonLogo = createDomElement('img', {
       src: assets.logo.vertical,
       style: widgetBubbleStyle.bubbleLogo,
-      onerror: setFallbackImage
+      onerror: setFallbackImage,
     })
 
     const reqCountBadge = createDomElement('p', {
