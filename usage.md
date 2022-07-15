@@ -78,6 +78,8 @@ interface UserInfo {
   email?: string
   name?: string
   picture?: string
+  address: string
+  publicKey: string
 }
 */
 ```
@@ -88,7 +90,7 @@ Logout
 await auth.logout()
 ```
 
-### Get public key
+### Get public key associated with an email
 
 ```js
 await auth.getPublicKey(`${email}`)
