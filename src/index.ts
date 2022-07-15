@@ -16,12 +16,11 @@ import {
   NetworkConfig,
   Position,
   RpcConfig,
-  State,
   Theme,
   ThemeConfig,
   UserInfo,
 } from './typings'
-import { getAppInfo, getImageUrls } from './network'
+import { getAppInfo, getImageUrls } from './appInfo'
 import { WalletNotInitializedError } from './errors'
 import {
   getLogger,
@@ -70,9 +69,10 @@ class AuthProvider {
     this.logger = getLogger('AuthProvider')
     if (this.params.debug) {
       setLogLevel(LOG_LEVEL.DEBUG)
-      const dsn = this.networkConfig.sentryDsn
-      if (dsn) {
-        setExceptionReporter(getSentryErrorReporter(dsn))
+      if (this.networkConfig.sentryDsn) {
+        setExceptionReporter(
+          getSentryErrorReporter(this.networkConfig.sentryDsn)
+        )
       }
     } else {
       setLogLevel(LOG_LEVEL.NOLOGS)
@@ -201,8 +201,12 @@ class AuthProvider {
   }
 
   private async setAppConfig() {
-    const appInfo = await getAppInfo(this.appId)
-    const appImageURLs = getImageUrls(this.appId, appInfo.theme)
+    const appInfo = await getAppInfo(this.appId, this.networkConfig.gatewayUrl)
+    const appImageURLs = getImageUrls(
+      this.appId,
+      appInfo.theme,
+      this.networkConfig.gatewayUrl
+    )
     this.appConfig = {
       name: appInfo.name,
       themeConfig: {

@@ -116,11 +116,6 @@ export interface InitParams {
   rpcConfig?: RpcConfig
 }
 
-export interface State {
-  iframeUrl: string
-  redirectUri?: string
-}
-
 export interface EncryptInput {
   message: string
   publicKey: string
