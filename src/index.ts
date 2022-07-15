@@ -2,6 +2,7 @@ import { ArcanaProvider } from './provider'
 import IframeWrapper from './iframeWrapper'
 import {
   computeAddress,
+  encryptWithPublicKey,
   getWalletType,
   getSentryErrorReporter,
   isDefined,
@@ -264,4 +265,5 @@ export {
   InitInput,
   NetworkConfig,
   computeAddress,
+  encryptWithPublicKey,
 }

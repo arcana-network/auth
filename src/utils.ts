@@ -1,6 +1,7 @@
+import EthCrypto from 'eth-crypto'
 import { ethers } from 'ethers'
 import { getConfig } from './config'
-import { WalletPosition, WalletSize, Position } from './typings'
+import { EncryptInput, WalletPosition, WalletSize, Position } from './typings'
 import { AppMode, ModeWalletTypeRelation, WalletType } from './typings'
 import * as Sentry from '@sentry/browser'
 import { getLogger } from './logger'
@@ -146,6 +147,17 @@ const removeHexPrefix = (i: string) =>
   i.startsWith(HEX_PREFIX) ? i.substring(2) : i
 
 /**
+ * A function to ECIES encrypt message using public key
+ */
+const encryptWithPublicKey = async (input: EncryptInput): Promise<string> => {
+  const ciphertext = await EthCrypto.encryptWithPublicKey(
+    removeHexPrefix(input.publicKey),
+    input.message
+  )
+  return EthCrypto.cipher.stringify(ciphertext)
+}
+
+/**
  * A function to compute address from public key
  */
 const computeAddress = (publicKey: string): string => {
@@ -160,6 +172,7 @@ const setFallbackImage = (e: Event): void => {
 export {
   computeAddress,
   createDomElement,
+  encryptWithPublicKey,
   getWalletType,
   setWalletSize,
   getWalletSize,

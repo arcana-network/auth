@@ -1,5 +1,9 @@
 // const { AuthProvider, AppMode, encryptWithPublicKey } = window.arcana.auth
-import { AuthProvider, AppMode } from '../dist/standalone/auth.esm.js'
+import {
+  AuthProvider,
+  AppMode,
+  encryptWithPublicKey,
+} from '../dist/standalone/auth.esm.js'
 
 const auth = new AuthProvider('43')
 let provider
@@ -28,6 +32,8 @@ const triggerPasswordlessLoginBtn = document.getElementById('trigger-p-login')
 const getPublicBtn = document.getElementById('get-public')
 const getOthersPublicBtn = document.getElementById('get-other-public')
 const requestSignatureBtn = document.getElementById('request-signature')
+const encryptBtn = document.getElementById('encrypt')
+const requestDecryptBtn = document.getElementById('request-decryption')
 const requestTypedSignatureBtn = document.getElementById(
   'request-typed-signature'
 )
@@ -100,7 +106,29 @@ requestPersonalSignatureBtn.addEventListener('click', async () => {
   console.log({ personalSign })
 })
 
+let plaintext = 'I am a plaintext!'
+let ciphertext
 let publicKey
+
+encryptBtn.addEventListener('click', async () => {
+  console.log('Doing encryption')
+  const c = await encryptWithPublicKey({
+    publicKey,
+    message: plaintext,
+  })
+
+  console.log({ ciphertext: c })
+  ciphertext = c
+})
+
+requestDecryptBtn.addEventListener('click', async () => {
+  console.log('Requesting decryption')
+  const plaintext = await provider.request({
+    method: 'eth_decrypt',
+    params: [ciphertext, from],
+  })
+  console.log({ plaintext })
+})
 
 getPublicBtn.addEventListener('click', async () => {
   console.log('Requesting public key')
@@ -116,7 +144,6 @@ getOthersPublicBtn.addEventListener('click', async () => {
   console.log('Requesting others public key')
   const pk = await auth.getPublicKey('makyl@newfang.io')
   console.log({ pk })
-  publicKey = pk
 })
 
 requestTypedSignatureBtn.addEventListener('click', async () => {
