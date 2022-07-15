@@ -1,4 +1,4 @@
-import { ChildMethods } from './typings'
+import { ChildMethods, RpcConfig } from './typings'
 import {
   JsonRpcId,
   JsonRpcEngine,
@@ -31,10 +31,10 @@ import { Connection } from 'penpal'
 import { ethErrors } from 'eth-rpc-errors'
 import { SafeEventEmitterProvider } from 'eth-json-rpc-middleware'
 import SafeEventEmitter from '@metamask/safe-event-emitter'
-import { getConfig } from './config'
 import { UserNotLoggedInError } from './errors'
 import { getLogger, Logger } from './logger'
 import IframeWrapper from './iframeWrapper'
+import { getHexFromNumber } from './utils'
 
 interface RequestArguments {
   method: string
@@ -68,7 +68,7 @@ export class ArcanaProvider extends SafeEventEmitter {
   private subscriber: SafeEventEmitter
   private communication: Connection<ChildMethods>
   private logger: Logger = getLogger('ArcanaProvider')
-  constructor(private iframe: IframeWrapper) {
+  constructor(private iframe: IframeWrapper, private rpcConfig: RpcConfig) {
     super()
     this.initProvider()
     this.subscriber = new SafeEventEmitter()
@@ -84,10 +84,9 @@ export class ArcanaProvider extends SafeEventEmitter {
         this.onResponse(method, response)
       },
       getParentUrl: this.getCurrentUrl,
-      getAppMode: () => {
-        return this.iframe?.appMode
-      },
+      getAppMode: () => this.iframe?.appMode,
       getAppConfig: this.iframe.getAppConfig,
+      getRpcConfig: () => this.rpcConfig,
       sendPendingRequestCount: this.iframe.onReceivingPendingRequestCount,
     })
     this.communication = communication
@@ -290,7 +289,7 @@ export class ArcanaProvider extends SafeEventEmitter {
     engine.push(walletMiddleware)
 
     const fetchMiddleware = createFetchMiddleware({
-      rpcUrl: getConfig().RPC_URL,
+      rpcUrl: this.rpcConfig.rpcUrl,
     })
     engine.push(fetchMiddleware)
 
@@ -327,9 +326,10 @@ export class ArcanaProvider extends SafeEventEmitter {
   }
 
   private getNetAndChainMiddleware() {
+    const hexChainId = getHexFromNumber(this.rpcConfig.chainId)
     return createScaffoldMiddleware({
-      eth_chainId: getConfig().CHAIN_ID,
-      net_version: getConfig().NET_VERSION,
+      eth_chainId: hexChainId,
+      net_version: this.rpcConfig.chainId,
     }) as JsonRpcMiddleware<string, unknown>
   }
 

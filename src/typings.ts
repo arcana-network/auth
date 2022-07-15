@@ -58,10 +58,11 @@ export interface ChildMethods {
 export interface ParentMethods {
   onEvent: (t: string, val: unknown) => void
   onMethodResponse: (method: string, response: JsonRpcResponse<unknown>) => void
+  sendPendingRequestCount: (count: number) => void
   getAppConfig: () => AppConfig
   getAppMode: () => AppMode
-  sendPendingRequestCount: (count: number) => void
   getParentUrl: () => string
+  getRpcConfig: () => RpcConfig
 }
 
 export interface TypedDataMessage {
@@ -82,12 +83,14 @@ export interface WalletPosition {
 }
 
 export interface NetworkConfig {
-  RPC_URL: string
-  CHAIN_ID: string
-  NET_VERSION: string
-  GATEWAY_URL: string
-  WALLET_URL: string
-  SENTRY_DSN: string
+  gatewayUrl: string
+  walletUrl: string
+  sentryDsn?: string
+}
+
+export interface RpcConfig {
+  rpcUrl: string
+  chainId: number
 }
 
 export enum WalletType {
@@ -110,6 +113,7 @@ export interface InitParams {
   network: ('testnet' | 'dev') | NetworkConfig
   inpageProvider: boolean
   debug: boolean
+  rpcConfig?: RpcConfig
 }
 
 export interface State {

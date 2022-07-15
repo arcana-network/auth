@@ -7,12 +7,7 @@ import {
   getSentryErrorReporter,
   isDefined,
 } from './utils'
-import {
-  isNetworkConfig,
-  setCustomConfig,
-  setNetwork,
-  getConfig,
-} from './config'
+import { getNetworkConfig, getRpcConfig } from './config'
 import {
   AppConfig,
   AppMode,
@@ -20,6 +15,7 @@ import {
   InitParams,
   NetworkConfig,
   Position,
+  RpcConfig,
   State,
   Theme,
   ThemeConfig,
@@ -57,9 +53,10 @@ class AuthProvider {
   private appId: string
   private params: InitParams
   private appConfig: AppConfig
-  private state: State
   private logger: Logger
   private iframeWrapper: IframeWrapper | null
+  private networkConfig: NetworkConfig
+  private rpcConfig: RpcConfig
   private _provider: ArcanaProvider
   constructor(appId: string, p?: InitParams) {
     if (!isDefined(appId)) {
@@ -67,19 +64,16 @@ class AuthProvider {
     }
     this.appId = appId
     this.params = getDefaultInitParams(p)
-    if (isNetworkConfig(this.params.network)) {
-      setCustomConfig(this.params.network)
-    } else if (!['dev', 'testnet'].includes(this.params.network)) {
-      throw new Error('network is invalid in params')
-    } else {
-      setNetwork(this.params.network)
-    }
+    this.networkConfig = getNetworkConfig(this.params.network)
+    this.rpcConfig = getRpcConfig(this.params.rpcConfig, this.params.network)
 
     this.logger = getLogger('AuthProvider')
-    this.initializeState()
     if (this.params.debug) {
       setLogLevel(LOG_LEVEL.DEBUG)
-      setExceptionReporter(getSentryErrorReporter(getConfig().SENTRY_DSN))
+      const dsn = this.networkConfig.sentryDsn
+      if (dsn) {
+        setExceptionReporter(getSentryErrorReporter(dsn))
+      }
     } else {
       setLogLevel(LOG_LEVEL.NOLOGS)
     }
@@ -88,10 +82,10 @@ class AuthProvider {
   /**
    * A function to initialize the wallet, should be called before getting provider
    */
-  public async init(
-    input: InitInput = { appMode: AppMode.NoUI, position: 'right' }
-  ) {
-    const { appMode, position } = input
+  public async init(input?: InitInput) {
+    const appMode = input?.appMode || AppMode.NoUI
+    const position = input?.position || 'right'
+
     if (this.iframeWrapper) {
       return
     }
@@ -100,15 +94,18 @@ class AuthProvider {
 
     this.iframeWrapper = new IframeWrapper({
       appId: this.appId,
-      iframeUrl: this.state.iframeUrl,
+      iframeUrl: this.networkConfig.walletUrl,
       appConfig: this.appConfig,
       position: position,
     })
 
-    const walletType = await getWalletType(this.appId)
+    const walletType = await getWalletType(
+      this.appId,
+      this.networkConfig.gatewayUrl
+    )
     this.iframeWrapper.setWalletType(walletType, appMode)
 
-    this._provider = new ArcanaProvider(this.iframeWrapper)
+    this._provider = new ArcanaProvider(this.iframeWrapper, this.rpcConfig)
     await this._provider.init()
     this.setProviders()
   }
@@ -245,12 +242,6 @@ class AuthProvider {
     ;(window as Record<string, any>).arcana.provider = this._provider
   }
   /* eslint-enable */
-
-  private initializeState() {
-    const iframeUrl = getConfig().WALLET_URL
-    const redirectUri = `${iframeUrl}/${this.appId}/redirect`
-    this.state = { iframeUrl, redirectUri }
-  }
 }
 
 export {
