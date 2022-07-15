@@ -16,7 +16,6 @@ import {
   verifyMode,
   setFallbackImage,
 } from './utils'
-import { getLogger } from './logger'
 
 const BREAKPOINT_SMALL = 768
 

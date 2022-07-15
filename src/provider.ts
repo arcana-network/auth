@@ -289,7 +289,7 @@ export class ArcanaProvider extends SafeEventEmitter {
     engine.push(walletMiddleware)
 
     const fetchMiddleware = createFetchMiddleware({
-      rpcUrl: this.rpcConfig.rpcUrl,
+      rpcUrl: this.rpcConfig.rpcUrls[0],
     })
     engine.push(fetchMiddleware)
 

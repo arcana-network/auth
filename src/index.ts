@@ -33,17 +33,16 @@ import {
 const getDefaultInitParams = (initParams?: InitParams) => {
   const p: InitParams = {
     network: 'testnet',
-    inpageProvider: false,
     debug: false,
   }
   if (initParams?.network) {
     p.network = initParams.network
   }
-  if (initParams?.inpageProvider !== undefined) {
-    p.inpageProvider = initParams.inpageProvider
-  }
   if (initParams?.debug !== undefined) {
     p.debug = initParams.debug
+  }
+  if (initParams?.rpcConfig) {
+    p.rpcConfig = initParams.rpcConfig
   }
   return p
 }
@@ -53,7 +52,7 @@ class AuthProvider {
   private params: InitParams
   private appConfig: AppConfig
   private logger: Logger
-  private iframeWrapper: IframeWrapper | null
+  private iframeWrapper: IframeWrapper
   private networkConfig: NetworkConfig
   private rpcConfig: RpcConfig
   private _provider: ArcanaProvider
@@ -234,12 +233,6 @@ class AuthProvider {
 
   /* eslint-disable @typescript-eslint/no-explicit-any */
   private setProviders() {
-    if (this.params.inpageProvider) {
-      if (!(window as Record<string, any>).ethereum) {
-        ;(window as Record<string, any>).ethereum = this._provider
-      }
-    }
-
     if (!(window as Record<string, any>).arcana) {
       ;(window as Record<string, any>).arcana = {}
     }

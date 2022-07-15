@@ -89,8 +89,14 @@ export interface NetworkConfig {
 }
 
 export interface RpcConfig {
-  rpcUrl: string
+  rpcUrls: string[]
   chainId: number
+  chainName?: string
+  blockExplorerUrls?: string[]
+  nativeCurrency?: {
+    symbol: string
+    decimals: number
+  }
 }
 
 export enum WalletType {
@@ -111,7 +117,6 @@ export const ModeWalletTypeRelation = {
 
 export interface InitParams {
   network: ('testnet' | 'dev') | NetworkConfig
-  inpageProvider: boolean
   debug: boolean
   rpcConfig?: RpcConfig
 }

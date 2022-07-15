@@ -16,14 +16,16 @@ const TESTNET_NETWORK_CONFIG: NetworkConfig = {
     'https://4e27545e4faf43318301625d79a6dc34@o1011868.ingest.sentry.io/6451353',
 }
 
-const DEV_RPC_CONFIG = {
-  rpcUrl: 'https://blockchain-dev.arcana.network',
+const DEV_RPC_CONFIG: RpcConfig = {
+  rpcUrls: ['https://blockchain-dev.arcana.network'],
   chainId: 40404,
+  chainName: 'Arcana Dev',
 }
 
 const TESTNET_RPC_CONFIG: RpcConfig = {
-  rpcUrl: 'https://blockchain001-testnet.arcana.network/',
+  rpcUrls: ['https://blockchain001-testnet.arcana.network/'],
   chainId: 40405,
+  chainName: 'Arcana testnet',
 }
 
 const getNetworkConfig = (n: Network | NetworkConfig) => {
@@ -60,7 +62,17 @@ const getRpcConfig = (c: RpcConfig | undefined, n: Network | NetworkConfig) => {
 }
 
 function isRpcConfig(c: RpcConfig | undefined): c is RpcConfig {
-  if (!(typeof c == 'object' && c.rpcUrl)) {
+  if (typeof c === 'undefined') {
+    return false
+  }
+  if (
+    !(
+      typeof c == 'object' &&
+      c.rpcUrls &&
+      Array.isArray(c.rpcUrls) &&
+      c.rpcUrls.length > 0
+    )
+  ) {
     return false
   }
   if (!(typeof c == 'object' && c.chainId)) {
