@@ -178,10 +178,10 @@ class AuthProvider {
    */
   public async getPublicKey(email: string) {
     if (this._provider) {
-      if (!email) {
+      if (!email || email === '') {
         throw new ArcanaAuthError(
           'email_required',
-          'Email is required in params'
+          `Email is required in getPublicKey, got ${email}`
         )
       }
       return await this._provider.getPublicKey(email, 'google')
