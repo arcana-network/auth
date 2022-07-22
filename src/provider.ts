@@ -165,7 +165,7 @@ export class ArcanaProvider extends SafeEventEmitter {
     const queryParams = new URLSearchParams()
     queryParams.append('loginType', params.loginType)
     queryParams.append('appId', params.appId)
-    queryParams.append('parentUrl', this.getCurrentUrl())
+    queryParams.append('parentUrl', encodeURIComponent(this.getCurrentUrl()))
     if (params.email) {
       queryParams.append('email', params.email)
     }
