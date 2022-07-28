@@ -32,7 +32,7 @@ import { AuthProvider } from '@arcana/auth'
 ### Initialize
 
 ```js
-import { AppMode } from '@arcana/auth'
+import { AuthProvider, AppMode } from '@arcana/auth'
 const auth = new AuthProvider(`${appId}`)
 
 const position = 'left' // values - 'left' or 'right'
@@ -44,6 +44,26 @@ provider = auth.provider
 provider = window.arcana.provider
 // or
 provider = window.ethereum
+```
+
+#### Specifying chain during init
+
+```ts
+import { AuthProvider, AppMode } from '@arcana/auth'
+const auth = new AuthProvider(`${appId}`, {
+  rpcConfig: RpcConfig,
+})
+
+interface RpcConfig {
+  rpcUrls: string[]
+  chainId: number
+  chainName?: string
+  blockExplorerUrls?: string[]
+  nativeCurrency?: {
+    symbol: string
+    decimals?: number
+  }
+}
 ```
 
 ## Auth API’s

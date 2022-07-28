@@ -16,8 +16,6 @@ import {
   verifyMode,
   setFallbackImage,
 } from './utils'
-import { getConfig } from './config'
-import { getLogger } from './logger'
 
 const BREAKPOINT_SMALL = 768
 
@@ -38,7 +36,7 @@ export default class IframeWrapper {
         this.iframeCommunication = connectToChild<ChildMethods>({
           iframe: this.iframe,
           methods: { ...methods },
-          childOrigin: getConfig().WALLET_URL,
+          childOrigin: this.params.iframeUrl,
         })
         await this.iframeCommunication.promise
       }
@@ -102,30 +100,6 @@ export default class IframeWrapper {
     }
   }
 
-  private async createOrGetInstance(params: {
-    [k: string]: (params: unknown) => unknown
-  }) {
-    try {
-      if (!this.iframe) {
-        this.initWalletUI()
-      }
-      if (!this.iframeCommunication) {
-        this.iframeCommunication = connectToChild<ChildMethods>({
-          iframe: this.iframe,
-          methods: {
-            ...params,
-          },
-          childOrigin: getConfig().WALLET_URL,
-        })
-        await this.iframeCommunication.promise
-      }
-    } catch (error) {
-      getLogger('IframeWrapper').error('createOrGetInstance', error)
-      throw new Error('Error during createOrGetInstance in IframeWrapper')
-    }
-    return { iframe: this.iframe, communication: this.iframeCommunication }
-  }
-
   private constructWidgetIframeStructure(isFullMode: boolean) {
     const {
       appConfig: { themeConfig },
@@ -161,9 +135,10 @@ export default class IframeWrapper {
   }
 
   private createWidgetIframe(isFullMode: boolean) {
+    const u = new URL(`/${this.params.appId}/login`, this.params.iframeUrl)
     this.iframe = createDomElement('iframe', {
       style: widgetIframeStyle.iframe,
-      src: `${this.params.iframeUrl}/${this.params.appId}/login`,
+      src: u.toString(),
     }) as HTMLIFrameElement
 
     const { widgetIframeHeader, widgetIframeBody } =

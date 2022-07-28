@@ -1,6 +1,5 @@
 import EthCrypto from 'eth-crypto'
 import { ethers } from 'ethers'
-import { getConfig } from './config'
 import { EncryptInput, WalletPosition, WalletSize, Position } from './typings'
 import { AppMode, ModeWalletTypeRelation, WalletType } from './typings'
 import * as Sentry from '@sentry/browser'
@@ -19,14 +18,14 @@ const getContract = (rpcUrl: string, appAddress: string) => {
   return appContract
 }
 
-const getWalletType = async (appId: string) => {
-  const config = getConfig()
-
-  const appAddress = await getAppAddress(appId)
+const getWalletType = async (appId: string, gatewayUrl: string) => {
+  const arcanaRpcUrl = await getArcanaRpc(gatewayUrl)
+  const appAddress = await getAppAddress(appId, gatewayUrl)
   if (!appAddress) {
     throw InvalidAppId
   }
-  const c = getContract(config.RPC_URL, appAddress)
+
+  const c = getContract(arcanaRpcUrl, appAddress)
   try {
     const res = await c.functions.walletType()
     const walletType: WalletType = res[0].toNumber()
@@ -37,14 +36,31 @@ const getWalletType = async (appId: string) => {
   }
 }
 
-const getAppAddress = async (id: string) => {
+const getAppAddress = async (id: string, gatewayUrl: string) => {
   try {
-    const config = getConfig()
-    const u = new URL(`/get-address/?id=${id}`, config.GATEWAY_URL)
+    const u = new URL(`/get-address/?id=${id}`, gatewayUrl)
     const res = await fetch(u.toString())
     const json = await res.json()
     const address: string = json?.address
     return address
+  } catch (e) {
+    getLogger('WalletProvider').error('getAppAddress', e)
+    throw e
+  }
+}
+
+const getArcanaRpc = async (gatewayUrl: string) => {
+  try {
+    const u = new URL('/get-config/', gatewayUrl)
+    const res = await fetch(u.toString())
+    if (res.status < 400) {
+      const json: { RPC_URL: string } = await res.json()
+      return json.RPC_URL
+    } else {
+      const err = await res.text()
+      getLogger('AuthProvider').error('getArcanaRpc', { err })
+      throw new Error('Error during fetching config from gateway url')
+    }
   } catch (e) {
     getLogger('WalletProvider').error('getAppAddress', e)
     throw e
@@ -136,7 +152,7 @@ const getSentryErrorReporter = (dsn: string): ((m: string) => void) => {
   }
 }
 
-const isDefined = (arg: any) => arg !== undefined && arg !== null
+const isDefined = (arg: unknown) => arg !== undefined && arg !== null
 
 const HEX_PREFIX = '0x'
 
@@ -146,6 +162,10 @@ const addHexPrefix = (i: string) =>
 const removeHexPrefix = (i: string) =>
   i.startsWith(HEX_PREFIX) ? i.substring(2) : i
 
+const getHexFromNumber = (n: number, prefix = true): string => {
+  const h = n.toString(16)
+  return prefix ? addHexPrefix(h) : removeHexPrefix(h)
+}
 /**
  * A function to ECIES encrypt message using public key
  */
@@ -184,4 +204,5 @@ export {
   addHexPrefix,
   removeHexPrefix,
   setFallbackImage,
+  getHexFromNumber,
 }

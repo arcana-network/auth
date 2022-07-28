@@ -1,4 +1,4 @@
-import { ChildMethods } from './typings'
+import { ChildMethods, RpcConfig } from './typings'
 import {
   JsonRpcId,
   JsonRpcEngine,
@@ -31,10 +31,10 @@ import { Connection } from 'penpal'
 import { ethErrors } from 'eth-rpc-errors'
 import { SafeEventEmitterProvider } from 'eth-json-rpc-middleware'
 import SafeEventEmitter from '@metamask/safe-event-emitter'
-import { getConfig } from './config'
-import { UserNotLoggedInError } from './errors'
+import { ArcanaAuthError, UserNotLoggedInError } from './errors'
 import { getLogger, Logger } from './logger'
 import IframeWrapper from './iframeWrapper'
+import { getHexFromNumber } from './utils'
 
 interface RequestArguments {
   method: string
@@ -63,12 +63,12 @@ class ProviderError extends Error implements JsonRpcError {
 }
 
 export class ArcanaProvider extends SafeEventEmitter {
+  #communication: Connection<ChildMethods>
   private jsonRpcEngine: JsonRpcEngine
   private provider: SafeEventEmitterProvider
   private subscriber: SafeEventEmitter
-  private communication: Connection<ChildMethods>
   private logger: Logger = getLogger('ArcanaProvider')
-  constructor(private iframe: IframeWrapper) {
+  constructor(private iframe: IframeWrapper, private rpcConfig: RpcConfig) {
     super()
     this.initProvider()
     this.subscriber = new SafeEventEmitter()
@@ -84,13 +84,12 @@ export class ArcanaProvider extends SafeEventEmitter {
         this.onResponse(method, response)
       },
       getParentUrl: this.getCurrentUrl,
-      getAppMode: () => {
-        return this.iframe?.appMode
-      },
+      getAppMode: () => this.iframe?.appMode,
       getAppConfig: this.iframe.getAppConfig,
+      getRpcConfig: () => this.rpcConfig,
       sendPendingRequestCount: this.iframe.onReceivingPendingRequestCount,
     })
-    this.communication = communication
+    this.#communication = communication
   }
 
   public onResponse = (method: string, response: JsonRpcResponse<unknown>) => {
@@ -106,7 +105,7 @@ export class ArcanaProvider extends SafeEventEmitter {
 
   public async isLoggedIn() {
     try {
-      const c = await this.communication.promise
+      const c = await this.getCommunication('isLoggedIn')
       return c.isLoggedIn()
     } catch (e) {
       this.logger.error('isLoggedIn', e)
@@ -124,21 +123,21 @@ export class ArcanaProvider extends SafeEventEmitter {
   }
 
   public async triggerSocialLogin(loginType: string): Promise<string> {
-    const c = await this.communication.promise
+    const c = await this.getCommunication('triggerSocialLogin')
     const url = this.getCurrentUrl()
     const redirectUrl = await c.triggerSocialLogin(loginType, url)
     return redirectUrl
   }
 
   public async triggerPasswordlessLogin(email: string) {
-    const c = await this.communication.promise
+    const c = await this.getCommunication('triggerPasswordlessLogin')
     const url = this.getCurrentUrl()
     const redirectUrl = await c.triggerPasswordlessLogin(email, url)
     return redirectUrl
   }
 
   public async requestUserInfo() {
-    const c = await this.communication.promise
+    const c = await this.getCommunication('getUserInfo')
     const isLoggedIn = await c.isLoggedIn()
     if (!isLoggedIn) {
       this.logger.error('requestUserInfo', UserNotLoggedInError)
@@ -149,13 +148,13 @@ export class ArcanaProvider extends SafeEventEmitter {
   }
 
   public async getPublicKey(email: string, verifier: string) {
-    const c = await this.communication.promise
+    const c = await this.getCommunication('getPublicKey')
     const pk = await c.getPublicKey(email, verifier)
     return pk
   }
 
   public async triggerLogout() {
-    const c = await this.communication.promise
+    const c = await this.getCommunication('triggerLogout')
     await c.triggerLogout()
   }
 
@@ -168,10 +167,15 @@ export class ArcanaProvider extends SafeEventEmitter {
     throw getError('all_disconnected')
   }
 
-  private async getCommunication() {
-    const c = await this.communication.promise
-    if (!c.sendRequest) {
-      this.throwDisconnectedMessage()
+  private async getCommunication(
+    expectedFn: keyof ChildMethods = 'sendRequest'
+  ) {
+    const c = await this.#communication.promise
+    if (!c[expectedFn]) {
+      throw new ArcanaAuthError(
+        'fn_not_available',
+        'The requested fn is not available in this context'
+      )
     }
     return c
   }
@@ -290,7 +294,7 @@ export class ArcanaProvider extends SafeEventEmitter {
     engine.push(walletMiddleware)
 
     const fetchMiddleware = createFetchMiddleware({
-      rpcUrl: getConfig().RPC_URL,
+      rpcUrl: this.rpcConfig.rpcUrls[0],
     })
     engine.push(fetchMiddleware)
 
@@ -327,9 +331,10 @@ export class ArcanaProvider extends SafeEventEmitter {
   }
 
   private getNetAndChainMiddleware() {
+    const hexChainId = getHexFromNumber(this.rpcConfig.chainId)
     return createScaffoldMiddleware({
-      eth_chainId: getConfig().CHAIN_ID,
-      net_version: getConfig().NET_VERSION,
+      eth_chainId: hexChainId,
+      net_version: this.rpcConfig.chainId,
     }) as JsonRpcMiddleware<string, unknown>
   }
 
