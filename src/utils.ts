@@ -7,7 +7,8 @@ import * as Sentry from '@sentry/browser'
 import { getLogger } from './logger'
 import { InvalidAppId } from './errors'
 
-const fallbackLogo = '../images/fallback-logo.svg'
+const fallbackLogo =
+  'https://arcana-front.s3.ap-south-1.amazonaws.com/fallback-logo.svg'
 
 const getContract = (rpcUrl: string, appAddress: string) => {
   const provider = new ethers.providers.JsonRpcProvider(rpcUrl)
