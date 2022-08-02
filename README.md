@@ -78,7 +78,7 @@ A unique **AppId** will be assigned to your dApp and you need the same to initia
 
 # 📚 Documentation
 
-Check out [Arcana Network documentation](https://docs.beta.arcana.network/) for [Auth SDK Quick Start Guide](https://docs.beta.arcana.network/docs/auth_qs), [Usage Guide](https://docs.beta.arcana.network/docs/auth_usage) and [API Reference Guide](https://docs.beta.arcana.network/docs/auth_ref).
+Check out [Arcana Network documentation](https://docs.beta.arcana.network/) for [Auth SDK Quick Start Guide](https://docs.beta.arcana.network/docs/auth_qs), [Usage Guide](https://docs.beta.arcana.network/docs/auth_usage) and [Auth SDK Reference Guide](https://authsdk-ref-guide.netlify.app/).
 
 Refer to the [demo dApp](https://docs.beta.arcana.network/docs/demo-app) and [How To Integrate with Auth SDK](https://docs.beta.arcana.network/docs/setupwallet) guide for details.
 
