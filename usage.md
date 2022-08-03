@@ -72,7 +72,7 @@ User Info
 
 ```js
 const info = await auth.getUser()
-/* 
+/*
 interface UserInfo {
   id: string
   email?: string
@@ -252,4 +252,77 @@ provider
   .then((signature) => {
     // Use signature
   })
+```
+
+## Advanced Usage
+
+### Initialization
+
+Typically, dApps can initialize the AuthProvider as follows:
+
+```
+const auth = new AuthProvider('nn')
+```
+
+Here 'nn' refers to the dApp identifier assigned via Arcana Dashboard during new dApp entry creation and registration.
+
+You can utilize the optional AuthProvider initialization parameters. The optional parameters are:
+
+- debug - boolean
+- inpageProvider - boolean
+- network - [networkConfig](https://authsdk-ref-guide.netlify.app/interfaces/networkconfig)]
+
+The network parameter can take on one of these values:
+
+- [networkConfig](https://authsdk-ref-guide.netlify.app/interfaces/networkconfig)]
+- "testnet" (default)
+- "dev"
+
+By default, if you do not specify these optional parameters, debug is disabled, inpageProvider is enabled and network is set to "testnet".
+
+Here is an example where AuthProvider is initialized by specifying networkconfig values appropriate for local build, setup and testing of dApps integrating with Arcana Auth SDK:
+
+Note, in this case the AUTH_URL and WALLET_URL point to local deployment of the Auth SDK.
+
+```
+const auth = new AuthProvider('nn', {
+  network: {
+    AUTH_URL: 'http://localhost:3000',
+    RPC_URL: 'https://blockchain001-testnet.arcana.network/',
+    CHAIN_ID: '0x9dd5',
+    NET_VERSION: '40405',
+    GATEWAY_URL: 'https://gateway001-testnet.arcana.network',
+    WALLET_URL: 'http://localhost:8080',
+  },
+})
+```
+
+If you specify "testnet" as the network, the Auth SDK uses the following network settings by default.
+
+```
+const auth = new AuthProvider('nn', {
+  network: {
+    AUTH_URL: 'https://verify.beta.arcana.network',
+    RPC_URL: 'https://blockchain001-testnet.arcana.network/',
+    CHAIN_ID: '0x9dd5',
+    NET_VERSION: '40405',
+    GATEWAY_URL: 'https://gateway001-testnet.arcana.network',
+    WALLET_URL: 'https://wallet.beta.arcana.network',
+  }
+}
+```
+
+Similarly, if you specify "dev" as the network, the Auth SDK uses the following network settings:
+
+```
+const auth = new AuthProvider('nn', {
+  network: {
+    AUTH_URL: 'https://verify.dev.arcana.network',
+    RPC_URL: 'https://blockchain-dev.arcana.network',
+    CHAIN_ID: '0x9dd4',
+    NET_VERSION: '40404',
+    GATEWAY_URL: 'https://gateway-dev.arcana.network',
+    WALLET_URL: 'https://wallet.dev.arcana.network',
+  }
+}
 ```
