@@ -6,6 +6,9 @@ import {
   getWalletType,
   getSentryErrorReporter,
   isDefined,
+  constructLoginUrl,
+  redirectTo,
+  getCurrentUrl,
 } from './utils'
 import { getNetworkConfig, getRpcConfig } from './config'
 import {
@@ -105,7 +108,8 @@ class AuthProvider {
     this.iframeWrapper.setWalletType(walletType, appMode)
 
     this._provider = new ArcanaProvider(this.iframeWrapper, this.rpcConfig)
-    await this._provider.init()
+    const { loginWithLink, loginWithSocial } = this
+    await this._provider.init({ loginWithLink, loginWithSocial })
     this.setProviders()
   }
 
@@ -114,9 +118,18 @@ class AuthProvider {
    */
   public async loginWithSocial(loginType: string) {
     if (this._provider) {
-      const redirectUrl = await this._provider.triggerSocialLogin(loginType)
-      this.redirectTo(redirectUrl)
-      return
+      if (!(await this._provider.isLoginAvailable(loginType))) {
+        throw new Error(`${loginType} login is not available`)
+      }
+
+      const redirectUrl = constructLoginUrl({
+        loginType,
+        appId: this.appId,
+        authUrl: this.networkConfig.authUrl,
+        redirectUrl: getCurrentUrl(),
+      })
+
+      redirectTo(redirectUrl)
     }
     this.logger.error('requestSocialLogin', WalletNotInitializedError)
     throw WalletNotInitializedError
@@ -127,9 +140,14 @@ class AuthProvider {
    */
   public async loginWithLink(email: string) {
     if (this._provider) {
-      const redirectUrl = await this._provider.triggerPasswordlessLogin(email)
-      this.redirectTo(redirectUrl)
-      return
+      const redirectUrl = constructLoginUrl({
+        loginType: 'passwordless',
+        appId: this.appId,
+        email,
+        authUrl: this.networkConfig.authUrl,
+        redirectUrl: getCurrentUrl(),
+      })
+      redirectTo(redirectUrl)
     }
     this.logger.error('requestPasswordlessLogin', WalletNotInitializedError)
     throw WalletNotInitializedError
@@ -196,13 +214,6 @@ class AuthProvider {
     }
     this.logger.error('getProvider', WalletNotInitializedError)
     throw WalletNotInitializedError
-  }
-
-  private redirectTo(url: string) {
-    if (url) {
-      setTimeout(() => (window.location.href = url), 50)
-    }
-    return
   }
 
   private async setAppConfig() {

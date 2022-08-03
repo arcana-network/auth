@@ -34,7 +34,7 @@ import SafeEventEmitter from '@metamask/safe-event-emitter'
 import { ArcanaAuthError, UserNotLoggedInError } from './errors'
 import { getLogger, Logger } from './logger'
 import IframeWrapper from './iframeWrapper'
-import { getHexFromNumber } from './utils'
+import { getHexFromNumber, getCurrentUrl } from './utils'
 
 interface RequestArguments {
   method: string
@@ -62,8 +62,13 @@ class ProviderError extends Error implements JsonRpcError {
   }
 }
 
+interface TriggerLoginFuncs {
+  loginWithSocial(loginType: string): void
+  loginWithLink(email: string): void
+}
+
 export class ArcanaProvider extends SafeEventEmitter {
-  #communication: Connection<ChildMethods>
+  private communication: Connection<ChildMethods>
   private jsonRpcEngine: JsonRpcEngine
   private provider: SafeEventEmitterProvider
   private subscriber: SafeEventEmitter
@@ -74,7 +79,7 @@ export class ArcanaProvider extends SafeEventEmitter {
     this.subscriber = new SafeEventEmitter()
   }
 
-  public async init() {
+  public async init(loginFuncs: TriggerLoginFuncs) {
     const { communication } = await this.iframe.setConnectionMethods({
       onEvent: this.handleEvents,
       onMethodResponse: (
@@ -83,13 +88,15 @@ export class ArcanaProvider extends SafeEventEmitter {
       ) => {
         this.onResponse(method, response)
       },
-      getParentUrl: this.getCurrentUrl,
+      getParentUrl: getCurrentUrl,
       getAppMode: () => this.iframe?.appMode,
       getAppConfig: this.iframe.getAppConfig,
       getRpcConfig: () => this.rpcConfig,
       sendPendingRequestCount: this.iframe.onReceivingPendingRequestCount,
+      triggerSocialLogin: loginFuncs.loginWithSocial,
+      triggerPasswordlessLogin: loginFuncs.loginWithLink,
     })
-    this.#communication = communication
+    this.communication = communication
   }
 
   public onResponse = (method: string, response: JsonRpcResponse<unknown>) => {
@@ -117,23 +124,11 @@ export class ArcanaProvider extends SafeEventEmitter {
     return await this.isLoggedIn()
   }
 
-  getCurrentUrl() {
-    const url = window.location.origin + window.location.pathname
-    return url
-  }
-
-  public async triggerSocialLogin(loginType: string): Promise<string> {
-    const c = await this.getCommunication('triggerSocialLogin')
-    const url = this.getCurrentUrl()
-    const redirectUrl = await c.triggerSocialLogin(loginType, url)
-    return redirectUrl
-  }
-
-  public async triggerPasswordlessLogin(email: string) {
-    const c = await this.getCommunication('triggerPasswordlessLogin')
-    const url = this.getCurrentUrl()
-    const redirectUrl = await c.triggerPasswordlessLogin(email, url)
-    return redirectUrl
+  public async isLoginAvailable(type: string) {
+    const c = await this.getCommunication('isLoginAvailable')
+    const available = await c.isLoginAvailable(type)
+    this.logger.info('loginAvailable', { [type]: available })
+    return available
   }
 
   public async requestUserInfo() {
@@ -170,7 +165,7 @@ export class ArcanaProvider extends SafeEventEmitter {
   private async getCommunication(
     expectedFn: keyof ChildMethods = 'sendRequest'
   ) {
-    const c = await this.#communication.promise
+    const c = await this.communication.promise
     if (!c[expectedFn]) {
       throw new ArcanaAuthError(
         'fn_not_available',

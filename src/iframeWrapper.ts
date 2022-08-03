@@ -26,7 +26,7 @@ export default class IframeWrapper {
   public appMode: AppMode
 
   private iframeCommunication: Connection<ChildMethods>
-  constructor(private params: IframeWrapperParams) {
+  constructor(public params: IframeWrapperParams) {
     this.checkSecureOrigin()
   }
 

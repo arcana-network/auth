@@ -3,6 +3,7 @@ import { NetworkConfig, RpcConfig } from './typings'
 type Network = 'dev' | 'testnet'
 
 const DEV_NETWORK_CONFIG: NetworkConfig = {
+  authUrl: 'https://verify.dev.arcana.network',
   gatewayUrl: 'https://gateway-dev.arcana.network',
   walletUrl: 'https://wallet.dev.arcana.network',
   sentryDsn:
@@ -10,6 +11,7 @@ const DEV_NETWORK_CONFIG: NetworkConfig = {
 }
 
 const TESTNET_NETWORK_CONFIG: NetworkConfig = {
+  authUrl: 'https://verify.beta.arcana.network',
   gatewayUrl: 'https://gateway001-testnet.arcana.network',
   walletUrl: 'https://wallet.beta.arcana.network',
   sentryDsn:
@@ -95,6 +97,9 @@ function isNetworkConfig(
     return false
   }
   if (!(typeof network == 'object' && network.walletUrl)) {
+    return false
+  }
+  if (!(typeof network == 'object' && network.authUrl)) {
     return false
   }
   return true

@@ -6,7 +6,8 @@ import * as Sentry from '@sentry/browser'
 import { getLogger } from './logger'
 import { InvalidAppId } from './errors'
 
-const fallbackLogo = '../images/fallback-logo.svg'
+const fallbackLogo =
+  'https://arcana-front.s3.ap-south-1.amazonaws.com/fallback-logo.svg'
 
 const getContract = (rpcUrl: string, appAddress: string) => {
   const provider = new ethers.providers.JsonRpcProvider(rpcUrl)
@@ -128,7 +129,7 @@ function verifyMode(w: WalletType, a: AppMode | undefined): AppMode {
   const allowedModes = ModeWalletTypeRelation[w]
   if (a !== undefined) {
     if (!allowedModes.includes(a)) {
-      getLogger('WalletProvider').error('verifyMode-mismtch', {
+      getLogger('WalletProvider').warn('verifyMode-mismatch', {
         a,
         allowedModes,
       })
@@ -150,6 +151,32 @@ const getSentryErrorReporter = (dsn: string): ((m: string) => void) => {
   return (msg: string) => {
     Sentry.captureMessage(msg)
   }
+}
+
+const constructLoginUrl = (params: {
+  loginType: string
+  email?: string
+  appId: string
+  authUrl: string
+  redirectUrl: string
+}) => {
+  const url = new URL('/init', params.authUrl)
+  const queryParams = new URLSearchParams()
+  queryParams.append('loginType', params.loginType)
+  queryParams.append('appId', params.appId)
+  queryParams.append('parentUrl', encodeURIComponent(params.redirectUrl))
+  if (params.email) {
+    queryParams.append('email', params.email)
+  }
+  url.hash = queryParams.toString()
+  return url.toString()
+}
+
+const redirectTo = (url: string) => {
+  if (url) {
+    setTimeout(() => (window.location.href = url), 50)
+  }
+  return
 }
 
 const isDefined = (arg: unknown) => arg !== undefined && arg !== null
@@ -189,8 +216,14 @@ const setFallbackImage = (e: Event): void => {
   target.src = fallbackLogo
 }
 
+const getCurrentUrl = () => {
+  const url = window.location.origin + window.location.pathname
+  return url
+}
+
 export {
   computeAddress,
+  constructLoginUrl,
   createDomElement,
   encryptWithPublicKey,
   getWalletType,
@@ -203,6 +236,8 @@ export {
   isDefined,
   addHexPrefix,
   removeHexPrefix,
+  redirectTo,
   setFallbackImage,
   getHexFromNumber,
+  getCurrentUrl,
 }
