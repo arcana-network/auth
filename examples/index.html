@@ -1,63 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <style>
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        font-family: sans-serif;
-      }
-      .container {
-        margin-left: 10px;
-      }
-      .btn {
-        display: block;
-        padding: 10px 15px;
-        width: 150px;
-        text-transform: uppercase;
-        cursor: pointer;
-        border: 2px solid black;
-        background: none;
-        margin-bottom: 4px;
-      }
-      .btn:hover {
-        padding: 10px 15px;
-        width: 150px;
-        text-transform: uppercase;
-        cursor: pointer;
-        /* border: 2px solid white; */
-        background: black;
-        color: white;
-      }
-    </style>
-  </head>
 
-  <body>
-    <h1>Embedded Wallet test</h1>
-    <div class="container">
-      <button class="btn" id="trigger-login">Trigger google login</button>
-      <button class="btn" id="trigger-p-login">Trigger passwordless login</button>
-      <button class="btn" id="get-accounts">Get Accounts</button>
-      <button class="btn" id="get-public">Get Public Key</button>
-      <button class="btn" id="get-other-public">Get other's Public Key</button>
-      <button class="btn" id="request-signature">Request signature</button>
-      <button class="btn" id="encrypt">Do encryption</button>
-      <button class="btn" id="request-decryption">Request decryption</button>
-      <button class="btn" id="request-personal-signature">
-        Request personal signature
-      </button>
-      <button class="btn" id="request-typed-signature">
-        Request typed signature
-      </button>
-      <button class="btn" id="logout">
-        Logout
-      </button>
-    </div>
-    <script src="./index.js" type="module"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+    }
+
+    .container {
+      margin-left: 10px;
+    }
+
+    .btn {
+      display: block;
+      padding: 10px 15px;
+      width: 150px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border: 2px solid black;
+      background: none;
+      margin-bottom: 4px;
+    }
+
+    .btn:hover {
+      padding: 10px 15px;
+      width: 150px;
+      text-transform: uppercase;
+      cursor: pointer;
+      /* border: 2px solid white; */
+      background: black;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Embedded Wallet test</h1>
+  <div class="container">
+    <button class="btn" id="trigger-login">Trigger google login</button>
+    <button class="btn" id="trigger-p-login">Trigger passwordless login</button>
+    <button class="btn" id="get-accounts">Get Accounts</button>
+    <button class="btn" id="get-public">Get Public Key</button>
+    <button class="btn" id="get-other-public">Get other's Public Key</button>
+    <button class="btn" id="request-signature">Request signature</button>
+    <button class="btn" id="encrypt">Do encryption</button>
+    <button class="btn" id="request-decryption">Request decryption</button>
+    <button class="btn" id="request-personal-signature">
+      Request personal signature
+    </button>
+    <button class="btn" id="request-typed-signature">
+      Request typed signature
+    </button>
+    <button class="btn" id="logout">
+      Logout
+    </button>
+  </div>
+  <script src="./index.js" type="module"></script>
+</body>
+
 </html>

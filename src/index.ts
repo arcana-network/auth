@@ -16,7 +16,6 @@ import {
 import {
   AppConfig,
   AppMode,
-  EncryptInput,
   InitInput,
   InitParams,
   NetworkConfig,
@@ -27,7 +26,7 @@ import {
   UserInfo,
 } from './typings'
 import { getAppInfo, getImageUrls } from './network'
-import { WalletNotInitializedError } from './errors'
+import { WalletNotInitializedError, ArcanaAuthError } from './errors'
 import {
   getLogger,
   Logger,
@@ -175,6 +174,12 @@ class AuthProvider {
    */
   public async getPublicKey(email: string) {
     if (this._provider) {
+      if (!email || email === '') {
+        throw new ArcanaAuthError(
+          'email_required',
+          `Email is required in getPublicKey, got ${email}`
+        )
+      }
       return await this._provider.getPublicKey(email, 'google')
     }
     this.logger.error('requestPublicKey', WalletNotInitializedError)
@@ -244,7 +249,6 @@ export {
   Theme,
   AppMode,
   Position,
-  EncryptInput,
   UserInfo,
   ThemeConfig,
   InitInput,

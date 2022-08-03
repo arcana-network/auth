@@ -43,6 +43,8 @@ export interface UserInfo {
   email?: string
   name?: string
   picture?: string
+  address: string
+  publicKey: string
 }
 
 export interface ChildMethods {

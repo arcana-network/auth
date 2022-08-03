@@ -31,8 +31,8 @@ const triggerLoginBtn = document.getElementById('trigger-login')
 const triggerPasswordlessLoginBtn = document.getElementById('trigger-p-login')
 const getPublicBtn = document.getElementById('get-public')
 const getOthersPublicBtn = document.getElementById('get-other-public')
-const encryptBtn = document.getElementById('encrypt')
 const requestSignatureBtn = document.getElementById('request-signature')
+const encryptBtn = document.getElementById('encrypt')
 const requestDecryptBtn = document.getElementById('request-decryption')
 const requestTypedSignatureBtn = document.getElementById(
   'request-typed-signature'
@@ -109,6 +109,7 @@ requestPersonalSignatureBtn.addEventListener('click', async () => {
 let plaintext = 'I am a plaintext!'
 let ciphertext
 let publicKey
+
 encryptBtn.addEventListener('click', async () => {
   console.log('Doing encryption')
   const c = await encryptWithPublicKey({
@@ -118,6 +119,15 @@ encryptBtn.addEventListener('click', async () => {
 
   console.log({ ciphertext: c })
   ciphertext = c
+})
+
+requestDecryptBtn.addEventListener('click', async () => {
+  console.log('Requesting decryption')
+  const plaintext = await provider.request({
+    method: 'eth_decrypt',
+    params: [ciphertext, from],
+  })
+  console.log({ plaintext })
 })
 
 getPublicBtn.addEventListener('click', async () => {
@@ -134,16 +144,6 @@ getOthersPublicBtn.addEventListener('click', async () => {
   console.log('Requesting others public key')
   const pk = await auth.getPublicKey('makyl@newfang.io')
   console.log({ pk })
-  publicKey = pk
-})
-
-requestDecryptBtn.addEventListener('click', async () => {
-  console.log('Requesting decryption')
-  const plaintext = await provider.request({
-    method: 'eth_decrypt',
-    params: [ciphertext, from],
-  })
-  console.log({ plaintext })
 })
 
 requestTypedSignatureBtn.addEventListener('click', async () => {

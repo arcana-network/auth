@@ -1,6 +1,6 @@
 {
   "name": "@arcana/auth",
-  "version": "0.0.9-beta.13",
+  "version": "0.1.1",
   "description": "Arcana Auth",
   "main": "dist/index.js",
   "module": "dist/standalone/auth.esm.js",
@@ -15,7 +15,7 @@
     "test": "jest",
     "docs": "typedoc --options typedoc.json",
     "htmldocs": "typedoc --options typedochtml.json",
-    "build": "yarn run build:ts && yarn run build:esm && yarn run build:umd",
+    "build": "npm-run-all --parallel build:esm build:umd",
     "build:esm": "rollup --config rollup.es.config.js",
     "build:umd": "rollup --config rollup.umd.config.js",
     "build:ts": "rimraf dist/ && rimraf types/ && tsc --project tsconfig.json",
@@ -40,13 +40,19 @@
     "wallet"
   ],
   "devDependencies": {
+    "@babel/core": "^7.18.6",
+    "@babel/preset-env": "^7.18.6",
+    "@babel/preset-typescript": "^7.18.6",
+    "@rollup/plugin-alias": "^3.1.9",
     "@rollup/plugin-commonjs": "^22.0.1",
+    "@rollup/plugin-inject": "^4.0.4",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@rollup/plugin-typescript": "^8.3.3",
     "@types/jest": "^27.4.1",
     "@typescript-eslint/eslint-plugin": "^5.18.0",
     "@typescript-eslint/parser": "^5.18.0",
+    "babel-jest": "^28.1.2",
     "eslint": "^8.12.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-tsdoc": "^0.2.16",
@@ -55,10 +61,11 @@
     "jest": "^27.5.1",
     "jest-environment-jsdom": "^27.5.1",
     "lint-staged": ">=10",
+    "node-stdlib-browser": "^1.2.0",
+    "npm-run-all": "^4.1.5",
     "prettier": "^2.6.2",
     "rimraf": "^3.0.2",
     "rollup": "^2.75.7",
-    "rollup-plugin-polyfill-node": "^0.9.0",
     "rollup-plugin-terser": "^7.0.2",
     "typedoc": "^0.22.15",
     "typedoc-plugin-extras": "^2.2.3",
@@ -80,6 +87,6 @@
   },
   "lint-staged": {
     "*.ts": "eslint --cache --fix",
-    "*.{js,css,md}": "prettier --write"
+    "*.{js,css,md,ts}": "prettier --write"
   }
 }
