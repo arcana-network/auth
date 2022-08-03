@@ -89,6 +89,8 @@ export class ArcanaProvider extends SafeEventEmitter {
       },
       getAppConfig: this.iframe.getAppConfig,
       sendPendingRequestCount: this.iframe.onReceivingPendingRequestCount,
+      triggerSocialLogin: this.triggerSocialLogin,
+      triggerPasswordlessLogin: this.triggerPasswordlessLogin,
     })
     this.communication = communication
   }
@@ -123,18 +125,59 @@ export class ArcanaProvider extends SafeEventEmitter {
     return url
   }
 
-  public async triggerSocialLogin(loginType: string): Promise<string> {
-    const c = await this.communication.promise
-    const url = this.getCurrentUrl()
-    const redirectUrl = await c.triggerSocialLogin(loginType, url)
-    return redirectUrl
+  triggerSocialLogin = async (loginType: string) => {
+    if (!(await this.isLoginAvailable(loginType))) {
+      throw new Error(`${loginType} login is not available`)
+    }
+
+    const redirectUrl = this.constructLoginUrl({
+      loginType,
+      appId: this.iframe.params.appId,
+    })
+
+    this.redirectTo(redirectUrl)
+    return
   }
 
-  public async triggerPasswordlessLogin(email: string) {
+  private redirectTo(url: string) {
+    if (url) {
+      setTimeout(() => (window.location.href = url), 50)
+    }
+    return
+  }
+
+  triggerPasswordlessLogin = async (email: string) => {
+    const redirectUrl = this.constructLoginUrl({
+      loginType: 'passwordless',
+      appId: this.iframe.params.appId,
+      email,
+    })
+    this.redirectTo(redirectUrl)
+    return
+  }
+
+  private constructLoginUrl(params: {
+    loginType: string
+    email?: string
+    appId: string
+  }) {
+    const url = new URL('/init', getConfig().AUTH_URL)
+    const queryParams = new URLSearchParams()
+    queryParams.append('loginType', params.loginType)
+    queryParams.append('appId', params.appId)
+    queryParams.append('parentUrl', encodeURIComponent(this.getCurrentUrl()))
+    if (params.email) {
+      queryParams.append('email', params.email)
+    }
+    url.hash = queryParams.toString()
+    return url.toString()
+  }
+
+  public async isLoginAvailable(type: string) {
     const c = await this.communication.promise
-    const url = this.getCurrentUrl()
-    const redirectUrl = await c.triggerPasswordlessLogin(email, url)
-    return redirectUrl
+    const available = await c.isLoginAvailable(type)
+    this.logger.info('loginAvailable', { [type]: available })
+    return available
   }
 
   public async requestUserInfo() {

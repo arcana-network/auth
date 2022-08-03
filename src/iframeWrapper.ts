@@ -17,7 +17,6 @@ import {
   setFallbackImage,
 } from './utils'
 import { getConfig } from './config'
-import { getLogger } from './logger'
 
 const BREAKPOINT_SMALL = 768
 
@@ -28,7 +27,7 @@ export default class IframeWrapper {
   public appMode: AppMode
 
   private iframeCommunication: Connection<ChildMethods>
-  constructor(private params: IframeWrapperParams) {
+  constructor(public params: IframeWrapperParams) {
     this.checkSecureOrigin()
   }
 
@@ -100,30 +99,6 @@ export default class IframeWrapper {
       default:
         break
     }
-  }
-
-  private async createOrGetInstance(params: {
-    [k: string]: (params: unknown) => unknown
-  }) {
-    try {
-      if (!this.iframe) {
-        this.initWalletUI()
-      }
-      if (!this.iframeCommunication) {
-        this.iframeCommunication = connectToChild<ChildMethods>({
-          iframe: this.iframe,
-          methods: {
-            ...params,
-          },
-          childOrigin: getConfig().WALLET_URL,
-        })
-        await this.iframeCommunication.promise
-      }
-    } catch (error) {
-      getLogger('IframeWrapper').error('createOrGetInstance', error)
-      throw new Error('Error during createOrGetInstance in IframeWrapper')
-    }
-    return { iframe: this.iframe, communication: this.iframeCommunication }
   }
 
   private constructWidgetIframeStructure(isFullMode: boolean) {

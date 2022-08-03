@@ -42,8 +42,6 @@ await auth.init({ appMode: AppMode.Widget, position })
 provider = auth.provider
 // or
 provider = window.arcana.provider
-// or
-provider = window.ethereum
 ```
 
 ## Auth API’s

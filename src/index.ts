@@ -38,14 +38,10 @@ import {
 const getDefaultInitParams = (initParams?: InitParams) => {
   const p: InitParams = {
     network: 'testnet',
-    inpageProvider: false,
     debug: false,
   }
   if (initParams?.network) {
     p.network = initParams.network
-  }
-  if (initParams?.inpageProvider !== undefined) {
-    p.inpageProvider = initParams.inpageProvider
   }
   if (initParams?.debug !== undefined) {
     p.debug = initParams.debug
@@ -79,7 +75,10 @@ class AuthProvider {
     this.initializeState()
     if (this.params.debug) {
       setLogLevel(LOG_LEVEL.DEBUG)
-      setExceptionReporter(getSentryErrorReporter(getConfig().SENTRY_DSN))
+      const sentryDsn = getConfig().SENTRY_DSN
+      if (sentryDsn) {
+        setExceptionReporter(getSentryErrorReporter(sentryDsn))
+      }
     } else {
       setLogLevel(LOG_LEVEL.NOLOGS)
     }
@@ -118,8 +117,7 @@ class AuthProvider {
    */
   public async loginWithSocial(loginType: string) {
     if (this._provider) {
-      const redirectUrl = await this._provider.triggerSocialLogin(loginType)
-      this.redirectTo(redirectUrl)
+      this._provider.triggerSocialLogin(loginType)
       return
     }
     this.logger.error('requestSocialLogin', WalletNotInitializedError)
@@ -131,9 +129,7 @@ class AuthProvider {
    */
   public async loginWithLink(email: string) {
     if (this._provider) {
-      const redirectUrl = await this._provider.triggerPasswordlessLogin(email)
-      this.redirectTo(redirectUrl)
-      return
+      this._provider.triggerPasswordlessLogin(email)
     }
     this.logger.error('requestPasswordlessLogin', WalletNotInitializedError)
     throw WalletNotInitializedError
@@ -202,13 +198,6 @@ class AuthProvider {
     throw WalletNotInitializedError
   }
 
-  private redirectTo(url: string) {
-    if (url) {
-      setTimeout(() => (window.location.href = url), 50)
-    }
-    return
-  }
-
   private async setAppConfig() {
     const appInfo = await getAppInfo(this.appId)
     const appImageURLs = getImageUrls(this.appId, appInfo.theme)
@@ -239,12 +228,6 @@ class AuthProvider {
 
   /* eslint-disable @typescript-eslint/no-explicit-any */
   private setProviders() {
-    if (this.params.inpageProvider) {
-      if (!(window as Record<string, any>).ethereum) {
-        ;(window as Record<string, any>).ethereum = this._provider
-      }
-    }
-
     if (!(window as Record<string, any>).arcana) {
       ;(window as Record<string, any>).arcana = {}
     }
