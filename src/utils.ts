@@ -113,7 +113,7 @@ function verifyMode(w: WalletType, a: AppMode | undefined): AppMode {
   const allowedModes = ModeWalletTypeRelation[w]
   if (a !== undefined) {
     if (!allowedModes.includes(a)) {
-      getLogger('WalletProvider').error('verifyMode-mismtch', {
+      getLogger('WalletProvider').warn('verifyMode-mismatch', {
         a,
         allowedModes,
       })
