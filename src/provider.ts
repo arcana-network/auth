@@ -158,10 +158,6 @@ export class ArcanaProvider extends SafeEventEmitter {
     this.provider = providerFromEngine(this.jsonRpcEngine)
   }
 
-  private throwDisconnectedMessage() {
-    throw getError('all_disconnected')
-  }
-
   private async getCommunication(
     expectedFn: keyof ChildMethods = 'sendRequest'
   ) {

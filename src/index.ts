@@ -108,15 +108,17 @@ class AuthProvider {
     this.iframeWrapper.setWalletType(walletType, appMode)
 
     this._provider = new ArcanaProvider(this.iframeWrapper, this.rpcConfig)
-    const { loginWithLink, loginWithSocial } = this
-    await this._provider.init({ loginWithLink, loginWithSocial })
+    await this._provider.init({
+      loginWithLink: this.loginWithLink,
+      loginWithSocial: this.loginWithSocial,
+    })
     this.setProviders()
   }
 
   /**
    * A function to trigger social login in the wallet
    */
-  public async loginWithSocial(loginType: string) {
+  loginWithSocial = async (loginType: string) => {
     if (this._provider) {
       if (!(await this._provider.isLoginAvailable(loginType))) {
         throw new Error(`${loginType} login is not available`)
@@ -138,7 +140,7 @@ class AuthProvider {
   /**
    * A function to trigger passwordless login in the wallet
    */
-  public async loginWithLink(email: string) {
+  loginWithLink = (email: string) => {
     if (this._provider) {
       const redirectUrl = constructLoginUrl({
         loginType: 'passwordless',
