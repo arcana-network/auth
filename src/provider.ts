@@ -161,14 +161,20 @@ export class ArcanaProvider extends SafeEventEmitter {
   private async getCommunication(
     expectedFn: keyof ChildMethods = 'sendRequest'
   ) {
-    const c = await this.communication.promise
-    if (!c[expectedFn]) {
-      throw new ArcanaAuthError(
-        'fn_not_available',
-        'The requested fn is not available in this context'
-      )
+    if (this.communication) {
+      const c = await this.communication.promise
+      if (!c[expectedFn]) {
+        throw new ArcanaAuthError(
+          'fn_not_available',
+          'The requested fn is not available in this context'
+        )
+      }
+      return c
     }
-    return c
+    throw new ArcanaAuthError(
+      'connection_not_available',
+      'The connection is not available yet'
+    )
   }
 
   private openPermissionScreen(method: string) {

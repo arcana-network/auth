@@ -125,6 +125,7 @@ export interface InitParams {
   network: ('testnet' | 'dev') | NetworkConfig
   debug: boolean
   rpcConfig?: RpcConfig
+  redirectUrl?: string
 }
 
 export interface EncryptInput {

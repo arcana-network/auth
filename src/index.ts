@@ -47,6 +47,9 @@ const getDefaultInitParams = (initParams?: InitParams) => {
   if (initParams?.rpcConfig) {
     p.rpcConfig = initParams.rpcConfig
   }
+  if (initParams?.redirectUrl) {
+    p.redirectUrl = initParams.redirectUrl
+  }
   return p
 }
 
@@ -128,7 +131,9 @@ class AuthProvider {
         loginType,
         appId: this.appId,
         authUrl: this.networkConfig.authUrl,
-        redirectUrl: getCurrentUrl(),
+        redirectUrl: this.params.redirectUrl
+          ? this.params.redirectUrl
+          : getCurrentUrl(),
       })
 
       redirectTo(redirectUrl)
@@ -147,7 +152,9 @@ class AuthProvider {
         appId: this.appId,
         email,
         authUrl: this.networkConfig.authUrl,
-        redirectUrl: getCurrentUrl(),
+        redirectUrl: this.params.redirectUrl
+          ? this.params.redirectUrl
+          : getCurrentUrl(),
       })
       redirectTo(redirectUrl)
     }
