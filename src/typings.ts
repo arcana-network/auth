@@ -13,7 +13,7 @@ export interface IframeWrapperParams {
   position: Position
 }
 
-export interface InitInput {
+export interface InitParams {
   appMode: AppMode
   position: Position
 }
@@ -121,7 +121,7 @@ export const ModeWalletTypeRelation = {
   [WalletType.NoUI]: [AppMode.NoUI],
 }
 
-export interface InitParams {
+export interface ConstructorParams {
   network: ('testnet' | 'dev') | NetworkConfig
   debug: boolean
   rpcConfig?: RpcConfig

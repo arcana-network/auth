@@ -1,7 +1,16 @@
 import EthCrypto from 'eth-crypto'
 import { ethers } from 'ethers'
-import { EncryptInput, WalletPosition, WalletSize, Position } from './typings'
-import { AppMode, ModeWalletTypeRelation, WalletType } from './typings'
+import {
+  AppMode,
+  ConstructorParams,
+  ModeWalletTypeRelation,
+  WalletType,
+  EncryptInput,
+  WalletPosition,
+  WalletSize,
+  Position,
+  InitParams,
+} from './typings'
 import * as Sentry from '@sentry/browser'
 import { getLogger } from './logger'
 import { InvalidAppId } from './errors'
@@ -221,6 +230,41 @@ const getCurrentUrl = () => {
   return url
 }
 
+const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
+  const p: ConstructorParams = {
+    network: 'testnet',
+    debug: false,
+  }
+  if (initParams?.network) {
+    p.network = initParams.network
+  }
+  if (initParams?.debug !== undefined) {
+    p.debug = initParams.debug
+  }
+  if (initParams?.rpcConfig) {
+    p.rpcConfig = initParams.rpcConfig
+  }
+  if (initParams?.redirectUrl) {
+    p.redirectUrl = initParams.redirectUrl
+  }
+  return p
+}
+
+const getInitParams = (input?: Partial<InitParams>): InitParams => {
+  const p: InitParams = {
+    appMode: AppMode.NoUI,
+    position: 'right',
+  }
+
+  if (input?.appMode !== undefined) {
+    p.appMode = input.appMode
+  }
+  if (input?.position !== undefined) {
+    p.position = input.position
+  }
+  return p
+}
+
 export {
   computeAddress,
   constructLoginUrl,
@@ -240,4 +284,6 @@ export {
   setFallbackImage,
   getHexFromNumber,
   getCurrentUrl,
+  getConstructorParams,
+  getInitParams,
 }

@@ -9,13 +9,16 @@ import {
   constructLoginUrl,
   redirectTo,
   getCurrentUrl,
+  getConstructorParams,
+  getInitParams,
 } from './utils'
 import { getNetworkConfig, getRpcConfig } from './config'
 import {
   AppConfig,
   AppMode,
-  InitInput,
   InitParams,
+  ConstructorParams,
+  EncryptInput,
   NetworkConfig,
   Position,
   RpcConfig,
@@ -33,41 +36,21 @@ import {
   setLogLevel,
 } from './logger'
 
-const getDefaultInitParams = (initParams?: InitParams) => {
-  const p: InitParams = {
-    network: 'testnet',
-    debug: false,
-  }
-  if (initParams?.network) {
-    p.network = initParams.network
-  }
-  if (initParams?.debug !== undefined) {
-    p.debug = initParams.debug
-  }
-  if (initParams?.rpcConfig) {
-    p.rpcConfig = initParams.rpcConfig
-  }
-  if (initParams?.redirectUrl) {
-    p.redirectUrl = initParams.redirectUrl
-  }
-  return p
-}
-
 class AuthProvider {
   private appId: string
-  private params: InitParams
+  private params: ConstructorParams
   private appConfig: AppConfig
   private logger: Logger
   private iframeWrapper: IframeWrapper
   private networkConfig: NetworkConfig
   private rpcConfig: RpcConfig
   private _provider: ArcanaProvider
-  constructor(appId: string, p?: InitParams) {
+  constructor(appId: string, p?: Partial<ConstructorParams>) {
     if (!isDefined(appId)) {
       throw new Error('appId is required')
     }
     this.appId = appId
-    this.params = getDefaultInitParams(p)
+    this.params = getConstructorParams(p)
     this.networkConfig = getNetworkConfig(this.params.network)
     this.rpcConfig = getRpcConfig(this.params.rpcConfig, this.params.network)
 
@@ -87,16 +70,8 @@ class AuthProvider {
   /**
    * A function to initialize the wallet, should be called before getting provider
    */
-  public async init(input?: InitInput) {
-    let appMode = AppMode.NoUI
-    let position: Position = 'right'
-
-    if (input?.appMode !== undefined) {
-      appMode = input.appMode
-    }
-    if (input?.position !== undefined) {
-      position = input.position
-    }
+  public async init(input?: Partial<InitParams>) {
+    const { appMode, position } = getInitParams(input)
 
     if (this.iframeWrapper) {
       return
@@ -144,6 +119,7 @@ class AuthProvider {
       })
 
       redirectTo(redirectUrl)
+      return
     }
     this.logger.error('requestSocialLogin', WalletNotInitializedError)
     throw WalletNotInitializedError
@@ -164,6 +140,7 @@ class AuthProvider {
           : getCurrentUrl(),
       })
       redirectTo(redirectUrl)
+      return
     }
     this.logger.error('requestPasswordlessLogin', WalletNotInitializedError)
     throw WalletNotInitializedError
@@ -276,14 +253,16 @@ class AuthProvider {
 
 export {
   AuthProvider,
-  InitParams,
+  ConstructorParams,
   AppConfig,
   Theme,
   AppMode,
   Position,
+  RpcConfig,
+  EncryptInput,
   UserInfo,
   ThemeConfig,
-  InitInput,
+  InitParams,
   NetworkConfig,
   computeAddress,
   encryptWithPublicKey,
