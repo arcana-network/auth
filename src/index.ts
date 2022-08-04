@@ -88,8 +88,15 @@ class AuthProvider {
    * A function to initialize the wallet, should be called before getting provider
    */
   public async init(input?: InitInput) {
-    const appMode = input?.appMode || AppMode.NoUI
-    const position = input?.position || 'right'
+    let appMode = AppMode.NoUI
+    let position: Position = 'right'
+
+    if (input?.appMode !== undefined) {
+      appMode = input.appMode
+    }
+    if (input?.position !== undefined) {
+      position = input.position
+    }
 
     if (this.iframeWrapper) {
       return
