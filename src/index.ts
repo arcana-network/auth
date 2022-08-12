@@ -18,6 +18,7 @@ import {
   AppMode,
   InitParams,
   ConstructorParams,
+  ChainConfigInput,
   EncryptInput,
   NetworkConfig,
   Position,
@@ -254,6 +255,7 @@ class AuthProvider {
 export {
   AuthProvider,
   ConstructorParams,
+  ChainConfigInput,
   Chain as CHAIN,
   AppConfig,
   Theme,

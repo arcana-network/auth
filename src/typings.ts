@@ -1,5 +1,5 @@
 import { JsonRpcRequest, JsonRpcResponse } from 'json-rpc-engine'
-import { Chains } from './chainList'
+import { Chain } from './chainList'
 export type Theme = 'light' | 'dark'
 
 export type Orientation = 'horizontal' | 'vertical'
@@ -96,7 +96,7 @@ export interface NetworkConfig {
 
 export interface ChainConfigInput {
   rpcUrl: string
-  chainId: Chains
+  chainId: Chain
 }
 
 export interface RpcConfig {
