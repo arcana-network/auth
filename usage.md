@@ -48,11 +48,11 @@ provider = window.arcana.provider
 #### Specifying chain during init
 
 ```ts
-import { AuthProvider, CHAINS } from '@arcana/auth'
+import { AuthProvider, CHAIN } from '@arcana/auth'
 
 const auth = new AuthProvider(`${appId}`, {
   chainConfig: {
-    chainId: CHAINS.POLYGON_MAINNET,
+    chainId: CHAIN.POLYGON_MAINNET,
     rpcUrl: '',
   },
 })
