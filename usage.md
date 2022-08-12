@@ -33,6 +33,7 @@ import { AuthProvider } from '@arcana/auth'
 
 ```js
 import { AuthProvider, AppMode } from '@arcana/auth'
+
 const auth = new AuthProvider(`${appId}`)
 
 const position = 'left' // values - 'left' or 'right'
@@ -47,20 +48,18 @@ provider = window.arcana.provider
 #### Specifying chain during init
 
 ```ts
-import { AuthProvider, AppMode } from '@arcana/auth'
+import { AuthProvider, CHAINS } from '@arcana/auth'
+
 const auth = new AuthProvider(`${appId}`, {
-  rpcConfig: RpcConfig,
+  chainConfig: {
+    chainId: CHAINS.POLYGON_MAINNET,
+    rpcUrl: '',
+  },
 })
 
-interface RpcConfig {
-  rpcUrls: string[]
-  chainId: number
-  chainName?: string
-  blockExplorerUrls?: string[]
-  nativeCurrency?: {
-    symbol: string
-    decimals?: number
-  }
+interface ChainConfig {
+  chainId: CHAINS
+  rpcUrl?: string
 }
 ```
 
