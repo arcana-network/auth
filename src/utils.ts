@@ -241,8 +241,8 @@ const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
   if (initParams?.debug !== undefined) {
     p.debug = initParams.debug
   }
-  if (initParams?.rpcConfig) {
-    p.rpcConfig = initParams.rpcConfig
+  if (initParams?.chainConfig) {
+    p.chainConfig = initParams.chainConfig
   }
   if (initParams?.redirectUrl) {
     p.redirectUrl = initParams.redirectUrl

@@ -1,5 +1,5 @@
-import { NetworkConfig, RpcConfig } from './typings'
-
+import { NetworkConfig, RpcConfig, ChainConfigInput } from './typings'
+import { getConfigFromChain } from './chainList'
 type Network = 'dev' | 'testnet'
 
 const DEV_NETWORK_CONFIG: NetworkConfig = {
@@ -46,9 +46,16 @@ const getNetworkConfig = (n: Network | NetworkConfig) => {
   }
 }
 
-const getRpcConfig = (c: RpcConfig | undefined, n: Network | NetworkConfig) => {
-  if (isRpcConfig(c)) {
-    return c
+const getRpcConfig = (
+  c: ChainConfigInput | undefined,
+  n: Network | NetworkConfig
+): RpcConfig => {
+  if (isRpcConfigInput(c)) {
+    const config = getConfigFromChain(c.chainId)
+    if (c.rpcUrl) {
+      config.rpcUrls = [c.rpcUrl]
+    }
+    return config
   }
 
   if (typeof n === 'string' && isNetworkEnum(n)) {
@@ -63,18 +70,10 @@ const getRpcConfig = (c: RpcConfig | undefined, n: Network | NetworkConfig) => {
   return TESTNET_RPC_CONFIG
 }
 
-function isRpcConfig(c: RpcConfig | undefined): c is RpcConfig {
+function isRpcConfigInput(
+  c: ChainConfigInput | undefined
+): c is ChainConfigInput {
   if (typeof c === 'undefined') {
-    return false
-  }
-  if (
-    !(
-      typeof c == 'object' &&
-      c.rpcUrls &&
-      Array.isArray(c.rpcUrls) &&
-      c.rpcUrls.length > 0
-    )
-  ) {
     return false
   }
   if (!(typeof c == 'object' && c.chainId)) {

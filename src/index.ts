@@ -35,7 +35,7 @@ import {
   setExceptionReporter,
   setLogLevel,
 } from './logger'
-
+import { Chains } from './chainList'
 class AuthProvider {
   private appId: string
   private params: ConstructorParams
@@ -52,7 +52,7 @@ class AuthProvider {
     this.appId = appId
     this.params = getConstructorParams(p)
     this.networkConfig = getNetworkConfig(this.params.network)
-    this.rpcConfig = getRpcConfig(this.params.rpcConfig, this.params.network)
+    this.rpcConfig = getRpcConfig(this.params.chainConfig, this.params.network)
 
     this.logger = getLogger('AuthProvider')
     if (this.params.debug) {
@@ -254,6 +254,7 @@ class AuthProvider {
 export {
   AuthProvider,
   ConstructorParams,
+  Chains as CHAINS,
   AppConfig,
   Theme,
   AppMode,

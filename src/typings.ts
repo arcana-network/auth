@@ -1,5 +1,5 @@
 import { JsonRpcRequest, JsonRpcResponse } from 'json-rpc-engine'
-
+import { Chains } from './chainList'
 export type Theme = 'light' | 'dark'
 
 export type Orientation = 'horizontal' | 'vertical'
@@ -94,6 +94,11 @@ export interface NetworkConfig {
   sentryDsn?: string
 }
 
+export interface ChainConfigInput {
+  rpcUrl: string
+  chainId: Chains
+}
+
 export interface RpcConfig {
   rpcUrls: string[]
   chainId: number
@@ -124,7 +129,7 @@ export const ModeWalletTypeRelation = {
 export interface ConstructorParams {
   network: ('testnet' | 'dev') | NetworkConfig
   debug: boolean
-  rpcConfig?: RpcConfig
+  chainConfig?: ChainConfigInput
   redirectUrl?: string
 }
 
