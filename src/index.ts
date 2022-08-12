@@ -35,7 +35,7 @@ import {
   setExceptionReporter,
   setLogLevel,
 } from './logger'
-import { Chains } from './chainList'
+import { Chain } from './chainList'
 class AuthProvider {
   private appId: string
   private params: ConstructorParams
@@ -254,7 +254,7 @@ class AuthProvider {
 export {
   AuthProvider,
   ConstructorParams,
-  Chains as CHAINS,
+  Chain as CHAIN,
   AppConfig,
   Theme,
   AppMode,
