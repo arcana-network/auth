@@ -32,7 +32,8 @@ import { AuthProvider } from '@arcana/auth'
 ### Initialize
 
 ```js
-import { AppMode } from '@arcana/auth'
+import { AuthProvider, AppMode } from '@arcana/auth'
+
 const auth = new AuthProvider(`${appId}`)
 
 const position = 'left' // values - 'left' or 'right'
@@ -42,6 +43,24 @@ await auth.init({ appMode: AppMode.Widget, position })
 provider = auth.provider
 // or
 provider = window.arcana.provider
+```
+
+#### Specifying chain during init
+
+```ts
+import { AuthProvider, CHAIN } from '@arcana/auth'
+
+const auth = new AuthProvider(`${appId}`, {
+  chainConfig: {
+    chainId: CHAIN.POLYGON_MAINNET,
+    rpcUrl: '',
+  },
+})
+
+interface ChainConfig {
+  chainId: CHAINS
+  rpcUrl?: string
+}
 ```
 
 ## Auth API’s

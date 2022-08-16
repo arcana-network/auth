@@ -6,26 +6,28 @@ import {
   getWalletType,
   getSentryErrorReporter,
   isDefined,
+  constructLoginUrl,
+  redirectTo,
+  getCurrentUrl,
+  getConstructorParams,
+  getInitParams,
 } from './utils'
-import {
-  isNetworkConfig,
-  setCustomConfig,
-  setNetwork,
-  getConfig,
-} from './config'
+import { getNetworkConfig, getRpcConfig } from './config'
 import {
   AppConfig,
   AppMode,
-  InitInput,
   InitParams,
+  ConstructorParams,
+  ChainConfigInput,
+  EncryptInput,
   NetworkConfig,
   Position,
-  State,
+  RpcConfig,
   Theme,
   ThemeConfig,
   UserInfo,
 } from './typings'
-import { getAppInfo, getImageUrls } from './network'
+import { getAppInfo, getImageUrls } from './appInfo'
 import { WalletNotInitializedError, ArcanaAuthError } from './errors'
 import {
   getLogger,
@@ -34,50 +36,32 @@ import {
   setExceptionReporter,
   setLogLevel,
 } from './logger'
-
-const getDefaultInitParams = (initParams?: InitParams) => {
-  const p: InitParams = {
-    network: 'testnet',
-    debug: false,
-  }
-  if (initParams?.network) {
-    p.network = initParams.network
-  }
-  if (initParams?.debug !== undefined) {
-    p.debug = initParams.debug
-  }
-  return p
-}
-
+import { Chain } from './chainList'
 class AuthProvider {
   private appId: string
-  private params: InitParams
+  private params: ConstructorParams
   private appConfig: AppConfig
-  private state: State
   private logger: Logger
-  private iframeWrapper: IframeWrapper | null
+  private iframeWrapper: IframeWrapper
+  private networkConfig: NetworkConfig
+  private rpcConfig: RpcConfig
   private _provider: ArcanaProvider
-  constructor(appId: string, p?: InitParams) {
+  constructor(appId: string, p?: Partial<ConstructorParams>) {
     if (!isDefined(appId)) {
       throw new Error('appId is required')
     }
     this.appId = appId
-    this.params = getDefaultInitParams(p)
-    if (isNetworkConfig(this.params.network)) {
-      setCustomConfig(this.params.network)
-    } else if (!['dev', 'testnet'].includes(this.params.network)) {
-      throw new Error('network is invalid in params')
-    } else {
-      setNetwork(this.params.network)
-    }
+    this.params = getConstructorParams(p)
+    this.networkConfig = getNetworkConfig(this.params.network)
+    this.rpcConfig = getRpcConfig(this.params.chainConfig, this.params.network)
 
     this.logger = getLogger('AuthProvider')
-    this.initializeState()
     if (this.params.debug) {
       setLogLevel(LOG_LEVEL.DEBUG)
-      const sentryDsn = getConfig().SENTRY_DSN
-      if (sentryDsn) {
-        setExceptionReporter(getSentryErrorReporter(sentryDsn))
+      if (this.networkConfig.sentryDsn) {
+        setExceptionReporter(
+          getSentryErrorReporter(this.networkConfig.sentryDsn)
+        )
       }
     } else {
       setLogLevel(LOG_LEVEL.NOLOGS)
@@ -87,10 +71,9 @@ class AuthProvider {
   /**
    * A function to initialize the wallet, should be called before getting provider
    */
-  public async init(
-    input: InitInput = { appMode: AppMode.NoUI, position: 'right' }
-  ) {
-    const { appMode, position } = input
+  public async init(input?: Partial<InitParams>) {
+    const { appMode, position } = getInitParams(input)
+
     if (this.iframeWrapper) {
       return
     }
@@ -99,25 +82,44 @@ class AuthProvider {
 
     this.iframeWrapper = new IframeWrapper({
       appId: this.appId,
-      iframeUrl: this.state.iframeUrl,
+      iframeUrl: this.networkConfig.walletUrl,
       appConfig: this.appConfig,
       position: position,
     })
 
-    const walletType = await getWalletType(this.appId)
+    const walletType = await getWalletType(
+      this.appId,
+      this.networkConfig.gatewayUrl
+    )
     this.iframeWrapper.setWalletType(walletType, appMode)
 
-    this._provider = new ArcanaProvider(this.iframeWrapper)
-    await this._provider.init()
+    this._provider = new ArcanaProvider(this.iframeWrapper, this.rpcConfig)
+    await this._provider.init({
+      loginWithLink: this.loginWithLink,
+      loginWithSocial: this.loginWithSocial,
+    })
     this.setProviders()
   }
 
   /**
    * A function to trigger social login in the wallet
    */
-  public async loginWithSocial(loginType: string) {
+  loginWithSocial = async (loginType: string) => {
     if (this._provider) {
-      this._provider.triggerSocialLogin(loginType)
+      if (!(await this._provider.isLoginAvailable(loginType))) {
+        throw new Error(`${loginType} login is not available`)
+      }
+
+      const redirectUrl = constructLoginUrl({
+        loginType,
+        appId: this.appId,
+        authUrl: this.networkConfig.authUrl,
+        redirectUrl: this.params.redirectUrl
+          ? this.params.redirectUrl
+          : getCurrentUrl(),
+      })
+
+      redirectTo(redirectUrl)
       return
     }
     this.logger.error('requestSocialLogin', WalletNotInitializedError)
@@ -127,9 +129,19 @@ class AuthProvider {
   /**
    * A function to trigger passwordless login in the wallet
    */
-  public async loginWithLink(email: string) {
+  loginWithLink = (email: string) => {
     if (this._provider) {
-      this._provider.triggerPasswordlessLogin(email)
+      const redirectUrl = constructLoginUrl({
+        loginType: 'passwordless',
+        appId: this.appId,
+        email,
+        authUrl: this.networkConfig.authUrl,
+        redirectUrl: this.params.redirectUrl
+          ? this.params.redirectUrl
+          : getCurrentUrl(),
+      })
+      redirectTo(redirectUrl)
+      return
     }
     this.logger.error('requestPasswordlessLogin', WalletNotInitializedError)
     throw WalletNotInitializedError
@@ -199,8 +211,12 @@ class AuthProvider {
   }
 
   private async setAppConfig() {
-    const appInfo = await getAppInfo(this.appId)
-    const appImageURLs = getImageUrls(this.appId, appInfo.theme)
+    const appInfo = await getAppInfo(this.appId, this.networkConfig.gatewayUrl)
+    const appImageURLs = getImageUrls(
+      this.appId,
+      appInfo.theme,
+      this.networkConfig.gatewayUrl
+    )
     this.appConfig = {
       name: appInfo.name,
       themeConfig: {
@@ -234,24 +250,22 @@ class AuthProvider {
     ;(window as Record<string, any>).arcana.provider = this._provider
   }
   /* eslint-enable */
-
-  private initializeState() {
-    const iframeUrl = getConfig().WALLET_URL
-    const redirectUri = `${iframeUrl}/${this.appId}/redirect`
-    this.state = { iframeUrl, redirectUri }
-  }
 }
 
 export {
   AuthProvider,
-  InitParams,
+  ConstructorParams,
+  ChainConfigInput,
+  Chain as CHAIN,
   AppConfig,
   Theme,
   AppMode,
   Position,
+  RpcConfig,
+  EncryptInput,
   UserInfo,
   ThemeConfig,
-  InitInput,
+  InitParams,
   NetworkConfig,
   computeAddress,
   encryptWithPublicKey,

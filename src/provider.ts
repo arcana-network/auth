@@ -1,4 +1,4 @@
-import { ChildMethods } from './typings'
+import { ChildMethods, RpcConfig } from './typings'
 import {
   JsonRpcId,
   JsonRpcEngine,
@@ -31,10 +31,10 @@ import { Connection } from 'penpal'
 import { ethErrors } from 'eth-rpc-errors'
 import { SafeEventEmitterProvider } from 'eth-json-rpc-middleware'
 import SafeEventEmitter from '@metamask/safe-event-emitter'
-import { getConfig } from './config'
-import { UserNotLoggedInError } from './errors'
+import { ArcanaAuthError, UserNotLoggedInError } from './errors'
 import { getLogger, Logger } from './logger'
 import IframeWrapper from './iframeWrapper'
+import { getHexFromNumber, getCurrentUrl } from './utils'
 
 interface RequestArguments {
   method: string
@@ -62,19 +62,24 @@ class ProviderError extends Error implements JsonRpcError {
   }
 }
 
+interface TriggerLoginFuncs {
+  loginWithSocial(loginType: string): void
+  loginWithLink(email: string): void
+}
+
 export class ArcanaProvider extends SafeEventEmitter {
+  private communication: Connection<ChildMethods>
   private jsonRpcEngine: JsonRpcEngine
   private provider: SafeEventEmitterProvider
   private subscriber: SafeEventEmitter
-  private communication: Connection<ChildMethods>
   private logger: Logger = getLogger('ArcanaProvider')
-  constructor(private iframe: IframeWrapper) {
+  constructor(private iframe: IframeWrapper, private rpcConfig: RpcConfig) {
     super()
     this.initProvider()
     this.subscriber = new SafeEventEmitter()
   }
 
-  public async init() {
+  public async init(loginFuncs: TriggerLoginFuncs) {
     const { communication } = await this.iframe.setConnectionMethods({
       onEvent: this.handleEvents,
       onMethodResponse: (
@@ -83,14 +88,13 @@ export class ArcanaProvider extends SafeEventEmitter {
       ) => {
         this.onResponse(method, response)
       },
-      getParentUrl: this.getCurrentUrl,
-      getAppMode: () => {
-        return this.iframe?.appMode
-      },
+      getParentUrl: getCurrentUrl,
+      getAppMode: () => this.iframe?.appMode,
       getAppConfig: this.iframe.getAppConfig,
+      getRpcConfig: () => this.rpcConfig,
       sendPendingRequestCount: this.iframe.onReceivingPendingRequestCount,
-      triggerSocialLogin: this.triggerSocialLogin,
-      triggerPasswordlessLogin: this.triggerPasswordlessLogin,
+      triggerSocialLogin: loginFuncs.loginWithSocial,
+      triggerPasswordlessLogin: loginFuncs.loginWithLink,
     })
     this.communication = communication
   }
@@ -108,7 +112,7 @@ export class ArcanaProvider extends SafeEventEmitter {
 
   public async isLoggedIn() {
     try {
-      const c = await this.communication.promise
+      const c = await this.getCommunication('isLoggedIn')
       return c.isLoggedIn()
     } catch (e) {
       this.logger.error('isLoggedIn', e)
@@ -120,68 +124,15 @@ export class ArcanaProvider extends SafeEventEmitter {
     return await this.isLoggedIn()
   }
 
-  getCurrentUrl() {
-    const url = window.location.origin + window.location.pathname
-    return url
-  }
-
-  triggerSocialLogin = async (loginType: string) => {
-    if (!(await this.isLoginAvailable(loginType))) {
-      throw new Error(`${loginType} login is not available`)
-    }
-
-    const redirectUrl = this.constructLoginUrl({
-      loginType,
-      appId: this.iframe.params.appId,
-    })
-
-    this.redirectTo(redirectUrl)
-    return
-  }
-
-  private redirectTo(url: string) {
-    if (url) {
-      setTimeout(() => (window.location.href = url), 50)
-    }
-    return
-  }
-
-  triggerPasswordlessLogin = async (email: string) => {
-    const redirectUrl = this.constructLoginUrl({
-      loginType: 'passwordless',
-      appId: this.iframe.params.appId,
-      email,
-    })
-    this.redirectTo(redirectUrl)
-    return
-  }
-
-  private constructLoginUrl(params: {
-    loginType: string
-    email?: string
-    appId: string
-  }) {
-    const url = new URL('/init', getConfig().AUTH_URL)
-    const queryParams = new URLSearchParams()
-    queryParams.append('loginType', params.loginType)
-    queryParams.append('appId', params.appId)
-    queryParams.append('parentUrl', encodeURIComponent(this.getCurrentUrl()))
-    if (params.email) {
-      queryParams.append('email', params.email)
-    }
-    url.hash = queryParams.toString()
-    return url.toString()
-  }
-
   public async isLoginAvailable(type: string) {
-    const c = await this.communication.promise
+    const c = await this.getCommunication('isLoginAvailable')
     const available = await c.isLoginAvailable(type)
     this.logger.info('loginAvailable', { [type]: available })
     return available
   }
 
   public async requestUserInfo() {
-    const c = await this.communication.promise
+    const c = await this.getCommunication('getUserInfo')
     const isLoggedIn = await c.isLoggedIn()
     if (!isLoggedIn) {
       this.logger.error('requestUserInfo', UserNotLoggedInError)
@@ -192,13 +143,13 @@ export class ArcanaProvider extends SafeEventEmitter {
   }
 
   public async getPublicKey(email: string, verifier: string) {
-    const c = await this.communication.promise
+    const c = await this.getCommunication('getPublicKey')
     const pk = await c.getPublicKey(email, verifier)
     return pk
   }
 
   public async triggerLogout() {
-    const c = await this.communication.promise
+    const c = await this.getCommunication('triggerLogout')
     await c.triggerLogout()
   }
 
@@ -207,16 +158,23 @@ export class ArcanaProvider extends SafeEventEmitter {
     this.provider = providerFromEngine(this.jsonRpcEngine)
   }
 
-  private throwDisconnectedMessage() {
-    throw getError('all_disconnected')
-  }
-
-  private async getCommunication() {
-    const c = await this.communication.promise
-    if (!c.sendRequest) {
-      this.throwDisconnectedMessage()
+  private async getCommunication(
+    expectedFn: keyof ChildMethods = 'sendRequest'
+  ) {
+    if (this.communication) {
+      const c = await this.communication.promise
+      if (!c[expectedFn]) {
+        throw new ArcanaAuthError(
+          'fn_not_available',
+          'The requested fn is not available in this context'
+        )
+      }
+      return c
     }
-    return c
+    throw new ArcanaAuthError(
+      'connection_not_available',
+      'The connection is not available yet'
+    )
   }
 
   private openPermissionScreen(method: string) {
@@ -333,7 +291,7 @@ export class ArcanaProvider extends SafeEventEmitter {
     engine.push(walletMiddleware)
 
     const fetchMiddleware = createFetchMiddleware({
-      rpcUrl: getConfig().RPC_URL,
+      rpcUrl: this.rpcConfig.rpcUrls[0],
     })
     engine.push(fetchMiddleware)
 
@@ -370,9 +328,10 @@ export class ArcanaProvider extends SafeEventEmitter {
   }
 
   private getNetAndChainMiddleware() {
+    const hexChainId = getHexFromNumber(this.rpcConfig.chainId)
     return createScaffoldMiddleware({
-      eth_chainId: getConfig().CHAIN_ID,
-      net_version: getConfig().NET_VERSION,
+      eth_chainId: hexChainId,
+      net_version: this.rpcConfig.chainId,
     }) as JsonRpcMiddleware<string, unknown>
   }
 

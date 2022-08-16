@@ -1,5 +1,5 @@
 import { JsonRpcRequest, JsonRpcResponse } from 'json-rpc-engine'
-
+import { Chain } from './chainList'
 export type Theme = 'light' | 'dark'
 
 export type Orientation = 'horizontal' | 'vertical'
@@ -13,7 +13,7 @@ export interface IframeWrapperParams {
   position: Position
 }
 
-export interface InitInput {
+export interface InitParams {
   appMode: AppMode
   position: Position
 }
@@ -61,11 +61,12 @@ export interface ChildMethods {
 export interface ParentMethods {
   onEvent: (t: string, val: unknown) => void
   onMethodResponse: (method: string, response: JsonRpcResponse<unknown>) => void
+  sendPendingRequestCount: (count: number) => void
   getAppConfig: () => AppConfig
   getAppMode: () => AppMode
-  sendPendingRequestCount: (count: number) => void
   getParentUrl: () => string
-  triggerSocialLogin: (type: string) => void
+  getRpcConfig: () => RpcConfig
+  triggerSocialLogin: (kind: string) => void
   triggerPasswordlessLogin: (email: string) => void
 }
 
@@ -87,13 +88,26 @@ export interface WalletPosition {
 }
 
 export interface NetworkConfig {
-  AUTH_URL: string
-  RPC_URL: string
-  CHAIN_ID: string
-  NET_VERSION: string
-  GATEWAY_URL: string
-  WALLET_URL: string
-  SENTRY_DSN?: string
+  authUrl: string
+  gatewayUrl: string
+  walletUrl: string
+  sentryDsn?: string
+}
+
+export interface ChainConfigInput {
+  rpcUrl: string
+  chainId: Chain
+}
+
+export interface RpcConfig {
+  rpcUrls: string[]
+  chainId: number
+  chainName?: string
+  blockExplorerUrls?: string[]
+  nativeCurrency?: {
+    symbol: string
+    decimals: number
+  }
 }
 
 export enum WalletType {
@@ -112,14 +126,11 @@ export const ModeWalletTypeRelation = {
   [WalletType.NoUI]: [AppMode.NoUI],
 }
 
-export interface InitParams {
+export interface ConstructorParams {
   network: ('testnet' | 'dev') | NetworkConfig
   debug: boolean
-}
-
-export interface State {
-  iframeUrl: string
-  redirectUri?: string
+  chainConfig?: ChainConfigInput
+  redirectUrl?: string
 }
 
 export interface EncryptInput {
