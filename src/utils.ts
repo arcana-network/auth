@@ -77,7 +77,7 @@ const getArcanaRpc = async (gatewayUrl: string) => {
   }
 }
 
-type elements = 'style' | 'src' | 'onclick' | 'id' | 'onerror'
+type elements = 'style' | 'src' | 'onclick' | 'id' | 'onerror' | 'allow'
 
 const createDomElement = (
   type: string,

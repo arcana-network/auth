@@ -139,6 +139,7 @@ export default class IframeWrapper {
     this.iframe = createDomElement('iframe', {
       style: widgetIframeStyle.iframe,
       src: u.toString(),
+      allow: 'clipboard-write',
     }) as HTMLIFrameElement
 
     const { widgetIframeHeader, widgetIframeBody } =
