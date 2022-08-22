@@ -15,36 +15,60 @@ const ChainList: Record<Chain, RpcConfig> = {
     rpcUrls: ['https://cloudflare-eth.com/'],
     chainName: 'Ethereum Mainnet',
     blockExplorerUrls: ['https://etherscan.io/'],
+    nativeCurrency: {
+      symbol: 'ETH',
+      decimals: 18,
+    },
   },
   [Chain.ETHEREUM_ROPSTEN]: {
     chainId: 3,
     rpcUrls: ['https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
     chainName: 'Ethereum Ropsten (Testnet)',
     blockExplorerUrls: ['https://ropsten.etherscan.io/'],
+    nativeCurrency: {
+      symbol: 'ETH',
+      decimals: 18,
+    },
   },
   [Chain.ETHEREUM_RINKEBY]: {
     chainId: 4,
     rpcUrls: ['https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
     chainName: 'Ethereum Rinkeby (Testnet)',
     blockExplorerUrls: ['https://rinkeby.etherscan.io/'],
+    nativeCurrency: {
+      symbol: 'ETH',
+      decimals: 18,
+    },
   },
   [Chain.ETHEREUM_GOERLI]: {
     chainId: 5,
     rpcUrls: ['https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
     chainName: 'Ethereum Goerli (Testnet)',
     blockExplorerUrls: ['https://goerli.etherscan.io/'],
+    nativeCurrency: {
+      symbol: 'ETH',
+      decimals: 18,
+    },
   },
   [Chain.POLYGON_MAINNET]: {
     chainId: 137,
     rpcUrls: ['https://polygon-rpc.com'],
     chainName: 'Polygon Mainnet',
     blockExplorerUrls: ['https://polygonscan.com'],
+    nativeCurrency: {
+      symbol: 'matic',
+      decimals: 18,
+    },
   },
   [Chain.POLYGON_MUMBAI_TESTNET]: {
     chainId: 80001,
     rpcUrls: ['https://rpc-mumbai.maticvigil.com'],
     chainName: 'Polygon Mumbai (Testnet)',
     blockExplorerUrls: ['https://mumbai-explorer.matic.today'],
+    nativeCurrency: {
+      symbol: 'matic',
+      decimals: 18,
+    },
   },
 }
 
