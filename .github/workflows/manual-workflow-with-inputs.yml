@@ -1,0 +1,50 @@
+# This is a basic workflow that is manually triggered
+
+
+name: Manual workflow with inputs
+on:
+  workflow_dispatch:
+    inputs:
+      server:
+        type: choice
+        required: true
+        description: Environment
+        options: 
+        - staging
+        - production
+
+jobs:
+  deployment-dev:
+    runs-on: self-hosted
+    name: Deployment on dev servers
+    if:  ${{ github.event.inputs.server == 'staging' }} 
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2   
+
+      - name: Run Ansible playbook  on dev servers
+        uses: dawidd6/action-ansible-playbook@v2.5.0
+        with:
+          playbook: ansible/deploy.yml 
+          directory: ./
+          key: ${{ secrets.DEPLOY_SSH_PRV_KEY }}   
+          inventory: ${{ secrets.ansible_inventory_dev }}   
+          options: | 
+            --extra-vars branch=${{github.ref_name}}
+  deployment-prod:
+    runs-on: self-hosted
+    name: Deployment on prod servers
+    if:  ${{ github.event.inputs.server == 'production' }} 
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2   
+
+      - name: Run Ansible playbook  on prod servers
+        uses: dawidd6/action-ansible-playbook@v2.5.0
+        with:
+          playbook: ansible/deploy.yml 
+          directory: ./
+          key: ${{ secrets.DEPLOY_SSH_PRV_KEY }}   
+          inventory: ${{ secrets.ansible_inventory_prod }}
+          options: | 
+            --extra-vars branch=${{github.ref_name}}

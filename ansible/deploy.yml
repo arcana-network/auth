@@ -1,0 +1,46 @@
+---
+- hosts: all       #we can also mention multiple servers by mention the groups name which present in inventory file
+  become: yes
+  become_user: deploy
+  vars:
+    temp_repo_path: "/tmp/auth" 
+  tasks:             
+      
+  - name: Clone the latest repo to tmp path
+    git:
+      repo: git@github.com:arcana-network/auth.git
+      key_file: /home/deploy/.ssh/id_rsa  
+      accept_hostkey: yes
+      dest: "{{ temp_repo_path }}"
+      version: "{{branch}}"
+    register: code_upload    
+
+  - name: change the permissions of folders
+    become: yes
+    shell: "sudo chown deploy:tesla -R /tmp/auth/" 
+
+
+
+  - name: Rsync the code to our running repo
+    delegate_to: "{{ inventory_hostname }}"  
+    synchronize:
+      src: /tmp/auth/
+      dest: /home/deploy/auth/
+      delete: yes
+      recursive: yes
+    when: code_upload.changed
+
+  - name: change the permissions of folders
+    become: yes
+    shell: "sudo chown deploy:deploy -R /tmp/auth" 
+ 
+  - name: Remove the tmp cloned repo
+    become: yes
+    file:
+      path: "{{ temp_repo_path }}"
+      state: absent
+
+
+  - name: Reload systemctl
+    become: yes
+    shell: "sudo systemctl restart auth.service"
