@@ -10,9 +10,9 @@ class Popup {
 
   public getWindowResponse() {
     return new Promise((resolve, reject) => {
-      let expectedExit = false
-      const exitPoll = setInterval(() => {
-        if (!expectedExit && this.window?.closed) {
+      let cleanExit = false
+      const pollId = window.setInterval(() => {
+        if (!cleanExit && this.window?.closed) {
           reject('User closed the popup')
         }
       }, 500)
@@ -21,8 +21,9 @@ class Popup {
           return
         }
         const data = event.data as MessageData
-        expectedExit = true
-        clearInterval(exitPoll)
+        cleanExit = true
+
+        clearInterval(pollId)
         this.clear(handler)
 
         if (data.status === 'success') {
