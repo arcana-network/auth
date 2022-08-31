@@ -37,6 +37,7 @@ import {
   setLogLevel,
 } from './logger'
 import { Chain } from './chainList'
+import Popup from './popup'
 class AuthProvider {
   private appId: string
   private params: ConstructorParams
@@ -104,23 +105,13 @@ class AuthProvider {
   /**
    * A function to trigger social login in the wallet
    */
-  loginWithSocial = async (loginType: string) => {
+  loginWithSocial = async (loginType: string): Promise<ArcanaProvider> => {
     if (this._provider) {
       if (!(await this._provider.isLoginAvailable(loginType))) {
         throw new Error(`${loginType} login is not available`)
       }
-
-      const redirectUrl = constructLoginUrl({
-        loginType,
-        appId: this.appId,
-        authUrl: this.networkConfig.authUrl,
-        redirectUrl: this.params.redirectUrl
-          ? this.params.redirectUrl
-          : getCurrentUrl(),
-      })
-
-      redirectTo(redirectUrl)
-      return
+      const url = this.getLoginUrl(loginType)
+      return this.beginLogin(url)
     }
     this.logger.error('requestSocialLogin', WalletNotInitializedError)
     throw WalletNotInitializedError
@@ -129,19 +120,10 @@ class AuthProvider {
   /**
    * A function to trigger passwordless login in the wallet
    */
-  loginWithLink = (email: string) => {
+  loginWithLink = (email: string): Promise<ArcanaProvider> => {
     if (this._provider) {
-      const redirectUrl = constructLoginUrl({
-        loginType: 'passwordless',
-        appId: this.appId,
-        email,
-        authUrl: this.networkConfig.authUrl,
-        redirectUrl: this.params.redirectUrl
-          ? this.params.redirectUrl
-          : getCurrentUrl(),
-      })
-      redirectTo(redirectUrl)
-      return
+      const url = this.getLoginUrl('passwordless', email)
+      return this.beginLogin(url)
     }
     this.logger.error('requestPasswordlessLogin', WalletNotInitializedError)
     throw WalletNotInitializedError
@@ -208,6 +190,39 @@ class AuthProvider {
     }
     this.logger.error('getProvider', WalletNotInitializedError)
     throw WalletNotInitializedError
+  }
+
+  /* Private functions */
+
+  private getLoginUrl(loginType: string, email?: string) {
+    return constructLoginUrl({
+      loginType,
+      appId: this.appId,
+      email,
+      authUrl: this.networkConfig.authUrl,
+      redirectUrl: this.params.redirectUrl
+        ? this.params.redirectUrl
+        : getCurrentUrl(),
+    })
+  }
+
+  private async beginLogin(url: string): Promise<ArcanaProvider> {
+    const popup = new Popup(url)
+    await popup.open()
+    return await this.waitForConnect()
+  }
+
+  private waitForConnect(): Promise<ArcanaProvider> {
+    return new Promise((resolve, reject) => {
+      const t = setTimeout(
+        () => reject('Timeout exceeded waiting for connect'),
+        15 * 1000
+      )
+      this._provider.on('connect', () => {
+        clearTimeout(t)
+        return resolve(this._provider)
+      })
+    })
   }
 
   private async setAppConfig() {
