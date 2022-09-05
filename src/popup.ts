@@ -2,28 +2,39 @@ class Popup {
   private window: Window | null
   constructor(public url: string) {}
 
-  public open() {
+  public open(shouldPoll = false) {
     const windowFeatures = getWindowFeatures()
     this.window = window.open(this.url, '_blank', windowFeatures)
-    return this.getWindowResponse()
+    return this.getWindowResponse(shouldPoll)
   }
 
-  public getWindowResponse() {
+  private getWindowResponse(shouldPoll = false) {
     return new Promise((resolve, reject) => {
       let cleanExit = false
-      const pollId = window.setInterval(() => {
-        if (!cleanExit && this.window?.closed) {
-          reject('User closed the popup')
-        }
-      }, 500)
+      let pollId: number
+      if (shouldPoll) {
+        pollId = window.setInterval(() => {
+          if (!cleanExit && this.window?.closed) {
+            reject('User closed the popup')
+          }
+        }, 500)
+      }
       const handler = async (event: MessageEvent) => {
         if (!event?.data?.status) {
           return
         }
+
         const data = event.data as MessageData
         cleanExit = true
 
-        clearInterval(pollId)
+        if (data.status === 'close') {
+          this.window?.close()
+          return
+        }
+
+        if (shouldPoll) {
+          clearInterval(pollId)
+        }
         this.clear(handler)
 
         if (data.status === 'success') {
@@ -45,7 +56,7 @@ class Popup {
 }
 
 interface MessageData {
-  status: 'success' | 'error'
+  status: 'success' | 'error' | 'close'
   error?: string
 }
 
