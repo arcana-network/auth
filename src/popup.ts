@@ -1,18 +1,18 @@
 class Popup {
   private window: Window | null
-  constructor(public url: string) {}
+  constructor(public url: string, private shouldPoll = true) {}
 
-  public open(shouldPoll = false) {
+  public open() {
     const windowFeatures = getWindowFeatures()
     this.window = window.open(this.url, '_blank', windowFeatures)
-    return this.getWindowResponse(shouldPoll)
+    return this.getWindowResponse()
   }
 
-  private getWindowResponse(shouldPoll = false) {
+  private getWindowResponse() {
     return new Promise((resolve, reject) => {
       let cleanExit = false
       let pollId: number
-      if (shouldPoll) {
+      if (this.shouldPoll) {
         pollId = window.setInterval(() => {
           if (!cleanExit && this.window?.closed) {
             reject('User closed the popup')
@@ -32,7 +32,7 @@ class Popup {
           return
         }
 
-        if (shouldPoll) {
+        if (this.shouldPoll) {
           clearInterval(pollId)
         }
         this.clear(handler)
@@ -66,8 +66,8 @@ const popupFeatures: { [key: string]: number } = {
   status: 0,
   menubar: 0,
   resizable: 0,
-  height: 700,
-  width: 1200,
+  height: window.innerHeight < 1200 ? window.innerHeight : 1200,
+  width: window.innerWidth < 700 ? window.innerWidth : 700,
   popup: 1,
 }
 

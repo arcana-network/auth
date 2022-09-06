@@ -47,7 +47,7 @@ class AuthProvider {
   private iframeWrapper: IframeWrapper
   private networkConfig: NetworkConfig
   private rpcConfig: RpcConfig
-  private initStatus: InitStatus = 'false'
+  private initStatus: InitStatus = InitStatus.CREATED
   private initPromises: ((value: AuthProvider) => void)[] = []
   private _provider: ArcanaProvider
   constructor(appId: string, p?: Partial<ConstructorParams>) {
@@ -76,8 +76,8 @@ class AuthProvider {
    * A function to initialize the wallet, should be called before getting provider
    */
   public async init(input?: Partial<InitParams>): Promise<AuthProvider> {
-    if (this.initStatus === 'false') {
-      this.initStatus = 'running'
+    if (this.initStatus === InitStatus.CREATED) {
+      this.initStatus = InitStatus.RUNNING
       const { appMode, position } = getInitParams(input)
 
       if (this.iframeWrapper) {
@@ -105,11 +105,11 @@ class AuthProvider {
         loginWithSocial: this.loginWithSocial,
       })
       this.setProviders()
-      this.initStatus = 'done'
+      this.initStatus = InitStatus.DONE
 
       this.resolveInitPromises()
       return this
-    } else if (this.initStatus === 'running') {
+    } else if (this.initStatus === InitStatus.RUNNING) {
       return await this.waitForInit()
     }
     return this
@@ -119,7 +119,7 @@ class AuthProvider {
    * A function to trigger social login in the wallet
    */
   loginWithSocial = async (loginType: string): Promise<ArcanaProvider> => {
-    if (this.initStatus === 'done') {
+    if (this.initStatus === InitStatus.DONE) {
       if (!(await this._provider.isLoginAvailable(loginType))) {
         throw new Error(`${loginType} login is not available`)
       }
@@ -134,7 +134,7 @@ class AuthProvider {
    * A function to trigger passwordless login in the wallet
    */
   loginWithLink = (email: string): Promise<ArcanaProvider> => {
-    if (this.initStatus === 'done') {
+    if (this.initStatus === InitStatus.DONE) {
       const url = this.getLoginUrl('passwordless', email)
       return this.beginLogin(url, false)
     }
@@ -147,7 +147,7 @@ class AuthProvider {
    * @returns available user info
    */
   public getUser(): Promise<UserInfo> {
-    if (this.initStatus === 'done') {
+    if (this.initStatus === InitStatus.DONE) {
       return this._provider.requestUserInfo()
     }
     this.logger.error('requestUserInfo', WalletNotInitializedError)
@@ -167,7 +167,7 @@ class AuthProvider {
    * A function to logout the user
    */
   public logout() {
-    if (this.initStatus === 'done') {
+    if (this.initStatus === InitStatus.DONE) {
       return this._provider.triggerLogout()
     }
     this.logger.error('logout', WalletNotInitializedError)
@@ -178,7 +178,7 @@ class AuthProvider {
    * A function to request public key of different users
    */
   public async getPublicKey(email: string) {
-    if (this.initStatus === 'done') {
+    if (this.initStatus === InitStatus.DONE) {
       if (!email || email === '') {
         throw new ArcanaAuthError(
           'email_required',
@@ -196,7 +196,7 @@ class AuthProvider {
    * @deprecated use .provider instead
    */
   public getProvider() {
-    if (this.initStatus === 'done') {
+    if (this.initStatus === InitStatus.DONE) {
       return this._provider
     }
     this.logger.error('getProvider', WalletNotInitializedError)
@@ -221,8 +221,8 @@ class AuthProvider {
     url: string,
     shouldPoll = false
   ): Promise<ArcanaProvider> {
-    const popup = new Popup(url)
-    await popup.open(shouldPoll)
+    const popup = new Popup(url, shouldPoll)
+    await popup.open()
     return await this.waitForConnect()
   }
 
