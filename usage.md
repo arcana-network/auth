@@ -1,5 +1,27 @@
 # Arcana Auth Usage guide
 
+## Quick start with ethers.js
+
+```ts
+const { AuthProvider } = window.arcana.auth
+const { ethers } = window.ethers
+
+const auth = new AuthProvider(`${appId}`)
+
+window.onload = async () => {
+  try {
+    await auth.init()
+    const arcanaProvider = await auth.loginWithSocial('google')
+    const provider = new ethers.providers.Web3Provider(arcanaProvider)
+
+    await provider.getBlockNumber()
+    // 14983200
+  } catch (e) {
+    // log error
+  }
+}
+```
+
 ## Installation
 
 ### Using NPM/Yarn
@@ -70,13 +92,14 @@ interface ChainConfig {
 Social login
 
 ```js
-await auth.loginWithSocial(`${verifier}`)
+// loginType - google, discord, twitter, github, twitch
+const provider = await auth.loginWithSocial(`${loginType}`)
 ```
 
 Email link login
 
 ```js
-await auth.loginWithLink(`${email}`)
+const provider = await auth.loginWithLink(`${email}`)
 ```
 
 Check is logged in

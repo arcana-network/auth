@@ -6,6 +6,12 @@ export type Orientation = 'horizontal' | 'vertical'
 
 export type Position = 'right' | 'left'
 
+export enum InitStatus {
+  CREATED,
+  RUNNING,
+  DONE,
+}
+
 export interface IframeWrapperParams {
   appId: string
   iframeUrl: string

@@ -48,7 +48,7 @@ const getWalletType = async (appId: string, gatewayUrl: string) => {
 
 const getAppAddress = async (id: string, gatewayUrl: string) => {
   try {
-    const u = new URL(`/get-address/?id=${id}`, gatewayUrl)
+    const u = new URL(`/api/v1/get-address/?id=${id}`, gatewayUrl)
     const res = await fetch(u.toString())
     const json = await res.json()
     const address: string = json?.address
@@ -61,7 +61,7 @@ const getAppAddress = async (id: string, gatewayUrl: string) => {
 
 const getArcanaRpc = async (gatewayUrl: string) => {
   try {
-    const u = new URL('/get-config/', gatewayUrl)
+    const u = new URL('/api/v1/get-config/', gatewayUrl)
     const res = await fetch(u.toString())
     if (res.status < 400) {
       const json: { RPC_URL: string } = await res.json()
