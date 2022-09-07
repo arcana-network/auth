@@ -158,9 +158,11 @@ class AuthProvider {
    * A function to determine whether user is logged in
    */
   public async isLoggedIn() {
-    await this.waitForInit()
-    const isLoggedIn = this._provider.isLoggedIn()
-    return isLoggedIn
+    if (this.initStatus === InitStatus.DONE) {
+      const isLoggedIn = this._provider.isLoggedIn()
+      return isLoggedIn
+    }
+    throw WalletNotInitializedError
   }
 
   /**
