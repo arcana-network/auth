@@ -42,7 +42,7 @@ const getWalletType = async (appId: string, gatewayUrl: string) => {
     return walletType
   } catch (e) {
     getLogger('WalletProvider').error('getWalletType', e)
-    throw new Error('Wallet Type not found in contract')
+    throw new Error('Error occurred during getting wallet type')
   }
 }
 
@@ -55,7 +55,7 @@ const getAppAddress = async (id: string, gatewayUrl: string) => {
     return address
   } catch (e) {
     getLogger('WalletProvider').error('getAppAddress', e)
-    throw e
+    throw new Error('Error occurred during getting app address')
   }
 }
 
@@ -73,7 +73,7 @@ const getArcanaRpc = async (gatewayUrl: string) => {
     }
   } catch (e) {
     getLogger('WalletProvider').error('getAppAddress', e)
-    throw e
+    throw new Error('Error occurred during getting arcana RPC url')
   }
 }
 
