@@ -66,8 +66,8 @@ const popupFeatures: { [key: string]: number } = {
   status: 0,
   menubar: 0,
   resizable: 0,
-  height: window.innerHeight < 1200 ? window.innerHeight : 1200,
-  width: window.innerWidth < 700 ? window.innerWidth : 700,
+  height: 1200,
+  width: 700,
   popup: 1,
 }
 
