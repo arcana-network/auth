@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Sora:wght@400;600&display=block');
+
+* {
+  font-family: 'Sora', sans-serif;
+  margin: 0;
+}
+
+h1 {
+  text-align: center;
+  margin: 10px 0;
+}
+
+h1,
+h2 {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.btn {
+  display: block;
+  background-color: white;
+  color: black;
+  padding: 1em 2em;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  width: 200px;
+  margin-bottom: 5px;
+}
+
+.btn:hover {
+  color: white;
+  background-color: black;
+}
+
+input {
+  padding: 8px 8px;
+  font-size: 1.25rem;
+}
+
+.sm-btn {
+  display: inline-block;
+  padding: 2px 4px;
+}
+
+.loading {
+  text-align: center;
+}
+
+.error {
+  text-transform: uppercase;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: white;
+  background-color: red;
+  padding: 8px 8px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.section-heading {
+  text-align: center;
+  color: white;
+  background-color: black;
+  padding: 15px 15px;
+  margin-bottom: 7px;
+  /* margin: 5px auto; */
+}
+
+.sub-heading {
+  text-transform: uppercase;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.sub-value {
+  font-size: 1.25rem;
+  background-color: lightcyan;
+  padding: 2px 2px;
+}
+
+.pill {
+  margin: 10px 0;
+  padding: 5px 5px;
+}
+
+.centre-align {
+  text-align: center;
+  vertical-align: baseline;
+}
+
+main {
+  border: 1px solid black;
+  padding: 5px 5px;
+}
+
+.container {
+  width: 85%;
+  margin: 0 auto;
+  border: 1px solid black;
+}
+.operations {
+  /* padding: 20px; */
+  width: 18%;
+}
+.view-window {
+  /* padding: 20px; */
+  width: 82%;
+  overflow-wrap: break-word;
+}
+.flex {
+  display: flex;
+  justify-content: space-between;
+
+  /* width: 100%; */
+}
+
+#email {
+  margin-right: 5px;
+}
+
+.big-button {
+  display: block;
+  width: 300px;
+  padding: 0.75em 1.5em;
+  font-size: 0.9rem;
+  /* margin: 0 auto; */
+  /* margin-left: 8px; */
+}
