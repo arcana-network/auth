@@ -20,11 +20,13 @@ h2 {
   background-color: white;
   color: black;
   padding: 1em 2em;
-  font-size: 0.9rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
   cursor: pointer;
-  width: 200px;
+  width: 100%;
   margin-bottom: 5px;
+  text-align: center;
+  overflow-wrap: break-word;
 }
 
 .btn:hover {
@@ -104,7 +106,7 @@ main {
 }
 .view-window {
   /* padding: 20px; */
-  width: 82%;
+  width: 81%;
   overflow-wrap: break-word;
 }
 .flex {
