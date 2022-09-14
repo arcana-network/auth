@@ -48,7 +48,7 @@ const widgetBubbleStyle = {
     backgroundColor: '#000000',
   },
   bubbleLogo: {
-    width: '60px',
+    width: '40px',
     objectFit: 'contain',
   },
   closeButton: {
