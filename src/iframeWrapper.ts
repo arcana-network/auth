@@ -110,7 +110,7 @@ export default class IframeWrapper {
     const appLogo = createDomElement('img', {
       src: assets.logo.horizontal,
       style: widgetIframeStyle.header.logo,
-      onerror: setFallbackImage,
+      onerror: (e: Event) => setFallbackImage(e, theme),
     })
 
     const closeButton = createDomElement('button', {
@@ -165,7 +165,7 @@ export default class IframeWrapper {
     const buttonLogo = createDomElement('img', {
       src: assets.logo.vertical,
       style: widgetBubbleStyle.bubbleLogo,
-      onerror: setFallbackImage,
+      onerror: (e: Event) => setFallbackImage(e, theme),
     })
 
     const reqCountBadge = createDomElement('p', {
