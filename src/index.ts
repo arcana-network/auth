@@ -221,21 +221,16 @@ class AuthProvider {
 
   private async beginLogin(
     url: string,
-    shouldPoll = true
+    waitForResponse = true
   ): Promise<ArcanaProvider> {
-    const popup = new Popup(url, shouldPoll)
+    const popup = new Popup(url, waitForResponse)
     await popup.open()
     return await this.waitForConnect()
   }
 
   private waitForConnect(): Promise<ArcanaProvider> {
-    return new Promise((resolve, reject) => {
-      const t = setTimeout(
-        () => reject('Timeout exceeded waiting for connect'),
-        15 * 1000
-      )
+    return new Promise((resolve) => {
       this._provider.on('connect', () => {
-        clearTimeout(t)
         return resolve(this._provider)
       })
     })
