@@ -221,7 +221,7 @@ class AuthProvider {
 
   private async beginLogin(
     url: string,
-    shouldPoll = false
+    shouldPoll = true
   ): Promise<ArcanaProvider> {
     const popup = new Popup(url, shouldPoll)
     await popup.open()
