@@ -3,16 +3,40 @@
 ## Quick start with ethers.js
 
 ```ts
-const { AuthProvider } = window.arcana.auth
-const { ethers } = window.ethers
+import { AuthProvider } from '@arcana/auth'
+import { ethers } from 'ethers'
 
 const auth = new AuthProvider(`${appId}`)
 
 window.onload = async () => {
   try {
     await auth.init()
+
     const arcanaProvider = await auth.loginWithSocial('google')
     const provider = new ethers.providers.Web3Provider(arcanaProvider)
+
+    await provider.getBlockNumber()
+    // 14983200
+  } catch (e) {
+    // log error
+  }
+}
+```
+
+## Quick start with Web3
+
+```ts
+import { AuthProvider } from '@arcana/auth'
+import Web3 from 'web3'
+
+const auth = new AuthProvider(`${appId}`)
+
+window.onload = async () => {
+  try {
+    await auth.init()
+
+    const arcanaProvider = await auth.loginWithSocial('google')
+    const provider = new Web3(arcanaProvider)
 
     await provider.getBlockNumber()
     // 14983200
@@ -46,31 +70,20 @@ yarn add @arcana/auth
 ### Import
 
 ```js
-const { AuthProvider } = window.arcana.auth
+const { AuthProvider } = window.arcana.auth // From CDN
 // or
-import { AuthProvider } from '@arcana/auth'
+import { AuthProvider } from '@arcana/auth' // From npm
 ```
 
 ### Initialize
 
-```js
-import { AuthProvider, AppMode } from '@arcana/auth'
-
-const auth = new AuthProvider(`${appId}`)
-
-const position = 'left' // values - 'left' or 'right'
-
-await auth.init({ appMode: AppMode.Widget, position })
-
-provider = auth.provider
-// or
-provider = window.arcana.provider
-```
-
-#### Specifying chain during init
-
 ```ts
-import { AuthProvider, CHAIN } from '@arcana/auth'
+import { AuthProvider, AppMode, CHAIN } from '@arcana/auth'
+
+interface ChainConfig {
+  chainId: CHAIN
+  rpcUrl?: string
+}
 
 const auth = new AuthProvider(`${appId}`, {
   chainConfig: {
@@ -79,10 +92,9 @@ const auth = new AuthProvider(`${appId}`, {
   },
 })
 
-interface ChainConfig {
-  chainId: CHAINS
-  rpcUrl?: string
-}
+const position = 'left' // values - 'left' or 'right'
+
+await auth.init({ appMode: AppMode.Widget, position })
 ```
 
 ## Auth API’s
@@ -105,7 +117,7 @@ const provider = await auth.loginWithLink(`${email}`)
 Check is logged in
 
 ```js
-const loggedIn = await auth.isLoggedIn()
+const isloggedIn = await auth.isLoggedIn() // boolean
 ```
 
 User Info
@@ -157,139 +169,4 @@ encryptWithPublicKey({
 import { computeAddress } from '@arcana/auth'
 
 const address = computeAddress(publicKey: string);
-```
-
-## Events
-
-Subscribing
-
-```js
-provider.on('chainChanged', handler: (chainId: number) => void);
-provider.on('accountsChanged', handler: (accounts: string[]) => void);
-provider.on('connect', handler: ({ chainId: number }) => void);
-provider.isConnected(): Promise<boolean>;
-```
-
-Unsubscribing
-
-```js
-provider.removeListener(`${eventName}`, handler)
-```
-
-## Using with web3/ethers
-
-### Ethers JS
-
-Installation
-
-```sh
-npm install --save ethers
-```
-
-Usage
-
-```js
-import { ethers } from 'ethers'
-
-const provider = new ethers.providers.Web3Provider(auth.provider)
-
-const signer = provider.getSigner()
-
-const signedMessage = await signer.signMessage('sample_message')
-```
-
-### Web3 JS
-
-Installation
-
-```sh
-npm install --save web3
-```
-
-Usage
-
-```js
-import Web3 from 'web3'
-
-const provider = new Web3(auth.provider)
-
-const signer = provider.getSigner()
-
-const signedMessage = await signer.signMessage('sample_message')
-```
-
-## RPC API’s
-
-### eth_accounts
-
-```js
-provider.request({ method: 'eth_accounts' }).then((accounts) => {
-  // Set default account to accounts[0]
-  from = accounts[0]
-})
-```
-
-### eth_sign
-
-```js
-provider
-  .request({
-    method: 'eth_sign',
-    params: [from, 'some_random_data'],
-  })
-  .then((signature) => {
-    // Use signature
-  })
-```
-
-### personal_sign
-
-```js
-provider
-  .request({
-    method: 'personal_sign',
-    params: ['some personal signing data', from],
-  })
-  .then((personalSignature) => {
-    // Use personal signature
-  })
-```
-
-### eth_getEncryptionPublicKey
-
-```js
-provider
-  .request({
-    method: 'eth_getEncryptionPublicKey',
-    params: [from],
-  })
-  .then((publicKey) => {
-    // Use public key
-  })
-```
-
-### eth_decrypt
-
-```js
-provider
-  .request({
-    method: 'eth_decrypt',
-    params: [ciphertext, from],
-  })
-  .then((plaintext) => {
-    // Use plaintext
-  })
-```
-
-### eth_signTypedData_v4
-
-```js
-provider
-  .request({
-    method: 'eth_signTypedData_v4',
-    params: [from, msgParams],
-  })
-  .then((signature) => {
-    // Use signature
-  })
 ```

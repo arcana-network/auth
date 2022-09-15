@@ -87,6 +87,9 @@
     "penpal": "^6.0.1",
     "web3-providers-http": "^1.6.1"
   },
+  "resolutions": {
+    "terser": "^5.15.0"
+  },
   "lint-staged": {
     "*.ts": "eslint --cache --fix",
     "*.{js,css,md,ts}": "prettier --write"
