@@ -1,6 +1,6 @@
 class Popup {
   private window: Window | null
-  constructor(public url: string, private shouldPoll = true) {}
+  constructor(public url: string, private waitForResponse = true) {}
 
   public open() {
     const windowFeatures = getWindowFeatures()
@@ -10,47 +10,39 @@ class Popup {
 
   private getWindowResponse() {
     return new Promise((resolve, reject) => {
-      let cleanExit = false
-      let pollId: number
-      if (this.shouldPoll) {
-        pollId = window.setInterval(() => {
+      if (this.waitForResponse) {
+        let cleanExit = false
+        const pollId = window.setInterval(() => {
           if (!cleanExit && this.window?.closed) {
             reject('User closed the popup')
           }
         }, 500)
+        const handler = async (event: MessageEvent) => {
+          if (!event?.data?.status) {
+            return
+          }
+          const data = event.data as MessageData
+          cleanExit = true
+          this.clear(handler, pollId)
+
+          if (data.status === 'success') {
+            return resolve('success')
+          } else if (data.status == 'error') {
+            return reject(data.error)
+          } else {
+            console.log('Unexpected event')
+          }
+        }
+        window.addEventListener('message', handler, false)
+      } else {
+        return resolve('success')
       }
-      const handler = async (event: MessageEvent) => {
-        if (!event?.data?.status) {
-          return
-        }
-
-        const data = event.data as MessageData
-        cleanExit = true
-
-        if (data.status === 'close') {
-          this.window?.close()
-          return
-        }
-
-        if (this.shouldPoll) {
-          clearInterval(pollId)
-        }
-        this.clear(handler)
-
-        if (data.status === 'success') {
-          return resolve('success')
-        } else if (data.status == 'error') {
-          return reject(data.error)
-        } else {
-          console.log('Unexpected event')
-        }
-      }
-      window.addEventListener('message', handler, false)
     })
   }
 
-  private clear(handler: (ev: MessageEvent) => void): void {
+  private clear(handler: (ev: MessageEvent) => void, id: number): void {
     window.removeEventListener('message', handler)
+    window.clearInterval(id)
     this.window?.close()
   }
 }
