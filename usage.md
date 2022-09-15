@@ -7,6 +7,7 @@
 3. [Installation](#installation)
 4. [Usage](#usage)
 5. [Auth APIs](#auth-apis)
+6. [Utilities](#utilities)
 
 ---
 
@@ -113,7 +114,7 @@ const position = 'left' // values - 'left' or 'right'
 await auth.init({ appMode: AppMode.Widget, position })
 ```
 
-See [Get Started with Auth SDK](https://docs.dev.arcana.network/docs/auth_qs) for more usage insights.
+## See [Get Started with Auth SDK](https://docs.dev.arcana.network/docs/auth_qs) for more usage insights.
 
 ## Auth API’s
 
@@ -169,6 +170,8 @@ Get the public key associated with an email.
 ```js
 await auth.getPublicKey(`${email}`)
 ```
+
+---
 
 ## Utilities
 
