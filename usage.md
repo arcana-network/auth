@@ -1,6 +1,16 @@
-# Arcana Auth Usage guide
+# Arcana Auth Usage Guide
 
-## Quick start with ethers.js
+**Contents**
+
+1. [Quick Start with `ethers.js`](#quick-start-with-ethersjs)
+2. [Quick Start with `web3.js`](#quick-start-with-web3js)
+3. [Installation](#installation)
+4. [Usage](#usage)
+5. [Auth APIs](#auth-apis)
+
+---
+
+## Quick Start with `ethers.js`
 
 ```ts
 import { AuthProvider } from '@arcana/auth'
@@ -23,7 +33,9 @@ window.onload = async () => {
 }
 ```
 
-## Quick start with Web3
+---
+
+## Quick Start with `web3.js`
 
 ```ts
 import { AuthProvider } from '@arcana/auth'
@@ -46,16 +58,18 @@ window.onload = async () => {
 }
 ```
 
+---
+
 ## Installation
 
-### Using NPM/Yarn
+### NPM/Yarn Install
 
 ```sh
 npm install --save @arcana/auth
 yarn add @arcana/auth
 ```
 
-### Using CDN
+### CDN Install
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@arcana/auth"></script>
@@ -65,9 +79,11 @@ yarn add @arcana/auth
 <script src="https://unpkg.com/@arcana/auth"></script>
 ```
 
+---
+
 ## Usage
 
-### Import
+### Import AuthProvider
 
 ```js
 const { AuthProvider } = window.arcana.auth // From CDN
@@ -75,7 +91,7 @@ const { AuthProvider } = window.arcana.auth // From CDN
 import { AuthProvider } from '@arcana/auth' // From npm
 ```
 
-### Initialize
+### Initialize AuthProvider
 
 ```ts
 import { AuthProvider, AppMode, CHAIN } from '@arcana/auth'
@@ -97,9 +113,13 @@ const position = 'left' // values - 'left' or 'right'
 await auth.init({ appMode: AppMode.Widget, position })
 ```
 
+See [Get Started with Auth SDK](https://docs.dev.arcana.network/docs/auth_qs) for more usage insights.
+
 ## Auth API’s
 
-### Login/logout
+### User Authentication
+
+#### Login
 
 Social login
 
@@ -108,23 +128,23 @@ Social login
 const provider = await auth.loginWithSocial(`${loginType}`)
 ```
 
-Email link login
+Passwordless login via email Link
 
 ```js
 const provider = await auth.loginWithLink(`${email}`)
 ```
 
-Check is logged in
+Check if a user is logged in
 
 ```js
 const isloggedIn = await auth.isLoggedIn() // boolean
 ```
 
-User Info
+Get user information
 
 ```js
 const info = await auth.getUser()
-/* 
+/*
 interface UserInfo {
   id: string
   email?: string
@@ -136,21 +156,23 @@ interface UserInfo {
 */
 ```
 
-Logout
+#### Logout
 
 ```js
 await auth.logout()
 ```
 
-### Get public key associated with an email
+### Get Public Key
+
+Get the public key associated with an email.
 
 ```js
 await auth.getPublicKey(`${email}`)
 ```
 
-## Utils
+## Utilities
 
-### ECIES encryption
+### ECIES Encryption
 
 ```js
 import { encryptWithPublicKey } from '@arcana/auth'
@@ -170,3 +192,5 @@ import { computeAddress } from '@arcana/auth'
 
 const address = computeAddress(publicKey: string);
 ```
+
+See [Auth SDK Reference Guide](https://authsdk-ref-guide.netlify.app/) for details.
