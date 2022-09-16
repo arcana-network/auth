@@ -159,7 +159,7 @@ async function sendTransaction() {
 async function signTransaction() {
   setRequest('eth_signTransaction')
 
-  const { sig } = await provider.request({
+  const sig = await provider.request({
     method: 'eth_signTransaction',
     params: [
       {

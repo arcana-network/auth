@@ -114,7 +114,7 @@ const position = 'left' // values - 'left' or 'right'
 await auth.init({ appMode: AppMode.Widget, position })
 ```
 
-## See [Get Started with Auth SDK](https://docs.dev.arcana.network/docs/auth_qs) for more usage insights.
+See [Get Started with Auth SDK](https://docs.dev.arcana.network/docs/auth_qs) for more usage insights.
 
 ## Auth API’s
 
