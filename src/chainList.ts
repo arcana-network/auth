@@ -7,6 +7,8 @@ export enum Chain {
   ETHEREUM_GOERLI = '0x5',
   POLYGON_MAINNET = '0x89',
   POLYGON_MUMBAI_TESTNET = '0x13881',
+  ARCANA_TESTNET = '0x9DD5',
+  ARCANA_DEV = '0x9DD4',
 }
 
 const ChainList: Record<Chain, RpcConfig> = {
@@ -69,6 +71,18 @@ const ChainList: Record<Chain, RpcConfig> = {
       symbol: 'matic',
       decimals: 18,
     },
+  },
+  [Chain.ARCANA_TESTNET]: {
+    chainId: 40405,
+    rpcUrls: ['https://blockchain001-testnet.arcana.network/'],
+    chainName: 'Arcana (Testnet)',
+    blockExplorerUrls: ['https://explorer.beta.arcana.network/'],
+  },
+  [Chain.ARCANA_DEV]: {
+    chainId: 40404,
+    rpcUrls: ['https://blockchain-dev.arcana.network'],
+    chainName: 'Arcana Dev',
+    blockExplorerUrls: ['https://explorer.dev.arcana.network/'],
   },
 }
 
