@@ -95,6 +95,8 @@ export class ArcanaProvider extends SafeEventEmitter {
       sendPendingRequestCount: this.iframe.onReceivingPendingRequestCount,
       triggerSocialLogin: loginFuncs.loginWithSocial,
       triggerPasswordlessLogin: loginFuncs.loginWithLink,
+      openPopup: () => this.iframe.show(),
+      closePopup: () => this.iframe.hide(),
     })
     this.communication = communication
   }
@@ -180,12 +182,6 @@ export class ArcanaProvider extends SafeEventEmitter {
   private openPermissionScreen(method: string) {
     if (permissionedCalls.includes(method)) {
       this.iframe.show()
-    }
-  }
-
-  private closePermissionScreen(method: string) {
-    if (permissionedCalls.includes(method)) {
-      this.iframe.hide()
     }
   }
 
@@ -449,7 +445,6 @@ export class ArcanaProvider extends SafeEventEmitter {
       this.subscriber.once(
         `result:${method}:${id}`,
         (params: { error: string; result: U }) => {
-          this.closePermissionScreen(method)
           if (params.error) {
             return reject(getError(params.error))
           }

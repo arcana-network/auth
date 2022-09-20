@@ -74,6 +74,8 @@ export interface ParentMethods {
   getRpcConfig: () => RpcConfig
   triggerSocialLogin: (kind: string) => void
   triggerPasswordlessLogin: (email: string) => void
+  openPopup: () => void
+  closePopup: () => void
 }
 
 export interface TypedDataMessage {
