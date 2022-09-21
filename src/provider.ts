@@ -150,6 +150,12 @@ export class ArcanaProvider extends SafeEventEmitter {
     return pk
   }
 
+  public async getAvailableLogins() {
+    const c = await this.getCommunication('getAvailableLogins')
+    const logins = await c.getAvailableLogins()
+    return logins
+  }
+
   public async triggerLogout() {
     const c = await this.getCommunication('triggerLogout')
     await c.triggerLogout()

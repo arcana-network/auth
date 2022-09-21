@@ -194,6 +194,17 @@ class AuthProvider {
   }
 
   /**
+   * A function to request list of available logins
+   */
+  public async getLogins() {
+    if (this.initStatus === InitStatus.DONE) {
+      return await this._provider.getAvailableLogins()
+    }
+    this.logger.error('getLogins', WalletNotInitializedError)
+    throw WalletNotInitializedError
+  }
+
+  /**
    * A function to get web3 provider
    * @deprecated use .provider instead
    */
