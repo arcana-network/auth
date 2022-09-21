@@ -97,6 +97,7 @@ export class ArcanaProvider extends SafeEventEmitter {
       triggerPasswordlessLogin: loginFuncs.loginWithLink,
       openPopup: () => this.iframe.show(),
       closePopup: () => this.iframe.hide(),
+      getPopupState: () => this.iframe.getState(),
     })
     this.communication = communication
   }

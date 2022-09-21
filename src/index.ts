@@ -136,7 +136,7 @@ class AuthProvider {
   loginWithLink = (email: string): Promise<ArcanaProvider> => {
     if (this.initStatus === InitStatus.DONE) {
       const url = this.getLoginUrl('passwordless', email)
-      return this.beginLogin(url, false)
+      return this.beginLogin(url)
     }
     this.logger.error('requestPasswordlessLogin', WalletNotInitializedError)
     throw WalletNotInitializedError
@@ -230,11 +230,8 @@ class AuthProvider {
     })
   }
 
-  private async beginLogin(
-    url: string,
-    waitForResponse = true
-  ): Promise<ArcanaProvider> {
-    const popup = new Popup(url, waitForResponse)
+  private async beginLogin(url: string): Promise<ArcanaProvider> {
+    const popup = new Popup(url)
     await popup.open()
     return await this.waitForConnect()
   }

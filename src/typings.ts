@@ -77,6 +77,7 @@ export interface ParentMethods {
   triggerPasswordlessLogin: (email: string) => void
   openPopup: () => void
   closePopup: () => void
+  getPopupState: () => 'open' | 'closed'
 }
 
 export interface TypedDataMessage {
