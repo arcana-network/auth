@@ -485,14 +485,14 @@ const getError = (message: string) => {
     case 'operation_not_supported':
       return new ProviderError(
         4200,
-        'The requested method is not supported by this provider'
+        'The requested method is not supported by this provider.'
       )
     case 'all_disconnected':
       return new ProviderError(
         4900,
-        'The provider is disconnected from all chains.Login is pending.'
+        'The provider is disconnected from all chains. Login is pending.'
       )
     default:
-      return new ProviderError(-32603, 'Internal error', message)
+      return new ProviderError(-32603, 'Internal error.', message)
   }
 }
