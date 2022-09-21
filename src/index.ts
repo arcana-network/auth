@@ -257,14 +257,14 @@ class AuthProvider {
     }
   }
 
-  async waitForInit(): Promise<AuthProvider> {
+  private async waitForInit(): Promise<AuthProvider> {
     const promise = new Promise<AuthProvider>((resolve) => {
       this.initPromises.push(resolve)
     })
     return await promise
   }
 
-  async resolveInitPromises() {
+  private async resolveInitPromises() {
     const list = this.initPromises
     this.initPromises = []
 

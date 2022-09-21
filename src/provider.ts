@@ -481,15 +481,18 @@ const getError = (message: string) => {
   getLogger('ArcanaProvider').error('getError', message)
   switch (message) {
     case 'user_deny':
-      return new ProviderError(4001, 'The request was denied by the user')
+      return new ProviderError(4001, 'User rejected the request.')
     case 'operation_not_supported':
-      return new ProviderError(4200, 'The request is not supported currently')
+      return new ProviderError(
+        4200,
+        'The requested method is not supported by this provider'
+      )
     case 'all_disconnected':
       return new ProviderError(
         4900,
-        'The provider is disconnected from all chains, login pending'
+        'The provider is disconnected from all chains.Login is pending.'
       )
     default:
-      return new ProviderError(-32603, 'Internal error')
+      return new ProviderError(-32603, 'Internal error', message)
   }
 }
