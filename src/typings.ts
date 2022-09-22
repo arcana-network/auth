@@ -56,6 +56,7 @@ export interface UserInfo {
 export interface ChildMethods {
   isLoggedIn: () => Promise<boolean>
   isLoginAvailable: (type: string) => Promise<boolean>
+  getAvailableLogins: () => Promise<string[]>
   triggerSocialLogin: (t: string, url: string) => Promise<string>
   triggerPasswordlessLogin: (email: string, url: string) => Promise<string>
   sendRequest: (req: JsonRpcRequest<unknown>) => Promise<void>
@@ -76,6 +77,7 @@ export interface ParentMethods {
   triggerPasswordlessLogin: (email: string) => void
   openPopup: () => void
   closePopup: () => void
+  getPopupState: () => 'open' | 'closed'
 }
 
 export interface TypedDataMessage {
