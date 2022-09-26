@@ -40,7 +40,7 @@ import { Chain } from './chainList'
 import Popup from './popup'
 
 class AuthProvider {
-  private appId: string
+  public appId: string
   private params: ConstructorParams
   private appConfig: AppConfig
   private logger: Logger
@@ -289,6 +289,14 @@ class AuthProvider {
       return this._provider
     }
     this.logger.error('provider', WalletNotInitializedError)
+    throw WalletNotInitializedError
+  }
+
+  get logo() {
+    if (this.initStatus === InitStatus.DONE) {
+      return this.appConfig.themeConfig.assets.logo
+    }
+    this.logger.error('logo', WalletNotInitializedError)
     throw WalletNotInitializedError
   }
 
