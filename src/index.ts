@@ -26,6 +26,7 @@ import {
   ThemeConfig,
   UserInfo,
   InitStatus,
+  Logins,
 } from './typings'
 import { getAppInfo, getImageUrls } from './appInfo'
 import { WalletNotInitializedError, ArcanaAuthError } from './errors'
@@ -300,6 +301,14 @@ class AuthProvider {
     throw WalletNotInitializedError
   }
 
+  get theme() {
+    if (this.initStatus === InitStatus.DONE) {
+      return this.appConfig.themeConfig.theme
+    }
+    this.logger.error('theme', WalletNotInitializedError)
+    throw WalletNotInitializedError
+  }
+
   /* eslint-disable @typescript-eslint/no-explicit-any */
   private setProviders() {
     if (!(window as Record<string, any>).arcana) {
@@ -320,6 +329,7 @@ export {
   AppMode,
   Position,
   RpcConfig,
+  Logins,
   EncryptInput,
   UserInfo,
   ThemeConfig,
