@@ -175,7 +175,7 @@ export class ArcanaProvider extends SafeEventEmitter {
       if (!c[expectedFn]) {
         throw new ArcanaAuthError(
           'fn_not_available',
-          'The requested fn is not available in this context'
+          `The requested fn ${expectedFn} is not available in this context`
         )
       }
       return c
