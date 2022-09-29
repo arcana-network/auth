@@ -6,6 +6,12 @@
   "module": "dist/standalone/auth.esm.js",
   "jsdelivr": "dist/standalone/auth.umd.js",
   "unpkg": "dist/standalone/auth.umd.js",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/standalone/auth.esm.js"
+    }
+  },
   "types": "types/index.d.ts",
   "files": [
     "dist",
