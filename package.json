@@ -1,11 +1,17 @@
 {
   "name": "@arcana/auth",
-  "version": "0.1.2-beta.6",
+  "version": "0.1.2-beta.15",
   "description": "Arcana Auth",
   "main": "dist/index.js",
   "module": "dist/standalone/auth.esm.js",
   "jsdelivr": "dist/standalone/auth.umd.js",
   "unpkg": "dist/standalone/auth.umd.js",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/standalone/auth.esm.js"
+    }
+  },
   "types": "types/index.d.ts",
   "files": [
     "dist",
@@ -86,6 +92,9 @@
     "json-rpc-engine": "^6.1.0",
     "penpal": "^6.0.1",
     "web3-providers-http": "^1.6.1"
+  },
+  "resolutions": {
+    "terser": "^5.15.0"
   },
   "lint-staged": {
     "*.ts": "eslint --cache --fix",

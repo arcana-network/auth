@@ -3,10 +3,11 @@ import { RpcConfig } from './typings'
 export enum Chain {
   ETHEREUM_MAINNET = '0x1',
   ETHEREUM_ROPSTEN = '0x3',
-  ETHEREUM_RINKEBY = '0x4',
   ETHEREUM_GOERLI = '0x5',
   POLYGON_MAINNET = '0x89',
   POLYGON_MUMBAI_TESTNET = '0x13881',
+  ARCANA_TESTNET = '0x9DD5',
+  ARCANA_DEV = '0x9DD4',
 }
 
 const ChainList: Record<Chain, RpcConfig> = {
@@ -25,16 +26,6 @@ const ChainList: Record<Chain, RpcConfig> = {
     rpcUrls: ['https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
     chainName: 'Ethereum Ropsten (Testnet)',
     blockExplorerUrls: ['https://ropsten.etherscan.io/'],
-    nativeCurrency: {
-      symbol: 'ETH',
-      decimals: 18,
-    },
-  },
-  [Chain.ETHEREUM_RINKEBY]: {
-    chainId: 4,
-    rpcUrls: ['https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
-    chainName: 'Ethereum Rinkeby (Testnet)',
-    blockExplorerUrls: ['https://rinkeby.etherscan.io/'],
     nativeCurrency: {
       symbol: 'ETH',
       decimals: 18,
@@ -69,6 +60,18 @@ const ChainList: Record<Chain, RpcConfig> = {
       symbol: 'matic',
       decimals: 18,
     },
+  },
+  [Chain.ARCANA_TESTNET]: {
+    chainId: 40405,
+    rpcUrls: ['https://blockchain001-testnet.arcana.network/'],
+    chainName: 'Arcana (Testnet)',
+    blockExplorerUrls: ['https://explorer.beta.arcana.network/'],
+  },
+  [Chain.ARCANA_DEV]: {
+    chainId: 40404,
+    rpcUrls: ['https://blockchain-dev.arcana.network'],
+    chainName: 'Arcana Dev',
+    blockExplorerUrls: ['https://explorer.dev.arcana.network/'],
   },
 }
 

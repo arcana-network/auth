@@ -1,5 +1,5 @@
 import { NetworkConfig, RpcConfig, ChainConfigInput } from './typings'
-import { getConfigFromChain } from './chainList'
+import { Chain, getConfigFromChain } from './chainList'
 type Network = 'dev' | 'testnet'
 
 const DEV_NETWORK_CONFIG: NetworkConfig = {
@@ -16,18 +16,6 @@ const TESTNET_NETWORK_CONFIG: NetworkConfig = {
   walletUrl: 'https://wallet.beta.arcana.network',
   sentryDsn:
     'https://4e27545e4faf43318301625d79a6dc34@o1011868.ingest.sentry.io/6451353',
-}
-
-const DEV_RPC_CONFIG: RpcConfig = {
-  rpcUrls: ['https://blockchain-dev.arcana.network'],
-  chainId: 40404,
-  chainName: 'Arcana Dev',
-}
-
-const TESTNET_RPC_CONFIG: RpcConfig = {
-  rpcUrls: ['https://blockchain001-testnet.arcana.network/'],
-  chainId: 40405,
-  chainName: 'Arcana testnet',
 }
 
 const getNetworkConfig = (n: Network | NetworkConfig) => {
@@ -61,13 +49,13 @@ const getRpcConfig = (
   if (typeof n === 'string' && isNetworkEnum(n)) {
     switch (n) {
       case 'testnet':
-        return TESTNET_RPC_CONFIG
+        return getConfigFromChain(Chain.ARCANA_TESTNET)
       case 'dev':
-        return DEV_RPC_CONFIG
+        return getConfigFromChain(Chain.ARCANA_DEV)
     }
   }
 
-  return TESTNET_RPC_CONFIG
+  return getConfigFromChain(Chain.ARCANA_TESTNET)
 }
 
 function isRpcConfigInput(

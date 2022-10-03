@@ -24,6 +24,7 @@ export default class IframeWrapper {
   public widgetBubble: HTMLButtonElement
   public widgetIframeContainer: HTMLDivElement
   public appMode: AppMode
+  private state: 'open' | 'closed'
 
   private iframeCommunication: Connection<ChildMethods>
   constructor(public params: IframeWrapperParams) {
@@ -49,6 +50,10 @@ export default class IframeWrapper {
   public setWalletType(walletType: WalletType, appMode: AppMode | undefined) {
     this.appMode = verifyMode(walletType, appMode)
     this.initWalletUI()
+  }
+
+  public getState() {
+    return this.state
   }
 
   public onReceivingPendingRequestCount(count: number) {
@@ -110,7 +115,7 @@ export default class IframeWrapper {
     const appLogo = createDomElement('img', {
       src: assets.logo.horizontal,
       style: widgetIframeStyle.header.logo,
-      onerror: setFallbackImage,
+      onerror: (e: Event) => setFallbackImage(e, theme),
     })
 
     const closeButton = createDomElement('button', {
@@ -165,7 +170,7 @@ export default class IframeWrapper {
     const buttonLogo = createDomElement('img', {
       src: assets.logo.vertical,
       style: widgetBubbleStyle.bubbleLogo,
-      onerror: setFallbackImage,
+      onerror: (e: Event) => setFallbackImage(e, theme),
     })
 
     const reqCountBadge = createDomElement('p', {
@@ -240,11 +245,13 @@ export default class IframeWrapper {
     const isFullMode = this.appMode === AppMode.Full
     this.widgetBubble.style.display = isFullMode ? 'flex' : 'none'
     this.widgetIframeContainer.style.display = 'none'
+    this.state = 'closed'
   }
 
   private openWidgetIframe() {
     this.widgetBubble.style.display = 'none'
     this.widgetIframeContainer.style.display = 'flex'
+    this.state = 'open'
   }
 
   private checkSecureOrigin() {

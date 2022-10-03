@@ -1,12 +1,22 @@
-// const { AuthProvider, AppMode, encryptWithPublicKey } = window.arcana.auth
-import {
-  AuthProvider,
-  AppMode,
-  encryptWithPublicKey,
-} from '../dist/standalone/auth.esm.js'
+const { AuthProvider, AppMode, encryptWithPublicKey } = window.arcana.auth
 
 const auth = new AuthProvider('43')
 let provider
+
+const reqElement = document.getElementById('request')
+const resElement = document.getElementById('result')
+const accElement = document.getElementById('account')
+
+function setRequest(value) {
+  reqElement.innerText = value
+  setResult('-')
+}
+function setResult(value) {
+  resElement.innerText = value
+}
+function setAccount(value) {
+  accElement.innerText = value
+}
 
 window.onload = async () => {
   console.log('Init wallet')
@@ -26,23 +36,6 @@ window.onload = async () => {
 // get from eth_accounts
 let from = ''
 
-console.log({ auth })
-const triggerLoginBtn = document.getElementById('trigger-login')
-const triggerPasswordlessLoginBtn = document.getElementById('trigger-p-login')
-const getPublicBtn = document.getElementById('get-public')
-const getOthersPublicBtn = document.getElementById('get-other-public')
-const requestSignatureBtn = document.getElementById('request-signature')
-const encryptBtn = document.getElementById('encrypt')
-const requestDecryptBtn = document.getElementById('request-decryption')
-const requestTypedSignatureBtn = document.getElementById(
-  'request-typed-signature'
-)
-const requestPersonalSignatureBtn = document.getElementById(
-  'request-personal-signature'
-)
-const getAccountsBtn = document.getElementById('get-accounts')
-const logoutBtn = document.getElementById('logout')
-
 function setHooks() {
   provider.on('connect', async (params) => {
     console.log({ type: 'connect', params: params })
@@ -57,103 +50,167 @@ function setHooks() {
   })
 }
 
-logoutBtn.addEventListener('click', async () => {
+async function logout() {
   console.log('Requesting logout')
   try {
     await auth.logout()
   } catch (e) {
     console.log({ e })
   }
-})
-getAccountsBtn.addEventListener('click', async () => {
+}
+
+async function getAccounts() {
   console.log('Requesting accounts')
   try {
+    setRequest('eth_accounts')
     const accounts = await provider.request({ method: 'eth_accounts' })
     console.log({ accounts })
     from = accounts[0]
+    setAccount(from)
+    setResult(from)
   } catch (e) {
     console.log(e)
     console.log({ e })
   }
-})
+}
 
-requestSignatureBtn.addEventListener('click', async () => {
+async function sign() {
   console.log('Requesting signature')
+  setRequest('eth_sign')
   const signature = await provider.request({
     method: 'eth_sign',
     params: [from, 'some_random_data'],
   })
+  setResult(signature)
   console.log({ signature })
-})
+}
 
-triggerLoginBtn.addEventListener('click', async () => {
+async function socialLogin() {
   console.log('Requesting login')
+  setRequest('social_login')
   await auth.loginWithSocial('google')
-  // console.log({ signature });
-})
-triggerPasswordlessLoginBtn.addEventListener('click', async () => {
+}
+async function linkLogin() {
   console.log('Requesting passwordlesslogin')
+  setRequest('link_login')
   await auth.loginWithLink('makyl@newfang.io')
-  // console.log({ signature });
-})
+}
 
-requestPersonalSignatureBtn.addEventListener('click', async () => {
+async function personalSign() {
   console.log('Requesting personal signature')
+  setRequest('personal_sign')
+
   const personalSign = await provider.request({
     method: 'personal_sign',
     params: ['0', from],
   })
+
+  setResult(personalSign)
   console.log({ personalSign })
-})
+}
 
 let plaintext = 'I am a plaintext!'
 let ciphertext
 let publicKey
 
-encryptBtn.addEventListener('click', async () => {
+async function encrypt() {
   console.log('Doing encryption')
+  setRequest('encrypt')
+
   const c = await encryptWithPublicKey({
     publicKey,
     message: plaintext,
   })
-
+  setResult(c)
   console.log({ ciphertext: c })
   ciphertext = c
-})
+}
 
-requestDecryptBtn.addEventListener('click', async () => {
+async function ethDecrypt() {
   console.log('Requesting decryption')
+  setRequest('eth_decrypt')
+
   const plaintext = await provider.request({
     method: 'eth_decrypt',
     params: [ciphertext, from],
   })
   console.log({ plaintext })
-})
+  setResult(plaintext)
+}
 
-getPublicBtn.addEventListener('click', async () => {
+async function sendTransaction() {
+  setRequest('eth_sendTransaction')
+
+  const hash = await provider.request({
+    method: 'eth_sendTransaction',
+    params: [
+      {
+        from,
+        gasPrice: 0,
+        to: '0xE28F01Cf69f27Ee17e552bFDFB7ff301ca07e780',
+        value: '0x0de0b6b3a7640000',
+      },
+    ],
+  })
+  setResult(hash)
+
+  console.log({ hash })
+}
+async function signTransaction() {
+  setRequest('eth_signTransaction')
+
+  const sig = await provider.request({
+    method: 'eth_signTransaction',
+    params: [
+      {
+        from,
+        gasPrice: 0,
+        to: '0xE28F01Cf69f27Ee17e552bFDFB7ff301ca07e780',
+        value: '0x0de0b6b3a7640000',
+      },
+    ],
+  })
+  setResult(sig)
+
+  console.log({ sig })
+}
+
+async function getSelfPublicKey() {
   console.log('Requesting public key')
+  setRequest('eth_getEncryptionPublicKey')
+
   const pk = await provider.request({
     method: 'eth_getEncryptionPublicKey',
     params: [from],
   })
   console.log({ pk })
+  setResult(pk)
   publicKey = pk
-})
+}
 
-getOthersPublicBtn.addEventListener('click', async () => {
+async function getPublicKey() {
+  setRequest('getPublicKey')
+
   console.log('Requesting others public key')
   const pk = await auth.getPublicKey('makyl@newfang.io')
-  console.log({ pk })
-})
+  setResult(pk)
 
-requestTypedSignatureBtn.addEventListener('click', async () => {
+  console.log({ pk })
+}
+
+async function signTyped() {
+  setRequest('eth_signTypedData_v4')
+
   console.log('Requesting typed signature')
   const typedSign = await provider.request({
     method: 'eth_signTypedData_v4',
     params: [from, msgParams],
   })
+
+  setResult(typedSign)
+
   console.log({ typedSign })
-})
+}
 
 const msgParams = JSON.stringify({
   domain: {

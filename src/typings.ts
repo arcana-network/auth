@@ -6,6 +6,12 @@ export type Orientation = 'horizontal' | 'vertical'
 
 export type Position = 'right' | 'left'
 
+export enum InitStatus {
+  CREATED,
+  RUNNING,
+  DONE,
+}
+
 export interface IframeWrapperParams {
   appId: string
   iframeUrl: string
@@ -46,10 +52,12 @@ export interface UserInfo {
   address: string
   publicKey: string
 }
+export type Logins = 'google' | 'github' | 'discord' | 'twitch' | 'twitter'
 
 export interface ChildMethods {
   isLoggedIn: () => Promise<boolean>
   isLoginAvailable: (type: string) => Promise<boolean>
+  getAvailableLogins: () => Promise<Logins[]>
   triggerSocialLogin: (t: string, url: string) => Promise<string>
   triggerPasswordlessLogin: (email: string, url: string) => Promise<string>
   sendRequest: (req: JsonRpcRequest<unknown>) => Promise<void>
@@ -68,6 +76,9 @@ export interface ParentMethods {
   getRpcConfig: () => RpcConfig
   triggerSocialLogin: (kind: string) => void
   triggerPasswordlessLogin: (email: string) => void
+  openPopup: () => void
+  closePopup: () => void
+  getPopupState: () => 'open' | 'closed'
 }
 
 export interface TypedDataMessage {

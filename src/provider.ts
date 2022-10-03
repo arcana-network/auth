@@ -72,6 +72,9 @@ export class ArcanaProvider extends SafeEventEmitter {
       sendPendingRequestCount: this.iframe.onReceivingPendingRequestCount,
       triggerSocialLogin: loginFuncs.loginWithSocial,
       triggerPasswordlessLogin: loginFuncs.loginWithLink,
+      openPopup: () => this.iframe.show(),
+      closePopup: () => this.iframe.hide(),
+      getPopupState: () => this.iframe.getState(),
     })
     this.communication = communication
   }
@@ -118,6 +121,12 @@ export class ArcanaProvider extends SafeEventEmitter {
     return pk
   }
 
+  public async getAvailableLogins() {
+    const c = await this.getCommunication('getAvailableLogins')
+    const logins = await c.getAvailableLogins()
+    return logins
+  }
+
   public async triggerLogout() {
     const c = await this.getCommunication('triggerLogout')
     await c.triggerLogout()
@@ -131,7 +140,7 @@ export class ArcanaProvider extends SafeEventEmitter {
       if (!c[expectedFn]) {
         throw new ArcanaAuthError(
           'fn_not_available',
-          'The requested fn is not available in this context'
+          `The requested fn ${expectedFn} is not available in this context`
         )
       }
       return c
@@ -145,12 +154,6 @@ export class ArcanaProvider extends SafeEventEmitter {
   private openPermissionScreen(method: string) {
     if (permissionedCalls.includes(method)) {
       this.iframe.show()
-    }
-  }
-
-  private closePermissionScreen(method: string) {
-    if (permissionedCalls.includes(method)) {
-      this.iframe.hide()
     }
   }
 
@@ -191,7 +194,6 @@ export class ArcanaProvider extends SafeEventEmitter {
       this.subscriber.once(
         `result:${method}:${id}`,
         (params: { error: string; result: U }) => {
-          this.closePermissionScreen(method)
           if (params.error) {
             return reject(getError(params.error))
           }
@@ -228,15 +230,18 @@ const getError = (message: string) => {
   getLogger('ArcanaProvider').error('getError', message)
   switch (message) {
     case 'user_deny':
-      return new ProviderError(4001, 'The request was denied by the user')
+      return new ProviderError(4001, 'User rejected the request.')
     case 'operation_not_supported':
-      return new ProviderError(4200, 'The request is not supported currently')
+      return new ProviderError(
+        4200,
+        'The requested method is not supported by this provider.'
+      )
     case 'all_disconnected':
       return new ProviderError(
         4900,
-        'The provider is disconnected from all chains, login pending'
+        'The provider is disconnected from all chains. Login is pending.'
       )
     default:
-      return new ProviderError(-32603, 'Internal error')
+      return new ProviderError(-32603, 'Internal error.', message)
   }
 }
