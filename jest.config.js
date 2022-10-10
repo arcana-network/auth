@@ -4,6 +4,7 @@ const config = {
   automock: false,
   setupFiles: [],
   collectCoverage: true,
+  preset: 'ts-jest',
   coverageReporters: ['text', 'cobertura'],
 }
 

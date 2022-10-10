@@ -39,6 +39,7 @@ import {
 } from './logger'
 import { Chain } from './chainList'
 import Popup from './popup'
+import { ModalController } from './ui/modalController'
 
 class AuthProvider {
   public appId: string
@@ -51,6 +52,7 @@ class AuthProvider {
   private initStatus: InitStatus = InitStatus.CREATED
   private initPromises: ((value: AuthProvider) => void)[] = []
   private _provider: ArcanaProvider
+  private connectCtrl: ModalController
   constructor(appId: string, p?: Partial<ConstructorParams>) {
     if (!isDefined(appId)) {
       throw new Error('appId is required')
@@ -106,6 +108,7 @@ class AuthProvider {
         loginWithSocial: this.loginWithSocial,
       })
       this.setProviders()
+
       this.initStatus = InitStatus.DONE
 
       this.resolveInitPromises()
@@ -114,6 +117,18 @@ class AuthProvider {
       return await this.waitForInit()
     }
     return this
+  }
+
+  public connect(mode: 'dark' | 'light' = 'dark') {
+    if (!this.connectCtrl) {
+      this.connectCtrl = new ModalController({
+        loginWithLink: this.loginWithLink,
+        loginWithSocial: this.loginWithSocial,
+        loginList: ['google'],
+        mode: mode,
+      })
+    }
+    this.connectCtrl.open()
   }
 
   /**
@@ -315,7 +330,15 @@ class AuthProvider {
       ;(window as Record<string, any>).arcana = {}
     }
     ;(window as Record<string, any>).arcana.provider = this._provider
+    if (!(window as Record<string, any>).ethereum) {
+      ;(window as Record<string, any>).ethereum = {}
+    }
+    if (!(window as Record<string, any>).providers) {
+      ;(window as Record<string, any>).ethereum.providers = []
+    }
+    ;(window as Record<string, any>).ethereum.providers.push(this._provider)
   }
+
   /* eslint-enable */
 }
 
