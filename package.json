@@ -1,6 +1,6 @@
 {
   "name": "@arcana/auth",
-  "version": "0.1.2-beta.15",
+  "version": "0.1.2-beta.16",
   "description": "Arcana Auth",
   "main": "dist/index.js",
   "module": "dist/standalone/auth.esm.js",
@@ -68,6 +68,7 @@
     "husky": ">=6",
     "jest": "^27.5.1",
     "jest-environment-jsdom": "^27.5.1",
+    "json-rpc-engine": "^6.1.0",
     "lint-staged": ">=10",
     "node-stdlib-browser": "^1.2.0",
     "npm-run-all": "^4.1.5",
@@ -84,14 +85,8 @@
     "@metamask/safe-event-emitter": "^2.0.0",
     "@sentry/browser": "^6.19.7",
     "@sentry/tracing": "^6.19.7",
-    "eth-block-tracker": "^5.0.1",
-    "eth-crypto": "^2.1.0",
-    "eth-json-rpc-middleware": "^8.0.1",
-    "eth-sig-util": "^3.0.1",
-    "ethers": "^5.5.4",
-    "json-rpc-engine": "^6.1.0",
-    "penpal": "^6.0.1",
-    "web3-providers-http": "^1.6.1"
+    "eth-rpc-errors": "^4.0.3",
+    "penpal": "^6.0.1"
   },
   "resolutions": {
     "terser": "^5.15.0"
