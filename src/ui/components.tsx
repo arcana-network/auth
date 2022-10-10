@@ -1,5 +1,5 @@
 import { ARCANA_LOGO, SOCIAL_LOGO } from './icons'
-import { useState } from 'preact/hooks'
+import { StateUpdater } from 'preact/hooks'
 import { ModalParams, Theme } from './typings'
 import { JSXInternal } from 'preact/src/jsx'
 import { h } from 'preact'
@@ -20,17 +20,24 @@ const Header = ({ mode }: { mode: Theme }) => {
   )
 }
 
-const EmailLogin = ({ loginWithLink }: Pick<ModalParams, 'loginWithLink'>) => {
-  const [email, setEmail] = useState('')
+const EmailLogin = ({
+  loginWithLink,
+  email,
+  setEmail,
+}: {
+  email: string
+  setEmail: StateUpdater<string>
+} & Pick<ModalParams, 'loginWithLink'>) => {
   const onInput: JSXInternal.GenericEventHandler<HTMLInputElement> = (e) => {
     setEmail(e.currentTarget.value)
   }
 
-  const clickHandler = () => {
+  const clickHandler = async () => {
     if (!email) {
       return
     }
-    return loginWithLink(email)
+    await loginWithLink(email)
+    return
   }
   return (
     <form className="email-login">
@@ -81,9 +88,9 @@ const SocialLogin = ({
 const Footer = ({ mode }: { mode: Theme }) => {
   const logo = ARCANA_LOGO[mode]
   return (
-    <div className="footer">
-      <p className="footer-text">Powered by</p>
-      <a href="https://arcana.network" className="footer-img__link">
+    <div className="xar-footer">
+      <p className="xar-footer-text">Powered by</p>
+      <a href="https://arcana.network" className="xar-footer-img__link">
         <img src={logo} alt="arcana logo" />
       </a>
     </div>
@@ -117,12 +124,10 @@ const Container = ({
   )
 }
 
-const Action = ({ text, url }: { text: string; url: string }) => {
+const Action = ({ text, method }: { text: string; method: () => void }) => {
   return (
     <div class="xar-action-container">
-      <a href={url} className="xar-action__link">
-        {text}
-      </a>
+      <a className="xar-action__link">{text}</a>
     </div>
   )
 }

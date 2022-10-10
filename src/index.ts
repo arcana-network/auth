@@ -119,7 +119,10 @@ class AuthProvider {
     return this
   }
 
-  public connect(mode: 'dark' | 'light' = 'dark') {
+  public async connect(mode: 'dark' | 'light' = 'dark') {
+    if (this.initStatus !== InitStatus.DONE) {
+      await this.init()
+    }
     if (!this.connectCtrl) {
       this.connectCtrl = new ModalController({
         loginWithLink: this.loginWithLink,
@@ -129,6 +132,8 @@ class AuthProvider {
       })
     }
     this.connectCtrl.open()
+    await this.waitForConnect()
+    return this._provider
   }
 
   /**

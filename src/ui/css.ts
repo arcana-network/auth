@@ -3,7 +3,8 @@ import { Theme } from '../typings'
 const getModalStyleSheet = (mode: Theme) => {
   const link = document.createElement('link')
   link.rel = 'stylesheet'
-  link.href = 'data:text/css,' + escape(getCssText(mode))
+  link.href =
+    'data:text/css;charset=UTF-8,' + encodeURIComponent(getCssText(mode))
   return link
 }
 
@@ -48,8 +49,8 @@ const getCssText = (mode: Theme) => {
           width: 100%;
           height: 100%;
           overflow: auto;
-          background-color: rgb(0,0,0); 
-          background-color: rgba(0,0,0,0.4);
+          background: rgba(10, 10, 10, 0.7);
+          backdrop-filter: blur(16px);
           font-family: Sora, sans-serif;
       }
       
@@ -184,19 +185,19 @@ const getCssText = (mode: Theme) => {
         transform: scale(1.05, 1.15);
       }
 
-      .footer {
+      .xar-footer {
         display: flex;
         align-items: center;
         justify-content: center;
         margin-top: 10px;
       }
 
-      .footer-text {
+      .xar-footer-text {
         font-size: 12px;
         font-weight: 400;
       }
       
-      .footer-img__link {
+      .xar-footer-img__link {
         width: 60px;
         height: 15px;
         margin-left: 5px;

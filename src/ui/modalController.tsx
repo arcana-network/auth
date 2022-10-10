@@ -7,12 +7,13 @@ class ModalController {
   private params: ModalParams
   private container: HTMLDivElement
   private status: 'open' | 'closed'
-  constructor(params: ModalParams) {
+  constructor(params: Omit<ModalParams, 'closeFunc'>) {
     this.params = {
       loginList: params.loginList,
       loginWithSocial: params.loginWithSocial,
       loginWithLink: params.loginWithLink,
       mode: params.mode,
+      closeFunc: this.close.bind(this),
     }
 
     this.createContainer()

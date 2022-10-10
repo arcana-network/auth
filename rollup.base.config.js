@@ -17,7 +17,7 @@ const baseConfig = {
       browser: true,
       preferBuiltins: false,
     }),
-    typescript(),
+    typescript({ module: 'esnext' }),
     json(),
     commonjs({
       requireReturnsDefault: 'auto',

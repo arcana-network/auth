@@ -1,18 +1,16 @@
 import { h, JSX } from 'preact'
-import { useState } from 'preact/hooks'
 
 const Overlay = (props: {
-  shouldClose: boolean
   children: preact.ComponentChildren
+  closeFunc?: () => void
 }) => {
-  const [display, setDisplay] = useState('flex')
   const clickHandler = (e: JSX.TargetedMouseEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLDivElement)?.id == 'xar-modal' && props.shouldClose) {
-      setDisplay('none')
+    if ((e.target as HTMLDivElement)?.id == 'xar-modal') {
+      if (props.closeFunc) props.closeFunc()
     }
   }
   return (
-    <div id="xar-modal" style={{ display }} onClick={clickHandler}>
+    <div id="xar-modal" onClick={clickHandler}>
       {props.children}
     </div>
   )
