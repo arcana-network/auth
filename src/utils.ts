@@ -143,11 +143,10 @@ const setWalletPosition = (
 
 const getWalletSize = (isViewportSmall: boolean): WalletSize => {
   const sizes = { height: '', width: '' }
+  sizes.height = '80vh'
   if (isViewportSmall) {
-    sizes.height = '375px'
     sizes.width = '235px'
   } else {
-    sizes.height = '540px'
     sizes.width = '360px'
   }
   return sizes
