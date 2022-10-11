@@ -9,7 +9,7 @@ class ModalController {
   private status: 'open' | 'closed'
   constructor(params: Omit<ModalParams, 'closeFunc'>) {
     this.params = {
-      loginList: params.loginList,
+      loginList: params.loginList.filter((l) => l !== 'passwordless'),
       loginWithSocial: params.loginWithSocial,
       loginWithLink: params.loginWithLink,
       mode: params.mode,

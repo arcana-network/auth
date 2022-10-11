@@ -124,13 +124,15 @@ class AuthProvider {
       this.connectCtrl = new ModalController({
         loginWithLink: this.loginWithLink,
         loginWithSocial: this.loginWithSocial,
-        loginList: ['google'],
+        loginList: await this.getLogins(),
         mode: mode,
       })
     }
     this.connectCtrl.open()
-    await this.waitForConnect()
-    return this._provider
+
+    const provider = this.waitForConnect()
+    this.connectCtrl.close()
+    return provider
   }
 
   /**

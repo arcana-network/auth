@@ -85,11 +85,18 @@ async function sign() {
   console.log({ signature })
 }
 
+async function connect() {
+  console.log('Requesting connect wallet')
+  setRequest('connect_wallet')
+  await auth.connect('dark')
+}
+
 async function socialLogin() {
   console.log('Requesting login')
   setRequest('social_login')
   await auth.loginWithSocial('google')
 }
+
 async function linkLogin() {
   console.log('Requesting passwordlesslogin')
   setRequest('link_login')

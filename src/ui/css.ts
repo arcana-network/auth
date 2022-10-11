@@ -96,6 +96,7 @@ const getCssText = (mode: Theme) => {
       }
 
       .email-login__label {
+        text-align: left;
         font-size: 14px;
         color: #8d8d8d;
         font-weight: 400;
@@ -161,6 +162,7 @@ const getCssText = (mode: Theme) => {
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        text-align: center;
       }
 
       .xar-inner-container > *:not(:first-child) {
@@ -223,7 +225,16 @@ const getCssText = (mode: Theme) => {
       .xar-separator:after {
         margin-left: 1rem;
       }
-      
+
+      .xar-action__link {
+        text-transform: uppercase;
+        text-decoration: underline;
+        color: #13a3fd;
+        font-weight: 700;
+        font-size: 15px;
+        line-height: 19px;
+        cursor: pointer;
+      }
       `
 }
 export { getModalStyleSheet }

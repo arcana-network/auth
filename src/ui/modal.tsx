@@ -11,6 +11,11 @@ import {
 import { Overlay } from './overlay'
 import { useReducer, useState } from 'preact/hooks'
 
+const WAIT_TEXT = {
+  SOCIAL: 'Please complete the login to proceed',
+  LINK: 'Please complete the login by clicking on email',
+}
+
 const initLoaderState = {
   text: '',
   loading: false,
@@ -33,10 +38,6 @@ const reducer = (
     return state
   }
 }
-const WAIT_TEXT = {
-  SOCIAL: 'Please complete the login to proceed',
-  LINK: 'Please complete the login by clicking on email',
-}
 
 const Modal = (props: ModalParams) => {
   const [loaderState, dispatch] = useReducer(reducer, initLoaderState)
@@ -51,10 +52,13 @@ const Modal = (props: ModalParams) => {
   }
 
   const linkLogin = async () => {
+    if (!email) {
+      return
+    }
+
     dispatch('LINK')
 
     props.loginWithLink(email).finally(() => {
-      console.log('Reached finally')
       dispatch('RESET')
     })
   }
@@ -67,9 +71,7 @@ const Modal = (props: ModalParams) => {
             {loaderState.type == 'LINK' ? (
               <>
                 <Action
-                  method={() => {
-                    linkLogin()
-                  }}
+                  method={() => linkLogin()}
                   text="Send the email again"
                 />
                 <Action

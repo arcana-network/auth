@@ -32,7 +32,10 @@ const EmailLogin = ({
     setEmail(e.currentTarget.value)
   }
 
-  const clickHandler = async () => {
+  const clickHandler = async (
+    e: JSXInternal.TargetedMouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault()
     if (!email) {
       return
     }
@@ -127,7 +130,9 @@ const Container = ({
 const Action = ({ text, method }: { text: string; method: () => void }) => {
   return (
     <div class="xar-action-container">
-      <a className="xar-action__link">{text}</a>
+      <p onClick={() => method()} className="xar-action__link">
+        {text}
+      </p>
     </div>
   )
 }
