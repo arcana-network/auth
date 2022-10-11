@@ -143,8 +143,3 @@ export interface ConstructorParams {
   chainConfig?: ChainConfigInput
   redirectUrl?: string
 }
-
-export interface EncryptInput {
-  message: string
-  publicKey: string
-}

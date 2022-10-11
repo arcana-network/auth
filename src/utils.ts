@@ -3,7 +3,6 @@ import {
   ConstructorParams,
   ModeWalletTypeRelation,
   WalletType,
-  EncryptInput,
   WalletPosition,
   WalletSize,
   Position,
