@@ -1,10 +1,9 @@
 import { ChildMethods, RpcConfig } from './typings'
-import {
+import type {
   JsonRpcId,
   JsonRpcEngine,
   JsonRpcRequest,
   JsonRpcError,
-  getUniqueId,
   JsonRpcResponse,
 } from 'json-rpc-engine'
 import { Connection } from 'penpal'
@@ -13,7 +12,7 @@ import SafeEventEmitter from '@metamask/safe-event-emitter'
 import { ArcanaAuthError, UserNotLoggedInError } from './errors'
 import { getLogger, Logger } from './logger'
 import IframeWrapper from './iframeWrapper'
-import { getCurrentUrl } from './utils'
+import { getCurrentUrl, getUniqueId } from './utils'
 
 interface RequestArguments {
   method: string

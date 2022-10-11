@@ -173,27 +173,19 @@ await auth.getPublicKey(`${email}`)
 
 ---
 
-## Utilities
+## Encryption
 
 ### ECIES Encryption
 
+The wallet uses ECIES for decryption of ciphertext so a complementary encryption method has to be used from package `eth-crypto`.
+
 ```js
-import { encryptWithPublicKey } from '@arcana/auth'
+import EthCrypto from 'eth-crypto'
 
-encryptWithPublicKey({
-  publicKey: '',
-  message: 'test-message',
-}).then((ciphertext) => {
-  // Do something with ciphertext
-})
-```
-
-### Compute Address
-
-```ts
-import { computeAddress } from '@arcana/auth'
-
-const address = computeAddress(publicKey: string);
+const encrypted = await EthCrypto.encryptWithPublicKey(
+  'bf1cc3154424dc22191941d9f4f50b063a2b663a2337e5548abea633c1d06ece...', // publicKey
+  'foobar' // message
+)
 ```
 
 See [Auth SDK Reference Guide](https://authsdk-ref-guide.netlify.app/) for details.
