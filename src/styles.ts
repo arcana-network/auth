@@ -36,6 +36,7 @@ const baseHeaderContainerStyle = {
   alignItems: 'center',
   padding: '10px 16px',
   borderRadius: '10px 10px 0px 0px',
+  zIndex: '1',
 }
 
 const widgetBubbleStyle = {
@@ -96,13 +97,12 @@ const widgetIframeStyle = {
     container: {
       light: {
         ...baseHeaderContainerStyle,
-        boxShadow:
-          '-2px -2px 1px rgba(255, 255, 255, 0.7), 2px 2px 2px rgba(0, 0, 0, 0.05)',
+        boxShadow: '2px 2px 2px 0px #0000000D, -2px -2px 1px 0px #FFFFFFB2',
         background: '#F9F9F9',
       },
       dark: {
         ...baseHeaderContainerStyle,
-        boxShadow: '0 5px 1px #181818',
+        boxShadow: '0 5px 4px -4px #181818',
         background: '#262626',
       },
     },
