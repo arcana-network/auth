@@ -89,20 +89,21 @@ const widgetIframeStyle = {
 
     display: 'flex',
     flexDirection: 'column',
+    boxShadow: '4px 5px 4px rgba(0, 0, 0, 0.25)',
+    borderRadius: '10px',
   },
   header: {
     container: {
       light: {
         ...baseHeaderContainerStyle,
         boxShadow:
-          '-1px -1px 3px #FFFFFF, 1.5px 1.5px 3px rgba(174, 174, 192, 0.4)',
-        background:
-          'linear-gradient(138.99deg, #F0F0F0 22.29%, rgba(254, 254, 255, 0) 101.74%)',
+          '-2px -2px 1px rgba(255, 255, 255, 0.7), 2px 2px 2px rgba(0, 0, 0, 0.05)',
+        background: '#F9F9F9',
       },
       dark: {
         ...baseHeaderContainerStyle,
-        boxShadow: '0px 9px 25px rgba(15, 15, 15, 0.25)',
-        background: '#1F1F1F',
+        boxShadow: '0 5px 1px #181818',
+        background: '#262626',
       },
     },
     logo: {
