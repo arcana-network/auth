@@ -1,19 +1,19 @@
 import { getModalStyleSheet } from './css'
 import { Modal } from './modal'
 import { ModalParams } from './typings'
-import { h, render } from 'preact'
-
+import { render } from 'preact'
+import './test.css'
 class ModalController {
   private params: ModalParams
   private container: HTMLDivElement
-  private status: 'open' | 'closed'
+  private status: 'open' | 'closed' = 'closed'
   constructor(params: Omit<ModalParams, 'closeFunc'>) {
     this.params = {
       loginList: params.loginList.filter((l) => l !== 'passwordless'),
       loginWithSocial: params.loginWithSocial,
       loginWithLink: params.loginWithLink,
       mode: params.mode,
-      closeFunc: this.close.bind(this),
+      closeFunc: this.close,
     }
 
     this.createContainer()
@@ -27,7 +27,7 @@ class ModalController {
     }
   }
 
-  public close() {
+  close = () => {
     if (this.status !== 'closed') {
       this.status = 'closed'
       render(null, this.container)
@@ -38,6 +38,13 @@ class ModalController {
     const stylesheet = getModalStyleSheet(this.params.mode)
     const head = document.getElementsByTagName('head')[0]
     head.appendChild(stylesheet)
+    const link = document.createElement('link')
+
+    link.type = 'text/css'
+    link.rel = 'stylesheet'
+    link.href = './auth-style.css'
+    head.appendChild(stylesheet)
+    head.appendChild(link)
   }
 
   private createContainer() {

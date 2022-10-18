@@ -1,9 +1,9 @@
 import { ARCANA_LOGO, SOCIAL_LOGO } from './icons'
 import { StateUpdater } from 'preact/hooks'
 import { ModalParams, Theme } from './typings'
+import { getTheme } from './css'
 import { JSXInternal } from 'preact/src/jsx'
-import { h } from 'preact'
-
+import ProgressOval from './loader'
 const Header = ({ mode }: { mode: Theme }) => {
   return (
     <>
@@ -103,10 +103,13 @@ const Footer = ({ mode }: { mode: Theme }) => {
 const Loader = (props: {
   text: string
   children: preact.ComponentChildren
+  mode: Theme
 }) => {
+  const { fg: color } = getTheme(props.mode)
   return (
     <>
-      {props.text ? <p>{props.text}</p> : ''}
+      <ProgressOval stroke={8} color={color} secondaryColor="#8D8D8D" />
+      {props.text ? <p className="loader__text">{props.text}</p> : ''}
       {props.children ? <>{props.children}</> : ''}
     </>
   )

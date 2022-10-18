@@ -1,10 +1,12 @@
 import { Theme } from '../typings'
 
-const getModalStyleSheet = (mode: Theme) => {
+const DARK_MODE_CLASS_NAME = 'xar-dark-mode'
+const LIGHT_MODE_CLASS_NAME = 'xar-light-mode'
+
+const getModalStyleSheet = () => {
   const link = document.createElement('link')
   link.rel = 'stylesheet'
-  link.href =
-    'data:text/css;charset=UTF-8,' + encodeURIComponent(getCssText(mode))
+  link.href = 'data:text/css;charset=UTF-8,' + encodeURIComponent(getCssText())
   return link
 }
 
@@ -26,18 +28,30 @@ const LightTheme = {
         inset 3px 1px 6px rgba(174, 174, 192, 0.2);`,
 }
 
-const getTheme = (theme: Theme) => {
+export const getTheme = (theme: Theme) => {
   if (theme === 'light') {
     return LightTheme
   }
   return DarkTheme
 }
 
-const getCssText = (mode: Theme) => {
-  const theme = getTheme(mode)
+const getCssText = () => {
   return `
       @import url('https://fonts.googleapis.com/css2?family=Sora:wght@100;400;600;700&display=block');
   
+      .light-mode {
+        --fg: '#101010',
+        --bg: '#f7f7f7',
+        --background: '#ffffff',
+        --inputShadow: 'inset -1px -7px 7px rgba(255, 255, 255, 0.7), inset 3px 1px 6px rgba(174, 174, 192, 0.2);'
+      }
+      .dark-mode {
+        --fg: '#f7f7f7',
+        --bg: '#101010',
+        --background: '#262626',
+        --inputShadow: 'inset -2px -2px 4px rgb(57 57 57 / 44%), inset 5px 5px 10px rgb(11 11 11 / 50%);'
+      }
+
       #xar-modal {
           display: flex;
           align-items: center;
@@ -107,12 +121,12 @@ const getCssText = (mode: Theme) => {
         padding: 0 16px;
         font-size: 14px;
         font-weight: 400;
-        color: ${theme.fg};
-        background: ${theme.bg};
+        color: var(--fg);
+        background: var(--bg);
         border: none;
         border-radius: 10px;
         outline: none;
-        box-shadow: ${theme.inputShadow};
+        box-shadow: var(--inputShadow);
       }
 
       .social-container {
@@ -122,7 +136,7 @@ const getCssText = (mode: Theme) => {
 
       .social-icon__wrapper {
         display: flex;
-        background: ${theme.fg};
+        background: var(--fg);
         width: 42px;
         height: 42px;
         border-radius: 25px;
@@ -148,8 +162,8 @@ const getCssText = (mode: Theme) => {
         min-width: 325px;
         max-width: 325px;
         min-height: 480px;
-        background-color: ${theme.background};
-        color: ${theme.fg};
+        background-color: var(--background);
+        color: var(--fg);
         margin: 0 auto;
         font-family: "Sora", sans-serif;
         box-shadow: 4px 5px 4px rgba(0, 0, 0, 0.25);
@@ -175,8 +189,8 @@ const getCssText = (mode: Theme) => {
         font-size: 14px;
         font-weight: 600;
         text-transform: uppercase;
-        color: ${theme.bg};
-        background: ${theme.fg};
+        color: var(--bg);
+        background: var(--fg);
         border: none;
         border-radius: 10px;
       }
@@ -234,6 +248,11 @@ const getCssText = (mode: Theme) => {
         font-size: 15px;
         line-height: 19px;
         cursor: pointer;
+      }
+
+      .loader__text {
+        font-size: 20px;
+        font-weight: 700;
       }
       `
 }

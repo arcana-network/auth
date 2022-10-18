@@ -67,7 +67,7 @@ const Modal = (props: ModalParams) => {
     return (
       <Overlay>
         <Container mode={props.mode}>
-          <Loader text={loaderState.text}>
+          <Loader text={loaderState.text} mode={props.mode}>
             {loaderState.type == 'LINK' ? (
               <>
                 <Action

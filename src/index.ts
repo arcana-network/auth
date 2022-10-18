@@ -116,6 +116,9 @@ class AuthProvider {
     return this
   }
 
+  /**
+   * A function to open the modal and do the arcana login
+   */
   public async connect(mode: 'dark' | 'light' = 'dark') {
     if (this.initStatus !== InitStatus.DONE) {
       await this.init()
@@ -129,9 +132,9 @@ class AuthProvider {
       })
     }
     this.connectCtrl.open()
-
-    const provider = this.waitForConnect()
+    const provider = await this.waitForConnect()
     this.connectCtrl.close()
+
     return provider
   }
 
@@ -342,7 +345,6 @@ class AuthProvider {
     }
     ;(window as Record<string, any>).ethereum.providers.push(this._provider)
   }
-
   /* eslint-enable */
 }
 
