@@ -26,6 +26,8 @@ const permissionedCalls = [
   'eth_signTypedData_v4',
   'eth_signTransaction',
   'eth_sendTransaction',
+  'wallet_switchEthereumChain',
+  'wallet_addEthereumChain',
 ]
 
 class ProviderError extends Error implements JsonRpcError {
