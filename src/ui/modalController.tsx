@@ -1,8 +1,7 @@
-import { getModalStyleSheet } from './css'
+import { getModalStyleSheet, getModeClass } from './css'
 import { Modal } from './modal'
 import { ModalParams } from './typings'
 import { render } from 'preact'
-import './test.css'
 class ModalController {
   private params: ModalParams
   private container: HTMLDivElement
@@ -35,21 +34,15 @@ class ModalController {
   }
 
   private addModalStylesheet() {
-    const stylesheet = getModalStyleSheet(this.params.mode)
+    const stylesheet = getModalStyleSheet()
     const head = document.getElementsByTagName('head')[0]
     head.appendChild(stylesheet)
-    const link = document.createElement('link')
-
-    link.type = 'text/css'
-    link.rel = 'stylesheet'
-    link.href = './auth-style.css'
-    head.appendChild(stylesheet)
-    head.appendChild(link)
   }
 
   private createContainer() {
     this.container = document.createElement('div')
     this.container.setAttribute('id', 'xar-login-container')
+    this.container.classList.add(getModeClass(this.params.mode))
     document.body.appendChild(this.container)
   }
 }

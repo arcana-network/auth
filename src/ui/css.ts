@@ -1,55 +1,40 @@
+import { LightTheme, DarkTheme } from './theme'
 import { Theme } from '../typings'
 
-const DARK_MODE_CLASS_NAME = 'xar-dark-mode'
-const LIGHT_MODE_CLASS_NAME = 'xar-light-mode'
+export const getModeClass = (mode: Theme) => {
+  if (mode === 'light') {
+    return LIGHT_MODE_CLASS_NAME
+  }
+  return DARK_MODE_CLASS_NAME
+}
 
-const getModalStyleSheet = () => {
+export const getModalStyleSheet = () => {
   const link = document.createElement('link')
   link.rel = 'stylesheet'
   link.href = 'data:text/css;charset=UTF-8,' + encodeURIComponent(getCssText())
   return link
 }
 
-const DarkTheme = {
-  bg: '#101010',
-  fg: '#f7f7f7',
-  background: '#262626',
-  mode: 'dark',
-  inputShadow: `inset -2px -2px 4px rgb(57 57 57 / 44%),
-        inset 5px 5px 10px rgb(11 11 11 / 50%);`,
-}
+const DARK_MODE_CLASS_NAME = 'xar-dark-mode'
 
-const LightTheme = {
-  fg: '#101010',
-  bg: '#f7f7f7',
-  background: '#ffffff',
-  mode: 'light',
-  inputShadow: `inset -1px -7px 7px rgba(255, 255, 255, 0.7),
-        inset 3px 1px 6px rgba(174, 174, 192, 0.2);`,
-}
-
-export const getTheme = (theme: Theme) => {
-  if (theme === 'light') {
-    return LightTheme
-  }
-  return DarkTheme
-}
+const LIGHT_MODE_CLASS_NAME = 'xar-light-mode'
 
 const getCssText = () => {
   return `
       @import url('https://fonts.googleapis.com/css2?family=Sora:wght@100;400;600;700&display=block');
   
-      .light-mode {
-        --fg: '#101010',
-        --bg: '#f7f7f7',
-        --background: '#ffffff',
-        --inputShadow: 'inset -1px -7px 7px rgba(255, 255, 255, 0.7), inset 3px 1px 6px rgba(174, 174, 192, 0.2);'
+      .${LIGHT_MODE_CLASS_NAME} {
+        --fg: ${LightTheme.fg};
+        --bg: ${LightTheme.bg};
+        --background: ${LightTheme.background};
+        --inputShadow: ${LightTheme.inputShadow};
       }
-      .dark-mode {
-        --fg: '#f7f7f7',
-        --bg: '#101010',
-        --background: '#262626',
-        --inputShadow: 'inset -2px -2px 4px rgb(57 57 57 / 44%), inset 5px 5px 10px rgb(11 11 11 / 50%);'
+
+      .${DARK_MODE_CLASS_NAME} {
+        --fg: ${DarkTheme.fg};
+        --bg: ${DarkTheme.bg};
+        --background: ${DarkTheme.background};
+        --inputShadow: ${DarkTheme.inputShadow};
       }
 
       #xar-modal {
@@ -256,4 +241,3 @@ const getCssText = () => {
       }
       `
 }
-export { getModalStyleSheet }
