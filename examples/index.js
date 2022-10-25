@@ -144,7 +144,6 @@ async function switchChain() {
     })
     console.log({ response })
   } catch (e) {
-    console.log(e)
     console.log({ e })
   }
 }
@@ -158,7 +157,6 @@ async function addNetwork(event) {
       params: [{ networkInfo: addNetworkInfo }],
     })
   } catch (e) {
-    console.log(e)
     console.log({ e })
   }
   return false
