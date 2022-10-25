@@ -2,10 +2,65 @@ const { AuthProvider, AppMode, encryptWithPublicKey } = window.arcana.auth
 
 const auth = new AuthProvider('43')
 let provider
+let chainIdToChange = null
+
+const addNetworkInfo = {
+  networkName: '',
+  rpcUrls: '',
+  chainId: '',
+  explorerUrls: '',
+  nativeCurrency: {
+    currencySymbol: '',
+  },
+}
 
 const reqElement = document.getElementById('request')
 const resElement = document.getElementById('result')
 const accElement = document.getElementById('account')
+const selectNetworkElement = document.getElementById('select-network')
+selectNetworkElement.addEventListener('input', (evt) => {
+  chainIdToChange = evt.target.value
+})
+const switchNetworkBtn = document.getElementById('switch-chain')
+switchNetworkBtn.addEventListener('click', switchChain)
+
+const networkNameInput = document.getElementById('networkName')
+const rpcUrlInput = document.getElementById('rpcUrl')
+const currencySymbolInput = document.getElementById('currencySymbol')
+const chainIdInput = document.getElementById('chainId')
+const explorerUrlInput = document.getElementById('explorerUrl')
+const addNetworkFormEl = document.getElementById('add-network-form')
+
+addNetworkFormEl.addEventListener('submit', addNetwork)
+
+networkNameInput.addEventListener('input', (evt) => {
+  networkInfoInput('networkName', evt.target.value)
+})
+
+rpcUrlInput.addEventListener('input', (evt) => {
+  networkInfoInput('rpcUrls', evt.target.value)
+})
+
+currencySymbolInput.addEventListener('input', (evt) => {
+  networkInfoInput('currencySymbol', evt.target.value)
+})
+
+chainIdInput.addEventListener('input', (evt) => {
+  networkInfoInput('chainId', evt.target.value)
+})
+
+explorerUrlInput.addEventListener('input', (evt) => {
+  networkInfoInput('explorerUrls', evt.target.value)
+  console.log({ addNetworkInfo })
+})
+
+function networkInfoInput(type, val) {
+  if (type === 'currencySymbol') {
+    addNetworkInfo.nativeCurrency[type] = val
+  } else {
+    addNetworkInfo[type] = val
+  }
+}
 
 function setRequest(value) {
   reqElement.innerText = value
@@ -48,6 +103,9 @@ function setHooks() {
   provider.on('chainChanged', async (params) => {
     console.log({ type: 'chainChanged', params: params })
   })
+  provider.on('disconnect', async (params) => {
+    console.log({ type: 'disconnect', params: params })
+  })
 }
 
 async function logout() {
@@ -72,6 +130,36 @@ async function getAccounts() {
     console.log(e)
     console.log({ e })
   }
+}
+
+async function switchChain() {
+  console.log(chainIdToChange, 'switchChain')
+  try {
+    setRequest('wallet_switchEthereumChain')
+    const response = await provider.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: chainIdToChange }],
+    })
+    console.log({ response })
+  } catch (e) {
+    console.log(e)
+    console.log({ e })
+  }
+}
+
+async function addNetwork(event) {
+  event.preventDefault()
+  try {
+    setRequest('wallet_addEthereumChain')
+    await provider.request({
+      method: 'wallet_addEthereumChain',
+      params: [{ networkInfo: addNetworkInfo }],
+    })
+  } catch (e) {
+    console.log(e)
+    console.log({ e })
+  }
+  return false
 }
 
 async function sign() {
@@ -139,22 +227,25 @@ async function ethDecrypt() {
 }
 
 async function sendTransaction() {
-  setRequest('eth_sendTransaction')
+  try {
+    setRequest('eth_sendTransaction')
 
-  const hash = await provider.request({
-    method: 'eth_sendTransaction',
-    params: [
-      {
-        from,
-        gasPrice: 0,
-        to: '0xE28F01Cf69f27Ee17e552bFDFB7ff301ca07e780',
-        value: '0x0de0b6b3a7640000',
-      },
-    ],
-  })
-  setResult(hash)
-
-  console.log({ hash })
+    const hash = await provider.request({
+      method: 'eth_sendTransaction',
+      params: [
+        {
+          from,
+          gasPrice: 0,
+          to: '0xE28F01Cf69f27Ee17e552bFDFB7ff301ca07e780',
+          value: '0x0de0b6b3a7640000',
+        },
+      ],
+    })
+    setResult(hash)
+    console.log({ hash })
+  } catch (e) {
+    console.log(e)
+  }
 }
 async function signTransaction() {
   setRequest('eth_signTransaction')

@@ -1,67 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Auth example</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="style.css">
-  <title>Auth example</title>
-</head>
-
-<body>
-  <h1>Auth Example</h1>
-  <div class="container">
-    <main>
-      <div class="flex">
-        <div class="operations">
-          <button class="btn" onclick="socialLogin()">Trigger google login</button>
-          <button class="btn" onclick="linkLogin()">Login with link</button>
-          <button class="btn" onclick="getAccounts()">Get Accounts</button>
-          <button class="btn" onclick="getSelfPublicKey()">Get Public Key</button>
-          <button class="btn" onclick="getPublicKey()">Get other's Public Key</button>
-          <button class="btn" onclick="sign()">Request signature</button>
-          <button class="btn" onclick="encrypt()">Do encryption</button>
-          <button class="btn" onclick="ethDecrypt()">Request decryption</button>
-          <button class="btn" onclick="personalSign()">Personal signature</button>
-          <button class="btn" onclick="signTyped()">Sign Typed</button>
-          <button class="btn" onclick="sendTransaction()">Send Transaction</button>
-          <button class="btn" onclick="signTransaction()">Sign Transaction</button>
-          <button class="btn" onclick="logout()">Logout</button>
+  <body>
+    <h1>Auth Example</h1>
+    <div class="container">
+      <main>
+        <div class="flex">
+          <div class="operations">
+            <button class="btn" onclick="socialLogin()">
+              Trigger google login
+            </button>
+            <button class="btn" onclick="linkLogin()">Login with link</button>
+            <button class="btn" onclick="getAccounts()">Get Accounts</button>
+            <button class="btn" onclick="getSelfPublicKey()">
+              Get Public Key
+            </button>
+            <button class="btn" onclick="getPublicKey()">
+              Get other's Public Key
+            </button>
+            <button class="btn" onclick="sign()">Request signature</button>
+            <button class="btn" onclick="encrypt()">Do encryption</button>
+            <button class="btn" onclick="ethDecrypt()">
+              Request decryption
+            </button>
+            <button class="btn" onclick="personalSign()">
+              Personal signature
+            </button>
+            <button class="btn" onclick="signTyped()">Sign Typed</button>
+            <button class="btn" onclick="sendTransaction()">
+              Send Transaction
+            </button>
+            <button class="btn" onclick="signTransaction()">
+              Sign Transaction
+            </button>
+            <button class="btn" onclick="logout()">Logout</button>
+          </div>
+          <div class="view-window">
+            <h2 class="section-heading">STATUS</h2>
+            <div class="pill">
+              <span class="sub-heading">Current account: </span>
+              <span class="sub-value" id="account">-</span>
+              <br />
+            </div>
+            <div class="pill">
+              <span class="sub-heading">REQ: </span>
+              <span class="sub-value" id="request">-</span>
+              <br />
+            </div>
+            <div class="pill">
+              <span class="sub-heading">RESULT: </span>
+              <span class="sub-value" id="result">-</span>
+              <br />
+            </div>
+            <hr />
+            <div>
+              <div class="pill">
+                <p class="h2">Switch Network</p>
+                <input id="select-network" class="pill" />
+                <button id="switch-chain">Switch</button>
+              </div>
+              <hr />
+              <div class="pill">
+                <p class="h2">Add Network</p>
+                <form onsubmit="addNetwork" id="add-network-form">
+                  <div class="flex flex-col pill">
+                    <label class="text-xs text-zinc-400" for="networkName">
+                      Network Name
+                    </label>
+                    <input
+                      id="networkName"
+                      type="text"
+                      class="input"
+                      placeholder="e.g. Ethereum"
+                    />
+                  </div>
+                  <div class="flex flex-col pill">
+                    <label class="text-xs text-zinc-400" for="rpcUrl">
+                      RPC URL
+                    </label>
+                    <input
+                      id="rpcUrl"
+                      required
+                      type="text"
+                      class="text-base sm:text-sm bg-gradient w-full p-2 sm:p-1 rounded-lg border-none outline-none"
+                      placeholder="e.g. https://cloudflare-eth.com/"
+                    />
+                  </div>
+                  <div class="flex flex-col pill">
+                    <label class="text-xs text-zinc-400" for="currencySymbol">
+                      Currency Symbol
+                    </label>
+                    <input
+                      id="currencySymbol"
+                      required
+                      type="text"
+                      class="text-base sm:text-sm bg-gradient w-full p-2 sm:p-1 rounded-lg border-none outline-none"
+                      placeholder="e.g. ETH"
+                    />
+                  </div>
+                  <div class="flex flex-col pill">
+                    <label class="text-xs text-zinc-400" for="chainId">
+                      Chain ID
+                    </label>
+                    <input
+                      id="chainId"
+                      required
+                      type="text"
+                      class="text-base sm:text-sm bg-gradient w-full p-2 sm:p-1 rounded-lg border-none outline-none"
+                      placeholder="e.g. 1"
+                    />
+                  </div>
+                  <div class="flex flex-col pill">
+                    <label class="text-xs text-zinc-400" for="explorerUrl">
+                      Explorer URL (Optional)
+                    </label>
+                    <input
+                      id="explorerUrl"
+                      type="text"
+                      class="text-base sm:text-sm bg-gradient w-full p-2 sm:p-1 rounded-lg border-none outline-none"
+                      placeholder="e.g. https://etherscan.io/"
+                    />
+                  </div>
+                  <div class="flex center">
+                    <button
+                      class="text-sm sm:text-xs rounded-xl text-white dark:bg-white bg-black dark:text-black w-36 h-9 sm:w-20 sm:h-8"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="view-window">
-          <h2 class="section-heading">STATUS</h2>
-          <div class="pill">
-            <span class="sub-heading">Current account: </span>
-            <span class="sub-value" id="account">-</span>
-            <br />
-          </div>
-          <div class="pill">
-            <span class="sub-heading">REQ: </span>
-            <span class="sub-value" id="request">-</span>
-            <br />
-          </div>
-          <div class="pill">
-            <span class="sub-heading">RESULT: </span>
-            <span class="sub-value" id="result">-</span>
-            <br />
-          </div>
-          <hr />
-          <!-- <div class="pill" v-if="error">
-            <div class="error">
-              <span>-</span>
-            </div> -->
-          <!-- <br /> -->
-          <!-- </div> -->
-          <!-- <div class="pill">
-            <input type="text" placeholder="User Input" v-model="input" />
-          </div> -->
-        </div>
-      </div>
-    </main>
-  </div>
-  <script src="../dist/standalone/auth.umd.js"></script>
-  <script src="./index.js"></script>
-</body>
-
+      </main>
+    </div>
+    <script src="../dist/standalone/auth.umd.js"></script>
+    <script src="./index.js"></script>
+  </body>
 </html>

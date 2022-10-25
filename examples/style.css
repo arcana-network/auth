@@ -35,8 +35,8 @@ h2 {
 }
 
 input {
-  padding: 8px 8px;
-  font-size: 1.25rem;
+  padding: 4px;
+  font-size: 1rem;
 }
 
 .sm-btn {
@@ -81,8 +81,8 @@ input {
 }
 
 .pill {
-  margin: 10px 0;
-  padding: 5px 5px;
+  margin: 8px 0;
+  padding: 3px 3px;
 }
 
 .centre-align {
@@ -127,4 +127,18 @@ main {
   font-size: 0.9rem;
   /* margin: 0 auto; */
   /* margin-left: 8px; */
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
