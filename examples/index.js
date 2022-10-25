@@ -6,9 +6,9 @@ let chainIdToChange = null
 
 const addNetworkInfo = {
   networkName: '',
-  rpcUrls: '',
+  rpcUrls: [],
   chainId: '',
-  explorerUrls: '',
+  explorerUrls: [],
   nativeCurrency: {
     currencySymbol: '',
   },
@@ -57,6 +57,8 @@ explorerUrlInput.addEventListener('input', (evt) => {
 function networkInfoInput(type, val) {
   if (type === 'currencySymbol') {
     addNetworkInfo.nativeCurrency[type] = val
+  } else if (type === 'rpcUrls' || type === 'explorerUrls') {
+    addNetworkInfo[type].push(val)
   } else {
     addNetworkInfo[type] = val
   }
