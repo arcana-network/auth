@@ -227,9 +227,9 @@ export class ArcanaProvider extends SafeEventEmitter {
   }
 }
 
-const getError = (message: string) => {
-  getLogger('ArcanaProvider').error('getError', message)
-  switch (message) {
+const getError = (error: string | ProviderError) => {
+  getLogger('ArcanaProvider').error('getError', error)
+  switch (error) {
     case 'user_deny':
       return new ProviderError(4001, 'User rejected the request.')
     case 'operation_not_supported':
@@ -243,6 +243,6 @@ const getError = (message: string) => {
         'The provider is disconnected from all chains. Login is pending.'
       )
     default:
-      return new ProviderError(-32603, 'Internal error.', message)
+      return error
   }
 }
