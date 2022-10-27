@@ -1,7 +1,7 @@
 import { ARCANA_LOGO, SOCIAL_LOGO } from './icons'
 import { StateUpdater } from 'preact/hooks'
 import { ModalParams, Theme } from './typings'
-import { getTheme } from './css'
+import { getTheme } from './theme'
 import { JSXInternal } from 'preact/src/jsx'
 import ProgressOval from './loader'
 const Header = ({ mode }: { mode: Theme }) => {
