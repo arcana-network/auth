@@ -5,7 +5,7 @@ let provider
 let chainIdToChange = null
 
 const addNetworkInfo = {
-  networkName: '',
+  chainName: '',
   rpcUrls: [],
   chainId: '',
   explorerUrls: [],
@@ -24,7 +24,7 @@ selectNetworkElement.addEventListener('input', (evt) => {
 const switchNetworkBtn = document.getElementById('switch-chain')
 switchNetworkBtn.addEventListener('click', switchChain)
 
-const networkNameInput = document.getElementById('networkName')
+const chainNameInput = document.getElementById('chainName')
 const rpcUrlInput = document.getElementById('rpcUrl')
 const currencySymbolInput = document.getElementById('currencySymbol')
 const chainIdInput = document.getElementById('chainId')
@@ -33,8 +33,8 @@ const addNetworkFormEl = document.getElementById('add-network-form')
 
 addNetworkFormEl.addEventListener('submit', addNetwork)
 
-networkNameInput.addEventListener('input', (evt) => {
-  networkInfoInput('networkName', evt.target.value)
+chainNameInput.addEventListener('input', (evt) => {
+  networkInfoInput('chainName', evt.target.value)
 })
 
 rpcUrlInput.addEventListener('input', (evt) => {
@@ -140,7 +140,7 @@ async function switchChain() {
     setRequest('wallet_switchEthereumChain')
     const response = await provider.request({
       method: 'wallet_switchEthereumChain',
-      params: [{ chainId: chainIdToChange }],
+      params: [chainIdToChange],
     })
     console.log({ response })
   } catch (e) {
@@ -154,7 +154,7 @@ async function addNetwork(event) {
     setRequest('wallet_addEthereumChain')
     await provider.request({
       method: 'wallet_addEthereumChain',
-      params: [{ networkInfo: addNetworkInfo }],
+      params: [addNetworkInfo],
     })
   } catch (e) {
     console.log({ e })
