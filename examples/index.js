@@ -59,6 +59,42 @@ async function logout() {
   }
 }
 
+async function addChain() {
+  try {
+    await provider.request({
+      method: 'wallet_addEthereumChain',
+      params: [
+        {
+          chainId: '0x64',
+          chainName: 'Ethereum',
+          blockExplorerUrls: ['https://etherscan.io/'],
+          rpcUrls: ['https://cloudflare-eth.com/'],
+          nativeCurrency: {
+            symbol: 'ETH',
+          },
+        },
+      ],
+    })
+  } catch (e) {
+    console.log({ e })
+  }
+}
+
+async function switchChain() {
+  try {
+    await provider.request({
+      method: 'wallet_switchEthereumChain',
+      params: [
+        {
+          chainId: '0x64',
+        },
+      ],
+    })
+  } catch (e) {
+    console.log({ e })
+  }
+}
+
 async function getAccounts() {
   console.log('Requesting accounts')
   try {

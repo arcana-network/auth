@@ -112,7 +112,7 @@ export interface ChainConfigInput {
 
 export interface RpcConfig {
   rpcUrls: string[]
-  chainId: number
+  chainId: string
   chainName?: string
   blockExplorerUrls?: string[]
   nativeCurrency?: {
