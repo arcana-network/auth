@@ -59,6 +59,21 @@ async function logout() {
   }
 }
 
+async function addChain() {
+  try {
+    await provider.request({
+      method: 'wallet_addEthereumChain',
+      params: [
+        {
+          chainId: 100,
+        },
+      ],
+    })
+  } catch (e) {
+    console.log({ e })
+  }
+}
+
 async function getAccounts() {
   console.log('Requesting accounts')
   try {
