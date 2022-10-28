@@ -65,7 +65,7 @@ async function addChain() {
       method: 'wallet_addEthereumChain',
       params: [
         {
-          chainId: 100,
+          chainId: '0x64',
           chainName: 'Ethereum',
           blockExplorerUrls: ['https://etherscan.io/'],
           rpcUrls: ['https://cloudflare-eth.com/'],
