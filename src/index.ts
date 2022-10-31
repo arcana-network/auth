@@ -8,6 +8,7 @@ import {
   getCurrentUrl,
   getConstructorParams,
   getInitParams,
+  removeHexPrefix,
 } from './utils'
 import { getNetworkConfig, getRpcConfig } from './config'
 import {
@@ -54,7 +55,7 @@ class AuthProvider {
     if (!isDefined(appId)) {
       throw new Error('appId is required')
     }
-    this.appId = appId
+    this.appId = removeHexPrefix(appId)
     this.params = getConstructorParams(p)
     this.networkConfig = getNetworkConfig(this.params.network)
     this.rpcConfig = getRpcConfig(this.params.chainConfig, this.params.network)

@@ -1,7 +1,6 @@
 import { ChildMethods, RpcConfig } from './typings'
 import type {
   JsonRpcId,
-  JsonRpcEngine,
   JsonRpcRequest,
   JsonRpcError,
   JsonRpcResponse,
@@ -49,7 +48,6 @@ interface TriggerLoginFuncs {
 
 export class ArcanaProvider extends SafeEventEmitter {
   private communication: Connection<ChildMethods>
-  private jsonRpcEngine: JsonRpcEngine
   private subscriber: SafeEventEmitter
   private logger: Logger = getLogger('ArcanaProvider')
   constructor(private iframe: IframeWrapper, private rpcConfig: RpcConfig) {
@@ -186,7 +184,7 @@ export class ArcanaProvider extends SafeEventEmitter {
       this.getCommunication().then(async (c) => {
         this.getResponse<string>(method, req.id).then(resolve, reject)
         await c.sendRequest(req)
-      })
+      }, reject)
     })
   }
 
@@ -227,9 +225,15 @@ export class ArcanaProvider extends SafeEventEmitter {
   }
 }
 
-const getError = (message: string) => {
-  getLogger('ArcanaProvider').error('getError', message)
-  switch (message) {
+type ErrorObj = {
+  code: number
+  message: string
+  data?: string
+}
+
+const getError = (error: string | ErrorObj) => {
+  getLogger('ArcanaProvider').error('getError', error)
+  switch (error) {
     case 'user_deny':
       return new ProviderError(4001, 'User rejected the request.')
     case 'operation_not_supported':
@@ -243,6 +247,9 @@ const getError = (message: string) => {
         'The provider is disconnected from all chains. Login is pending.'
       )
     default:
-      return new ProviderError(-32603, 'Internal error.', message)
+      if (!(typeof error === 'string')) {
+        return new ProviderError(error.code, error.message, error.data)
+      }
+      return ethErrors.rpc.internal(error)
   }
 }
