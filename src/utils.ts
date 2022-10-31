@@ -11,7 +11,6 @@ import {
 } from './typings'
 import * as Sentry from '@sentry/browser'
 import { getLogger } from './logger'
-import { InvalidAppId } from './errors'
 
 const fallbackLogo = {
   light:
@@ -59,30 +58,13 @@ const fetchWalletType = async (rpcUrl: string, address: string) => {
 
 const getWalletType = async (appId: string, gatewayUrl: string) => {
   const arcanaRpcUrl = await getArcanaRpc(gatewayUrl)
-  const appAddress = await getAppAddress(appId, gatewayUrl)
-  if (!appAddress) {
-    throw InvalidAppId
-  }
 
   try {
-    const walletType = await fetchWalletType(arcanaRpcUrl, appAddress)
+    const walletType = await fetchWalletType(arcanaRpcUrl, appId)
     return walletType
   } catch (e) {
     getLogger('WalletProvider').error('getWalletType', e)
     throw new Error('Error occurred during getting wallet type')
-  }
-}
-
-const getAppAddress = async (id: string, gatewayUrl: string) => {
-  try {
-    const u = new URL(`/api/v1/get-address/?id=${id}`, gatewayUrl)
-    const res = await fetch(u.toString())
-    const json = await res.json()
-    const address: string = json?.address
-    return address
-  } catch (e) {
-    getLogger('WalletProvider').error('getAppAddress', e)
-    throw new Error('Error occurred during getting app address')
   }
 }
 
@@ -99,7 +81,7 @@ const getArcanaRpc = async (gatewayUrl: string) => {
       throw new Error('Error during fetching config from gateway url')
     }
   } catch (e) {
-    getLogger('WalletProvider').error('getAppAddress', e)
+    getLogger('WalletProvider').error('getConfig', e)
     throw new Error('Error occurred during getting arcana RPC url')
   }
 }
