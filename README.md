@@ -74,7 +74,7 @@ yarn add @arcana/auth
 
 Before you can start using the Arcana Auth SDK, you need to register your dApp using [Arcana Developer Dashboard](https://dashboard.beta.arcana.network/).
 
-A unique **AppId** will be assigned to your dApp and you need the same to initialize the Arcana Auth SDK.
+A unique **App Address** will be assigned to your dApp and you need the same to initialize the Arcana Auth SDK.
 
 # 📚 Documentation
 

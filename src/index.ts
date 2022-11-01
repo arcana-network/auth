@@ -49,11 +49,11 @@ class AuthProvider {
   private initStatus: InitStatus = InitStatus.CREATED
   private initPromises: ((value: AuthProvider) => void)[] = []
   private _provider: ArcanaProvider
-  constructor(appId: string, p?: Partial<ConstructorParams>) {
-    if (!isDefined(appId)) {
-      throw new Error('appId is required')
+  constructor(appAddress: string, p?: Partial<ConstructorParams>) {
+    if (!isDefined(appAddress)) {
+      throw new Error('appAddress is required')
     }
-    this.appId = removeHexPrefix(appId)
+    this.appId = removeHexPrefix(appAddress)
     this.params = getConstructorParams(p)
     this.networkConfig = getNetworkConfig(this.params.network)
     this.rpcConfig = getRpcConfig(this.params.chainConfig, this.params.network)

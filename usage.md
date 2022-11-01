@@ -17,7 +17,7 @@
 import { AuthProvider } from '@arcana/auth'
 import { ethers } from 'ethers'
 
-const auth = new AuthProvider(`${appId}`)
+const auth = new AuthProvider(`${appAddress}`)
 
 window.onload = async () => {
   try {
@@ -42,7 +42,7 @@ window.onload = async () => {
 import { AuthProvider } from '@arcana/auth'
 import Web3 from 'web3'
 
-const auth = new AuthProvider(`${appId}`)
+const auth = new AuthProvider(`${appAddress}`)
 
 window.onload = async () => {
   try {
@@ -102,7 +102,7 @@ interface ChainConfig {
   rpcUrl?: string
 }
 
-const auth = new AuthProvider(`${appId}`, {
+const auth = new AuthProvider(`${appAddress}`, {
   chainConfig: {
     chainId: CHAIN.POLYGON_MAINNET,
     rpcUrl: '',
