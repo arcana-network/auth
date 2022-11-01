@@ -1,4 +1,4 @@
-import { ARCANA_LOGO, SOCIAL_LOGO } from './icons'
+import { ARCANA_LOGO, getSocialLogo } from './icons'
 import { StateUpdater } from 'preact/hooks'
 import { ModalParams, Theme } from './typings'
 import { getTheme } from './theme'
@@ -7,12 +7,12 @@ import ProgressOval from './loader'
 const Header = ({ mode }: { mode: Theme }) => {
   return (
     <>
-      <div className="header-logo__container">
-        <img className="header-logo" src={fallbackLogo[mode]} alt="" />
+      <div className="xar-header-logo__container">
+        <img className="xar-header-logo" src={fallbackLogo[mode]} alt="" />
       </div>
-      <div className="header-text">
-        <h1 className="header-heading">Welcome</h1>
-        <p className="header-subtext">
+      <div className="xar-header-text">
+        <h1 className="xar-header-heading">Welcome</h1>
+        <p className="xar-header-subtext">
           We’ll email you a login link for a password-free sign in.
         </p>
       </div>
@@ -43,14 +43,14 @@ const EmailLogin = ({
     return
   }
   return (
-    <form className="email-login">
-      <label className="email-login__label" htmlFor="">
+    <form className="xar-email-login">
+      <label className="xar-email-login__label" htmlFor="">
         Email
       </label>
       <input
         value={email}
         onInput={onInput}
-        className="email-login__input"
+        className="xar-email-login__input"
         type="text"
       />
       <button onClick={clickHandler} className="xar-btn">
@@ -67,19 +67,23 @@ const Separator = ({ text }: { text: string }) => {
 const SocialLogin = ({
   loginWithSocial,
   loginList,
-}: Pick<ModalParams, 'loginWithSocial' | 'loginList'>) => {
+  mode,
+}: Pick<ModalParams, 'loginWithSocial' | 'loginList'> & { mode: Theme }) => {
   const clickHandler = (p: string) => {
     return loginWithSocial(p)
   }
   return (
-    <div className="social-container">
+    <div className="xar-social-container">
       {loginList.map((l) => {
         return (
-          <div className="social-icon__wrapper" onClick={() => clickHandler(l)}>
+          <div
+            className="xar-social-icon__wrapper"
+            onClick={() => clickHandler(l)}
+          >
             <img
-              src={SOCIAL_LOGO[l]}
+              src={getSocialLogo(l, mode)}
               alt={`${l} logo`}
-              className="social-icon"
+              className="xar-social-icon"
             />
           </div>
         )
@@ -109,7 +113,7 @@ const Loader = (props: {
   return (
     <>
       <ProgressOval stroke={8} color={color} secondaryColor="#8D8D8D" />
-      {props.text ? <p className="loader__text">{props.text}</p> : ''}
+      {props.text ? <p className="xar-loader__text">{props.text}</p> : ''}
       {props.children ? <>{props.children}</> : ''}
     </>
   )

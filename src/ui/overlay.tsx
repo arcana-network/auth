@@ -3,11 +3,12 @@ import { JSX } from 'preact'
 const ID = 'xar-modal'
 const Overlay = (props: {
   children: preact.ComponentChildren
-  closeFunc?: () => void
+  closeFunc?: (error?: Error) => void
 }) => {
   const clickHandler = (e: JSX.TargetedMouseEvent<HTMLDivElement>) => {
     if ((e.target as HTMLDivElement)?.id == ID) {
-      if (props.closeFunc) props.closeFunc()
+      if (props.closeFunc)
+        props.closeFunc(new Error('User closed the connect modal'))
     }
   }
   return (

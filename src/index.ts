@@ -124,6 +124,11 @@ class AuthProvider {
     if (this.initStatus !== InitStatus.DONE) {
       await this.init()
     }
+
+    if (await this.isLoggedIn()) {
+      return this._provider
+    }
+
     if (!this.connectCtrl) {
       this.connectCtrl = new ModalController({
         loginWithLink: this.loginWithLink,
@@ -132,11 +137,20 @@ class AuthProvider {
         mode: mode,
       })
     }
-    this.connectCtrl.open()
-    const provider = await this.waitForConnect()
-    this.connectCtrl.close()
+    return new Promise((resolve, reject) => {
+      this.connectCtrl.open((err?: Error) => {
+        if (err) {
+          return reject(err)
+        }
+      })
 
-    return provider
+      this.waitForConnect()
+        .then((p) => {
+          this.connectCtrl.close()
+          resolve(p)
+        })
+        .catch(reject)
+    })
   }
 
   /**

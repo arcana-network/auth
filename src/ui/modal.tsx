@@ -99,6 +99,7 @@ const Modal = (props: ModalParams) => {
         <SocialLogin
           loginWithSocial={socialLogin}
           loginList={props.loginList}
+          mode={props.mode}
         />
       </Container>
     </Overlay>

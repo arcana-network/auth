@@ -6,6 +6,7 @@ class ModalController {
   private params: ModalParams
   private container: HTMLDivElement
   private status: 'open' | 'closed' = 'closed'
+  private onClose: (err?: Error) => unknown
   constructor(params: Omit<ModalParams, 'closeFunc'>) {
     this.params = {
       loginList: params.loginList.filter((l) => l !== 'passwordless'),
@@ -19,15 +20,17 @@ class ModalController {
     this.addModalStylesheet()
   }
 
-  public open() {
+  public open(onClose: (err?: Error) => unknown) {
     if (this.status !== 'open') {
+      this.onClose = onClose
       this.status = 'open'
       render(<Modal {...this.params} />, this.container)
     }
   }
 
-  close = () => {
+  close = (error?: Error) => {
     if (this.status !== 'closed') {
+      this.onClose(error)
       this.status = 'closed'
       render(null, this.container)
     }

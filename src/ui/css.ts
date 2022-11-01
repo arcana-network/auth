@@ -53,7 +53,7 @@ const getCssText = () => {
           font-family: Sora, sans-serif;
       }
       
-      .header-logo__container {
+      .xar-header-logo__container {
         width: 70px;
         height: 70px;
         border-radius: 60px;
@@ -64,44 +64,44 @@ const getCssText = () => {
         border: 2px solid black;
       }
 
-      .header-logo {
+      .xar-header-logo {
         max-width: 70px;
         max-height: 70px;
         margin: 0 auto;
         display: inline-block;
       }
 
-      .header-text {
+      .xar-header-text {
         font-family: "Montserrat", sans-serif;
       }
 
-      .header-heading {
+      .xar-header-heading {
         text-align: center;
       }
 
-      .header-subtext {
+      .xar-header-subtext {
         font-size: 12px;
         font-weight: 400;
       }
 
-      .email-login {
+      .xar-email-login {
         display: flex;
         flex-direction: column;
         width: 100%;
       }
 
-      .email-login > *:not(:first-child) {
+      .xar-email-login > *:not(:first-child) {
         margin-top: 20px;
       }
 
-      .email-login__label {
+      .xar-email-login__label {
         text-align: left;
         font-size: 14px;
         color: #8d8d8d;
         font-weight: 400;
       }
   
-      .email-login__input {
+      .xar-email-login__input {
         height: 45px;
         padding: 0 16px;
         font-size: 14px;
@@ -114,12 +114,12 @@ const getCssText = () => {
         box-shadow: var(--inputShadow);
       }
 
-      .social-container {
+      .xar-social-container {
         display: flex;
         justify-content: center;
       }
 
-      .social-icon__wrapper {
+      .xar-social-icon__wrapper {
         display: flex;
         background: var(--fg);
         width: 42px;
@@ -130,13 +130,13 @@ const getCssText = () => {
         margin-right: 10px;
       }
 
-      .social-icon__wrapper:hover {
+      .xar-social-icon__wrapper:hover {
         cursor: pointer;
         transition: all 0.5s;
         transform: scale(1.15, 1.15);
       }
 
-      .social-icon {
+      .xar-social-icon {
         margin: 0 auto;
         width: 24px;
         height: 24px;
@@ -235,7 +235,7 @@ const getCssText = () => {
         cursor: pointer;
       }
 
-      .loader__text {
+      .xar-loader__text {
         font-size: 20px;
         font-weight: 700;
       }

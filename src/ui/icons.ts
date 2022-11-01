@@ -9,9 +9,16 @@ const SOCIAL_LOGO: { [k: string]: string } = {
   discord: `${BASE_URL}/discord-icon.png`,
 }
 
+function getSocialLogo(provider: string, theme: 'light' | 'dark') {
+  if (provider === 'github' && theme === 'light') {
+    return SOCIAL_LOGO['github_light']
+  }
+  return SOCIAL_LOGO[provider]
+}
+
 const ARCANA_LOGO = {
   light: `${BASE_URL}/arcana-logo-dark.png`,
   dark: `${BASE_URL}/arcana-logo.png`,
 }
 
-export { SOCIAL_LOGO, ARCANA_LOGO }
+export { getSocialLogo, ARCANA_LOGO }
