@@ -51,11 +51,11 @@ class AuthProvider {
   private initPromises: ((value: AuthProvider) => void)[] = []
   private _provider: ArcanaProvider
   private connectCtrl: ModalController
-  constructor(appId: string, p?: Partial<ConstructorParams>) {
-    if (!isDefined(appId)) {
-      throw new Error('appId is required')
+  constructor(appAddress: string, p?: Partial<ConstructorParams>) {
+    if (!isDefined(appAddress)) {
+      throw new Error('appAddress is required')
     }
-    this.appId = removeHexPrefix(appId)
+    this.appId = removeHexPrefix(appAddress)
     this.params = getConstructorParams(p)
     this.networkConfig = getNetworkConfig(this.params.network)
     this.rpcConfig = getRpcConfig(this.params.chainConfig, this.params.network)
@@ -120,7 +120,7 @@ class AuthProvider {
   /**
    * A function to open the modal and do the arcana login
    */
-  public async connect(mode: 'dark' | 'light' = 'dark') {
+  public async connect() {
     if (this.initStatus !== InitStatus.DONE) {
       await this.init()
     }
@@ -129,12 +129,14 @@ class AuthProvider {
       return this._provider
     }
 
+    const logins = await this.getLogins()
+
     if (!this.connectCtrl) {
       this.connectCtrl = new ModalController({
         loginWithLink: this.loginWithLink,
         loginWithSocial: this.loginWithSocial,
-        loginList: await this.getLogins(),
-        mode: mode,
+        loginList: logins,
+        mode: this.appConfig.themeConfig.theme,
       })
     }
     return new Promise((resolve, reject) => {
