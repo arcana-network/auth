@@ -4,6 +4,8 @@ import { ModalParams, Theme } from './typings'
 import { getTheme } from './theme'
 import { JSXInternal } from 'preact/src/jsx'
 import ProgressOval from './loader'
+import './style.css'
+
 const Header = ({ mode, logo }: { mode: Theme; logo: string }) => {
   const setfallbackLogo = (e: Event) => {
     const l = fallbackLogo[mode]

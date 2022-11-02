@@ -1,6 +1,7 @@
 import { JSX } from 'preact'
 
 const ID = 'xar-modal'
+
 const Overlay = (props: {
   children: preact.ComponentChildren
   closeFunc?: (error?: Error) => void

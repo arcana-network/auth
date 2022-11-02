@@ -1,7 +1,7 @@
-import { getModalStyleSheet, getModeClass } from './css'
 import { Modal } from './modal'
 import { ModalParams } from './typings'
 import { render } from 'preact'
+
 class ModalController {
   private params: ModalParams
   private container: HTMLDivElement
@@ -18,7 +18,6 @@ class ModalController {
     }
 
     this.createContainer()
-    this.addModalStylesheet()
   }
 
   public open(onClose: (err?: Error) => unknown) {
@@ -37,16 +36,10 @@ class ModalController {
     }
   }
 
-  private addModalStylesheet() {
-    const stylesheet = getModalStyleSheet()
-    const head = document.getElementsByTagName('head')[0]
-    head.appendChild(stylesheet)
-  }
-
   private createContainer() {
     this.container = document.createElement('div')
     this.container.setAttribute('id', 'xar-login-container')
-    this.container.classList.add(getModeClass(this.params.mode))
+    this.container.classList.add(`xar-${this.params.mode}-mode`)
     document.body.appendChild(this.container)
   }
 }

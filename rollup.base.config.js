@@ -7,6 +7,8 @@ import { handleCircularDependancyWarning } from 'node-stdlib-browser/helpers/rol
 import stdLibBrowser from 'node-stdlib-browser'
 import alias from '@rollup/plugin-alias'
 import inject from '@rollup/plugin-inject'
+import postcss from 'rollup-plugin-postcss'
+
 const baseConfig = {
   input: './src/index.ts',
   plugins: [
@@ -25,6 +27,9 @@ const baseConfig = {
     inject({
       process: stdLibBrowser.process,
       Buffer: [stdLibBrowser.buffer, 'Buffer'],
+    }),
+    postcss({
+      plugins: [],
     }),
     terser(),
   ],
