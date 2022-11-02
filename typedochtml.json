@@ -5,6 +5,7 @@
   "excludePrivate": true,
   "excludeProtected": true,
   "excludeInternal": true,
+  "includeVersion": true,
   "footerDate": true,
   "footerTime": true,
   "plugin": ["typedoc-plugin-extras"]
