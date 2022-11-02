@@ -65,47 +65,55 @@ window.onload = async () => {
 
 ### `wallet_addEthereumChain`
 
-Supports [EIP-3085]("https://eips.ethereum.org/EIPS/eip-3085")
+This method is specified by [EIP-3085]("https://eips.ethereum.org/EIPS/eip-3085")
 
 ```ts
-await provider.request({
-  method: 'wallet_addEthereumChain',
-  params: [
-    {
+try {
+  await provider.request({
+    method: 'wallet_addEthereumChain',
+    params: [{
       chainId: '0xABCDEF',
       chainName: 'My Custom Chain',
-      rpcUrls: ['...'],
-    },
-  ],
-})
+      rpcUrls: ['...']
+    }]
+  })
+} catch(error) {
+  ...
+}
 
 interface AddEthereumChainParameter {
-  chainId: string // A 0x-prefixed hexadecimal string
-  chainName: string
+  chainId: string; // A 0x-prefixed hexadecimal string
+  chainName: string;
   nativeCurrency: {
-    name: string
-    symbol: string // 2-6 characters long
-    decimals: 18
-  }
-  rpcUrls: string[]
-  blockExplorerUrls?: string[]
+    name: string;
+    symbol: string; // 2-6 characters long
+    decimals: 18;
+  };
+  rpcUrls: string[];
+  blockExplorerUrls?: string[];
 }
 ```
 
 ### `wallet_switchEthereumChain`
 
-Supports [EIP-3326]("https://eips.ethereum.org/EIPS/eip-3326")
+This method is specified by [EIP-3326]("https://eips.ethereum.org/EIPS/eip-3326")
 
 ```ts
-await provider.request({
-  method: 'wallet_switchEthereumChain',
-  params: [{ chainId: '0xf00' }],
-})
+try {
+  await provider.request({
+    method: 'wallet_switchEthereumChain',
+    params: [{ chainId: '0xf00' }],
+  });
+} catch(error) {
+  ...
+}
 
 interface SwitchEthereumChainParameter {
-  chainId: string // A 0x-prefixed hexadecimal string
+  chainId: string; // A 0x-prefixed hexadecimal string
 }
 ```
+
+If the error code (error.code) is 4902, then the requested chain has not been added, and you have to request to add it via `wallet_addEthereumChain`.
 
 ---
 
