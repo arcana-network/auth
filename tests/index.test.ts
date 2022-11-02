@@ -1,5 +1,8 @@
-describe('Sample', () => {
-  test('sample addition', () => {
-    expect(2 + 2).toBe(4)
+import { getUniqueId } from '../src/utils'
+
+describe('utils.ts', () => {
+  test('computeAddress', () => {
+    const num = getUniqueId()
+    expect(num).not.toBe(0)
   })
 })

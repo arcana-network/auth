@@ -1,10 +1,16 @@
 import { JsonRpcRequest, JsonRpcResponse } from 'json-rpc-engine'
-
+import { Chain } from './chainList'
 export type Theme = 'light' | 'dark'
 
 export type Orientation = 'horizontal' | 'vertical'
 
 export type Position = 'right' | 'left'
+
+export enum InitStatus {
+  CREATED,
+  RUNNING,
+  DONE,
+}
 
 export interface IframeWrapperParams {
   appId: string
@@ -13,7 +19,7 @@ export interface IframeWrapperParams {
   position: Position
 }
 
-export interface InitInput {
+export interface InitParams {
   appMode: AppMode
   position: Position
 }
@@ -43,10 +49,15 @@ export interface UserInfo {
   email?: string
   name?: string
   picture?: string
+  address: string
+  publicKey: string
 }
+export type Logins = 'google' | 'github' | 'discord' | 'twitch' | 'twitter'
 
 export interface ChildMethods {
   isLoggedIn: () => Promise<boolean>
+  isLoginAvailable: (type: string) => Promise<boolean>
+  getAvailableLogins: () => Promise<Logins[]>
   triggerSocialLogin: (t: string, url: string) => Promise<string>
   triggerPasswordlessLogin: (email: string, url: string) => Promise<string>
   sendRequest: (req: JsonRpcRequest<unknown>) => Promise<void>
@@ -58,10 +69,16 @@ export interface ChildMethods {
 export interface ParentMethods {
   onEvent: (t: string, val: unknown) => void
   onMethodResponse: (method: string, response: JsonRpcResponse<unknown>) => void
+  sendPendingRequestCount: (count: number) => void
   getAppConfig: () => AppConfig
   getAppMode: () => AppMode
-  sendPendingRequestCount: (count: number) => void
   getParentUrl: () => string
+  getRpcConfig: () => RpcConfig
+  triggerSocialLogin: (kind: string) => void
+  triggerPasswordlessLogin: (email: string) => void
+  openPopup: () => void
+  closePopup: () => void
+  getPopupState: () => 'open' | 'closed'
 }
 
 export interface TypedDataMessage {
@@ -82,12 +99,26 @@ export interface WalletPosition {
 }
 
 export interface NetworkConfig {
-  RPC_URL: string
-  CHAIN_ID: string
-  NET_VERSION: string
-  GATEWAY_URL: string
-  WALLET_URL: string
-  SENTRY_DSN: string
+  authUrl: string
+  gatewayUrl: string
+  walletUrl: string
+  sentryDsn?: string
+}
+
+export interface ChainConfigInput {
+  rpcUrl: string
+  chainId: Chain
+}
+
+export interface RpcConfig {
+  rpcUrls: string[]
+  chainId: string
+  chainName?: string
+  blockExplorerUrls?: string[]
+  nativeCurrency?: {
+    symbol: string
+    decimals: number
+  }
 }
 
 export enum WalletType {
@@ -106,18 +137,9 @@ export const ModeWalletTypeRelation = {
   [WalletType.NoUI]: [AppMode.NoUI],
 }
 
-export interface InitParams {
+export interface ConstructorParams {
   network: ('testnet' | 'dev') | NetworkConfig
-  inpageProvider: boolean
   debug: boolean
-}
-
-export interface State {
-  iframeUrl: string
-  redirectUri?: string
-}
-
-export interface EncryptInput {
-  message: string
-  publicKey: string
+  chainConfig?: ChainConfigInput
+  redirectUrl?: string
 }

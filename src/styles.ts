@@ -27,7 +27,7 @@ const baseCloseButtonStyle = {
   background: 'transparent',
   border: 'none',
   cursor: 'pointer',
-  marginLeft: '5px'
+  marginLeft: '5px',
 }
 
 const baseHeaderContainerStyle = {
@@ -36,6 +36,7 @@ const baseHeaderContainerStyle = {
   alignItems: 'center',
   padding: '10px 16px',
   borderRadius: '10px 10px 0px 0px',
+  zIndex: '1',
 }
 
 const widgetBubbleStyle = {
@@ -48,8 +49,8 @@ const widgetBubbleStyle = {
     backgroundColor: '#000000',
   },
   bubbleLogo: {
-    width: '40px',
-    height: '40px',
+    width: '60px',
+    objectFit: 'contain',
   },
   closeButton: {
     ...baseCloseButtonStyle,
@@ -89,20 +90,20 @@ const widgetIframeStyle = {
 
     display: 'flex',
     flexDirection: 'column',
+    boxShadow: '4px 5px 4px rgba(0, 0, 0, 0.25)',
+    borderRadius: '10px',
   },
   header: {
     container: {
       light: {
         ...baseHeaderContainerStyle,
-        boxShadow:
-          '-1px -1px 3px #FFFFFF, 1.5px 1.5px 3px rgba(174, 174, 192, 0.4)',
-        background:
-          'linear-gradient(138.99deg, #F0F0F0 22.29%, rgba(254, 254, 255, 0) 101.74%)',
+        boxShadow: '2px 2px 2px 0px #0000000D, -2px -2px 1px 0px #FFFFFFB2',
+        background: '#F9F9F9',
       },
       dark: {
         ...baseHeaderContainerStyle,
-        boxShadow: '0px 9px 25px rgba(15, 15, 15, 0.25)',
-        background: '#1F1F1F',
+        boxShadow: '0 5px 4px -4px #181818',
+        background: '#262626',
       },
     },
     logo: {

@@ -1,55 +1,77 @@
-import { NetworkConfig } from './typings'
+import { NetworkConfig, RpcConfig, ChainConfigInput } from './typings'
+import { Chain, getConfigFromChain } from './chainList'
+type Network = 'dev' | 'testnet'
 
-let network: 'dev' | 'testnet' | 'custom' = 'dev'
-
-let customConfig: NetworkConfig
-
-const DEFAULT_SENTRY_DSN =
-  'https://4e27545e4faf43318301625d79a6dc34@o1011868.ingest.sentry.io/6451353'
-
-const DEV_CONFIG: NetworkConfig = {
-  RPC_URL: 'https://blockchain-dev.arcana.network',
-  CHAIN_ID: '0x9dd4',
-  NET_VERSION: '40404',
-  GATEWAY_URL: 'https://gateway-dev.arcana.network',
-  WALLET_URL: 'https://wallet.dev.arcana.network',
-  SENTRY_DSN:
+const DEV_NETWORK_CONFIG: NetworkConfig = {
+  authUrl: 'https://verify.dev.arcana.network',
+  gatewayUrl: 'https://gateway-dev.arcana.network',
+  walletUrl: 'https://wallet.dev.arcana.network',
+  sentryDsn:
     'https://68615fda056a4337bcc9b7e3062562c3@o1011868.ingest.sentry.io/6449849',
 }
 
-const TESTNET_CONFIG: NetworkConfig = {
-  RPC_URL: 'https://blockchain001-testnet.arcana.network/',
-  CHAIN_ID: '0x9dd5',
-  NET_VERSION: '40405',
-  GATEWAY_URL: 'https://gateway001-testnet.arcana.network',
-  WALLET_URL: 'https://wallet.beta.arcana.network',
-  SENTRY_DSN:
+const TESTNET_NETWORK_CONFIG: NetworkConfig = {
+  authUrl: 'https://verify.beta.arcana.network',
+  gatewayUrl: 'https://gateway001-testnet.arcana.network',
+  walletUrl: 'https://wallet.beta.arcana.network',
+  sentryDsn:
     'https://4e27545e4faf43318301625d79a6dc34@o1011868.ingest.sentry.io/6451353',
 }
 
-const getConfig = () => {
-  switch (network) {
-    case 'dev':
-      return DEV_CONFIG
-    case 'testnet':
-      return TESTNET_CONFIG
-    case 'custom':
-      return customConfig
+const getNetworkConfig = (n: Network | NetworkConfig) => {
+  if (typeof n === 'string' && n == 'testnet') {
+    return TESTNET_NETWORK_CONFIG
+  }
+
+  if (typeof n === 'string' && n == 'dev') {
+    return DEV_NETWORK_CONFIG
+  }
+
+  if (isNetworkConfig(n)) {
+    return n
+  } else {
+    throw new Error('Invalid network config passed')
   }
 }
 
-function setCustomConfig(n: NetworkConfig) {
-  network = 'custom'
-  customConfig = n
-  customConfig.SENTRY_DSN = DEFAULT_SENTRY_DSN
+const getRpcConfig = (
+  c: ChainConfigInput | undefined,
+  n: Network | NetworkConfig
+): RpcConfig => {
+  if (isRpcConfigInput(c)) {
+    const config = getConfigFromChain(c.chainId)
+    if (c.rpcUrl) {
+      config.rpcUrls = [c.rpcUrl]
+    }
+    return config
+  }
+
+  if (typeof n === 'string' && isNetworkEnum(n)) {
+    switch (n) {
+      case 'testnet':
+        return getConfigFromChain(Chain.ARCANA_TESTNET)
+      case 'dev':
+        return getConfigFromChain(Chain.ARCANA_DEV)
+    }
+  }
+
+  return getConfigFromChain(Chain.ARCANA_TESTNET)
 }
 
-const setIframeDevUrl = (url: string) => {
-  DEV_CONFIG.WALLET_URL = url
+function isRpcConfigInput(
+  c: ChainConfigInput | undefined
+): c is ChainConfigInput {
+  if (typeof c === 'undefined') {
+    return false
+  }
+  if (!(typeof c == 'object' && c.chainId)) {
+    return false
+  }
+  return true
 }
 
-const setNetwork = (n: 'testnet' | 'dev') => {
-  network = n
+function isNetworkEnum(n: string): n is Network {
+  return typeof n === 'string' && (n == 'testnet' || n == 'dev')
 }
 
 function isNetworkConfig(
@@ -58,28 +80,16 @@ function isNetworkConfig(
   if (typeof network === 'string') {
     return false
   }
-  if (!(typeof network == 'object' && network.RPC_URL)) {
+  if (!(typeof network == 'object' && network.gatewayUrl)) {
     return false
   }
-  if (!(typeof network == 'object' && network.CHAIN_ID)) {
+  if (!(typeof network == 'object' && network.walletUrl)) {
     return false
   }
-  if (!(typeof network == 'object' && network.NET_VERSION)) {
-    return false
-  }
-  if (!(typeof network == 'object' && network.GATEWAY_URL)) {
-    return false
-  }
-  if (!(typeof network == 'object' && network.WALLET_URL)) {
+  if (!(typeof network == 'object' && network.authUrl)) {
     return false
   }
   return true
 }
 
-export {
-  getConfig,
-  setCustomConfig,
-  setNetwork,
-  setIframeDevUrl,
-  isNetworkConfig,
-}
+export { getNetworkConfig, getRpcConfig }

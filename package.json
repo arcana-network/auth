@@ -1,11 +1,17 @@
 {
   "name": "@arcana/auth",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Arcana Auth",
   "main": "dist/index.js",
   "module": "dist/standalone/auth.esm.js",
   "jsdelivr": "dist/standalone/auth.umd.js",
   "unpkg": "dist/standalone/auth.umd.js",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/standalone/auth.esm.js"
+    }
+  },
   "types": "types/index.d.ts",
   "files": [
     "dist",
@@ -15,14 +21,16 @@
     "test": "jest",
     "docs": "typedoc --options typedoc.json",
     "htmldocs": "typedoc --options typedochtml.json",
-    "build": "yarn run build:ts && yarn run build:esm && yarn run build:umd",
+    "clean": "run-p clean:dist clean:types",
+    "clean:dist": "rimraf dist/",
+    "clean:types": "rimraf types/",
+    "build": "run-s clean build:sdk ",
+    "build:sdk": "run-p build:esm build:umd build:ts",
     "build:esm": "rollup --config rollup.es.config.js",
     "build:umd": "rollup --config rollup.umd.config.js",
-    "build:ts": "rimraf dist/ && rimraf types/ && tsc --project tsconfig.json",
+    "build:ts": "tsc --project tsconfig.json",
     "format": "prettier --ignore-path .gitignore --write .",
     "lint": "eslint --ext .ts src",
-    "dev": "esbuild src/index.ts --define:global=window --inject:config/esbuild.inject.js --format=iife --global-name=arcana.wallet --bundle --target=chrome58,firefox57,safari11,edge18  --outfile=dist/wallet.js",
-    "watch": "yarn run build -- --watch",
     "prepare": "husky install",
     "prepublishOnly": "yarn run build"
   },
@@ -40,13 +48,19 @@
     "wallet"
   ],
   "devDependencies": {
+    "@babel/core": "^7.18.6",
+    "@babel/preset-env": "^7.18.9",
+    "@babel/preset-typescript": "^7.18.6",
+    "@rollup/plugin-alias": "^3.1.9",
     "@rollup/plugin-commonjs": "^22.0.1",
+    "@rollup/plugin-inject": "^4.0.4",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@rollup/plugin-typescript": "^8.3.3",
     "@types/jest": "^27.4.1",
     "@typescript-eslint/eslint-plugin": "^5.18.0",
     "@typescript-eslint/parser": "^5.18.0",
+    "babel-jest": "^28.1.2",
     "eslint": "^8.12.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-tsdoc": "^0.2.16",
@@ -54,11 +68,13 @@
     "husky": ">=6",
     "jest": "^27.5.1",
     "jest-environment-jsdom": "^27.5.1",
+    "json-rpc-engine": "^6.1.0",
     "lint-staged": ">=10",
+    "node-stdlib-browser": "^1.2.0",
+    "npm-run-all": "^4.1.5",
     "prettier": "^2.6.2",
     "rimraf": "^3.0.2",
     "rollup": "^2.75.7",
-    "rollup-plugin-polyfill-node": "^0.9.0",
     "rollup-plugin-terser": "^7.0.2",
     "typedoc": "^0.22.15",
     "typedoc-plugin-extras": "^2.2.3",
@@ -69,17 +85,14 @@
     "@metamask/safe-event-emitter": "^2.0.0",
     "@sentry/browser": "^6.19.7",
     "@sentry/tracing": "^6.19.7",
-    "eth-block-tracker": "^5.0.1",
-    "eth-crypto": "^2.1.0",
-    "eth-json-rpc-middleware": "^8.0.1",
-    "eth-sig-util": "^3.0.1",
-    "ethers": "^5.5.4",
-    "json-rpc-engine": "^6.1.0",
-    "penpal": "^6.0.1",
-    "web3-providers-http": "^1.6.1"
+    "eth-rpc-errors": "^4.0.3",
+    "penpal": "^6.0.1"
+  },
+  "resolutions": {
+    "terser": "^5.15.0"
   },
   "lint-staged": {
     "*.ts": "eslint --cache --fix",
-    "*.{js,css,md}": "prettier --write"
+    "*.{js,css,md,ts}": "prettier --write"
   }
 }
