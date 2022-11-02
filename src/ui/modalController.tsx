@@ -14,6 +14,7 @@ class ModalController {
       loginWithLink: params.loginWithLink,
       mode: params.mode,
       closeFunc: this.close,
+      logo: params.logo,
     }
 
     this.createContainer()

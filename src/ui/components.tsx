@@ -4,11 +4,22 @@ import { ModalParams, Theme } from './typings'
 import { getTheme } from './theme'
 import { JSXInternal } from 'preact/src/jsx'
 import ProgressOval from './loader'
-const Header = ({ mode }: { mode: Theme }) => {
+const Header = ({ mode, logo }: { mode: Theme; logo: string }) => {
+  const setfallbackLogo = (e: Event) => {
+    const l = fallbackLogo[mode]
+    if (e.target instanceof HTMLImageElement) {
+      e.target.src = l
+    }
+  }
   return (
     <>
       <div className="xar-header-logo__container">
-        <img className="xar-header-logo" src={fallbackLogo[mode]} alt="" />
+        <img
+          className="xar-header-logo"
+          src={logo}
+          alt="app-logo"
+          onError={setfallbackLogo}
+        />
       </div>
       <div className="xar-header-text">
         <h1 className="xar-header-heading">Welcome</h1>

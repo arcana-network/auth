@@ -89,7 +89,7 @@ const Modal = (props: ModalParams) => {
   return (
     <Overlay closeFunc={props.closeFunc}>
       <Container mode={props.mode}>
-        <Header mode={props.mode} />
+        <Header mode={props.mode} logo={props.logo} />
         <EmailLogin
           email={email}
           setEmail={setEmail}

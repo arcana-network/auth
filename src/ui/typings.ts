@@ -4,6 +4,7 @@ type ModalParams = {
   closeFunc: () => unknown
   loginList: string[]
   mode: Theme
+  logo: string
 }
 
 type Theme = 'dark' | 'light'

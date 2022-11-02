@@ -136,7 +136,8 @@ class AuthProvider {
         loginWithLink: this.loginWithLink,
         loginWithSocial: this.loginWithSocial,
         loginList: logins,
-        mode: this.appConfig.themeConfig.theme,
+        mode: this.theme,
+        logo: this.logo.vertical,
       })
     }
     return new Promise((resolve, reject) => {

@@ -54,14 +54,14 @@ const getCssText = () => {
       }
       
       .xar-header-logo__container {
-        width: 70px;
-        height: 70px;
+        width: 80px;
+        height: 80px;
         border-radius: 60px;
         margin: 0 auto;
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 2px solid black;
+        border: 2px solid var(--fg);
       }
 
       .xar-header-logo {
