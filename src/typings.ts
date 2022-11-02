@@ -138,7 +138,7 @@ export const ModeWalletTypeRelation = {
 }
 
 export interface ConstructorParams {
-  network: ('testnet' | 'dev') | NetworkConfig
+  network: 'testnet' | NetworkConfig
   debug: boolean
   chainConfig?: ChainConfigInput
   redirectUrl?: string

@@ -68,12 +68,6 @@ const ChainList: Record<Chain, RpcConfig> = {
     chainName: 'Arcana (Testnet)',
     blockExplorerUrls: ['https://explorer.beta.arcana.network/'],
   },
-  [Chain.ARCANA_DEV]: {
-    chainId: Chain.ARCANA_DEV,
-    rpcUrls: ['https://blockchain-dev.arcana.network'],
-    chainName: 'Arcana Dev',
-    blockExplorerUrls: ['https://explorer.dev.arcana.network/'],
-  },
 }
 
 export const getConfigFromChain = (c: Chain): RpcConfig => {
