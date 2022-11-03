@@ -7,6 +7,5 @@ export default {
     format: 'umd',
     name: 'arcana.auth',
     compact: true,
-    sourcemap: true,
   },
 }

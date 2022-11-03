@@ -6,6 +6,5 @@ export default {
     file: 'dist/standalone/auth.esm.js',
     format: 'es',
     compact: true,
-    sourcemap: true,
   },
 }
