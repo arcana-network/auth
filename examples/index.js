@@ -1,6 +1,6 @@
 const { AuthProvider, AppMode, encryptWithPublicKey } = window.arcana.auth
 
-const auth = new AuthProvider('43')
+const auth = new AuthProvider('...')
 let provider
 
 const reqElement = document.getElementById('request')
@@ -124,7 +124,12 @@ async function sign() {
 async function connect() {
   console.log('Requesting connect wallet')
   setRequest('connect_wallet')
-  await auth.connect('dark')
+  try {
+    const provider = await auth.connect()
+    console.log({ provider })
+  } catch (error) {
+    console.log({ error })
+  }
 }
 
 async function socialLogin() {
