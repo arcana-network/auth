@@ -56,6 +56,12 @@ export default class IframeWrapper {
     return this.state
   }
 
+  public showWidgetBubble() {
+    if (this.appMode === AppMode.Full) {
+      this.widgetBubble.style.display = 'flex'
+    }
+  }
+
   public onReceivingPendingRequestCount(count: number) {
     const reqCountBadgeEl = document.getElementById('req-count-badge')
     if (!reqCountBadgeEl) {
@@ -160,7 +166,7 @@ export default class IframeWrapper {
     )
   }
 
-  private createWidgetBubble(isFullMode: boolean) {
+  private createWidgetBubble() {
     const {
       appConfig: { themeConfig },
     } = this.params
@@ -190,7 +196,7 @@ export default class IframeWrapper {
       'button',
       {
         onclick: () => this.openWidgetIframe(),
-        style: isFullMode ? widgetBubbleStyle[theme] : { display: 'none' },
+        style: widgetBubbleStyle[theme],
       },
       reqCountBadge,
       buttonLogo,
@@ -205,7 +211,7 @@ export default class IframeWrapper {
       isFullMode
     ) as HTMLDivElement
 
-    this.widgetBubble = this.createWidgetBubble(isFullMode) as HTMLButtonElement
+    this.widgetBubble = this.createWidgetBubble() as HTMLButtonElement
 
     this.resizeWidgetUI()
 

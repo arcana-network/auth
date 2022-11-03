@@ -15,7 +15,7 @@ const baseWidgetBubbleStyle = {
   margin: '0 auto',
   cursor: 'pointer',
 
-  display: 'flex',
+  display: 'none',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
