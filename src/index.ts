@@ -25,6 +25,7 @@ import {
   UserInfo,
   InitStatus,
   Logins,
+  EthereumProvider,
 } from './typings'
 import { getAppInfo, getImageUrls } from './appInfo'
 import { WalletNotInitializedError, ArcanaAuthError } from './errors'
@@ -37,6 +38,7 @@ import {
 } from './logger'
 import { Chain } from './chainList'
 import Popup from './popup'
+import { ModalController } from './ui/modalController'
 
 class AuthProvider {
   public appId: string
@@ -49,6 +51,7 @@ class AuthProvider {
   private initStatus: InitStatus = InitStatus.CREATED
   private initPromises: ((value: AuthProvider) => void)[] = []
   private _provider: ArcanaProvider
+  private connectCtrl: ModalController
   constructor(appAddress: string, p?: Partial<ConstructorParams>) {
     if (!isDefined(appAddress)) {
       throw new Error('appAddress is required')
@@ -104,6 +107,7 @@ class AuthProvider {
         loginWithSocial: this.loginWithSocial,
       })
       this.setProviders()
+
       this.initStatus = InitStatus.DONE
 
       this.resolveInitPromises()
@@ -115,9 +119,48 @@ class AuthProvider {
   }
 
   /**
+   * A function to open login modal
+   */
+  public async connect(): Promise<EthereumProvider> {
+    if (this.initStatus !== InitStatus.DONE) {
+      await this.init()
+    }
+
+    if (await this.isLoggedIn()) {
+      return this._provider
+    }
+
+    const logins = await this.getLogins()
+
+    if (!this.connectCtrl) {
+      this.connectCtrl = new ModalController({
+        loginWithLink: this.loginWithLink,
+        loginWithSocial: this.loginWithSocial,
+        loginList: logins,
+        mode: this.theme,
+        logo: this.logo.vertical,
+      })
+    }
+    return new Promise((resolve, reject) => {
+      this.connectCtrl.open((err?: Error) => {
+        if (err) {
+          return reject(err)
+        }
+      })
+
+      this.waitForConnect()
+        .then((p) => {
+          this.connectCtrl.close()
+          resolve(p)
+        })
+        .catch(reject)
+    })
+  }
+
+  /**
    * A function to trigger social login in the wallet
    */
-  loginWithSocial = async (loginType: string): Promise<ArcanaProvider> => {
+  loginWithSocial = async (loginType: string): Promise<EthereumProvider> => {
     if (this.initStatus === InitStatus.DONE) {
       if (!(await this._provider.isLoginAvailable(loginType))) {
         throw new Error(`${loginType} login is not available`)
@@ -132,7 +175,7 @@ class AuthProvider {
   /**
    * A function to trigger passwordless login in the wallet
    */
-  loginWithLink = (email: string): Promise<ArcanaProvider> => {
+  loginWithLink = (email: string): Promise<EthereumProvider> => {
     if (this.initStatus === InitStatus.DONE) {
       const url = this.getLoginUrl('passwordless', email)
       return this.beginLogin(url)
@@ -229,13 +272,13 @@ class AuthProvider {
     })
   }
 
-  private async beginLogin(url: string): Promise<ArcanaProvider> {
+  private async beginLogin(url: string): Promise<EthereumProvider> {
     const popup = new Popup(url)
     await popup.open()
     return await this.waitForConnect()
   }
 
-  private waitForConnect(): Promise<ArcanaProvider> {
+  private waitForConnect(): Promise<EthereumProvider> {
     return new Promise((resolve) => {
       this._provider.on('connect', () => {
         return resolve(this._provider)
@@ -313,6 +356,13 @@ class AuthProvider {
       ;(window as Record<string, any>).arcana = {}
     }
     ;(window as Record<string, any>).arcana.provider = this._provider
+    if (!(window as Record<string, any>).ethereum) {
+      ;(window as Record<string, any>).ethereum = {}
+    }
+    if (!(window as Record<string, any>).providers) {
+      ;(window as Record<string, any>).ethereum.providers = []
+    }
+    ;(window as Record<string, any>).ethereum.providers.push(this._provider)
   }
   /* eslint-enable */
 }
@@ -322,6 +372,7 @@ export {
   ConstructorParams,
   ChainConfigInput,
   Chain as CHAIN,
+  EthereumProvider,
   AppConfig,
   Theme,
   AppMode,

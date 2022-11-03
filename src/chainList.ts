@@ -1,4 +1,3 @@
-import { CHAIN } from '.'
 import { RpcConfig } from './typings'
 
 export enum Chain {
@@ -13,7 +12,7 @@ export enum Chain {
 
 const ChainList: Record<Chain, RpcConfig> = {
   [Chain.ETHEREUM_MAINNET]: {
-    chainId: CHAIN.ETHEREUM_MAINNET,
+    chainId: Chain.ETHEREUM_MAINNET,
     rpcUrls: ['https://cloudflare-eth.com/'],
     chainName: 'Ethereum Mainnet',
     blockExplorerUrls: ['https://etherscan.io/'],

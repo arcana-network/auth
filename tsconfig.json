@@ -2,7 +2,7 @@
   "compilerOptions": {                       
     "lib": ["dom", "es2018"],
     "target": "es6",
-    "module": "esnext",     
+    "module": "commonjs",     
     "moduleResolution": "node",                     
     "declaration": true,                         
     "declarationDir": "types",
@@ -12,9 +12,11 @@
     "strictPropertyInitialization": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
   },
   "include": [
-    "src/*.ts",
+    "src/*.*",
   ],
 }

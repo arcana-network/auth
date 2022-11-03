@@ -4,8 +4,9 @@ const config = {
   automock: false,
   setupFiles: [],
   collectCoverage: true,
+  preset: 'ts-jest',
   coverageReporters: ['text', 'cobertura'],
 }
 
 // eslint-disable-next-line no-undef
-module.exports = config
+export default config
