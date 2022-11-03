@@ -1,6 +1,7 @@
 import { ARCANA_LOGO, getSocialLogo } from './icons'
 import { StateUpdater } from 'preact/hooks'
-import { ModalParams, Theme } from './typings'
+import { ModalParams } from './typings'
+import { Theme } from '../typings'
 import { JSXInternal } from 'preact/src/jsx'
 import { getFallbackImage } from '../utils'
 import ProgressOval from './loader'

@@ -1,3 +1,5 @@
+import { Theme } from '../typings'
+
 type ModalParams = {
   loginWithLink: (email: string) => Promise<unknown>
   loginWithSocial: (type: string) => Promise<unknown>
@@ -7,6 +9,4 @@ type ModalParams = {
   logo: string
 }
 
-type Theme = 'dark' | 'light'
-
-export { ModalParams, Theme }
+export { ModalParams }
