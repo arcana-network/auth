@@ -199,7 +199,7 @@ Arcana wallet is an embedded Web3 wallet offered via the Auth SDK. It uses [Ethe
 Arcana wallet implements the following common interfaces exposed by all Ethereum clients:
 
 - [eth_accounts](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_accounts)
-- [th_getBalance](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_getbalance)
+- [eth_getBalance](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_getbalance)
 - [eth_sendTransaction](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_sendtransaction)
 - [eth_sign](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_sendtransaction)
 - [eth_call](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_call)
