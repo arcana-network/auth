@@ -1,5 +1,6 @@
 import { JsonRpcRequest, JsonRpcResponse } from 'json-rpc-engine'
 import { Chain } from './chainList'
+
 export type Theme = 'light' | 'dark'
 
 export type Orientation = 'horizontal' | 'vertical'
@@ -142,4 +143,18 @@ export interface ConstructorParams {
   debug: boolean
   chainConfig?: ChainConfigInput
   redirectUrl?: string
+}
+
+type RequestArguments = {
+  readonly method: string
+  readonly params?: readonly unknown[] | object
+}
+
+export interface EthereumProvider {
+  request(args: RequestArguments): Promise<unknown>
+  on(eventName: string | symbol, listener: (...args: any[]) => void): this
+  removeListener(
+    eventName: string | symbol,
+    listener: (...args: any[]) => void
+  ): this
 }

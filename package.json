@@ -1,14 +1,15 @@
 {
   "name": "@arcana/auth",
-  "version": "0.1.3",
+  "version": "0.2.0-beta.1",
   "description": "Arcana Auth",
-  "main": "dist/index.js",
+  "main": "dist/standalone/auth.esm.js",
+  "type": "module",
   "module": "dist/standalone/auth.esm.js",
   "jsdelivr": "dist/standalone/auth.umd.js",
   "unpkg": "dist/standalone/auth.umd.js",
   "exports": {
     ".": {
-      "require": "./dist/index.js",
+      "require": "./dist/standalone/auth.esm.js",
       "import": "./dist/standalone/auth.esm.js"
     }
   },
@@ -25,10 +26,10 @@
     "clean:dist": "rimraf dist/",
     "clean:types": "rimraf types/",
     "build": "run-s clean build:sdk ",
-    "build:sdk": "run-p build:esm build:umd build:ts",
+    "build:sdk": "run-p build:esm build:umd",
     "build:esm": "rollup --config rollup.es.config.js",
     "build:umd": "rollup --config rollup.umd.config.js",
-    "build:ts": "tsc --project tsconfig.json",
+    "build:ts": "tsc --project tsconfig.json --emitDeclarationOnly",
     "format": "prettier --ignore-path .gitignore --write .",
     "lint": "eslint --ext .ts src",
     "prepare": "husky install",

@@ -1,4 +1,4 @@
-import { ChildMethods, RpcConfig } from './typings'
+import { ChildMethods, EthereumProvider, RpcConfig } from './typings'
 import type {
   JsonRpcId,
   JsonRpcRequest,
@@ -46,7 +46,10 @@ interface TriggerLoginFuncs {
   loginWithLink(email: string): void
 }
 
-export class ArcanaProvider extends SafeEventEmitter {
+export class ArcanaProvider
+  extends SafeEventEmitter
+  implements EthereumProvider
+{
   private communication: Connection<ChildMethods>
   private subscriber: SafeEventEmitter
   private logger: Logger = getLogger('ArcanaProvider')

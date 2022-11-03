@@ -25,6 +25,7 @@ import {
   UserInfo,
   InitStatus,
   Logins,
+  EthereumProvider,
 } from './typings'
 import { getAppInfo, getImageUrls } from './appInfo'
 import { WalletNotInitializedError, ArcanaAuthError } from './errors'
@@ -118,9 +119,9 @@ class AuthProvider {
   }
 
   /**
-   * A function to open the modal and do the arcana login
+   * A function to open login modal
    */
-  public async connect() {
+  public async connect(): Promise<EthereumProvider> {
     if (this.initStatus !== InitStatus.DONE) {
       await this.init()
     }
@@ -159,7 +160,7 @@ class AuthProvider {
   /**
    * A function to trigger social login in the wallet
    */
-  loginWithSocial = async (loginType: string): Promise<ArcanaProvider> => {
+  loginWithSocial = async (loginType: string): Promise<EthereumProvider> => {
     if (this.initStatus === InitStatus.DONE) {
       if (!(await this._provider.isLoginAvailable(loginType))) {
         throw new Error(`${loginType} login is not available`)
@@ -174,7 +175,7 @@ class AuthProvider {
   /**
    * A function to trigger passwordless login in the wallet
    */
-  loginWithLink = (email: string): Promise<ArcanaProvider> => {
+  loginWithLink = (email: string): Promise<EthereumProvider> => {
     if (this.initStatus === InitStatus.DONE) {
       const url = this.getLoginUrl('passwordless', email)
       return this.beginLogin(url)
@@ -271,13 +272,13 @@ class AuthProvider {
     })
   }
 
-  private async beginLogin(url: string): Promise<ArcanaProvider> {
+  private async beginLogin(url: string): Promise<EthereumProvider> {
     const popup = new Popup(url)
     await popup.open()
     return await this.waitForConnect()
   }
 
-  private waitForConnect(): Promise<ArcanaProvider> {
+  private waitForConnect(): Promise<EthereumProvider> {
     return new Promise((resolve) => {
       this._provider.on('connect', () => {
         return resolve(this._provider)
@@ -371,6 +372,7 @@ export {
   ConstructorParams,
   ChainConfigInput,
   Chain as CHAIN,
+  EthereumProvider,
   AppConfig,
   Theme,
   AppMode,
