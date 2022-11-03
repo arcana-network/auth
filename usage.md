@@ -61,6 +61,62 @@ window.onload = async () => {
 
 ---
 
+## Switching Chains
+
+### `wallet_addEthereumChain`
+
+This method is specified by [EIP-3085]("https://eips.ethereum.org/EIPS/eip-3085")
+
+```ts
+try {
+  await provider.request({
+    method: 'wallet_addEthereumChain',
+    params: [{
+      chainId: '0xABCDEF',
+      chainName: 'My Custom Chain',
+      rpcUrls: ['...']
+    }]
+  })
+} catch(error) {
+  ...
+}
+
+interface AddEthereumChainParameter {
+  chainId: string; // A 0x-prefixed hexadecimal string
+  chainName: string;
+  nativeCurrency: {
+    name: string;
+    symbol: string; // 2-6 characters long
+    decimals: 18;
+  };
+  rpcUrls: string[];
+  blockExplorerUrls?: string[];
+}
+```
+
+### `wallet_switchEthereumChain`
+
+This method is specified by [EIP-3326]("https://eips.ethereum.org/EIPS/eip-3326")
+
+```ts
+try {
+  await provider.request({
+    method: 'wallet_switchEthereumChain',
+    params: [{ chainId: '0xf00' }],
+  });
+} catch(error) {
+  ...
+}
+
+interface SwitchEthereumChainParameter {
+  chainId: string; // A 0x-prefixed hexadecimal string
+}
+```
+
+If the error code (error.code) is 4902, then the requested chain has not been added, and you have to request to add it via `wallet_addEthereumChain`.
+
+---
+
 ## Installation
 
 ### NPM/Yarn Install
