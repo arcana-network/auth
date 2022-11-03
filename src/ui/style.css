@@ -21,7 +21,7 @@
   align-items: center;
   justify-content: center;
   position: fixed;
-  z-index: 1;
+  z-index: 99999;
   left: 0;
   top: 0;
   width: 100%;
@@ -50,15 +50,13 @@
   display: inline-block;
 }
 
-.xar-header-text {
-  font-family: 'Montserrat', sans-serif;
-}
-
 .xar-header-heading {
+  font-family: 'Montserrat', sans-serif;
   text-align: center;
 }
 
 .xar-header-subtext {
+  font-family: 'Sora', sans-serif;
   font-size: 12px;
   font-weight: 400;
 }
