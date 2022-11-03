@@ -6,7 +6,7 @@
 2. [Quick Start with `ethers.js`](#quick-start-with-ethersjs)
 3. [Quick Start with `web3.js`](#quick-start-with-web3js)
 4. [Usage](#usage)
-   - [Integrate SDK](#integrate-sdk)
+   - [AuthProvider](#authprovider)
    - [Auth APIs](#auth-apis)
    - [Arcana Wallet Method](#arcana-wallet-methods)
 
@@ -85,7 +85,7 @@ window.onload = async () => {
 
 ## Usage
 
-### Integrate Auth SDK
+### AuthProvider
 
 #### Import AuthProvider
 
@@ -121,9 +121,7 @@ See [Get Started with Auth SDK](https://docs.dev.arcana.network/docs/auth_qs) fo
 
 ### Auth APIs
 
-#### User Authentication
-
-##### Login
+#### Login
 
 Social login
 
@@ -132,7 +130,7 @@ Social login
 const provider = await auth.loginWithSocial(`${loginType}`)
 ```
 
-Passwordless login via email Link
+Passwordless login via email verification link
 
 ```js
 const provider = await auth.loginWithLink(`${email}`)
@@ -148,6 +146,7 @@ Get user information
 
 ```js
 const info = await auth.getUser()
+
 /*
 interface UserInfo {
   id: string
@@ -160,13 +159,13 @@ interface UserInfo {
 */
 ```
 
-##### Logout
+#### Logout
 
 ```js
 await auth.logout()
 ```
 
-#### Get Public Key
+### Get Public Key
 
 Get the public key associated with an email.
 
@@ -199,17 +198,17 @@ Arcana wallet is an embedded Web3 wallet offered via the Auth SDK. It uses [Ethe
 
 Arcana wallet implements the following common interfaces exposed by all Ethereum clients:
 
-- eth_accounts(https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_accounts)
-- eth_getBalance(https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_getbalance)
-- eth_sendTransaction(opens new window)
-- eth_sign(https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_sendtransaction)
-- eth_call(https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_call)
+- [eth_accounts](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_accounts)
+- [th_getBalance](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_getbalance)
+- [eth_sendTransaction](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_sendtransaction)
+- [eth_sign](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_sendtransaction)
+- [eth_call](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_call)
 
 ### Switching Chains
 
 #### `wallet_addEthereumChain`
 
-This method is specified by [EIP-3085]("https://eips.ethereum.org/EIPS/eip-3085")
+This method is specified by [EIP-3085](https://eips.ethereum.org/EIPS/eip-3085)
 
 ```ts
 try {
@@ -236,11 +235,24 @@ interface AddEthereumChainParameter {
   rpcUrls: string[];
   blockExplorerUrls?: string[];
 }
+
+// Example
+
+// const {
+//     CHAIN, AuthProvider, AppMode, encryptWithPublicKey
+// } = window.arcana.auth
+
+// const auth = new AuthProvider(APP_ADDRESS, {
+//   chainConfig: {
+//     chainId: CHAIN.POLYGON_MAINNET,
+//   },
+// })
+
 ```
 
 #### `wallet_switchEthereumChain`
 
-This method is specified by [EIP-3326]("https://eips.ethereum.org/EIPS/eip-3326")
+This method is specified by [EIP-3326](https://eips.ethereum.org/EIPS/eip-3326)
 
 ```ts
 try {
@@ -257,6 +269,6 @@ interface SwitchEthereumChainParameter {
 }
 ```
 
-If the error code (error.code) is 4902, then the requested chain has not been added, and you have to request to add it via `wallet_addEthereumChain`. For a complete list of Auth SDK error messages, see the [Developer Resources section in user documentation](https://docs.beta.arcana.network/docs/category/error-messages)
+If the error code (error.code) is 4902, then the requested chain has not been added, and you have to request to add it via `wallet_addEthereumChain`.
 
 Check out [Auth SDK Reference Guide](https://authsdk-ref-guide.netlify.app/) for details.
