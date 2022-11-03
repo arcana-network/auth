@@ -40,7 +40,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid var(--fg);
+  border: 2px solid var(--bg);
 }
 
 .xar-header-logo {
@@ -218,4 +218,8 @@
 .xar-loader__text {
   font-size: 20px;
   font-weight: 700;
+}
+
+.xar-loader-circle {
+  stroke: var(--fg);
 }

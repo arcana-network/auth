@@ -2,12 +2,11 @@ const RADIUS = 20
 
 interface LoaderProps {
   stroke: number
-  color: string
   secondaryColor: string
 }
 
 export default function Loader(props: LoaderProps) {
-  const { stroke = 8, color, secondaryColor } = props
+  const { stroke = 8, secondaryColor } = props
   return (
     <div aria-label="oval-loading">
       <svg
@@ -15,7 +14,7 @@ export default function Loader(props: LoaderProps) {
         height={80}
         viewBox={getViewBoxSize(Number(stroke), RADIUS)}
         xmlns="http://www.w3.org/2000/svg"
-        stroke={color}
+        className="xar-loader-circle"
         data-testid="oval-svg"
       >
         <g fill="none" fillRule="evenodd">
