@@ -214,6 +214,7 @@ export class ArcanaProvider
         this.emit('chainChanged', val)
         break
       case 'connect':
+        this.iframe.showWidgetBubble()
         this.emit('connect', val)
         break
       case 'disconnect':
