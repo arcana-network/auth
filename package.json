@@ -1,6 +1,6 @@
 {
   "name": "@arcana/auth",
-  "version": "0.2.0-beta.1",
+  "version": "0.2.0-beta.2",
   "description": "Arcana Auth",
   "main": "dist/standalone/auth.esm.js",
   "type": "module",
@@ -26,7 +26,7 @@
     "clean:dist": "rimraf dist/",
     "clean:types": "rimraf types/",
     "build": "run-s clean build:sdk ",
-    "build:sdk": "run-p build:esm build:umd",
+    "build:sdk": "run-p build:esm build:umd build:ts",
     "build:esm": "rollup --config rollup.es.config.js",
     "build:umd": "rollup --config rollup.umd.config.js",
     "build:ts": "tsc --project tsconfig.json --emitDeclarationOnly",
