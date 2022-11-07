@@ -141,8 +141,11 @@ export const ModeWalletTypeRelation = {
 export interface ConstructorParams {
   network: ('testnet' | 'dev') | NetworkConfig
   debug: boolean
+  alwaysShowWidget: boolean
   chainConfig?: ChainConfigInput
   redirectUrl?: string
+  theme: Theme
+  position: Position
 }
 
 type RequestArguments = {

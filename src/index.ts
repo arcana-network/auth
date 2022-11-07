@@ -1,13 +1,11 @@
 import { ArcanaProvider } from './provider'
 import IframeWrapper from './iframeWrapper'
 import {
-  getWalletType,
   getSentryErrorReporter,
   isDefined,
   constructLoginUrl,
   getCurrentUrl,
   getConstructorParams,
-  getInitParams,
   removeHexPrefix,
 } from './utils'
 import { getNetworkConfig, getRpcConfig } from './config'
@@ -26,6 +24,7 @@ import {
   InitStatus,
   Logins,
   EthereumProvider,
+  WalletType,
 } from './typings'
 import { getAppInfo, getImageUrls } from './appInfo'
 import { WalletNotInitializedError, ArcanaAuthError } from './errors'
@@ -60,8 +59,8 @@ class AuthProvider {
     this.params = getConstructorParams(p)
     this.networkConfig = getNetworkConfig(this.params.network)
     this.rpcConfig = getRpcConfig(this.params.chainConfig, this.params.network)
-
     this.logger = getLogger('AuthProvider')
+
     if (this.params.debug) {
       setLogLevel(LOG_LEVEL.DEBUG)
       if (this.networkConfig.sentryDsn) {
@@ -77,10 +76,13 @@ class AuthProvider {
   /**
    * A function to initialize the wallet, should be called before getting provider
    */
-  public async init(input?: Partial<InitParams>): Promise<AuthProvider> {
+  public async init(): Promise<AuthProvider> {
     if (this.initStatus === InitStatus.CREATED) {
       this.initStatus = InitStatus.RUNNING
-      const { appMode, position } = getInitParams(input)
+
+      const appMode = this.params.alwaysShowWidget
+        ? AppMode.Full
+        : AppMode.Widget
 
       if (this.iframeWrapper) {
         return this
@@ -92,16 +94,13 @@ class AuthProvider {
         appId: this.appId,
         iframeUrl: this.networkConfig.walletUrl,
         appConfig: this.appConfig,
-        position: position,
+        position: this.params.position,
       })
 
-      const walletType = await getWalletType(
-        this.appId,
-        this.networkConfig.gatewayUrl
-      )
-      this.iframeWrapper.setWalletType(walletType, appMode)
+      this.iframeWrapper.setWalletType(WalletType.UI, appMode)
 
       this._provider = new ArcanaProvider(this.iframeWrapper, this.rpcConfig)
+
       await this._provider.init({
         loginWithLink: this.loginWithLink,
         loginWithSocial: this.loginWithSocial,

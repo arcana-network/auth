@@ -229,6 +229,9 @@ const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
   const p: ConstructorParams = {
     network: 'testnet',
     debug: false,
+    position: 'right',
+    theme: 'dark',
+    alwaysShowWidget: true,
   }
   if (initParams?.network) {
     p.network = initParams.network
@@ -241,6 +244,15 @@ const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
   }
   if (initParams?.redirectUrl) {
     p.redirectUrl = initParams.redirectUrl
+  }
+  if (initParams?.theme) {
+    p.theme = initParams.theme
+  }
+  if (initParams?.position) {
+    p.position = initParams.position
+  }
+  if (initParams?.alwaysShowWidget !== undefined) {
+    p.alwaysShowWidget = initParams.alwaysShowWidget
   }
   return p
 }
