@@ -43,7 +43,6 @@ class AuthProvider {
   public appId: string
   private params: ConstructorParams
   private appConfig: AppConfig
-  private logger: Logger
   private iframeWrapper: IframeWrapper
   private networkConfig: NetworkConfig
   private rpcConfig: RpcConfig
@@ -59,7 +58,6 @@ class AuthProvider {
     this.params = getConstructorParams(p)
     this.networkConfig = getNetworkConfig(this.params.network)
     this.rpcConfig = getRpcConfig(this.params.chainConfig, this.params.network)
-    this.logger = getLogger('AuthProvider')
 
     if (this.params.debug) {
       setLogLevel(LOG_LEVEL.DEBUG)

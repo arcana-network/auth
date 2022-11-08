@@ -106,15 +106,16 @@ interface ChainConfig {
 }
 
 const auth = new AuthProvider(`${appAddress}`, {
+  position: 'left',
+  theme: 'light',
+  alwaysShowWidget: false,
   chainConfig: {
     chainId: CHAIN.POLYGON_MAINNET,
     rpcUrl: '',
   },
 })
 
-const position = 'left' // values - 'left' or 'right'
-
-await auth.init({ appMode: AppMode.Widget, position })
+await auth.init()
 ```
 
 See [Get Started with Auth SDK](https://docs.dev.arcana.network/docs/auth_qs) for more Auth SDK usage insights.
@@ -235,18 +236,6 @@ interface AddEthereumChainParameter {
   rpcUrls: string[];
   blockExplorerUrls?: string[];
 }
-
-// Example
-
-// const {
-//     CHAIN, AuthProvider, AppMode, encryptWithPublicKey
-// } = window.arcana.auth
-
-// const auth = new AuthProvider(APP_ADDRESS, {
-//   chainConfig: {
-//     chainId: CHAIN.POLYGON_MAINNET,
-//   },
-// })
 
 ```
 
