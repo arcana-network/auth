@@ -1,13 +1,11 @@
 import { ArcanaProvider } from './provider'
 import IframeWrapper from './iframeWrapper'
 import {
-  getWalletType,
-  getSentryErrorReporter,
+  getErrorReporter,
   isDefined,
   constructLoginUrl,
   getCurrentUrl,
   getConstructorParams,
-  getInitParams,
   removeHexPrefix,
 } from './utils'
 import { getNetworkConfig, getRpcConfig } from './config'
@@ -26,16 +24,11 @@ import {
   InitStatus,
   Logins,
   EthereumProvider,
+  WalletType,
 } from './typings'
 import { getAppInfo, getImageUrls } from './appInfo'
-import { WalletNotInitializedError, ArcanaAuthError } from './errors'
-import {
-  getLogger,
-  Logger,
-  LOG_LEVEL,
-  setExceptionReporter,
-  setLogLevel,
-} from './logger'
+import { ErrorNotInitialized, ArcanaAuthError } from './errors'
+import { LOG_LEVEL, setExceptionReporter, setLogLevel } from './logger'
 import { Chain } from './chainList'
 import Popup from './popup'
 import { ModalController } from './ui/modalController'
@@ -44,7 +37,6 @@ class AuthProvider {
   public appId: string
   private params: ConstructorParams
   private appConfig: AppConfig
-  private logger: Logger
   private iframeWrapper: IframeWrapper
   private networkConfig: NetworkConfig
   private rpcConfig: RpcConfig
@@ -61,14 +53,9 @@ class AuthProvider {
     this.networkConfig = getNetworkConfig(this.params.network)
     this.rpcConfig = getRpcConfig(this.params.chainConfig, this.params.network)
 
-    this.logger = getLogger('AuthProvider')
     if (this.params.debug) {
       setLogLevel(LOG_LEVEL.DEBUG)
-      if (this.networkConfig.sentryDsn) {
-        setExceptionReporter(
-          getSentryErrorReporter(this.networkConfig.sentryDsn)
-        )
-      }
+      setExceptionReporter(getErrorReporter())
     } else {
       setLogLevel(LOG_LEVEL.NOLOGS)
     }
@@ -77,10 +64,13 @@ class AuthProvider {
   /**
    * A function to initialize the wallet, should be called before getting provider
    */
-  public async init(input?: Partial<InitParams>): Promise<AuthProvider> {
+  public async init(): Promise<AuthProvider> {
     if (this.initStatus === InitStatus.CREATED) {
       this.initStatus = InitStatus.RUNNING
-      const { appMode, position } = getInitParams(input)
+
+      const appMode = this.params.alwaysShowWidget
+        ? AppMode.Full
+        : AppMode.Widget
 
       if (this.iframeWrapper) {
         return this
@@ -92,16 +82,13 @@ class AuthProvider {
         appId: this.appId,
         iframeUrl: this.networkConfig.walletUrl,
         appConfig: this.appConfig,
-        position: position,
+        position: this.params.position,
       })
 
-      const walletType = await getWalletType(
-        this.appId,
-        this.networkConfig.gatewayUrl
-      )
-      this.iframeWrapper.setWalletType(walletType, appMode)
+      this.iframeWrapper.setWalletType(WalletType.UI, appMode)
 
       this._provider = new ArcanaProvider(this.iframeWrapper, this.rpcConfig)
+
       await this._provider.init({
         loginWithLink: this.loginWithLink,
         loginWithSocial: this.loginWithSocial,
@@ -168,8 +155,7 @@ class AuthProvider {
       const url = this.getLoginUrl(loginType)
       return this.beginLogin(url)
     }
-    this.logger.error('requestSocialLogin', WalletNotInitializedError)
-    throw WalletNotInitializedError
+    throw ErrorNotInitialized
   }
 
   /**
@@ -180,8 +166,7 @@ class AuthProvider {
       const url = this.getLoginUrl('passwordless', email)
       return this.beginLogin(url)
     }
-    this.logger.error('requestPasswordlessLogin', WalletNotInitializedError)
-    throw WalletNotInitializedError
+    throw ErrorNotInitialized
   }
 
   /**
@@ -192,8 +177,7 @@ class AuthProvider {
     if (this.initStatus === InitStatus.DONE) {
       return this._provider.requestUserInfo()
     }
-    this.logger.error('requestUserInfo', WalletNotInitializedError)
-    throw WalletNotInitializedError
+    throw ErrorNotInitialized
   }
 
   /**
@@ -204,7 +188,7 @@ class AuthProvider {
       const isLoggedIn = this._provider.isLoggedIn()
       return isLoggedIn
     }
-    throw WalletNotInitializedError
+    throw ErrorNotInitialized
   }
 
   /**
@@ -214,8 +198,7 @@ class AuthProvider {
     if (this.initStatus === InitStatus.DONE) {
       return this._provider.triggerLogout()
     }
-    this.logger.error('logout', WalletNotInitializedError)
-    throw WalletNotInitializedError
+    throw ErrorNotInitialized
   }
 
   /**
@@ -231,8 +214,7 @@ class AuthProvider {
       }
       return await this._provider.getPublicKey(email, 'google')
     }
-    this.logger.error('requestPublicKey', WalletNotInitializedError)
-    throw WalletNotInitializedError
+    throw ErrorNotInitialized
   }
 
   /**
@@ -242,8 +224,7 @@ class AuthProvider {
     if (this.initStatus === InitStatus.DONE) {
       return await this._provider.getAvailableLogins()
     }
-    this.logger.error('getLogins', WalletNotInitializedError)
-    throw WalletNotInitializedError
+    throw ErrorNotInitialized
   }
 
   /**
@@ -254,8 +235,7 @@ class AuthProvider {
     if (this.initStatus === InitStatus.DONE) {
       return this._provider
     }
-    this.logger.error('getProvider', WalletNotInitializedError)
-    throw WalletNotInitializedError
+    throw ErrorNotInitialized
   }
 
   /* Private functions */
@@ -290,7 +270,7 @@ class AuthProvider {
     const appInfo = await getAppInfo(this.appId, this.networkConfig.gatewayUrl)
     const appImageURLs = getImageUrls(
       this.appId,
-      appInfo.theme,
+      this.params.theme,
       this.networkConfig.gatewayUrl
     )
     this.appConfig = {
@@ -302,7 +282,7 @@ class AuthProvider {
             vertical: appImageURLs.vertical,
           },
         },
-        theme: appInfo.theme,
+        theme: this.params.theme,
       },
     }
   }
@@ -330,24 +310,21 @@ class AuthProvider {
     if (this._provider) {
       return this._provider
     }
-    this.logger.error('provider', WalletNotInitializedError)
-    throw WalletNotInitializedError
+    throw ErrorNotInitialized
   }
 
   get logo() {
     if (this.initStatus === InitStatus.DONE) {
       return this.appConfig.themeConfig.assets.logo
     }
-    this.logger.error('logo', WalletNotInitializedError)
-    throw WalletNotInitializedError
+    throw ErrorNotInitialized
   }
 
   get theme() {
     if (this.initStatus === InitStatus.DONE) {
       return this.appConfig.themeConfig.theme
     }
-    this.logger.error('theme', WalletNotInitializedError)
-    throw WalletNotInitializedError
+    throw ErrorNotInitialized
   }
 
   /* eslint-disable @typescript-eslint/no-explicit-any */

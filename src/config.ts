@@ -6,16 +6,12 @@ const DEV_NETWORK_CONFIG: NetworkConfig = {
   authUrl: 'https://verify.dev.arcana.network',
   gatewayUrl: 'https://gateway-dev.arcana.network',
   walletUrl: 'https://wallet.dev.arcana.network',
-  sentryDsn:
-    'https://68615fda056a4337bcc9b7e3062562c3@o1011868.ingest.sentry.io/6449849',
 }
 
 const TESTNET_NETWORK_CONFIG: NetworkConfig = {
   authUrl: 'https://verify.beta.arcana.network',
   gatewayUrl: 'https://gateway001-testnet.arcana.network',
   walletUrl: 'https://wallet.beta.arcana.network',
-  sentryDsn:
-    'https://4e27545e4faf43318301625d79a6dc34@o1011868.ingest.sentry.io/6451353',
 }
 
 const getNetworkConfig = (n: Network | NetworkConfig) => {

@@ -9,7 +9,6 @@ import {
   InitParams,
   Theme,
 } from './typings'
-import * as Sentry from '@sentry/browser'
 import { getLogger } from './logger'
 
 const fallbackLogo = {
@@ -162,15 +161,9 @@ function verifyMode(w: WalletType, a: AppMode | undefined): AppMode {
   }
 }
 
-const getSentryErrorReporter = (dsn: string): ((m: string) => void) => {
-  Sentry.init({
-    dsn,
-    maxBreadcrumbs: 5,
-    debug: true,
-    defaultIntegrations: false,
-  })
+const getErrorReporter = (): ((m: string) => void) => {
   return (msg: string) => {
-    Sentry.captureMessage(msg)
+    console.error(msg)
   }
 }
 
@@ -229,6 +222,9 @@ const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
   const p: ConstructorParams = {
     network: 'testnet',
     debug: false,
+    position: 'right',
+    theme: 'dark',
+    alwaysShowWidget: true,
   }
   if (initParams?.network) {
     p.network = initParams.network
@@ -241,6 +237,15 @@ const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
   }
   if (initParams?.redirectUrl) {
     p.redirectUrl = initParams.redirectUrl
+  }
+  if (initParams?.theme) {
+    p.theme = initParams.theme
+  }
+  if (initParams?.position) {
+    p.position = initParams.position
+  }
+  if (initParams?.alwaysShowWidget !== undefined) {
+    p.alwaysShowWidget = initParams.alwaysShowWidget
   }
   return p
 }
@@ -277,7 +282,7 @@ export {
   getUniqueId,
   getWalletPosition,
   verifyMode,
-  getSentryErrorReporter,
+  getErrorReporter,
   isDefined,
   addHexPrefix,
   removeHexPrefix,

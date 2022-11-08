@@ -88,8 +88,6 @@
   },
   "dependencies": {
     "@metamask/safe-event-emitter": "^2.0.0",
-    "@sentry/browser": "^6.19.7",
-    "@sentry/tracing": "^6.19.7",
     "eth-rpc-errors": "^4.0.3",
     "penpal": "^6.0.1"
   },
