@@ -4,13 +4,13 @@ class ArcanaAuthError extends Error {
   }
 }
 
-const ErrorUserNotLoggedIn = new ArcanaAuthError(
+const ErrorNotLoggedIn = new ArcanaAuthError(
   'user_not_logged_in',
   'User is not logged in'
 )
-const ErrorWalletNotInitialized = new ArcanaAuthError(
+const ErrorNotInitialized = new ArcanaAuthError(
   'wallet_not_initialized',
   'AuthProvider is not initialized. Please run `await auth.init(...)` before calling functions'
 )
 
-export { ErrorUserNotLoggedIn, ErrorWalletNotInitialized, ArcanaAuthError }
+export { ErrorNotLoggedIn, ErrorNotInitialized, ArcanaAuthError }

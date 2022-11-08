@@ -27,14 +27,8 @@ import {
   WalletType,
 } from './typings'
 import { getAppInfo, getImageUrls } from './appInfo'
-import { ErrorWalletNotInitialized, ArcanaAuthError } from './errors'
-import {
-  getLogger,
-  Logger,
-  LOG_LEVEL,
-  setExceptionReporter,
-  setLogLevel,
-} from './logger'
+import { ErrorNotInitialized, ArcanaAuthError } from './errors'
+import { LOG_LEVEL, setExceptionReporter, setLogLevel } from './logger'
 import { Chain } from './chainList'
 import Popup from './popup'
 import { ModalController } from './ui/modalController'
@@ -161,7 +155,7 @@ class AuthProvider {
       const url = this.getLoginUrl(loginType)
       return this.beginLogin(url)
     }
-    throw ErrorWalletNotInitialized
+    throw ErrorNotInitialized
   }
 
   /**
@@ -172,7 +166,7 @@ class AuthProvider {
       const url = this.getLoginUrl('passwordless', email)
       return this.beginLogin(url)
     }
-    throw ErrorWalletNotInitialized
+    throw ErrorNotInitialized
   }
 
   /**
@@ -183,7 +177,7 @@ class AuthProvider {
     if (this.initStatus === InitStatus.DONE) {
       return this._provider.requestUserInfo()
     }
-    throw ErrorWalletNotInitialized
+    throw ErrorNotInitialized
   }
 
   /**
@@ -194,7 +188,7 @@ class AuthProvider {
       const isLoggedIn = this._provider.isLoggedIn()
       return isLoggedIn
     }
-    throw ErrorWalletNotInitialized
+    throw ErrorNotInitialized
   }
 
   /**
@@ -204,7 +198,7 @@ class AuthProvider {
     if (this.initStatus === InitStatus.DONE) {
       return this._provider.triggerLogout()
     }
-    throw ErrorWalletNotInitialized
+    throw ErrorNotInitialized
   }
 
   /**
@@ -220,7 +214,7 @@ class AuthProvider {
       }
       return await this._provider.getPublicKey(email, 'google')
     }
-    throw ErrorWalletNotInitialized
+    throw ErrorNotInitialized
   }
 
   /**
@@ -230,7 +224,7 @@ class AuthProvider {
     if (this.initStatus === InitStatus.DONE) {
       return await this._provider.getAvailableLogins()
     }
-    throw ErrorWalletNotInitialized
+    throw ErrorNotInitialized
   }
 
   /**
@@ -241,7 +235,7 @@ class AuthProvider {
     if (this.initStatus === InitStatus.DONE) {
       return this._provider
     }
-    throw ErrorWalletNotInitialized
+    throw ErrorNotInitialized
   }
 
   /* Private functions */
@@ -316,21 +310,21 @@ class AuthProvider {
     if (this._provider) {
       return this._provider
     }
-    throw ErrorWalletNotInitialized
+    throw ErrorNotInitialized
   }
 
   get logo() {
     if (this.initStatus === InitStatus.DONE) {
       return this.appConfig.themeConfig.assets.logo
     }
-    throw ErrorWalletNotInitialized
+    throw ErrorNotInitialized
   }
 
   get theme() {
     if (this.initStatus === InitStatus.DONE) {
       return this.appConfig.themeConfig.theme
     }
-    throw ErrorWalletNotInitialized
+    throw ErrorNotInitialized
   }
 
   /* eslint-disable @typescript-eslint/no-explicit-any */
