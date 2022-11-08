@@ -103,7 +103,6 @@ export interface NetworkConfig {
   authUrl: string
   gatewayUrl: string
   walletUrl: string
-  sentryDsn?: string
 }
 
 export interface ChainConfigInput {

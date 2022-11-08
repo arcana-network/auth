@@ -8,7 +8,7 @@ import type {
 import { Connection } from 'penpal'
 import { ethErrors } from 'eth-rpc-errors'
 import SafeEventEmitter from '@metamask/safe-event-emitter'
-import { ArcanaAuthError, UserNotLoggedInError } from './errors'
+import { ArcanaAuthError, ErrorUserNotLoggedIn } from './errors'
 import { getLogger, Logger } from './logger'
 import IframeWrapper from './iframeWrapper'
 import { getCurrentUrl, getUniqueId } from './utils'
@@ -110,8 +110,7 @@ export class ArcanaProvider
     const c = await this.getCommunication('getUserInfo')
     const isLoggedIn = await c.isLoggedIn()
     if (!isLoggedIn) {
-      this.logger.error('requestUserInfo', UserNotLoggedInError)
-      throw UserNotLoggedInError
+      throw ErrorUserNotLoggedIn
     }
     const info = await c.getUserInfo()
     return info

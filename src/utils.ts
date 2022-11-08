@@ -9,7 +9,6 @@ import {
   InitParams,
   Theme,
 } from './typings'
-import * as Sentry from '@sentry/browser'
 import { getLogger } from './logger'
 
 const fallbackLogo = {
@@ -162,15 +161,9 @@ function verifyMode(w: WalletType, a: AppMode | undefined): AppMode {
   }
 }
 
-const getSentryErrorReporter = (dsn: string): ((m: string) => void) => {
-  Sentry.init({
-    dsn,
-    maxBreadcrumbs: 5,
-    debug: true,
-    defaultIntegrations: false,
-  })
+const getErrorReporter = (): ((m: string) => void) => {
   return (msg: string) => {
-    Sentry.captureMessage(msg)
+    console.error(msg)
   }
 }
 
@@ -289,7 +282,7 @@ export {
   getUniqueId,
   getWalletPosition,
   verifyMode,
-  getSentryErrorReporter,
+  getErrorReporter,
   isDefined,
   addHexPrefix,
   removeHexPrefix,
