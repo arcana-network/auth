@@ -224,7 +224,7 @@ const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
     debug: false,
     position: 'right',
     theme: 'dark',
-    alwaysShowWidget: true,
+    alwaysVisible: true,
   }
   if (initParams?.network) {
     p.network = initParams.network
@@ -244,8 +244,8 @@ const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
   if (initParams?.position) {
     p.position = initParams.position
   }
-  if (initParams?.alwaysShowWidget !== undefined) {
-    p.alwaysShowWidget = initParams.alwaysShowWidget
+  if (initParams?.alwaysVisible !== undefined) {
+    p.alwaysVisible = initParams.alwaysVisible
   }
   return p
 }

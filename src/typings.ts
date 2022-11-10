@@ -140,7 +140,7 @@ export const ModeWalletTypeRelation = {
 export interface ConstructorParams {
   network: ('testnet' | 'dev') | NetworkConfig
   debug: boolean
-  alwaysShowWidget: boolean
+  alwaysVisible: boolean
   chainConfig?: ChainConfigInput
   redirectUrl?: string
   theme: Theme

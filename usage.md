@@ -98,7 +98,7 @@ import { AuthProvider } from '@arcana/auth' // From npm
 #### Initialize AuthProvider
 
 ```ts
-import { AuthProvider, AppMode, CHAIN } from '@arcana/auth'
+import { AuthProvider, CHAIN } from '@arcana/auth'
 
 interface ChainConfig {
   chainId: CHAIN
@@ -108,7 +108,7 @@ interface ChainConfig {
 const auth = new AuthProvider(`${appAddress}`, {
   position: 'left',
   theme: 'light',
-  alwaysShowWidget: false,
+  alwaysVisible: false,
   chainConfig: {
     chainId: CHAIN.POLYGON_MAINNET,
     rpcUrl: '',
