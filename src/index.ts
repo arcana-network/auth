@@ -12,7 +12,6 @@ import { getNetworkConfig, getRpcConfig } from './config'
 import {
   AppConfig,
   AppMode,
-  InitParams,
   ConstructorParams,
   ChainConfigInput,
   NetworkConfig,
@@ -350,12 +349,10 @@ export {
   EthereumProvider,
   AppConfig,
   Theme,
-  AppMode,
   Position,
   RpcConfig,
   Logins,
   UserInfo,
   ThemeConfig,
-  InitParams,
   NetworkConfig,
 }

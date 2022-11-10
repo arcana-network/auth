@@ -6,7 +6,6 @@ import {
   WalletPosition,
   WalletSize,
   Position,
-  InitParams,
   Theme,
 } from './typings'
 import { getLogger } from './logger'
@@ -250,21 +249,6 @@ const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
   return p
 }
 
-const getInitParams = (input?: Partial<InitParams>): InitParams => {
-  const p: InitParams = {
-    appMode: AppMode.NoUI,
-    position: 'right',
-  }
-
-  if (input?.appMode !== undefined) {
-    p.appMode = input.appMode
-  }
-  if (input?.position !== undefined) {
-    p.position = input.position
-  }
-  return p
-}
-
 const MAX = 4294967295
 let idCounter = Math.floor(Math.random() * MAX)
 const getUniqueId = () => {
@@ -292,5 +276,4 @@ export {
   getHexFromNumber,
   getCurrentUrl,
   getConstructorParams,
-  getInitParams,
 }

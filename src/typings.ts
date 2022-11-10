@@ -20,11 +20,6 @@ export interface IframeWrapperParams {
   position: Position
 }
 
-export interface InitParams {
-  appMode: AppMode
-  position: Position
-}
-
 export interface ThemeConfig {
   assets: {
     logo: {
