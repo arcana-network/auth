@@ -12,7 +12,6 @@ import { getNetworkConfig, getRpcConfig } from './config'
 import {
   AppConfig,
   AppMode,
-  InitParams,
   ConstructorParams,
   ChainConfigInput,
   NetworkConfig,
@@ -68,9 +67,7 @@ class AuthProvider {
     if (this.initStatus === InitStatus.CREATED) {
       this.initStatus = InitStatus.RUNNING
 
-      const appMode = this.params.alwaysShowWidget
-        ? AppMode.Full
-        : AppMode.Widget
+      const appMode = this.params.alwaysVisible ? AppMode.Full : AppMode.Widget
 
       if (this.iframeWrapper) {
         return this
@@ -352,12 +349,10 @@ export {
   EthereumProvider,
   AppConfig,
   Theme,
-  AppMode,
   Position,
   RpcConfig,
   Logins,
   UserInfo,
   ThemeConfig,
-  InitParams,
   NetworkConfig,
 }

@@ -6,7 +6,6 @@ import {
   WalletPosition,
   WalletSize,
   Position,
-  InitParams,
   Theme,
 } from './typings'
 import { getLogger } from './logger'
@@ -224,7 +223,7 @@ const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
     debug: false,
     position: 'right',
     theme: 'dark',
-    alwaysShowWidget: true,
+    alwaysVisible: true,
   }
   if (initParams?.network) {
     p.network = initParams.network
@@ -244,23 +243,8 @@ const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
   if (initParams?.position) {
     p.position = initParams.position
   }
-  if (initParams?.alwaysShowWidget !== undefined) {
-    p.alwaysShowWidget = initParams.alwaysShowWidget
-  }
-  return p
-}
-
-const getInitParams = (input?: Partial<InitParams>): InitParams => {
-  const p: InitParams = {
-    appMode: AppMode.NoUI,
-    position: 'right',
-  }
-
-  if (input?.appMode !== undefined) {
-    p.appMode = input.appMode
-  }
-  if (input?.position !== undefined) {
-    p.position = input.position
+  if (initParams?.alwaysVisible !== undefined) {
+    p.alwaysVisible = initParams.alwaysVisible
   }
   return p
 }
@@ -292,5 +276,4 @@ export {
   getHexFromNumber,
   getCurrentUrl,
   getConstructorParams,
-  getInitParams,
 }

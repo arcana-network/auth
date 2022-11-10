@@ -1,6 +1,9 @@
 const { AuthProvider, AppMode, encryptWithPublicKey } = window.arcana.auth
 
-const auth = new AuthProvider('...')
+const auth = new AuthProvider('5Cf32B3Da75EABf85bBAB9dF64FD3D07ce6aCCC0', {
+  network: 'dev',
+  alwaysVisible: false,
+})
 let provider
 
 const reqElement = document.getElementById('request')

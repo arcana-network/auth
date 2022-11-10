@@ -20,11 +20,6 @@ export interface IframeWrapperParams {
   position: Position
 }
 
-export interface InitParams {
-  appMode: AppMode
-  position: Position
-}
-
 export interface ThemeConfig {
   assets: {
     logo: {
@@ -140,7 +135,7 @@ export const ModeWalletTypeRelation = {
 export interface ConstructorParams {
   network: ('testnet' | 'dev') | NetworkConfig
   debug: boolean
-  alwaysShowWidget: boolean
+  alwaysVisible: boolean
   chainConfig?: ChainConfigInput
   redirectUrl?: string
   theme: Theme
