@@ -1,9 +1,6 @@
-const { AuthProvider, AppMode, encryptWithPublicKey } = window.arcana.auth
+const { AuthProvider } = window.arcana.auth
 
-const auth = new AuthProvider('5Cf32B3Da75EABf85bBAB9dF64FD3D07ce6aCCC0', {
-  network: 'dev',
-  alwaysVisible: false,
-})
+const auth = new AuthProvider('...')
 let provider
 
 const reqElement = document.getElementById('request')
@@ -14,20 +11,23 @@ function setRequest(value) {
   reqElement.innerText = value
   setResult('-')
 }
+
 function setResult(value) {
   resElement.innerText = value
 }
+
 function setAccount(value) {
   accElement.innerText = value
 }
 
 window.onload = async () => {
-  console.log('Init wallet')
-  const position = 'right'
   try {
-    await auth.init({ appMode: AppMode.Full, position })
+    console.time('auth_init')
+    await auth.init()
+    console.timeEnd('auth_init')
     provider = auth.provider
     const connected = await auth.isLoggedIn()
+    console.log('Init auth complete!')
     console.log({ connected })
     setHooks()
   } catch (e) {
@@ -165,19 +165,22 @@ let ciphertext
 let publicKey
 
 async function encrypt() {
-  console.log('Doing encryption')
-  setRequest('encrypt')
-
-  const c = await encryptWithPublicKey({
-    publicKey,
-    message: plaintext,
-  })
-  setResult(c)
-  console.log({ ciphertext: c })
-  ciphertext = c
+  // console.log('Doing encryption')
+  // setRequest('encrypt')
+  // const c = await encryptWithPublicKey({
+  //   publicKey,
+  //   message: plaintext,
+  // })
+  // setResult(c)
+  // console.log({ ciphertext: c })
+  // ciphertext = c
 }
 
 async function ethDecrypt() {
+  if (!ciphertext) {
+    setResult('No ciphertext, ignoring event')
+    return
+  }
   console.log('Requesting decryption')
   setRequest('eth_decrypt')
 
