@@ -5,7 +5,7 @@ const closeButtonImage = {
 }
 
 const baseWidgetBubbleStyle = {
-  position: 'absolute',
+  position: 'fixed',
 
   width: '117px',
   height: '117px',
@@ -19,6 +19,8 @@ const baseWidgetBubbleStyle = {
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
+
+  zIndex: '214748363',
 }
 
 const baseCloseButtonStyle = {
@@ -85,13 +87,15 @@ const widgetBubbleStyle = {
 
 const widgetIframeStyle = {
   container: {
-    position: 'absolute',
+    position: 'fixed',
     // Size and position values are set in iframewrapper.ts
 
     display: 'flex',
     flexDirection: 'column',
     boxShadow: '4px 5px 4px rgba(0, 0, 0, 0.25)',
     borderRadius: '10px',
+
+    zIndex: '214748363',
   },
   header: {
     container: {
