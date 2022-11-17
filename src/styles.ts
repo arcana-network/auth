@@ -20,7 +20,7 @@ const baseWidgetBubbleStyle = {
   justifyContent: 'center',
   alignItems: 'center',
 
-  zIndex: '214748363',
+  zIndex: '100000',
 }
 
 const baseCloseButtonStyle = {
@@ -95,7 +95,7 @@ const widgetIframeStyle = {
     boxShadow: '4px 5px 4px rgba(0, 0, 0, 0.25)',
     borderRadius: '10px',
 
-    zIndex: '214748363',
+    zIndex: '100000',
   },
   header: {
     container: {
