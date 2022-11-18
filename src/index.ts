@@ -146,6 +146,9 @@ class AuthProvider {
    */
   loginWithSocial = async (loginType: string): Promise<EthereumProvider> => {
     if (this.initStatus === InitStatus.DONE) {
+      if (await this.isLoggedIn()) {
+        return this._provider
+      }
       if (!(await this._provider.isLoginAvailable(loginType))) {
         throw new Error(`${loginType} login is not available`)
       }
@@ -158,8 +161,11 @@ class AuthProvider {
   /**
    * A function to trigger passwordless login in the wallet
    */
-  loginWithLink = (email: string): Promise<EthereumProvider> => {
+  loginWithLink = async (email: string): Promise<EthereumProvider> => {
     if (this.initStatus === InitStatus.DONE) {
+      if (await this.isLoggedIn()) {
+        return this._provider
+      }
       const url = this.getLoginUrl('passwordless', email)
       return this.beginLogin(url)
     }
