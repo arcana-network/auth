@@ -256,8 +256,7 @@ const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
 }
 
 const createOverlayOnRedirection = () => {
-  const shouldCreateOverlay = checkIfRedirection()
-  if (!shouldCreateOverlay) {
+  if (!isRedirection()) {
     return
   }
 
@@ -304,7 +303,7 @@ const createOverlayOnRedirection = () => {
   document.body.appendChild(overlay)
 }
 
-const checkIfRedirection = () => {
+const isRedirection = () => {
   const redirectHash = window.location.hash
   if (redirectHash) {
     const searchParams = new URLSearchParams(redirectHash.substring(1))
