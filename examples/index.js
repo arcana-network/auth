@@ -1,7 +1,21 @@
 const { AuthProvider } = window.arcana.auth
 
-const auth = new AuthProvider('...')
 let provider
+const auth = new AuthProvider('...')
+
+window.onload = async () => {
+  try {
+    console.time('auth_init')
+    await auth.init()
+    console.timeEnd('auth_init')
+    provider = auth.provider
+    console.log('Init auth complete!')
+    setHooks()
+  } catch (e) {
+    console.log({ e })
+    console.log(e)
+  }
+}
 
 const reqElement = document.getElementById('request')
 const resElement = document.getElementById('result')
@@ -20,30 +34,12 @@ function setAccount(value) {
   accElement.innerText = value
 }
 
-window.onload = async () => {
-  try {
-    console.time('auth_init')
-    await auth.init()
-    console.timeEnd('auth_init')
-    provider = auth.provider
-    const connected = await auth.isLoggedIn()
-    console.log('Init auth complete!')
-    console.log({ connected })
-    setHooks()
-  } catch (e) {
-    console.log({ e })
-    console.log(e)
-  }
-}
-
 // get from eth_accounts
 let from = ''
 
 function setHooks() {
   provider.on('connect', async (params) => {
     console.log({ type: 'connect', params: params })
-    const isLoggedIn = await auth.isLoggedIn()
-    console.log({ isLoggedIn })
   })
   provider.on('accountsChanged', (params) => {
     console.log({ type: 'accountsChanged', params: params })

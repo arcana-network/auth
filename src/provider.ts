@@ -53,7 +53,11 @@ export class ArcanaProvider
   private communication: Connection<ChildMethods>
   private subscriber: SafeEventEmitter
   private logger: Logger = getLogger('ArcanaProvider')
-  constructor(private iframe: IframeWrapper, private rpcConfig: RpcConfig) {
+  constructor(
+    private iframe: IframeWrapper,
+    private rpcConfig: RpcConfig,
+    private setConnected: () => void
+  ) {
     super()
     this.subscriber = new SafeEventEmitter()
   }
@@ -214,6 +218,7 @@ export class ArcanaProvider
         break
       case 'connect':
         this.iframe.showWidgetBubble()
+        this.setConnected()
         this.emit('connect', val)
         break
       case 'disconnect':
