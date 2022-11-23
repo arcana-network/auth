@@ -7,6 +7,8 @@ import {
   getCurrentUrl,
   getConstructorParams,
   removeHexPrefix,
+  createOverlayOnRedirection,
+  preLoadIframe,
 } from './utils'
 import { getNetworkConfig, getRpcConfig } from './config'
 import {
@@ -34,6 +36,7 @@ import { ModalController } from './ui/modalController'
 
 class AuthProvider {
   public appId: string
+  public connected = false
   private params: ConstructorParams
   private appConfig: AppConfig
   private iframeWrapper: IframeWrapper
@@ -50,6 +53,7 @@ class AuthProvider {
     this.appId = removeHexPrefix(appAddress)
     this.params = getConstructorParams(p)
     this.networkConfig = getNetworkConfig(this.params.network)
+    preLoadIframe(this.networkConfig.walletUrl, this.appId)
     this.rpcConfig = getRpcConfig(this.params.chainConfig, this.params.network)
 
     if (this.params.debug) {
@@ -72,6 +76,7 @@ class AuthProvider {
       if (this.iframeWrapper) {
         return this
       }
+      createOverlayOnRedirection()
 
       await this.setAppConfig()
 
@@ -84,7 +89,11 @@ class AuthProvider {
 
       this.iframeWrapper.setWalletType(WalletType.UI, appMode)
 
-      this._provider = new ArcanaProvider(this.iframeWrapper, this.rpcConfig)
+      this._provider = new ArcanaProvider(
+        this.iframeWrapper,
+        this.rpcConfig,
+        this.setConnected
+      )
 
       await this._provider.init({
         loginWithLink: this.loginWithLink,
@@ -95,6 +104,9 @@ class AuthProvider {
       this.initStatus = InitStatus.DONE
 
       this.resolveInitPromises()
+      if (await this._provider.isLoggedIn()) {
+        await this.waitForConnect()
+      }
       return this
     } else if (this.initStatus === InitStatus.RUNNING) {
       return await this.waitForInit()
@@ -255,6 +267,12 @@ class AuthProvider {
     })
   }
 
+  setConnected = () => {
+    if (!this.connected) {
+      this.connected = true
+    }
+  }
+
   private async beginLogin(url: string): Promise<EthereumProvider> {
     const popup = new Popup(url)
     await popup.open()
@@ -263,7 +281,11 @@ class AuthProvider {
 
   private waitForConnect(): Promise<EthereumProvider> {
     return new Promise((resolve) => {
+      if (this.connected) {
+        return resolve(this._provider)
+      }
       this._provider.on('connect', () => {
+        this.setConnected()
         return resolve(this._provider)
       })
     })
