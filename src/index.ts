@@ -8,6 +8,7 @@ import {
   getConstructorParams,
   removeHexPrefix,
   createOverlayOnRedirection,
+  preLoadIframe,
 } from './utils'
 import { getNetworkConfig, getRpcConfig } from './config'
 import {
@@ -32,23 +33,6 @@ import { LOG_LEVEL, setExceptionReporter, setLogLevel } from './logger'
 import { Chain } from './chainList'
 import Popup from './popup'
 import { ModalController } from './ui/modalController'
-
-function preLoadIframe(url: string, appId: string) {
-  try {
-    if (typeof document === 'undefined') return
-    const iframeLink = document.createElement('link')
-    iframeLink.href = `${url}/${appId}/login`
-    iframeLink.type = 'text/html'
-    iframeLink.rel = 'prefetch'
-    if (iframeLink.relList && iframeLink.relList.supports) {
-      if (iframeLink.relList.supports('prefetch')) {
-        document.head.appendChild(iframeLink)
-      }
-    }
-  } catch (error) {
-    console.warn(error)
-  }
-}
 
 class AuthProvider {
   public appId: string

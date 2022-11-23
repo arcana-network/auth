@@ -314,7 +314,6 @@ const checkIfRedirection = () => {
       window.history.replaceState(null, '', cleanUrl)
       return true
     }
-    return false
   }
   return false
 }
@@ -324,6 +323,19 @@ let idCounter = Math.floor(Math.random() * MAX)
 const getUniqueId = () => {
   idCounter = (idCounter + 1) % MAX
   return idCounter
+}
+
+function preLoadIframe(url: string, appId: string) {
+  try {
+    if (typeof document === 'undefined') return
+    const iframeLink = document.createElement('link')
+    iframeLink.href = `${url}/${appId}/login`
+    iframeLink.type = 'text/html'
+    iframeLink.rel = 'prefetch'
+    document.head.appendChild(iframeLink)
+  } catch (error) {
+    console.warn(error)
+  }
 }
 
 export {
@@ -336,6 +348,7 @@ export {
   getUniqueId,
   getWalletPosition,
   verifyMode,
+  preLoadIframe,
   getErrorReporter,
   isDefined,
   addHexPrefix,
