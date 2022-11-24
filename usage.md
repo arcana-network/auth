@@ -122,6 +122,12 @@ See [Get Started with Auth SDK](https://docs.dev.arcana.network/docs/auth_qs) fo
 
 ### Auth APIs
 
+#### Plug and Play Authentication
+
+```js
+const provider = await auth.connect()
+```
+
 #### Login
 
 Social login
@@ -131,7 +137,7 @@ Social login
 const provider = await auth.loginWithSocial(`${loginType}`)
 ```
 
-Passwordless login via email verification link
+Passwordless login via an email verification link
 
 ```js
 const provider = await auth.loginWithLink(`${email}`)
