@@ -2,15 +2,15 @@ const { AuthProvider } = window.arcana.auth
 
 let provider
 const auth = new AuthProvider('...')
+provider = auth.provider
+setHooks()
 
 window.onload = async () => {
   try {
     console.time('auth_init')
     await auth.init()
     console.timeEnd('auth_init')
-    provider = auth.provider
     console.log('Init auth complete!')
-    setHooks()
   } catch (e) {
     console.log({ e })
   }

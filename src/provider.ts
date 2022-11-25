@@ -52,17 +52,19 @@ export class ArcanaProvider
 {
   private communication: Connection<ChildMethods>
   private subscriber: SafeEventEmitter
+  private iframe: IframeWrapper
   private logger: Logger = getLogger('ArcanaProvider')
-  constructor(
-    private iframe: IframeWrapper,
-    private rpcConfig: RpcConfig,
-    private setConnected: () => void
-  ) {
+  constructor(private rpcConfig: RpcConfig, private setConnected: () => void) {
     super()
     this.subscriber = new SafeEventEmitter()
   }
 
-  public async init(loginFuncs: TriggerLoginFuncs) {
+  public isArcana() {
+    return true
+  }
+
+  public async init(iframe: IframeWrapper, loginFuncs: TriggerLoginFuncs) {
+    this.iframe = iframe
     const { communication } = await this.iframe.setConnectionMethods({
       onEvent: this.handleEvents,
       onMethodResponse: (
