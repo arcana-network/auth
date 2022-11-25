@@ -136,4 +136,39 @@ const widgetIframeStyle = {
   },
 }
 
-export { widgetBubbleStyle, widgetIframeStyle }
+const redirectionOverlayStyle: { [k: string]: Partial<CSSStyleDeclaration> } = {
+  overlay: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    top: '0',
+    left: '0',
+    background: 'rgba(10, 10, 10)',
+    position: 'fixed',
+    zIndex: '100001',
+  },
+  text: {
+    color: 'white',
+    fontSize: '16px',
+    fontFamily: 'Sora, sans-serif',
+  },
+  heading: {
+    color: 'white',
+    fontFamily: 'Sora, sans-serif',
+  },
+  closeBtn: {
+    color: 'white',
+    fontWeight: '700',
+    position: 'absolute',
+    top: '15px',
+    right: '15px',
+    border: '2px solid white',
+    background: 'none',
+    borderRadius: '50%',
+    cursor: 'pointer',
+  },
+}
+export { widgetBubbleStyle, widgetIframeStyle, redirectionOverlayStyle }
