@@ -55,6 +55,7 @@ class AuthProvider {
     this.networkConfig = getNetworkConfig(this.params.network)
     preLoadIframe(this.networkConfig.walletUrl, this.appId)
     this.rpcConfig = getRpcConfig(this.params.chainConfig, this.params.network)
+    this._provider = new ArcanaProvider(this.rpcConfig, this.setConnected)
 
     if (this.params.debug) {
       setLogLevel(LOG_LEVEL.DEBUG)
@@ -89,13 +90,7 @@ class AuthProvider {
 
       this.iframeWrapper.setWalletType(WalletType.UI, appMode)
 
-      this._provider = new ArcanaProvider(
-        this.iframeWrapper,
-        this.rpcConfig,
-        this.setConnected
-      )
-
-      await this._provider.init({
+      await this._provider.init(this.iframeWrapper, {
         loginWithLink: this.loginWithLink,
         loginWithSocial: this.loginWithSocial,
       })
@@ -115,7 +110,7 @@ class AuthProvider {
   }
 
   /**
-   * A function to open login modal
+   * A function to open login plug n play modal
    */
   public async connect(): Promise<EthereumProvider> {
     if (this.initStatus !== InitStatus.DONE) {
@@ -267,6 +262,9 @@ class AuthProvider {
     })
   }
 
+  /**
+   * @internal
+   */
   setConnected = () => {
     if (!this.connected) {
       this.connected = true
