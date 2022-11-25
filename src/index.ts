@@ -96,12 +96,13 @@ class AuthProvider {
       })
       this.setProviders()
 
-      this.initStatus = InitStatus.DONE
-
-      this.resolveInitPromises()
       if (await this._provider.isLoggedIn()) {
         await this.waitForConnect()
       }
+
+      this.initStatus = InitStatus.DONE
+      this.resolveInitPromises()
+
       return this
     } else if (this.initStatus === InitStatus.RUNNING) {
       return await this.waitForInit()
