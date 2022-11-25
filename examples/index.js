@@ -93,6 +93,21 @@ async function switchChain() {
   }
 }
 
+async function addToken() {
+  try {
+    await provider.request({
+      method: 'wallet_watchAsset',
+      params: [
+        {
+          address: '0xB983E01458529665007fF7E0CDdeCDB74B967Eb6',
+        },
+      ],
+    })
+  } catch (e) {
+    console.log({ e })
+  }
+}
+
 async function getAccounts() {
   console.log('Requesting accounts')
   try {
