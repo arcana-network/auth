@@ -108,6 +108,10 @@ class AuthProvider {
     } else if (this.initStatus === InitStatus.RUNNING) {
       return await this.waitForInit()
     }
+
+    if (await this._provider.isLoggedIn()) {
+      await this.waitForConnect()
+    }
     return this
   }
 
