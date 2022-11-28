@@ -7,9 +7,12 @@ import {
   WalletSize,
   Position,
   Theme,
+  EthereumProvider,
 } from './typings'
+import Loader from './ui/loader'
+import { render } from 'preact'
 import { getLogger } from './logger'
-import { redirectionOverlayStyle } from './styles'
+import { redirectionOverlayStyle, strokeColor } from './styles'
 
 const fallbackLogo = {
   light:
@@ -260,7 +263,10 @@ const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
   return p
 }
 
-const createOverlayOnRedirection = (theme: Theme) => {
+const createOverlayOnRedirection = (
+  provider: EthereumProvider,
+  theme: Theme
+) => {
   if (!isRedirection()) {
     return
   }
@@ -268,32 +274,54 @@ const createOverlayOnRedirection = (theme: Theme) => {
   const overlay = createDomElement('div', {
     style: redirectionOverlayStyle.overlay[theme],
   })
+  document.body.appendChild(overlay)
 
-  const icon = createDomElement('img', {
-    src: icons.success(theme),
+  const loader = Loader({
+    strokeColor: strokeColor[theme],
+    stroke: 8,
+    secondaryColor: '#8D8D8D',
   })
+  // Show loading bar
+  render(loader, overlay)
 
-  const text = createDomElement(
+  const loginText = createDomElement(
     'p',
     {
-      style: redirectionOverlayStyle.text[theme],
+      style: redirectionOverlayStyle.loaderText[theme],
     },
-    'Please continue on the original window'
+    'Login in progress'
   )
 
-  const heading = createDomElement(
-    'h1',
-    {
-      style: redirectionOverlayStyle.heading[theme],
-    },
-    'Login successful'
-  )
+  overlay.appendChild(loginText)
 
-  overlay.appendChild(icon)
-  overlay.appendChild(heading)
-  overlay.appendChild(text)
+  // on conenct show success
+  provider.on('connect', () => {
+    render(null, overlay)
+    overlay.removeChild(loginText)
+    const icon = createDomElement('img', {
+      src: icons.success(theme),
+    })
 
-  document.body.appendChild(overlay)
+    const text = createDomElement(
+      'p',
+      {
+        style: redirectionOverlayStyle.text[theme],
+      },
+      'Please continue on the original window'
+    )
+
+    const heading = createDomElement(
+      'h1',
+      {
+        style: redirectionOverlayStyle.heading[theme],
+      },
+      'Login successful'
+    )
+
+    overlay.appendChild(icon)
+    overlay.appendChild(heading)
+    overlay.appendChild(text)
+  })
 }
 
 const isRedirection = () => {

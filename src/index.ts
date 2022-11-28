@@ -77,7 +77,7 @@ class AuthProvider {
       if (this.iframeWrapper) {
         return this
       }
-      createOverlayOnRedirection(this.params.theme)
+      createOverlayOnRedirection(this._provider, this.params.theme)
 
       await this.setAppConfig()
 

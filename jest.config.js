@@ -5,6 +5,10 @@ const config = {
   setupFiles: [],
   collectCoverage: true,
   preset: 'ts-jest',
+  transform: {
+    '^.+\\.[t|j]sx?$': 'babel-jest',
+  },
+  transformIgnorePatterns: ['node_modules/(?!preact)'],
   coverageReporters: ['text', 'cobertura'],
 }
 

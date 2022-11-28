@@ -153,6 +153,11 @@ const overlayTextBase = {
   fontFamily: 'Sora, sans-serif',
 }
 
+const strokeColor = {
+  light: '#101010',
+  dark: '#f7f7f7',
+}
+
 const redirectionOverlayStyle = {
   overlay: {
     light: {
@@ -168,23 +173,43 @@ const redirectionOverlayStyle = {
     light: {
       ...overlayTextBase,
       fontSize: '16px',
-      color: '#101010',
+      color: strokeColor['light'],
     },
     dark: {
       ...overlayTextBase,
       fontSize: '16px',
-      color: '#f7f7f7',
+      color: strokeColor['dark'],
     },
   },
   heading: {
     light: {
       ...overlayTextBase,
-      color: '#101010',
+      color: strokeColor['light'],
     },
     dark: {
       ...overlayTextBase,
-      color: '#f7f7f7',
+      color: strokeColor['dark'],
+    },
+  },
+  loaderText: {
+    light: {
+      ...overlayTextBase,
+      color: strokeColor['light'],
+      marginTop: '15px',
+      fontSize: '20px',
+    },
+    dark: {
+      ...overlayTextBase,
+      color: strokeColor['dark'],
+      marginTop: '15px',
+      fontSize: '20px',
     },
   },
 }
-export { widgetBubbleStyle, widgetIframeStyle, redirectionOverlayStyle }
+
+export {
+  strokeColor,
+  widgetBubbleStyle,
+  widgetIframeStyle,
+  redirectionOverlayStyle,
+}
