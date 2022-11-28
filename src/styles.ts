@@ -136,39 +136,79 @@ const widgetIframeStyle = {
   },
 }
 
-const redirectionOverlayStyle: { [k: string]: Partial<CSSStyleDeclaration> } = {
+const overlayBase = {
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexDirection: 'column',
+  top: '0',
+  left: '0',
+  position: 'fixed',
+  zIndex: '100001',
+}
+
+const overlayTextBase = {
+  fontFamily: 'Sora, sans-serif',
+  marginTop: '15px',
+}
+
+const strokeColor = {
+  light: '#101010',
+  dark: '#f7f7f7',
+}
+
+const redirectionOverlayStyle = {
   overlay: {
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    top: '0',
-    left: '0',
-    background: 'rgba(10, 10, 10)',
-    position: 'fixed',
-    zIndex: '100001',
+    light: {
+      ...overlayBase,
+      background: '#F9F9F9',
+    },
+    dark: {
+      ...overlayBase,
+      background: '#262626',
+    },
   },
   text: {
-    color: 'white',
-    fontSize: '16px',
-    fontFamily: 'Sora, sans-serif',
+    light: {
+      ...overlayTextBase,
+      fontSize: '16px',
+      color: strokeColor['light'],
+    },
+    dark: {
+      ...overlayTextBase,
+      fontSize: '16px',
+      color: strokeColor['dark'],
+    },
   },
   heading: {
-    color: 'white',
-    fontFamily: 'Sora, sans-serif',
+    light: {
+      ...overlayTextBase,
+      color: strokeColor['light'],
+    },
+    dark: {
+      ...overlayTextBase,
+      color: strokeColor['dark'],
+    },
   },
-  closeBtn: {
-    color: 'white',
-    fontWeight: '700',
-    position: 'absolute',
-    top: '15px',
-    right: '15px',
-    border: '2px solid white',
-    background: 'none',
-    borderRadius: '50%',
-    cursor: 'pointer',
+  loaderText: {
+    light: {
+      ...overlayTextBase,
+      color: strokeColor['light'],
+      fontSize: '20px',
+    },
+    dark: {
+      ...overlayTextBase,
+      color: strokeColor['dark'],
+      fontSize: '20px',
+    },
   },
 }
-export { widgetBubbleStyle, widgetIframeStyle, redirectionOverlayStyle }
+
+export {
+  strokeColor,
+  widgetBubbleStyle,
+  widgetIframeStyle,
+  redirectionOverlayStyle,
+}

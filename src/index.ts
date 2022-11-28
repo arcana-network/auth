@@ -77,7 +77,7 @@ class AuthProvider {
       if (this.iframeWrapper) {
         return this
       }
-      createOverlayOnRedirection()
+      createOverlayOnRedirection(this._provider, this.params.theme)
 
       await this.setAppConfig()
 
@@ -97,11 +97,6 @@ class AuthProvider {
       this.setProviders()
 
       this.initStatus = InitStatus.DONE
-
-      if (await this._provider.isLoggedIn()) {
-        await this.waitForConnect()
-      }
-
       this.resolveInitPromises()
 
       return this
@@ -109,9 +104,6 @@ class AuthProvider {
       return await this.waitForInit()
     }
 
-    if (await this._provider.isLoggedIn()) {
-      await this.waitForConnect()
-    }
     return this
   }
 

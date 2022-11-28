@@ -3,6 +3,7 @@ const RADIUS = 20
 interface LoaderProps {
   stroke: number
   secondaryColor: string
+  strokeColor?: string
 }
 
 export default function Loader(props: LoaderProps) {
@@ -32,7 +33,7 @@ export default function Loader(props: LoaderProps) {
               stroke-width={stroke}
               opacity={0.3}
             />
-            <path d={getPath(RADIUS)}>
+            <path d={getPath(RADIUS)} stroke={props.strokeColor}>
               <animateTransform
                 attributeName="transform"
                 type="rotate"
