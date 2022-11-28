@@ -136,39 +136,55 @@ const widgetIframeStyle = {
   },
 }
 
-const redirectionOverlayStyle: { [k: string]: Partial<CSSStyleDeclaration> } = {
+const overlayBase = {
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexDirection: 'column',
+  top: '0',
+  left: '0',
+  position: 'fixed',
+  zIndex: '100001',
+}
+
+const overlayTextBase = {
+  fontFamily: 'Sora, sans-serif',
+}
+
+const redirectionOverlayStyle = {
   overlay: {
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    top: '0',
-    left: '0',
-    background: 'rgba(10, 10, 10)',
-    position: 'fixed',
-    zIndex: '100001',
+    light: {
+      ...overlayBase,
+      background: '#F9F9F9',
+    },
+    dark: {
+      ...overlayBase,
+      background: '#262626',
+    },
   },
   text: {
-    color: 'white',
-    fontSize: '16px',
-    fontFamily: 'Sora, sans-serif',
+    light: {
+      ...overlayTextBase,
+      fontSize: '16px',
+      color: '#101010',
+    },
+    dark: {
+      ...overlayTextBase,
+      fontSize: '16px',
+      color: '#f7f7f7',
+    },
   },
   heading: {
-    color: 'white',
-    fontFamily: 'Sora, sans-serif',
-  },
-  closeBtn: {
-    color: 'white',
-    fontWeight: '700',
-    position: 'absolute',
-    top: '15px',
-    right: '15px',
-    border: '2px solid white',
-    background: 'none',
-    borderRadius: '50%',
-    cursor: 'pointer',
+    light: {
+      ...overlayTextBase,
+      color: '#101010',
+    },
+    dark: {
+      ...overlayTextBase,
+      color: '#f7f7f7',
+    },
   },
 }
 export { widgetBubbleStyle, widgetIframeStyle, redirectionOverlayStyle }

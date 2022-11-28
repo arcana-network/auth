@@ -18,8 +18,13 @@ const fallbackLogo = {
 }
 
 const icons = {
-  success:
-    "data:image/svg+xml,%3Csvg width='82' height='82' viewBox='0 0 82 82' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M21.9999 42L33.2192 53L61 31' stroke='%238FFF00' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='41' cy='41' r='39' stroke='%238FFF00' stroke-width='4'/%3E%3C/svg%3E%0A",
+  success: (t: Theme) => {
+    let strokeColor = '8FFF00'
+    if (t == 'light') {
+      strokeColor = '70C900'
+    }
+    return `data:image/svg+xml,%3Csvg width='82' height='82' viewBox='0 0 82 82' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M21.9999 42L33.2192 53L61 31' stroke='%23${strokeColor}' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='41' cy='41' r='39' stroke='%23${strokeColor}' stroke-width='4'/%3E%3C/svg%3E%0A`
+  },
 }
 
 const getFallbackImage = (t: Theme) => {
@@ -255,50 +260,38 @@ const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
   return p
 }
 
-const createOverlayOnRedirection = () => {
+const createOverlayOnRedirection = (theme: Theme) => {
   if (!isRedirection()) {
     return
   }
 
   const overlay = createDomElement('div', {
-    style: redirectionOverlayStyle.overlay,
+    style: redirectionOverlayStyle.overlay[theme],
   })
 
   const icon = createDomElement('img', {
-    src: icons.success,
+    src: icons.success(theme),
   })
 
   const text = createDomElement(
     'p',
     {
-      style: redirectionOverlayStyle.text,
+      style: redirectionOverlayStyle.text[theme],
     },
-    'Please continue on this window or the original window'
+    'Please continue on the original window'
   )
 
   const heading = createDomElement(
     'h1',
     {
-      style: redirectionOverlayStyle.heading,
+      style: redirectionOverlayStyle.heading[theme],
     },
     'Login successful'
   )
-  const closeButton = createDomElement(
-    'button',
-    {
-      style: redirectionOverlayStyle.closeBtn,
-      onclick: () => {
-        document.body.removeChild(overlay)
-      },
-    },
-    '\u{00d7}'
-  )
 
-  // Create close button also
   overlay.appendChild(icon)
   overlay.appendChild(heading)
   overlay.appendChild(text)
-  overlay.appendChild(closeButton)
 
   document.body.appendChild(overlay)
 }
