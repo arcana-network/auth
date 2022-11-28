@@ -151,6 +151,7 @@ const overlayBase = {
 
 const overlayTextBase = {
   fontFamily: 'Sora, sans-serif',
+  marginTop: '15px',
 }
 
 const strokeColor = {
@@ -195,13 +196,11 @@ const redirectionOverlayStyle = {
     light: {
       ...overlayTextBase,
       color: strokeColor['light'],
-      marginTop: '15px',
       fontSize: '20px',
     },
     dark: {
       ...overlayTextBase,
       color: strokeColor['dark'],
-      marginTop: '15px',
       fontSize: '20px',
     },
   },
