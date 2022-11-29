@@ -266,6 +266,8 @@ interface SwitchEthereumChainParameter {
 
 If the error code (error.code) is 4902, then the requested chain has not been added, and you have to request to add it via `wallet_addEthereumChain`.
 
+### Track New Assets
+
 #### `wallet_watchAsset`
 
 This method is specified by [EIP-747](https://eips.ethereum.org/EIPS/eip-747).
