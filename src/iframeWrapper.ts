@@ -126,9 +126,7 @@ export default class IframeWrapper {
 
     const closeButton = createDomElement('button', {
       onclick: () => this.closeWidgetIframe(),
-      style: isFullMode
-        ? widgetIframeStyle.header.closeButton[theme]
-        : { display: 'none' },
+      style: widgetIframeStyle.header.closeButton[theme],
     })
 
     const widgetIframeHeader = createDomElement(
