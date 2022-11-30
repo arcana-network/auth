@@ -95,12 +95,16 @@ const Modal = (props: ModalParams) => {
           setEmail={setEmail}
           loginWithLink={linkLogin}
         />
-        <Separator text="or continue with" />
-        <SocialLogin
-          loginWithSocial={socialLogin}
-          loginList={props.loginList}
-          mode={props.mode}
-        />
+        {props.loginList.length > 0 ? (
+          <>
+            <Separator text="or continue with" />
+            <SocialLogin
+              loginWithSocial={socialLogin}
+              loginList={props.loginList}
+              mode={props.mode}
+            />
+          </>
+        ) : null}
       </Container>
     </Overlay>
   )
