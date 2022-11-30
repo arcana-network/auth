@@ -263,9 +263,12 @@ class AuthProvider {
   /**
    * @internal
    */
-  setConnected = () => {
+  setConnected = (isDisconnected?: boolean) => {
     if (!this.connected) {
       this.connected = true
+    }
+    if (isDisconnected) {
+      this.connected = false
     }
   }
 

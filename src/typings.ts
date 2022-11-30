@@ -1,4 +1,4 @@
-import { JsonRpcRequest, JsonRpcResponse } from 'json-rpc-engine'
+import type { JsonRpcRequest, JsonRpcResponse } from 'json-rpc-engine'
 import { Chain } from './chainList'
 
 export type Theme = 'light' | 'dark'
