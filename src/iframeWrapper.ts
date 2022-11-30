@@ -62,6 +62,12 @@ export default class IframeWrapper {
     }
   }
 
+  public hideWidgetBubble() {
+    if (this.appMode === AppMode.Full) {
+      this.widgetBubble.style.display = 'none'
+    }
+  }
+
   public onReceivingPendingRequestCount(count: number) {
     const reqCountBadgeEl = document.getElementById('req-count-badge')
     if (!reqCountBadgeEl) {
@@ -111,7 +117,7 @@ export default class IframeWrapper {
     }
   }
 
-  private constructWidgetIframeStructure(isFullMode: boolean) {
+  private constructWidgetIframeStructure() {
     const {
       appConfig: { themeConfig },
     } = this.params
@@ -143,7 +149,7 @@ export default class IframeWrapper {
     return { widgetIframeHeader, widgetIframeBody }
   }
 
-  private createWidgetIframe(isFullMode: boolean) {
+  private createWidgetIframe() {
     const u = new URL(`/${this.params.appId}/login`, this.params.iframeUrl)
     this.iframe = createDomElement('iframe', {
       style: widgetIframeStyle.iframe,
@@ -152,7 +158,7 @@ export default class IframeWrapper {
     }) as HTMLIFrameElement
 
     const { widgetIframeHeader, widgetIframeBody } =
-      this.constructWidgetIframeStructure(isFullMode)
+      this.constructWidgetIframeStructure()
 
     widgetIframeBody.appendChild(this.iframe)
 
@@ -203,11 +209,7 @@ export default class IframeWrapper {
   }
 
   private initWalletUI() {
-    const isFullMode = this.appMode === AppMode.Full
-
-    this.widgetIframeContainer = this.createWidgetIframe(
-      isFullMode
-    ) as HTMLDivElement
+    this.widgetIframeContainer = this.createWidgetIframe() as HTMLDivElement
 
     this.widgetBubble = this.createWidgetBubble() as HTMLButtonElement
 
@@ -222,7 +224,7 @@ export default class IframeWrapper {
   }
 
   private onCloseBubbleClick() {
-    this.widgetBubble.style.display = 'none'
+    this.hideWidgetBubble()
   }
 
   // Todo: add remove event listener for "resize" event
