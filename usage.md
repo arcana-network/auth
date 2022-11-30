@@ -215,7 +215,7 @@ Arcana wallet implements the following common interfaces exposed by all Ethereum
 
 #### `wallet_addEthereumChain`
 
-This method is specified by [EIP-3085](https://eips.ethereum.org/EIPS/eip-3085)
+This method is specified by [EIP-3085](https://eips.ethereum.org/EIPS/eip-3085).
 
 ```ts
 try {
@@ -247,7 +247,7 @@ interface AddEthereumChainParameter {
 
 #### `wallet_switchEthereumChain`
 
-This method is specified by [EIP-3326](https://eips.ethereum.org/EIPS/eip-3326)
+This method is specified by [EIP-3326](https://eips.ethereum.org/EIPS/eip-3326).
 
 ```ts
 try {
@@ -265,5 +265,26 @@ interface SwitchEthereumChainParameter {
 ```
 
 If the error code (error.code) is 4902, then the requested chain has not been added, and you have to request to add it via `wallet_addEthereumChain`.
+
+### Track New Assets
+
+#### `wallet_watchAsset`
+
+This method is specified by [EIP-747](https://eips.ethereum.org/EIPS/eip-747).
+
+```ts
+await provider.request({
+  method: 'wallet_watchAsset',
+  params: {
+    type: 'ERC20',
+    options: {
+      address: '0xB983E01458529665007fF7E0CDdeCDB74B967Eb6',
+      symbol: 'FOO',
+      decimals: 18,
+      image: 'https://foo.io/token-image.svg',
+    },
+  },
+})
+```
 
 Check out [Auth SDK Reference Guide](https://authsdk-ref-guide.netlify.app/) for details.
