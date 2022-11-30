@@ -273,15 +273,18 @@ If the error code (error.code) is 4902, then the requested chain has not been ad
 This method is specified by [EIP-747](https://eips.ethereum.org/EIPS/eip-747).
 
 ```ts
-params: {
-        type: 'ERC20',
-        options: {
-          address: '0xB983E01458529665007fF7E0CDdeCDB74B967Eb6',
-          symbol: 'FOO',
-          decimals: 18,
-          image: 'https://foo.io/token-image.svg',
-        },
-      },
+await provider.request({
+  method: 'wallet_watchAsset',
+  params: {
+    type: 'ERC20',
+    options: {
+      address: '0xB983E01458529665007fF7E0CDdeCDB74B967Eb6',
+      symbol: 'FOO',
+      decimals: 18,
+      image: 'https://foo.io/token-image.svg',
+    },
+  },
+})
 ```
 
 Check out [Auth SDK Reference Guide](https://authsdk-ref-guide.netlify.app/) for details.
