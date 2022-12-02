@@ -1,10 +1,12 @@
-import { ChildMethods, EthereumProvider, RpcConfig } from './typings'
-import type {
+import {
   JsonRpcId,
   JsonRpcRequest,
   JsonRpcError,
   JsonRpcResponse,
-} from 'json-rpc-engine'
+  ChildMethods,
+  EthereumProvider,
+  RpcConfig,
+} from './typings'
 import { Connection } from 'penpal'
 import { ethErrors } from 'eth-rpc-errors'
 import SafeEventEmitter from '@metamask/safe-event-emitter'

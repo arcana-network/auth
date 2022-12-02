@@ -2,13 +2,13 @@ import { ArcanaProvider } from './provider'
 import IframeWrapper from './iframeWrapper'
 import {
   getErrorReporter,
-  isDefined,
   constructLoginUrl,
   getCurrentUrl,
   getConstructorParams,
   removeHexPrefix,
   createOverlayOnRedirection,
   preLoadIframe,
+  validateClientId,
 } from './utils'
 import { getNetworkConfig, getRpcConfig } from './config'
 import {
@@ -47,12 +47,12 @@ class AuthProvider {
   private _provider: ArcanaProvider
   private connectCtrl: ModalController
   constructor(appAddress: string, p?: Partial<ConstructorParams>) {
-    if (!isDefined(appAddress)) {
-      throw new Error('appAddress is required')
-    }
+    validateClientId(appAddress)
+
     this.appId = removeHexPrefix(appAddress)
     this.params = getConstructorParams(p)
     this.networkConfig = getNetworkConfig(this.params.network)
+
     preLoadIframe(this.networkConfig.walletUrl, this.appId)
     this.rpcConfig = getRpcConfig(this.params.chainConfig, this.params.network)
     this._provider = new ArcanaProvider(this.rpcConfig, this.setConnected)
