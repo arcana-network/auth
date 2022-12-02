@@ -215,6 +215,23 @@ const redirectTo = (url: string) => {
 
 const isDefined = (arg: unknown) => arg !== undefined && arg !== null
 
+const isValidString = (arg: unknown): arg is string =>
+  typeof arg === 'string' && arg.trim().length > 0
+
+const isAddressLike = (arg: string) => removeHexPrefix(arg).length === 40
+
+const validateClientId = (arg: unknown) => {
+  if (!isDefined(arg)) {
+    throw new Error('appAddress is required')
+  }
+  if (!isValidString(arg)) {
+    throw new Error('appAddress is required to be a non-empty string')
+  }
+  if (!isAddressLike(arg)) {
+    throw new Error('appAddress is required to be an ethereum address')
+  }
+}
+
 const HEX_PREFIX = '0x'
 
 const addHexPrefix = (i: string) =>
@@ -396,7 +413,7 @@ export {
   verifyMode,
   preLoadIframe,
   getErrorReporter,
-  isDefined,
+  validateClientId,
   addHexPrefix,
   removeHexPrefix,
   redirectTo,
