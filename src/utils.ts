@@ -109,7 +109,14 @@ const getArcanaRpc = async (gatewayUrl: string) => {
   }
 }
 
-type elements = 'style' | 'src' | 'onclick' | 'id' | 'onerror' | 'allow'
+type elements =
+  | 'style'
+  | 'src'
+  | 'onclick'
+  | 'id'
+  | 'onerror'
+  | 'allow'
+  | 'className'
 
 const createDomElement = (
   type: string,
@@ -190,19 +197,15 @@ const getErrorReporter = (): ((m: string) => void) => {
 const constructLoginUrl = (params: {
   loginType: string
   email?: string
+  sessionId?: string
+  setToken?: string
   appId: string
   authUrl: string
-  redirectUrl: string
+  parentUrl: string
 }) => {
   const url = new URL('/init', params.authUrl)
-  const queryParams = new URLSearchParams()
-  queryParams.append('loginType', params.loginType)
-  queryParams.append('appId', params.appId)
-  queryParams.append('parentUrl', encodeURIComponent(params.redirectUrl))
-  if (params.email) {
-    queryParams.append('email', params.email)
-  }
-  url.hash = queryParams.toString()
+  const hash = encodeJSON(params)
+  url.hash = hash
   return url.toString()
 }
 
@@ -399,6 +402,23 @@ function preLoadIframe(url: string, appId: string) {
   } catch (error) {
     console.warn(error)
   }
+}
+
+/**
+ * @source https://github.com/blakeembrey/universal-base64/blob/master/src/browser.ts
+ */
+function btoaUTF8(str: string): string {
+  return window.btoa(
+    encodeURIComponent(str).replace(/%[0-9A-F]{2}/g, percentToByte)
+  )
+}
+
+function percentToByte(p: string) {
+  return String.fromCharCode(parseInt(p.slice(1), 16))
+}
+
+export function encodeJSON<T>(options: T): string {
+  return btoaUTF8(JSON.stringify(options))
 }
 
 export {

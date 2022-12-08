@@ -95,6 +95,10 @@ export interface ChildMethods {
   getPublicKey: (email: string, verifier: string) => Promise<string>
   triggerLogout: () => Promise<void>
   getUserInfo: () => Promise<UserInfo>
+  initPasswordlessLogin: (email: string) => {
+    sessionId: string
+    setToken: string
+  }
 }
 
 export interface ParentMethods {

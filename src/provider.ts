@@ -144,6 +144,11 @@ export class ArcanaProvider
     await c.triggerLogout()
   }
 
+  public async initPasswordlessLogin(email: string) {
+    const c = await this.getCommunication('initPasswordlessLogin')
+    return await c.initPasswordlessLogin(email)
+  }
+
   private async getCommunication(
     expectedFn: keyof ChildMethods = 'sendRequest'
   ) {
