@@ -16,8 +16,10 @@ import {
   verifyMode,
   setFallbackImage,
 } from './utils'
+import { WarningDupeIframe } from './errors'
 
 const BREAKPOINT_SMALL = 768
+const ARCANA_WALLET_CLASS = 'xar-wallet'
 
 export default class IframeWrapper {
   private iframe: HTMLIFrameElement
@@ -28,6 +30,7 @@ export default class IframeWrapper {
 
   private iframeCommunication: Connection<ChildMethods>
   constructor(public params: IframeWrapperParams) {
+    this.checkDuplicateIframe()
     this.checkSecureOrigin()
   }
 
@@ -155,6 +158,7 @@ export default class IframeWrapper {
       style: widgetIframeStyle.iframe,
       src: u.toString(),
       allow: 'clipboard-write',
+      className: ARCANA_WALLET_CLASS,
     }) as HTMLIFrameElement
 
     const { widgetIframeHeader, widgetIframeBody } =
@@ -168,6 +172,15 @@ export default class IframeWrapper {
       widgetIframeHeader,
       widgetIframeBody
     )
+  }
+
+  private checkDuplicateIframe() {
+    const iframes: HTMLIFrameElement[] = [].slice.call(
+      document.querySelectorAll(`.${ARCANA_WALLET_CLASS}`)
+    )
+    if (iframes.length > 0) {
+      WarningDupeIframe.log()
+    }
   }
 
   private createWidgetBubble() {

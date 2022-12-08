@@ -34,6 +34,8 @@ import { Chain } from './chainList'
 import Popup from './popup'
 import { ModalController } from './ui/modalController'
 
+type ExtraParams = 'sessionId' | 'setToken' | 'email'
+
 class AuthProvider {
   public appId: string
   public connected = false
@@ -171,7 +173,8 @@ class AuthProvider {
       if (await this.isLoggedIn()) {
         return this._provider
       }
-      const url = this.getLoginUrl('passwordless', email)
+      const params = await this._provider.initPasswordlessLogin(email)
+      const url = this.getLoginUrl('passwordless', { ...params, email })
       return this.beginLogin(url)
     }
     throw ErrorNotInitialized
@@ -248,15 +251,16 @@ class AuthProvider {
 
   /* Private functions */
 
-  private getLoginUrl(loginType: string, email?: string) {
+  private getLoginUrl(
+    loginType: string,
+    params?: { [k in ExtraParams]: string }
+  ) {
     return constructLoginUrl({
       loginType,
       appId: this.appId,
-      email,
       authUrl: this.networkConfig.authUrl,
-      redirectUrl: this.params.redirectUrl
-        ? this.params.redirectUrl
-        : getCurrentUrl(),
+      parentUrl: getCurrentUrl(),
+      ...params,
     })
   }
 
