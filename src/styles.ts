@@ -95,7 +95,7 @@ const widgetIframeStyle = {
     boxShadow: '4px 5px 4px rgba(0, 0, 0, 0.25)',
     borderRadius: '10px',
 
-    zIndex: '100000',
+    zIndex: '2147483648',
   },
   header: {
     container: {
