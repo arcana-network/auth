@@ -20,7 +20,7 @@ const baseWidgetBubbleStyle = {
   justifyContent: 'center',
   alignItems: 'center',
 
-  zIndex: '100000',
+  zIndex: '2147483648',
 }
 
 const baseCloseButtonStyle = {
@@ -146,7 +146,7 @@ const overlayBase = {
   top: '0',
   left: '0',
   position: 'fixed',
-  zIndex: '100001',
+  zIndex: '2147483649',
 }
 
 const overlayTextBase = {
