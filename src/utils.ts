@@ -203,7 +203,7 @@ const constructLoginUrl = (params: {
   authUrl: string
   parentUrl: string
 }) => {
-  const url = new URL('/init', params.authUrl)
+  const url = new URL('/login/init', params.authUrl)
   const hash = encodeJSON(params)
   url.hash = hash
   return url.toString()
