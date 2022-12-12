@@ -153,7 +153,7 @@ export default class IframeWrapper {
   }
 
   private createWidgetIframe() {
-    const u = new URL(`/${this.params.appId}/login`, this.params.iframeUrl)
+    const u = new URL(`/${this.params.appId}/v2/login`, this.params.iframeUrl)
     this.iframe = createDomElement('iframe', {
       style: widgetIframeStyle.iframe,
       src: u.toString(),

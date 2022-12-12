@@ -52,6 +52,7 @@ export class ArcanaProvider
   extends SafeEventEmitter
   implements EthereumProvider
 {
+  public chainId: string
   private communication: Connection<ChildMethods>
   private subscriber: SafeEventEmitter
   private iframe: IframeWrapper
@@ -61,6 +62,7 @@ export class ArcanaProvider
     private setConnected: (isDisconnected?: boolean) => void
   ) {
     super()
+    this.chainId = rpcConfig.chainId
     this.subscriber = new SafeEventEmitter()
   }
 
@@ -220,12 +222,17 @@ export class ArcanaProvider
     })
   }
 
+  setChainId(val: unknown) {
+    if (typeof val === 'string') this.chainId = val
+  }
+
   handleEvents = (t: string, val: unknown) => {
     switch (t) {
       case 'accountsChanged':
         this.emit(t, [val])
         break
       case 'chainChanged':
+        this.setChainId(val)
         this.emit('chainChanged', val)
         break
       case 'connect':

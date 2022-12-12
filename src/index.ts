@@ -275,6 +275,12 @@ class AuthProvider {
       this.connected = false
     }
   }
+  /**
+   * @internal
+   */
+  get chainId() {
+    return this._provider.chainId
+  }
 
   private async beginLogin(url: string): Promise<EthereumProvider> {
     const popup = new Popup(url)
