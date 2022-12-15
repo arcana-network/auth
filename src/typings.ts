@@ -93,7 +93,7 @@ export interface ChildMethods {
   triggerPasswordlessLogin: (email: string, url: string) => Promise<string>
   sendRequest: (req: JsonRpcRequest<unknown>) => Promise<void>
   getPublicKey: (email: string, verifier: string) => Promise<string>
-  triggerLogout: () => Promise<void>
+  triggerLogout: (isV2?: boolean) => Promise<void>
   getUserInfo: () => Promise<UserInfo>
   initPasswordlessLogin: (email: string) => {
     sessionId: string
