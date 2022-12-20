@@ -65,6 +65,12 @@ export default class IframeWrapper {
     }
   }
 
+  public handleDisconnect() {
+    this.widgetIframeContainer.style.display = 'none'
+    this.widgetBubble.style.display = 'none'
+    this.iframe.src = this.getIframeUrl()
+  }
+
   public hideWidgetBubble() {
     if (this.appMode === AppMode.Full) {
       this.widgetBubble.style.display = 'none'
@@ -152,11 +158,15 @@ export default class IframeWrapper {
     return { widgetIframeHeader, widgetIframeBody }
   }
 
-  private createWidgetIframe() {
+  private getIframeUrl() {
     const u = new URL(`/${this.params.appId}/v2/login`, this.params.iframeUrl)
+    return u.toString()
+  }
+
+  private createWidgetIframe() {
     this.iframe = createDomElement('iframe', {
       style: widgetIframeStyle.iframe,
-      src: u.toString(),
+      src: this.getIframeUrl(),
       allow: 'clipboard-write',
       className: ARCANA_WALLET_CLASS,
     }) as HTMLIFrameElement

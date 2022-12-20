@@ -241,7 +241,7 @@ export class ArcanaProvider
         this.emit('connect', val)
         break
       case 'disconnect':
-        this.iframe.hideWidgetBubble()
+        this.iframe.handleDisconnect()
         this.setConnected(true)
         this.emit('disconnect', val)
         break
