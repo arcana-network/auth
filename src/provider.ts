@@ -53,14 +53,12 @@ export class ArcanaProvider
   implements EthereumProvider
 {
   public chainId: string
+  public connected = false
   private communication: Connection<ChildMethods>
   private subscriber: SafeEventEmitter
   private iframe: IframeWrapper
   private logger: Logger = getLogger('ArcanaProvider')
-  constructor(
-    private rpcConfig: RpcConfig,
-    private setConnected: (isDisconnected?: boolean) => void
-  ) {
+  constructor(private rpcConfig: RpcConfig) {
     super()
     this.chainId = rpcConfig.chainId
     this.subscriber = new SafeEventEmitter()
@@ -94,7 +92,7 @@ export class ArcanaProvider
     this.communication = communication
   }
 
-  public onResponse = (method: string, response: JsonRpcResponse<unknown>) => {
+  private onResponse = (method: string, response: JsonRpcResponse<unknown>) => {
     this.subscriber.emit(`result:${method}:${response.id}`, response)
   }
 
@@ -109,7 +107,7 @@ export class ArcanaProvider
   }
 
   public async isConnected() {
-    return await this.isLoggedIn()
+    return this.connected
   }
 
   public async isLoginAvailable(type: string) {
@@ -237,12 +235,12 @@ export class ArcanaProvider
         break
       case 'connect':
         this.iframe.showWidgetBubble()
-        this.setConnected()
+        this.connected = true
         this.emit('connect', val)
         break
       case 'disconnect':
-        this.iframe.hideWidgetBubble()
-        this.setConnected(true)
+        this.iframe.handleDisconnect()
+        this.connected = false
         this.emit('disconnect', val)
         break
       case 'message':
