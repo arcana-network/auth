@@ -37,7 +37,6 @@ type ExtraParams = 'sessionId' | 'setToken' | 'email'
 
 class AuthProvider {
   public appId: string
-  public connected = false
   private params: ConstructorParams
   private appConfig: AppConfig
   private iframeWrapper: IframeWrapper
@@ -56,7 +55,7 @@ class AuthProvider {
 
     preLoadIframe(this.networkConfig.walletUrl, this.appId)
     this.rpcConfig = getRpcConfig(this.params.chainConfig, this.params.network)
-    this._provider = new ArcanaProvider(this.rpcConfig, this.setConnected)
+    this._provider = new ArcanaProvider(this.rpcConfig)
 
     if (this.params.debug) {
       setLogLevel(LOG_LEVEL.DEBUG)
@@ -178,6 +177,10 @@ class AuthProvider {
     throw ErrorNotInitialized
   }
 
+  get connected() {
+    return this._provider.connected
+  }
+
   /**
    * A function to get user info for logged in user
    * @returns available user info
@@ -261,18 +264,6 @@ class AuthProvider {
       ...params,
     })
   }
-
-  /**
-   * @internal
-   */
-  setConnected = (isDisconnected?: boolean) => {
-    if (!this.connected) {
-      this.connected = true
-    }
-    if (isDisconnected) {
-      this.connected = false
-    }
-  }
   /**
    * @internal
    */
@@ -292,7 +283,6 @@ class AuthProvider {
         return resolve(this._provider)
       }
       this._provider.on('connect', () => {
-        this.setConnected()
         return resolve(this._provider)
       })
     })
