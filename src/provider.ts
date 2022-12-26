@@ -238,7 +238,10 @@ export class ArcanaProvider
         break
       case 'chainChanged':
         this.setChainId(val)
-        this.emit('chainChanged', val)
+        this.emit(
+          'chainChanged',
+          getHexFromNumber((val as { chainId: number }).chainId)
+        )
         break
       case 'connect':
         this.iframe.showWidgetBubble()
