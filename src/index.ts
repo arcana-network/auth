@@ -6,7 +6,6 @@ import {
   getCurrentUrl,
   getConstructorParams,
   removeHexPrefix,
-  createOverlayOnRedirection,
   preLoadIframe,
   validateClientId,
 } from './utils'
@@ -79,7 +78,6 @@ class AuthProvider {
       if (this.iframeWrapper) {
         return this
       }
-      createOverlayOnRedirection(this._provider, this.params.theme)
 
       await this.setAppConfig()
 
