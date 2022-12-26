@@ -13,7 +13,7 @@ import SafeEventEmitter from '@metamask/safe-event-emitter'
 import { ArcanaAuthError, ErrorNotLoggedIn } from './errors'
 import { getLogger, Logger } from './logger'
 import IframeWrapper from './iframeWrapper'
-import { getCurrentUrl, getUniqueId } from './utils'
+import { getCurrentUrl, getHexFromNumber, getUniqueId } from './utils'
 
 interface RequestArguments {
   method: string
@@ -221,7 +221,14 @@ export class ArcanaProvider
   }
 
   setChainId(val: unknown) {
-    if (typeof val === 'string') this.chainId = val
+    if (
+      val &&
+      typeof val === 'object' &&
+      'chainId' in val &&
+      typeof (val as { chainId: number }).chainId === 'number'
+    ) {
+      this.chainId = getHexFromNumber((val as { chainId: number }).chainId)
+    }
   }
 
   handleEvents = (t: string, val: unknown) => {
