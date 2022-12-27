@@ -1,4 +1,3 @@
-import { JsonRpcRequest, JsonRpcResponse } from 'json-rpc-engine'
 import { Chain } from './chainList'
 
 export type Theme = 'light' | 'dark'
@@ -6,6 +5,42 @@ export type Theme = 'light' | 'dark'
 export type Orientation = 'horizontal' | 'vertical'
 
 export type Position = 'right' | 'left'
+
+/* json-rpc-engine types */
+export declare type JsonRpcVersion = '2.0'
+export declare type JsonRpcId = number | string | void
+
+export interface JsonRpcRequest<T> {
+  jsonrpc: JsonRpcVersion
+  method: string
+  id: JsonRpcId
+  params?: T
+}
+
+interface JsonRpcResponseBase {
+  jsonrpc: JsonRpcVersion
+  id: JsonRpcId
+}
+
+export interface JsonRpcFailure extends JsonRpcResponseBase {
+  error: JsonRpcError
+}
+
+export interface JsonRpcError {
+  code: number
+  message: string
+  data?: unknown
+  stack?: string
+}
+
+declare type Maybe<T> = Partial<T> | null | undefined
+
+export interface JsonRpcSuccess<T> extends JsonRpcResponseBase {
+  result: Maybe<T>
+}
+
+export type JsonRpcResponse<T> = JsonRpcSuccess<T> | JsonRpcFailure
+/* end of json-rpc-engine types */
 
 export enum InitStatus {
   CREATED,
@@ -58,8 +93,12 @@ export interface ChildMethods {
   triggerPasswordlessLogin: (email: string, url: string) => Promise<string>
   sendRequest: (req: JsonRpcRequest<unknown>) => Promise<void>
   getPublicKey: (email: string, verifier: string) => Promise<string>
-  triggerLogout: () => Promise<void>
+  triggerLogout: (isV2?: boolean) => Promise<void>
   getUserInfo: () => Promise<UserInfo>
+  initPasswordlessLogin: (email: string) => {
+    sessionId: string
+    setToken: string
+  }
 }
 
 export interface ParentMethods {

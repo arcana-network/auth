@@ -20,7 +20,7 @@ const baseWidgetBubbleStyle = {
   justifyContent: 'center',
   alignItems: 'center',
 
-  zIndex: '100000',
+  zIndex: '2147483648',
 }
 
 const baseCloseButtonStyle = {
@@ -95,7 +95,7 @@ const widgetIframeStyle = {
     boxShadow: '4px 5px 4px rgba(0, 0, 0, 0.25)',
     borderRadius: '10px',
 
-    zIndex: '100000',
+    zIndex: '2147483648',
   },
   header: {
     container: {
@@ -136,39 +136,4 @@ const widgetIframeStyle = {
   },
 }
 
-const redirectionOverlayStyle: { [k: string]: Partial<CSSStyleDeclaration> } = {
-  overlay: {
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    top: '0',
-    left: '0',
-    background: 'rgba(10, 10, 10)',
-    position: 'fixed',
-    zIndex: '100001',
-  },
-  text: {
-    color: 'white',
-    fontSize: '16px',
-    fontFamily: 'Sora, sans-serif',
-  },
-  heading: {
-    color: 'white',
-    fontFamily: 'Sora, sans-serif',
-  },
-  closeBtn: {
-    color: 'white',
-    fontWeight: '700',
-    position: 'absolute',
-    top: '15px',
-    right: '15px',
-    border: '2px solid white',
-    background: 'none',
-    borderRadius: '50%',
-    cursor: 'pointer',
-  },
-}
-export { widgetBubbleStyle, widgetIframeStyle, redirectionOverlayStyle }
+export { widgetBubbleStyle, widgetIframeStyle }

@@ -16,8 +16,10 @@ import {
   verifyMode,
   setFallbackImage,
 } from './utils'
+import { WarningDupeIframe } from './errors'
 
 const BREAKPOINT_SMALL = 768
+const ARCANA_WALLET_CLASS = 'xar-wallet'
 
 export default class IframeWrapper {
   private iframe: HTMLIFrameElement
@@ -28,6 +30,7 @@ export default class IframeWrapper {
 
   private iframeCommunication: Connection<ChildMethods>
   constructor(public params: IframeWrapperParams) {
+    this.checkDuplicateIframe()
     this.checkSecureOrigin()
   }
 
@@ -59,6 +62,18 @@ export default class IframeWrapper {
   public showWidgetBubble() {
     if (this.appMode === AppMode.Full) {
       this.widgetBubble.style.display = 'flex'
+    }
+  }
+
+  public handleDisconnect() {
+    this.widgetIframeContainer.style.display = 'none'
+    this.widgetBubble.style.display = 'none'
+    this.iframe.src = this.getIframeUrl()
+  }
+
+  public hideWidgetBubble() {
+    if (this.appMode === AppMode.Full) {
+      this.widgetBubble.style.display = 'none'
     }
   }
 
@@ -111,7 +126,7 @@ export default class IframeWrapper {
     }
   }
 
-  private constructWidgetIframeStructure(isFullMode: boolean) {
+  private constructWidgetIframeStructure() {
     const {
       appConfig: { themeConfig },
     } = this.params
@@ -126,9 +141,7 @@ export default class IframeWrapper {
 
     const closeButton = createDomElement('button', {
       onclick: () => this.closeWidgetIframe(),
-      style: isFullMode
-        ? widgetIframeStyle.header.closeButton[theme]
-        : { display: 'none' },
+      style: widgetIframeStyle.header.closeButton[theme],
     })
 
     const widgetIframeHeader = createDomElement(
@@ -145,16 +158,21 @@ export default class IframeWrapper {
     return { widgetIframeHeader, widgetIframeBody }
   }
 
-  private createWidgetIframe(isFullMode: boolean) {
-    const u = new URL(`/${this.params.appId}/login`, this.params.iframeUrl)
+  private getIframeUrl() {
+    const u = new URL(`/${this.params.appId}/v2/login`, this.params.iframeUrl)
+    return u.toString()
+  }
+
+  private createWidgetIframe() {
     this.iframe = createDomElement('iframe', {
       style: widgetIframeStyle.iframe,
-      src: u.toString(),
+      src: this.getIframeUrl(),
       allow: 'clipboard-write',
+      className: ARCANA_WALLET_CLASS,
     }) as HTMLIFrameElement
 
     const { widgetIframeHeader, widgetIframeBody } =
-      this.constructWidgetIframeStructure(isFullMode)
+      this.constructWidgetIframeStructure()
 
     widgetIframeBody.appendChild(this.iframe)
 
@@ -164,6 +182,15 @@ export default class IframeWrapper {
       widgetIframeHeader,
       widgetIframeBody
     )
+  }
+
+  private checkDuplicateIframe() {
+    const iframes: HTMLIFrameElement[] = [].slice.call(
+      document.querySelectorAll(`.${ARCANA_WALLET_CLASS}`)
+    )
+    if (iframes.length > 0) {
+      WarningDupeIframe.log()
+    }
   }
 
   private createWidgetBubble() {
@@ -205,11 +232,7 @@ export default class IframeWrapper {
   }
 
   private initWalletUI() {
-    const isFullMode = this.appMode === AppMode.Full
-
-    this.widgetIframeContainer = this.createWidgetIframe(
-      isFullMode
-    ) as HTMLDivElement
+    this.widgetIframeContainer = this.createWidgetIframe() as HTMLDivElement
 
     this.widgetBubble = this.createWidgetBubble() as HTMLButtonElement
 
@@ -224,7 +247,7 @@ export default class IframeWrapper {
   }
 
   private onCloseBubbleClick() {
-    this.widgetBubble.style.display = 'none'
+    this.hideWidgetBubble()
   }
 
   // Todo: add remove event listener for "resize" event

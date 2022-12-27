@@ -2,13 +2,12 @@ import { ArcanaProvider } from './provider'
 import IframeWrapper from './iframeWrapper'
 import {
   getErrorReporter,
-  isDefined,
   constructLoginUrl,
   getCurrentUrl,
   getConstructorParams,
   removeHexPrefix,
-  createOverlayOnRedirection,
   preLoadIframe,
+  validateClientId,
 } from './utils'
 import { getNetworkConfig, getRpcConfig } from './config'
 import {
@@ -34,9 +33,10 @@ import { Chain } from './chainList'
 import Popup from './popup'
 import { ModalController } from './ui/modalController'
 
+type ExtraParams = 'sessionId' | 'setToken' | 'email'
+
 class AuthProvider {
   public appId: string
-  public connected = false
   private params: ConstructorParams
   private appConfig: AppConfig
   private iframeWrapper: IframeWrapper
@@ -47,15 +47,15 @@ class AuthProvider {
   private _provider: ArcanaProvider
   private connectCtrl: ModalController
   constructor(appAddress: string, p?: Partial<ConstructorParams>) {
-    if (!isDefined(appAddress)) {
-      throw new Error('appAddress is required')
-    }
+    validateClientId(appAddress)
+
     this.appId = removeHexPrefix(appAddress)
     this.params = getConstructorParams(p)
     this.networkConfig = getNetworkConfig(this.params.network)
+
     preLoadIframe(this.networkConfig.walletUrl, this.appId)
     this.rpcConfig = getRpcConfig(this.params.chainConfig, this.params.network)
-    this._provider = new ArcanaProvider(this.rpcConfig, this.setConnected)
+    this._provider = new ArcanaProvider(this.rpcConfig)
 
     if (this.params.debug) {
       setLogLevel(LOG_LEVEL.DEBUG)
@@ -77,7 +77,6 @@ class AuthProvider {
       if (this.iframeWrapper) {
         return this
       }
-      createOverlayOnRedirection()
 
       await this.setAppConfig()
 
@@ -97,11 +96,6 @@ class AuthProvider {
       this.setProviders()
 
       this.initStatus = InitStatus.DONE
-
-      if (await this._provider.isLoggedIn()) {
-        await this.waitForConnect()
-      }
-
       this.resolveInitPromises()
 
       return this
@@ -109,9 +103,6 @@ class AuthProvider {
       return await this.waitForInit()
     }
 
-    if (await this._provider.isLoggedIn()) {
-      await this.waitForConnect()
-    }
     return this
   }
 
@@ -179,10 +170,15 @@ class AuthProvider {
       if (await this.isLoggedIn()) {
         return this._provider
       }
-      const url = this.getLoginUrl('passwordless', email)
+      const params = await this._provider.initPasswordlessLogin(email)
+      const url = this.getLoginUrl('passwordless', { ...params, email })
       return this.beginLogin(url)
     }
     throw ErrorNotInitialized
+  }
+
+  get connected() {
+    return this._provider.connected
   }
 
   /**
@@ -256,25 +252,23 @@ class AuthProvider {
 
   /* Private functions */
 
-  private getLoginUrl(loginType: string, email?: string) {
+  private getLoginUrl(
+    loginType: string,
+    params?: { [k in ExtraParams]: string }
+  ) {
     return constructLoginUrl({
       loginType,
       appId: this.appId,
-      email,
       authUrl: this.networkConfig.authUrl,
-      redirectUrl: this.params.redirectUrl
-        ? this.params.redirectUrl
-        : getCurrentUrl(),
+      parentUrl: getCurrentUrl(),
+      ...params,
     })
   }
-
   /**
    * @internal
    */
-  setConnected = () => {
-    if (!this.connected) {
-      this.connected = true
-    }
+  get chainId() {
+    return this._provider.chainId
   }
 
   private async beginLogin(url: string): Promise<EthereumProvider> {
@@ -289,7 +283,6 @@ class AuthProvider {
         return resolve(this._provider)
       }
       this._provider.on('connect', () => {
-        this.setConnected()
         return resolve(this._provider)
       })
     })

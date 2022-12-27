@@ -1,17 +1,19 @@
-import { ChildMethods, EthereumProvider, RpcConfig } from './typings'
-import type {
+import {
   JsonRpcId,
   JsonRpcRequest,
   JsonRpcError,
   JsonRpcResponse,
-} from 'json-rpc-engine'
+  ChildMethods,
+  EthereumProvider,
+  RpcConfig,
+} from './typings'
 import { Connection } from 'penpal'
 import { ethErrors } from 'eth-rpc-errors'
 import SafeEventEmitter from '@metamask/safe-event-emitter'
 import { ArcanaAuthError, ErrorNotLoggedIn } from './errors'
 import { getLogger, Logger } from './logger'
 import IframeWrapper from './iframeWrapper'
-import { getCurrentUrl, getUniqueId } from './utils'
+import { getCurrentUrl, getHexFromNumber, getUniqueId } from './utils'
 
 interface RequestArguments {
   method: string
@@ -50,12 +52,15 @@ export class ArcanaProvider
   extends SafeEventEmitter
   implements EthereumProvider
 {
+  public chainId: string
+  public connected = false
   private communication: Connection<ChildMethods>
   private subscriber: SafeEventEmitter
   private iframe: IframeWrapper
   private logger: Logger = getLogger('ArcanaProvider')
-  constructor(private rpcConfig: RpcConfig, private setConnected: () => void) {
+  constructor(private rpcConfig: RpcConfig) {
     super()
+    this.chainId = rpcConfig.chainId
     this.subscriber = new SafeEventEmitter()
   }
 
@@ -87,7 +92,7 @@ export class ArcanaProvider
     this.communication = communication
   }
 
-  public onResponse = (method: string, response: JsonRpcResponse<unknown>) => {
+  private onResponse = (method: string, response: JsonRpcResponse<unknown>) => {
     this.subscriber.emit(`result:${method}:${response.id}`, response)
   }
 
@@ -102,7 +107,7 @@ export class ArcanaProvider
   }
 
   public async isConnected() {
-    return await this.isLoggedIn()
+    return this.connected
   }
 
   public async isLoginAvailable(type: string) {
@@ -136,7 +141,12 @@ export class ArcanaProvider
 
   public async triggerLogout() {
     const c = await this.getCommunication('triggerLogout')
-    await c.triggerLogout()
+    await c.triggerLogout(true)
+  }
+
+  public async initPasswordlessLogin(email: string) {
+    const c = await this.getCommunication('initPasswordlessLogin')
+    return await c.initPasswordlessLogin(email)
   }
 
   private async getCommunication(
@@ -210,20 +220,37 @@ export class ArcanaProvider
     })
   }
 
+  setChainId(val: unknown) {
+    if (
+      val &&
+      typeof val === 'object' &&
+      'chainId' in val &&
+      typeof (val as { chainId: number }).chainId === 'number'
+    ) {
+      this.chainId = getHexFromNumber((val as { chainId: number }).chainId)
+    }
+  }
+
   handleEvents = (t: string, val: unknown) => {
     switch (t) {
       case 'accountsChanged':
         this.emit(t, [val])
         break
       case 'chainChanged':
-        this.emit('chainChanged', val)
+        this.setChainId(val)
+        this.emit(
+          'chainChanged',
+          getHexFromNumber((val as { chainId: number }).chainId)
+        )
         break
       case 'connect':
         this.iframe.showWidgetBubble()
-        this.setConnected()
+        this.connected = true
         this.emit('connect', val)
         break
       case 'disconnect':
+        this.iframe.handleDisconnect()
+        this.connected = false
         this.emit('disconnect', val)
         break
       case 'message':
