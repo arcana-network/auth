@@ -118,7 +118,7 @@ const auth = new AuthProvider(`${appAddress}`, {
 await auth.init()
 ```
 
-See [Get Started with Auth SDK](https://docs.dev.arcana.network/docs/auth_qs) for more Auth SDK usage insights.
+See [Get Started with Auth SDK](https://docs.dev.arcana.network/walletsdk/wallet_qs.html) for more Auth SDK usage insights.
 
 ### Auth APIs
 
