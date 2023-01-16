@@ -75,7 +75,7 @@ A unique **App Address** will be assigned to your dApp and you need the same to 
 
 # 📚 Documentation
 
-Check out [Arcana Network documentation](https://docs.beta.arcana.network/) for [Auth SDK Quick Start Guide](https://docs.beta.arcana.network/docs/auth_qs), [Usage Guide](https://docs.beta.arcana.network/docs/auth_usage) and [API Reference Guide](https://authsdk-ref-guide.netlify.app).
+Check out [Arcana Network documentation](https://docs.beta.arcana.network/) for [Auth SDK Quick Start Guide](https://docs.arcana.network/walletsdk/wallet_qs.html), [Usage Guide](https://docs.arcana.network/walletsdk/wallet_usage.html) and [API Reference Guide](https://authsdk-ref-guide.netlify.app).
 
 # 💡 Support
 
