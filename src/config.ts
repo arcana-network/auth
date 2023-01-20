@@ -45,13 +45,13 @@ const getRpcConfig = (
   if (typeof n === 'string' && isNetworkEnum(n)) {
     switch (n) {
       case 'testnet':
-        return getConfigFromChain(Chain.ARCANA_TESTNET)
+        return getConfigFromChain(Chain.ETHEREUM_GOERLI)
       case 'dev':
-        return getConfigFromChain(Chain.ARCANA_DEV)
+        return getConfigFromChain(Chain.ETHEREUM_GOERLI)
     }
   }
 
-  return getConfigFromChain(Chain.ARCANA_TESTNET)
+  return getConfigFromChain(Chain.ETHEREUM_MAINNET)
 }
 
 function isRpcConfigInput(
