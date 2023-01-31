@@ -1,6 +1,6 @@
 import { NetworkConfig, RpcConfig, ChainConfigInput } from './typings'
 import { Chain, getConfigFromChain } from './chainList'
-type Network = 'dev' | 'testnet'
+type Network = 'dev' | 'testnet' | 'mainnet'
 
 const DEV_NETWORK_CONFIG: NetworkConfig = {
   authUrl: 'https://verify.dev.arcana.network',
@@ -14,6 +14,12 @@ const TESTNET_NETWORK_CONFIG: NetworkConfig = {
   walletUrl: 'https://wallet.beta.arcana.network',
 }
 
+const MAINNET_NETWORK_CONFIG: NetworkConfig = {
+  authUrl: 'https://auth.arcana.network',
+  gatewayUrl: 'https://gateway.arcana.network',
+  walletUrl: 'https://wallet.arcana.network',
+}
+
 const getNetworkConfig = (n: Network | NetworkConfig) => {
   if (typeof n === 'string' && n == 'testnet') {
     return TESTNET_NETWORK_CONFIG
@@ -23,6 +29,10 @@ const getNetworkConfig = (n: Network | NetworkConfig) => {
     return DEV_NETWORK_CONFIG
   }
 
+  if (typeof n === 'string' && n == 'mainnet') {
+    return MAINNET_NETWORK_CONFIG
+  }
+
   if (isNetworkConfig(n)) {
     return n
   } else {
@@ -30,25 +40,13 @@ const getNetworkConfig = (n: Network | NetworkConfig) => {
   }
 }
 
-const getRpcConfig = (
-  c: ChainConfigInput | undefined,
-  n: Network | NetworkConfig
-): RpcConfig => {
+const getRpcConfig = (c: ChainConfigInput | undefined): RpcConfig => {
   if (isRpcConfigInput(c)) {
     const config = getConfigFromChain(c.chainId)
     if (c.rpcUrl) {
       config.rpcUrls = [c.rpcUrl]
     }
     return config
-  }
-
-  if (typeof n === 'string' && isNetworkEnum(n)) {
-    switch (n) {
-      case 'testnet':
-        return getConfigFromChain(Chain.ETHEREUM_GOERLI)
-      case 'dev':
-        return getConfigFromChain(Chain.ETHEREUM_GOERLI)
-    }
   }
 
   return getConfigFromChain(Chain.ETHEREUM_MAINNET)
@@ -64,10 +62,6 @@ function isRpcConfigInput(
     return false
   }
   return true
-}
-
-function isNetworkEnum(n: string): n is Network {
-  return typeof n === 'string' && (n == 'testnet' || n == 'dev')
 }
 
 function isNetworkConfig(
