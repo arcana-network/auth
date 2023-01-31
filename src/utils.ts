@@ -25,7 +25,7 @@ const fetchWalletType = async (rpcUrl: string, address: string) => {
     method: 'eth_call',
     params: [
       {
-        to: address,
+        to: addHexPrefix(address),
         data: '0x5b648b0a',
       },
       'latest',
