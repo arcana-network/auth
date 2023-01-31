@@ -54,7 +54,7 @@ class AuthProvider {
     this.networkConfig = getNetworkConfig(this.params.network)
 
     preLoadIframe(this.networkConfig.walletUrl, this.appId)
-    this.rpcConfig = getRpcConfig(this.params.chainConfig, this.params.network)
+    this.rpcConfig = getRpcConfig(this.params.chainConfig)
     this._provider = new ArcanaProvider(this.rpcConfig)
 
     if (this.params.debug) {

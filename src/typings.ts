@@ -140,7 +140,7 @@ export interface NetworkConfig {
 }
 
 export interface ChainConfigInput {
-  rpcUrl: string
+  rpcUrl?: string
   chainId: Chain
 }
 
@@ -172,7 +172,7 @@ export const ModeWalletTypeRelation = {
 }
 
 export interface ConstructorParams {
-  network: ('testnet' | 'dev') | NetworkConfig
+  network: ('testnet' | 'dev' | 'mainnet') | NetworkConfig
   debug: boolean
   alwaysVisible: boolean
   chainConfig?: ChainConfigInput

@@ -239,7 +239,7 @@ const getCurrentUrl = () => {
 
 const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
   const p: ConstructorParams = {
-    network: 'testnet',
+    network: 'mainnet',
     debug: false,
     position: 'right',
     theme: 'dark',
