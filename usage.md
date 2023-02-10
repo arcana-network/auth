@@ -109,7 +109,7 @@ const auth = new AuthProvider(`${appAddress}`, {
   position: 'left',
   theme: 'light',
   alwaysVisible: false,
-  network: 'testnet', // network can be testnet or mainnet - defaults to mainnet
+  network: 'mainnet', // network can be testnet or mainnet - defaults to testnet
   chainConfig: {
     chainId: CHAIN.POLYGON_MAINNET,
     rpcUrl: '',

@@ -69,13 +69,13 @@ yarn add @arcana/auth
 
 # 📋 Prerequisites
 
-Before you can start using the Arcana Auth SDK, you need to register your dApp using [Arcana Developer Dashboard](https://dashboard.beta.arcana.network/).
+Before you can start using the Arcana Auth SDK, you need to register your dApp using [Arcana Developer Dashboard](https://dashboard.arcana.network/).
 
 A unique **App Address** will be assigned to your dApp and you need the same to initialize the Arcana Auth SDK.
 
 # 📚 Documentation
 
-Check out [Arcana Network documentation](https://docs.beta.arcana.network/) for [Auth SDK Quick Start Guide](https://docs.beta.arcana.network/docs/auth_qs), [Usage Guide](https://docs.beta.arcana.network/docs/auth_usage) and [API Reference Guide](https://authsdk-ref-guide.netlify.app).
+Check out [Arcana Network documentation](https://docs.arcana.network/) for [Auth SDK Quick Start Guide](https://docs.arcana.network/walletsdk/wallet_qs.html), [Usage Guide](https://docs.arcana.network/walletsdk/wallet_usage.html) and [API Reference Guide](https://authsdk-ref-guide.netlify.app).
 
 # 💡 Support
 
@@ -90,8 +90,3 @@ We welcome all contributions to the Arcana Auth SDK from the community. Read our
 Arcana Auth SDK is distributed under the [MIT License](https://fossa.com/blog/open-source-licenses-101-mit-license/).
 
 For details see [Arcana License](https://github.com/arcana-network/license/blob/main/LICENSE.md).
-
----
-> **Caution**
-> Arcana Auth SDK is in the Beta Release. Not recommended for production usage. 
----
