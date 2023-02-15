@@ -4,16 +4,21 @@ const closeButtonImage = {
   dark: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACsSURBVHgB7ZTNCcQgEEZHbWhLSEdbwlrKlrAdbEnJRfy5JAoZCCEJMxM9BHwgevDzgc4I0Ok8mhDCO6X04mS89wNIKME85iwdqdIY46dkygwScthSpShbhwUpFGk1GUVaXXYlbSY7kjrnvk1le6lUpoGJ1nrGtVJqMsb8oBXbN8vX+uf2qViG18jp09sypLqUUvrVpJw+uy3Fz5tT+puWIe0/O8AyMwN0Oo9mAWX8dJ7PBgbsAAAAAElFTkSuQmCC)',
 }
 
+const arrowButtonImage = {
+  dark: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE1IDE5TDggMTJMMTUgNSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==',
+  light:
+    'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE1IDE5TDggMTJMMTUgNSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==',
+}
+
 const baseWidgetBubbleStyle = {
   position: 'fixed',
 
-  width: '117px',
-  height: '117px',
+  width: '58px',
+  height: '46px',
   border: 'none',
-  borderRadius: '50%',
-  boxShadow: '4px 5px 4px rgba(0, 0, 0, 0.25)',
   margin: '0 auto',
   cursor: 'pointer',
+  boxShadow: '2px 2px 12px rgba(24, 24, 24, 0.45)',
 
   display: 'none',
   flexDirection: 'column',
@@ -48,23 +53,16 @@ const widgetBubbleStyle = {
   },
   dark: {
     ...baseWidgetBubbleStyle,
-    backgroundColor: '#000000',
+    backgroundColor: '#262626',
+  },
+  borderRadius: {
+    left: '0 10px 10px 0',
+    right: '10px 0 0 10px',
   },
   bubbleLogo: {
-    width: '60px',
-    objectFit: 'contain',
-  },
-  closeButton: {
-    ...baseCloseButtonStyle,
-    width: '20px',
-    height: '20px',
-
-    position: 'absolute',
-    top: '-15px',
-    right: '0px',
-
-    backgroundImage: closeButtonImage.light,
-    backgroundPosition: 'center',
+    left: {
+      transform: 'rotate(180deg)',
+    },
   },
   reqCountBadge: {
     width: '25px',
@@ -136,4 +134,4 @@ const widgetIframeStyle = {
   },
 }
 
-export { widgetBubbleStyle, widgetIframeStyle }
+export { widgetBubbleStyle, widgetIframeStyle, arrowButtonImage }
