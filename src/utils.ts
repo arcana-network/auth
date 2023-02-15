@@ -145,10 +145,15 @@ const getWalletSize = (isViewportSmall: boolean): WalletSize => {
 
 const getWalletPosition = (
   isViewportSmall: boolean,
-  position: Position
+  position: Position,
+  isWidgetBubble: boolean
 ): WalletPosition => {
-  const positionDistance = isViewportSmall ? '20px' : '30px'
-  return { bottom: positionDistance, [position]: positionDistance }
+  const positionDistance = isViewportSmall ? '16px' : '32px'
+  const bottomDistance = isViewportSmall ? '20px' : '40px'
+  return {
+    bottom: bottomDistance,
+    [position]: isWidgetBubble ? '0' : positionDistance,
+  }
 }
 
 function verifyMode(w: WalletType, a: AppMode | undefined): AppMode {
