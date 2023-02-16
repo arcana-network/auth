@@ -209,10 +209,6 @@ export default class IframeWrapper {
         this.params.appConfig.themeConfig.theme === 'dark'
           ? arrowButtonImage.dark
           : arrowButtonImage.light,
-      style:
-        this.params.position === 'left'
-          ? widgetBubbleStyle.bubbleLogo.left
-          : '',
       onerror: (e: Event) => setFallbackImage(e, theme),
     })
 
