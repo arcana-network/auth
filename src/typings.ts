@@ -6,6 +6,8 @@ export type Orientation = 'horizontal' | 'vertical'
 
 export type Position = 'right' | 'left'
 
+export type Network = 'dev' | 'testnet' | 'mainnet'
+
 /* json-rpc-engine types */
 export declare type JsonRpcVersion = '2.0'
 export declare type JsonRpcId = number | string | void
