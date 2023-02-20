@@ -1,6 +1,5 @@
-import { NetworkConfig, RpcConfig, ChainConfigInput } from './typings'
+import { NetworkConfig, RpcConfig, ChainConfigInput, Network } from './typings'
 import { Chain, getConfigFromChain } from './chainList'
-type Network = 'dev' | 'testnet' | 'mainnet'
 
 const DEV_NETWORK_CONFIG: NetworkConfig = {
   authUrl: 'https://verify.dev.arcana.network',

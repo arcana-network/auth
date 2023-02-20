@@ -7,6 +7,7 @@ import {
   WalletSize,
   Position,
   Theme,
+  Network,
 } from './typings'
 import { getLogger } from './logger'
 
@@ -207,7 +208,7 @@ const isValidString = (arg: unknown): arg is string =>
 
 const isAddressLike = (arg: string) => removeHexPrefix(arg).length === 40
 
-const validateClientId = (arg: unknown) => {
+const validateAppAddress = (arg: unknown) => {
   if (!isDefined(arg)) {
     throw new Error('appAddress is required')
   }
@@ -216,6 +217,33 @@ const validateClientId = (arg: unknown) => {
   }
   if (!isAddressLike(arg)) {
     throw new Error('appAddress is required to be an ethereum address')
+  }
+}
+
+const CLIENT_ID_SEPERATOR = '_'
+const isClientId = (id: string): boolean => {
+  const parts = id.split(CLIENT_ID_SEPERATOR)
+  return parts.length == 3
+}
+
+const getParamsFromClientId = (
+  id: string
+): { network: Network; address: string } => {
+  const parts = id.split(CLIENT_ID_SEPERATOR)
+
+  const [, networkHint, address] = parts
+  if (!isAddressLike(address)) {
+    throw new Error(`Invalid ClientId`)
+  }
+
+  if (networkHint == 'live') {
+    return { network: 'mainnet', address }
+  } else if (networkHint == 'test') {
+    return { network: 'testnet', address }
+  } else if (networkHint == 'dev') {
+    return { network: 'dev', address }
+  } else {
+    throw new Error(`Invalid ClientId`)
   }
 }
 
@@ -271,6 +299,13 @@ const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
   if (initParams?.alwaysVisible !== undefined) {
     p.alwaysVisible = initParams.alwaysVisible
   }
+
+  if (p.network == 'testnet' || p.network == 'dev') {
+    console.log(
+      `%c[Arcana Auth] You are currently on ${p.network} network.`,
+      'color: red'
+    )
+  }
   return p
 }
 
@@ -323,7 +358,7 @@ export {
   verifyMode,
   preLoadIframe,
   getErrorReporter,
-  validateClientId,
+  validateAppAddress,
   addHexPrefix,
   removeHexPrefix,
   redirectTo,
@@ -332,4 +367,6 @@ export {
   getHexFromNumber,
   getCurrentUrl,
   getConstructorParams,
+  getParamsFromClientId,
+  isClientId,
 }
