@@ -6,7 +6,11 @@ import {
   ParentMethods,
 } from './typings'
 import { connectToChild, Connection } from 'penpal'
-import { widgetIframeStyle, widgetBubbleStyle } from './styles'
+import {
+  widgetIframeStyle,
+  widgetBubbleStyle,
+  arrowButtonImage,
+} from './styles'
 import {
   createDomElement,
   getWalletPosition,
@@ -198,25 +202,19 @@ export default class IframeWrapper {
       appConfig: { themeConfig },
     } = this.params
 
-    const { theme, assets } = themeConfig
+    const { theme } = themeConfig
 
     const buttonLogo = createDomElement('img', {
-      src: assets.logo.vertical,
-      style: widgetBubbleStyle.bubbleLogo,
+      src:
+        this.params.appConfig.themeConfig.theme === 'dark'
+          ? arrowButtonImage.dark
+          : arrowButtonImage.light,
       onerror: (e: Event) => setFallbackImage(e, theme),
     })
 
     const reqCountBadge = createDomElement('p', {
       id: 'req-count-badge',
       style: { ...widgetBubbleStyle.reqCountBadge, display: 'none' },
-    })
-
-    const closeButton = createDomElement('button', {
-      onclick: (event: Event) => {
-        event.stopPropagation()
-        this.onCloseBubbleClick()
-      },
-      style: widgetBubbleStyle.closeButton,
     })
 
     return createDomElement(
@@ -226,8 +224,7 @@ export default class IframeWrapper {
         style: widgetBubbleStyle[theme],
       },
       reqCountBadge,
-      buttonLogo,
-      closeButton
+      buttonLogo
     )
   }
 
@@ -246,10 +243,6 @@ export default class IframeWrapper {
     document.body.appendChild(this.widgetIframeContainer)
   }
 
-  private onCloseBubbleClick() {
-    this.hideWidgetBubble()
-  }
-
   // Todo: add remove event listener for "resize" event
 
   private resizeWidgetUI() {
@@ -261,12 +254,17 @@ export default class IframeWrapper {
 
     setWalletPosition(
       this.widgetBubble,
-      getWalletPosition(isViewportSmall, this.params.position)
+      getWalletPosition(isViewportSmall, this.params.position, true)
     )
+
+    this.widgetBubble.style.borderRadius =
+      this.params.position === 'right'
+        ? widgetBubbleStyle.borderRadius.right
+        : widgetBubbleStyle.borderRadius.left
 
     setWalletPosition(
       this.widgetIframeContainer,
-      getWalletPosition(isViewportSmall, this.params.position)
+      getWalletPosition(isViewportSmall, this.params.position, false)
     )
   }
 

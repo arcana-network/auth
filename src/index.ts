@@ -7,7 +7,9 @@ import {
   getConstructorParams,
   removeHexPrefix,
   preLoadIframe,
-  validateClientId,
+  validateAppAddress,
+  isClientId,
+  getParamsFromClientId,
 } from './utils'
 import { getNetworkConfig, getRpcConfig } from './config'
 import {
@@ -46,11 +48,21 @@ class AuthProvider {
   private initPromises: ((value: AuthProvider) => void)[] = []
   private _provider: ArcanaProvider
   private connectCtrl: ModalController
-  constructor(appAddress: string, p?: Partial<ConstructorParams>) {
-    validateClientId(appAddress)
+  constructor(clientId: string, p?: Partial<ConstructorParams>) {
+    let network = p?.network
+    let appAddress = clientId
+
+    if (isClientId(clientId)) {
+      const parts = getParamsFromClientId(clientId)
+      network = parts.network
+      appAddress = parts.address
+    }
+
+    validateAppAddress(appAddress)
 
     this.appId = removeHexPrefix(appAddress)
-    this.params = getConstructorParams(p)
+
+    this.params = getConstructorParams({ ...p, network })
     this.networkConfig = getNetworkConfig(this.params.network)
 
     preLoadIframe(this.networkConfig.walletUrl, this.appId)
