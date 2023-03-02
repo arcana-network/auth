@@ -156,6 +156,16 @@ class AuthProvider {
         .catch(reject)
     })
   }
+  /**
+   * A function to show wallet
+   */
+  public showWallet() {
+    if (!this.connected) {
+      throw new Error('no connection yet, cannot show wallet')
+    }
+
+    this.iframeWrapper.show()
+  }
 
   /**
    * A function to trigger social login in the wallet
