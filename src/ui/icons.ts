@@ -1,17 +1,19 @@
 const BASE_URL = 'https://auth-icons.s3.ap-south-1.amazonaws.com'
 
 const SOCIAL_LOGO: { [k: string]: string } = {
-  google: `${BASE_URL}/google-icon.png`,
-  twitter: `${BASE_URL}/twitter-icon.png`,
-  github: `${BASE_URL}/github-icon.png`,
-  github_light: `${BASE_URL}/github-dark-icon.png`,
-  twitch: `${BASE_URL}/twitch-icon.png`,
-  discord: `${BASE_URL}/discord-icon.png`,
+  google: `${BASE_URL}/google.png`,
+  twitter: `${BASE_URL}/twitter.png`,
+  github: `${BASE_URL}/github-light.png`,
+  github_light: `${BASE_URL}/github.png`,
+  twitch: `${BASE_URL}/twitch.png`,
+  discord: `${BASE_URL}/discord.png`,
+  aws: `${BASE_URL}/aws.png`,
+  aws_light: `${BASE_URL}/aws_light.png`,
 }
 
 function getSocialLogo(provider: string, theme: 'light' | 'dark') {
-  if (provider === 'github' && theme === 'light') {
-    return SOCIAL_LOGO['github_light']
+  if (SOCIAL_LOGO[`${provider}_${theme}`]) {
+    return SOCIAL_LOGO[`${provider}_${theme}`]
   }
   return SOCIAL_LOGO[provider]
 }
