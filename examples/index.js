@@ -78,6 +78,12 @@ async function addChain() {
   }
 }
 
+async function showWallet() {
+  console.log('Requesting showWallet')
+  setRequest('show_wallet')
+  await auth.showWallet()
+}
+
 async function switchChain() {
   try {
     await provider.request({
