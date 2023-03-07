@@ -124,7 +124,6 @@ const setWalletSize = (
   element.style.width = sizes.width
   if (isViewportSmall) {
     element.style.maxWidth = '100%'
-    element.style.height = '100vh'
   }
 }
 
