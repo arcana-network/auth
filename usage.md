@@ -165,6 +165,12 @@ interface UserInfo {
 */
 ```
 
+Show wallet UI
+
+```js
+auth.showWallet()
+```
+
 #### Logout
 
 ```js
