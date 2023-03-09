@@ -115,9 +115,16 @@ const createDomElement = (
   return dom
 }
 
-const setWalletSize = (element: HTMLElement, sizes: WalletSize): void => {
+const setWalletSize = (
+  element: HTMLElement,
+  sizes: WalletSize,
+  isViewportSmall: boolean
+): void => {
   element.style.height = sizes.height
   element.style.width = sizes.width
+  if (isViewportSmall) {
+    element.style.maxWidth = '100%'
+  }
 }
 
 const setWalletPosition = (
@@ -133,14 +140,10 @@ const setWalletPosition = (
   element.style.bottom = position.bottom
 }
 
-const getWalletSize = (isViewportSmall: boolean): WalletSize => {
+const getWalletSize = (): WalletSize => {
   const sizes = { height: '', width: '' }
   sizes.height = '80vh'
-  if (isViewportSmall) {
-    sizes.width = '235px'
-  } else {
-    sizes.width = '360px'
-  }
+  sizes.width = '360px'
   return sizes
 }
 
@@ -149,8 +152,8 @@ const getWalletPosition = (
   position: Position,
   isWidgetBubble: boolean
 ): WalletPosition => {
-  const positionDistance = isViewportSmall ? '16px' : '32px'
-  const bottomDistance = isViewportSmall ? '20px' : '40px'
+  const positionDistance = isViewportSmall ? '0' : '32px'
+  const bottomDistance = isViewportSmall ? '0' : '40px'
   return {
     bottom: bottomDistance,
     [position]: isWidgetBubble ? '0' : positionDistance,

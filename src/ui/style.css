@@ -116,7 +116,7 @@
 .xar-social-icon {
   margin: 0 auto;
   width: 24px;
-  height: 24px;
+  max-height: 24px;
 }
 
 .xar-container {
@@ -179,6 +179,10 @@
   width: 60px;
   height: 15px;
   margin-left: 5px;
+}
+
+.xar-footer-img {
+  display: block;
 }
 
 .xar-separator {

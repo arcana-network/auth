@@ -22,7 +22,7 @@ import {
 } from './utils'
 import { WarningDupeIframe } from './errors'
 
-const BREAKPOINT_SMALL = 768
+const BREAKPOINT_SMALL = 390
 const ARCANA_WALLET_CLASS = 'xar-wallet'
 
 export default class IframeWrapper {
@@ -233,9 +233,10 @@ export default class IframeWrapper {
 
     this.widgetBubble = this.createWidgetBubble() as HTMLButtonElement
 
-    this.resizeWidgetUI()
+    const mql = window.matchMedia(`(max-width: ${BREAKPOINT_SMALL}px)`)
+    mql.addEventListener('change', this.resizeWidgetUI.bind(this))
 
-    window.addEventListener('resize', () => this.resizeWidgetUI())
+    this.resizeWidget(mql.matches)
 
     this.widgetIframeContainer.style.display = 'none'
 
@@ -245,12 +246,12 @@ export default class IframeWrapper {
 
   // Todo: add remove event listener for "resize" event
 
-  private resizeWidgetUI() {
-    const { matches: isViewportSmall } = window.matchMedia(
-      `(max-width: ${BREAKPOINT_SMALL}px)`
-    )
+  private resizeWidgetUI(e: MediaQueryListEvent) {
+    this.resizeWidget(e.matches)
+  }
 
-    setWalletSize(this.widgetIframeContainer, getWalletSize(isViewportSmall))
+  private resizeWidget(isViewportSmall: boolean) {
+    setWalletSize(this.widgetIframeContainer, getWalletSize(), isViewportSmall)
 
     setWalletPosition(
       this.widgetBubble,
