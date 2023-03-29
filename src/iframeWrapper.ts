@@ -7,28 +7,19 @@ import {
 } from './typings'
 import { connectToChild, Connection } from 'penpal'
 import {
-  widgetIframeStyle,
-  widgetBubbleStyle,
-  arrowButtonImage,
-} from './styles'
-import {
   createDomElement,
   getWalletPosition,
-  getWalletSize,
   setWalletPosition,
-  setWalletSize,
   verifyMode,
-  setFallbackImage,
 } from './utils'
 import { WarningDupeIframe } from './errors'
+import type * as CSS from 'csstype'
 
 const BREAKPOINT_SMALL = 390
 const ARCANA_WALLET_CLASS = 'xar-wallet'
 
 export default class IframeWrapper {
-  private iframe: HTMLIFrameElement
-  public widgetBubble: HTMLButtonElement
-  public widgetIframeContainer: HTMLDivElement
+  public widgetIframe: HTMLIFrameElement
   public appMode: AppMode
   private state: 'open' | 'closed'
 
@@ -42,13 +33,16 @@ export default class IframeWrapper {
     try {
       if (!this.iframeCommunication) {
         this.iframeCommunication = connectToChild<ChildMethods>({
-          iframe: this.iframe,
+          iframe: this.widgetIframe,
           methods: { ...methods },
           childOrigin: this.params.iframeUrl,
         })
         await this.iframeCommunication.promise
       }
-      return { iframe: this.iframe, communication: this.iframeCommunication }
+      return {
+        iframe: this.widgetIframe,
+        communication: this.iframeCommunication,
+      }
     } catch (error) {
       throw new Error('Could not set connection methods')
     }
@@ -63,22 +57,8 @@ export default class IframeWrapper {
     return this.state
   }
 
-  public showWidgetBubble() {
-    if (this.appMode === AppMode.Full) {
-      this.widgetBubble.style.display = 'flex'
-    }
-  }
-
   public handleDisconnect() {
-    this.widgetIframeContainer.style.display = 'none'
-    this.widgetBubble.style.display = 'none'
-    this.iframe.src = this.getIframeUrl()
-  }
-
-  public hideWidgetBubble() {
-    if (this.appMode === AppMode.Full) {
-      this.widgetBubble.style.display = 'none'
-    }
+    this.widgetIframe.src = this.getIframeUrl()
   }
 
   public onReceivingPendingRequestCount(count: number) {
@@ -94,72 +74,14 @@ export default class IframeWrapper {
     }
   }
 
+  public setIframeStyle(styles: CSSStyleDeclaration) {
+    for (const prop in styles) {
+      this.widgetIframe.style[prop] = styles[prop]
+    }
+  }
+
   getAppConfig = () => {
     return this.params.appConfig
-  }
-
-  show = () => {
-    switch (this.appMode) {
-      case AppMode.Full: {
-        this.openWidgetIframe()
-        break
-      }
-      case AppMode.Widget: {
-        this.openWidgetIframe()
-        break
-      }
-      case AppMode.NoUI:
-      default:
-        break
-    }
-  }
-
-  hide = () => {
-    switch (this.appMode) {
-      case AppMode.Full: {
-        this.closeWidgetIframe()
-        break
-      }
-      case AppMode.Widget: {
-        this.closeWidgetIframe()
-        break
-      }
-      case AppMode.NoUI:
-      default:
-        break
-    }
-  }
-
-  private constructWidgetIframeStructure() {
-    const {
-      appConfig: { themeConfig },
-    } = this.params
-
-    const { theme, assets } = themeConfig
-
-    const appLogo = createDomElement('img', {
-      src: assets.logo.horizontal,
-      style: widgetIframeStyle.header.logo,
-      onerror: (e: Event) => setFallbackImage(e, theme),
-    })
-
-    const closeButton = createDomElement('button', {
-      onclick: () => this.closeWidgetIframe(),
-      style: widgetIframeStyle.header.closeButton[theme],
-    })
-
-    const widgetIframeHeader = createDomElement(
-      'div',
-      { style: widgetIframeStyle.header.container[theme] },
-      appLogo,
-      closeButton
-    )
-
-    const widgetIframeBody = createDomElement('div', {
-      style: widgetIframeStyle.body,
-    })
-
-    return { widgetIframeHeader, widgetIframeBody }
   }
 
   private getIframeUrl() {
@@ -168,24 +90,15 @@ export default class IframeWrapper {
   }
 
   private createWidgetIframe() {
-    this.iframe = createDomElement('iframe', {
-      style: widgetIframeStyle.iframe,
+    return createDomElement('iframe', {
+      style: {
+        border: 'none',
+        position: 'absolute',
+      },
       src: this.getIframeUrl(),
       allow: 'clipboard-write',
       className: ARCANA_WALLET_CLASS,
     }) as HTMLIFrameElement
-
-    const { widgetIframeHeader, widgetIframeBody } =
-      this.constructWidgetIframeStructure()
-
-    widgetIframeBody.appendChild(this.iframe)
-
-    return createDomElement(
-      'div',
-      { style: widgetIframeStyle.container },
-      widgetIframeHeader,
-      widgetIframeBody
-    )
   }
 
   private checkDuplicateIframe() {
@@ -197,89 +110,30 @@ export default class IframeWrapper {
     }
   }
 
-  private createWidgetBubble() {
-    const {
-      appConfig: { themeConfig },
-    } = this.params
-
-    const { theme } = themeConfig
-
-    const buttonLogo = createDomElement('img', {
-      src:
-        this.params.appConfig.themeConfig.theme === 'dark'
-          ? arrowButtonImage.dark
-          : arrowButtonImage.light,
-      onerror: (e: Event) => setFallbackImage(e, theme),
-    })
-
-    const reqCountBadge = createDomElement('p', {
-      id: 'req-count-badge',
-      style: { ...widgetBubbleStyle.reqCountBadge, display: 'none' },
-    })
-
-    return createDomElement(
-      'button',
-      {
-        onclick: () => this.openWidgetIframe(),
-        style: widgetBubbleStyle[theme],
-      },
-      reqCountBadge,
-      buttonLogo
-    )
-  }
-
   private initWalletUI() {
-    this.widgetIframeContainer = this.createWidgetIframe() as HTMLDivElement
-
-    this.widgetBubble = this.createWidgetBubble() as HTMLButtonElement
+    this.widgetIframe = this.createWidgetIframe() as HTMLIFrameElement
 
     const mql = window.matchMedia(`(max-width: ${BREAKPOINT_SMALL}px)`)
-    mql.addEventListener('change', this.resizeWidgetUI.bind(this))
+    mql.addEventListener('change', this.placeWidgetUI.bind(this))
 
-    this.resizeWidget(mql.matches)
+    this.placeWidget(mql.matches)
 
-    this.widgetIframeContainer.style.display = 'none'
+    this.widgetIframe.style.display = 'flex'
 
-    document.body.appendChild(this.widgetBubble)
-    document.body.appendChild(this.widgetIframeContainer)
+    document.body.appendChild(this.widgetIframe)
   }
 
   // Todo: add remove event listener for "resize" event
 
-  private resizeWidgetUI(e: MediaQueryListEvent) {
-    this.resizeWidget(e.matches)
+  private placeWidgetUI(e: MediaQueryListEvent) {
+    this.placeWidget(e.matches)
   }
 
-  private resizeWidget(isViewportSmall: boolean) {
-    setWalletSize(this.widgetIframeContainer, getWalletSize(), isViewportSmall)
-
+  private placeWidget(isViewportSmall: boolean) {
     setWalletPosition(
-      this.widgetBubble,
-      getWalletPosition(isViewportSmall, this.params.position, true)
-    )
-
-    this.widgetBubble.style.borderRadius =
-      this.params.position === 'right'
-        ? widgetBubbleStyle.borderRadius.right
-        : widgetBubbleStyle.borderRadius.left
-
-    setWalletPosition(
-      this.widgetIframeContainer,
+      this.widgetIframe,
       getWalletPosition(isViewportSmall, this.params.position, false)
     )
-  }
-
-  private closeWidgetIframe() {
-    const isFullMode = this.appMode === AppMode.Full
-    this.widgetBubble.style.display = isFullMode ? 'flex' : 'none'
-    this.widgetIframeContainer.style.display = 'none'
-    this.state = 'closed'
-  }
-
-  private openWidgetIframe() {
-    this.widgetBubble.style.display = 'none'
-    this.widgetIframeContainer.style.display = 'flex'
-    this.state = 'open'
   }
 
   private checkSecureOrigin() {
