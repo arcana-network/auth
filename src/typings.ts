@@ -113,9 +113,8 @@ export interface ParentMethods {
   getRpcConfig: () => RpcConfig
   triggerSocialLogin: (kind: string) => void
   triggerPasswordlessLogin: (email: string) => void
-  openPopup: () => void
-  closePopup: () => void
   getPopupState: () => 'open' | 'closed'
+  setIframeStyle: (styles: CSSStyleDeclaration) => void
 }
 
 export interface TypedDataMessage {

@@ -20,16 +20,16 @@ interface RequestArguments {
   params?: unknown[] | Record<string, unknown>
 }
 
-const permissionedCalls = [
-  'eth_sign',
-  'personal_sign',
-  'eth_decrypt',
-  'eth_signTypedData_v4',
-  'eth_signTransaction',
-  'eth_sendTransaction',
-  'wallet_switchEthereumChain',
-  'wallet_addEthereumChain',
-]
+// const permissionedCalls = [
+//   'eth_sign',
+//   'personal_sign',
+//   'eth_decrypt',
+//   'eth_signTypedData_v4',
+//   'eth_signTransaction',
+//   'eth_sendTransaction',
+//   'wallet_switchEthereumChain',
+//   'wallet_addEthereumChain',
+// ]
 
 class ProviderError extends Error implements JsonRpcError {
   code: number
@@ -85,9 +85,8 @@ export class ArcanaProvider
       sendPendingRequestCount: this.iframe.onReceivingPendingRequestCount,
       triggerSocialLogin: loginFuncs.loginWithSocial,
       triggerPasswordlessLogin: loginFuncs.loginWithLink,
-      openPopup: () => this.iframe.show(),
-      closePopup: () => this.iframe.hide(),
       getPopupState: () => this.iframe.getState(),
+      setIframeStyle: this.iframe.setIframeStyle,
     })
     this.communication = communication
   }
@@ -168,12 +167,6 @@ export class ArcanaProvider
     )
   }
 
-  private openPermissionScreen(method: string) {
-    if (permissionedCalls.includes(method)) {
-      this.iframe.show()
-    }
-  }
-
   async request(args: RequestArguments) {
     if (!args || typeof args !== 'object' || Array.isArray(args)) {
       throw ethErrors.rpc.invalidRequest({
@@ -190,7 +183,6 @@ export class ArcanaProvider
       })
     }
 
-    this.openPermissionScreen(method)
     const req: JsonRpcRequest<unknown> = {
       method,
       params,
@@ -244,7 +236,6 @@ export class ArcanaProvider
         )
         break
       case 'connect':
-        this.iframe.showWidgetBubble()
         this.connected = true
         this.emit('connect', val)
         break
