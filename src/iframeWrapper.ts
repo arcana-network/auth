@@ -97,6 +97,8 @@ export default class IframeWrapper {
       style: {
         border: 'none',
         position: 'absolute',
+        height: 0,
+        width: 0,
       },
       src: this.getIframeUrl(),
       allow: 'clipboard-write',
