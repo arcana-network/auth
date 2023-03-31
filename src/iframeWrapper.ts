@@ -13,7 +13,6 @@ import {
   verifyMode,
 } from './utils'
 import { WarningDupeIframe } from './errors'
-import type * as CSS from 'csstype'
 
 const BREAKPOINT_SMALL = 390
 const ARCANA_WALLET_CLASS = 'xar-wallet'
