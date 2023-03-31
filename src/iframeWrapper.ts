@@ -73,7 +73,7 @@ export default class IframeWrapper {
     }
   }
 
-  public setIframeStyle(styles: CSSStyleDeclaration) {
+  setIframeStyle = (styles: CSSStyleDeclaration) => {
     for (const prop in styles) {
       this.widgetIframe.style[prop] = styles[prop]
     }
