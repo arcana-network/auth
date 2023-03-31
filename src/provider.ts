@@ -82,6 +82,7 @@ export class ArcanaProvider
       getAppMode: () => this.iframe?.appMode,
       getAppConfig: this.iframe.getAppConfig,
       getRpcConfig: () => this.rpcConfig,
+      getWalletPosition: this.iframe.getWalletPlace,
       sendPendingRequestCount: this.iframe.onReceivingPendingRequestCount,
       triggerSocialLogin: loginFuncs.loginWithSocial,
       triggerPasswordlessLogin: loginFuncs.loginWithLink,
