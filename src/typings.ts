@@ -115,6 +115,7 @@ export interface ParentMethods {
   triggerPasswordlessLogin: (email: string) => void
   getPopupState: () => 'open' | 'closed'
   setIframeStyle: (styles: CSSStyleDeclaration) => void
+  getWalletPosition: () => Position
 }
 
 export interface TypedDataMessage {
