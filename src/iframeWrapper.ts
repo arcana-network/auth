@@ -79,6 +79,10 @@ export default class IframeWrapper {
     }
   }
 
+  getWalletPlace = () => {
+    return this.params.position
+  }
+
   getAppConfig = () => {
     return this.params.appConfig
   }
