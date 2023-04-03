@@ -6,15 +6,9 @@ import {
   ParentMethods,
 } from './typings'
 import { connectToChild, Connection } from 'penpal'
-import {
-  createDomElement,
-  getWalletPosition,
-  setWalletPosition,
-  verifyMode,
-} from './utils'
+import { createDomElement, verifyMode } from './utils'
 import { WarningDupeIframe } from './errors'
 
-const BREAKPOINT_SMALL = 390
 const ARCANA_WALLET_CLASS = 'xar-wallet'
 
 export default class IframeWrapper {
