@@ -111,29 +111,10 @@ export default class IframeWrapper {
 
   private initWalletUI() {
     this.widgetIframe = this.createWidgetIframe() as HTMLIFrameElement
-
-    const mql = window.matchMedia(`(max-width: ${BREAKPOINT_SMALL}px)`)
-    mql.addEventListener('change', this.placeWidgetUI.bind(this))
-
-    this.placeWidget(mql.matches)
-
-    this.widgetIframe.style.display = 'flex'
-
     document.body.appendChild(this.widgetIframe)
   }
 
   // Todo: add remove event listener for "resize" event
-
-  private placeWidgetUI(e: MediaQueryListEvent) {
-    this.placeWidget(e.matches)
-  }
-
-  private placeWidget(isViewportSmall: boolean) {
-    setWalletPosition(
-      this.widgetIframe,
-      getWalletPosition(isViewportSmall, this.params.position, false)
-    )
-  }
 
   private checkSecureOrigin() {
     const isLocalhost =
