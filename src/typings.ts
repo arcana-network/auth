@@ -101,6 +101,7 @@ export interface ChildMethods {
     sessionId: string
     setToken: string
   }
+  expandWallet: () => Promise<void>
 }
 
 export interface ParentMethods {

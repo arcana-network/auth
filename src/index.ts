@@ -163,6 +163,7 @@ class AuthProvider {
     if (!this.connected) {
       throw new Error('no connection yet, cannot show wallet')
     }
+    this._provider.expandWallet()
   }
 
   /**

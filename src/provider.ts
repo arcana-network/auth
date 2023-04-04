@@ -149,6 +149,11 @@ export class ArcanaProvider
     return await c.initPasswordlessLogin(email)
   }
 
+  public async expandWallet() {
+    const c = await this.getCommunication('expandWallet')
+    return await c.expandWallet()
+  }
+
   private async getCommunication(
     expectedFn: keyof ChildMethods = 'sendRequest'
   ) {
