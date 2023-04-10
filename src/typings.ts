@@ -8,6 +8,8 @@ export type Position = 'right' | 'left'
 
 export type Network = 'dev' | 'testnet' | 'mainnet'
 
+export type SDKVersion = 'v3'
+
 /* json-rpc-engine types */
 export declare type JsonRpcVersion = '2.0'
 export declare type JsonRpcId = number | string | void
@@ -117,6 +119,7 @@ export interface ParentMethods {
   getPopupState: () => 'open' | 'closed'
   setIframeStyle: (styles: CSSStyleDeclaration) => void
   getWalletPosition: () => Position
+  getSDKVersion: () => SDKVersion
 }
 
 export interface TypedDataMessage {
