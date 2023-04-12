@@ -8,6 +8,7 @@ import {
 import { connectToChild, Connection } from 'penpal'
 import { createDomElement, verifyMode } from './utils'
 import { WarningDupeIframe } from './errors'
+import * as styles from './styles'
 
 const ARCANA_WALLET_CLASS = 'xar-wallet'
 
@@ -88,14 +89,7 @@ export default class IframeWrapper {
 
   private createWidgetIframe() {
     return createDomElement('iframe', {
-      style: {
-        border: 'none',
-        position: 'absolute',
-        height: 0,
-        width: 0,
-        right: 0,
-        bottom: 0,
-      },
+      style: styles.iFrameInitialStyle,
       src: this.getIframeUrl(),
       allow: 'clipboard-write',
       className: ARCANA_WALLET_CLASS,
