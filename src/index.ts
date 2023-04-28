@@ -1,35 +1,36 @@
 import { ArcanaProvider } from './provider'
 import IframeWrapper from './iframeWrapper'
 import {
-  getErrorReporter,
   constructLoginUrl,
-  getCurrentUrl,
   getConstructorParams,
-  removeHexPrefix,
-  preLoadIframe,
-  validateAppAddress,
-  isClientId,
+  getCurrentUrl,
+  getErrorReporter,
   getParamsFromClientId,
+  isClientId,
+  preLoadIframe,
+  removeHexPrefix,
+  validateAppAddress,
 } from './utils'
 import { getNetworkConfig, getRpcConfig } from './config'
 import {
   AppConfig,
   AppMode,
-  ConstructorParams,
   ChainConfigInput,
+  ChainType,
+  ConstructorParams,
+  EthereumProvider,
+  InitStatus,
+  Logins,
   NetworkConfig,
   Position,
   RpcConfig,
   Theme,
   ThemeConfig,
   UserInfo,
-  InitStatus,
-  Logins,
-  EthereumProvider,
   WalletType,
 } from './typings'
 import { getAppInfo, getImageUrls } from './appInfo'
-import { ErrorNotInitialized, ArcanaAuthError } from './errors'
+import { ArcanaAuthError, ErrorNotInitialized } from './errors'
 import { LOG_LEVEL, setExceptionReporter, setLogLevel } from './logger'
 import { Chain } from './chainList'
 import Popup from './popup'
@@ -319,6 +320,7 @@ class AuthProvider {
     )
     this.appConfig = {
       name: appInfo.name,
+      chainType: ChainType.solana_cv25519,
       themeConfig: {
         assets: {
           logo: {
@@ -395,8 +397,10 @@ export {
   Chain as CHAIN,
   EthereumProvider,
   AppConfig,
+  AppMode,
   Theme,
   Position,
+  ChainType,
   RpcConfig,
   Logins,
   UserInfo,
