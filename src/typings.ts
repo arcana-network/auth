@@ -75,6 +75,7 @@ export interface AppInfo {
 export interface AppConfig {
   name: string
   themeConfig: ThemeConfig
+  chainType: ChainType
 }
 
 export interface UserInfo {
@@ -166,6 +167,11 @@ export enum AppMode {
   NoUI = 0,
   Widget = 1,
   Full = 2,
+}
+
+export enum ChainType {
+  evm_secp256k1,
+  solana_cv25519,
 }
 
 export const ModeWalletTypeRelation = {
