@@ -1,5 +1,4 @@
 import { NetworkConfig, RpcConfig, ChainConfigInput, Network } from './typings'
-import { Chain, getConfigFromChain } from './chainList'
 
 const DEV_NETWORK_CONFIG: NetworkConfig = {
   authUrl: 'https://verify.dev.arcana.network',
@@ -39,30 +38,6 @@ const getNetworkConfig = (n: Network | NetworkConfig) => {
   }
 }
 
-const getRpcConfig = (c: ChainConfigInput | undefined): RpcConfig => {
-  if (isRpcConfigInput(c)) {
-    const config = getConfigFromChain(c.chainId)
-    if (c.rpcUrl) {
-      config.rpcUrls = [c.rpcUrl]
-    }
-    return config
-  }
-
-  return getConfigFromChain(Chain.ETHEREUM_MAINNET)
-}
-
-function isRpcConfigInput(
-  c: ChainConfigInput | undefined
-): c is ChainConfigInput {
-  if (typeof c === 'undefined') {
-    return false
-  }
-  if (!(typeof c == 'object' && c.chainId)) {
-    return false
-  }
-  return true
-}
-
 function isNetworkConfig(
   network: string | NetworkConfig
 ): network is NetworkConfig {
@@ -81,4 +56,4 @@ function isNetworkConfig(
   return true
 }
 
-export { getNetworkConfig, getRpcConfig }
+export { getNetworkConfig }

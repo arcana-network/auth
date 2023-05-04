@@ -1,5 +1,3 @@
-import { Chain } from './chainList'
-
 export type Theme = 'light' | 'dark'
 
 export type Orientation = 'horizontal' | 'vertical'
@@ -141,11 +139,6 @@ export interface NetworkConfig {
   walletUrl: string
 }
 
-export interface ChainConfigInput {
-  rpcUrl?: string
-  chainId: Chain
-}
-
 export interface RpcConfig {
   rpcUrls: string[]
   chainId: string
@@ -177,7 +170,6 @@ export interface ConstructorParams {
   network: ('testnet' | 'dev' | 'mainnet') | NetworkConfig
   debug: boolean
   alwaysVisible: boolean
-  chainConfig?: ChainConfigInput
   redirectUrl?: string
   theme: Theme
   position: Position
