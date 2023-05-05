@@ -16,7 +16,6 @@ import {
   AppConfig,
   AppMode,
   ConstructorParams,
-  ChainConfigInput,
   NetworkConfig,
   Position,
   RpcConfig,
@@ -389,7 +388,6 @@ class AuthProvider {
 export {
   AuthProvider,
   ConstructorParams,
-  ChainConfigInput,
   EthereumProvider,
   AppConfig,
   Theme,
