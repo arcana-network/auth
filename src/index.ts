@@ -11,15 +11,13 @@ import {
   isClientId,
   getParamsFromClientId,
 } from './utils'
-import { getNetworkConfig, getRpcConfig } from './config'
+import { getNetworkConfig } from './config'
 import {
   AppConfig,
   AppMode,
   ConstructorParams,
-  ChainConfigInput,
   NetworkConfig,
   Position,
-  RpcConfig,
   Theme,
   ThemeConfig,
   UserInfo,
@@ -31,7 +29,6 @@ import {
 import { getAppInfo, getImageUrls } from './appInfo'
 import { ErrorNotInitialized, ArcanaAuthError } from './errors'
 import { LOG_LEVEL, setExceptionReporter, setLogLevel } from './logger'
-import { Chain } from './chainList'
 import Popup from './popup'
 import { ModalController } from './ui/modalController'
 
@@ -43,7 +40,6 @@ class AuthProvider {
   private appConfig: AppConfig
   private iframeWrapper: IframeWrapper
   private networkConfig: NetworkConfig
-  private rpcConfig: RpcConfig
   private initStatus: InitStatus = InitStatus.CREATED
   private initPromises: ((value: AuthProvider) => void)[] = []
   private _provider: ArcanaProvider
@@ -66,8 +62,7 @@ class AuthProvider {
     this.networkConfig = getNetworkConfig(this.params.network)
 
     preLoadIframe(this.networkConfig.walletUrl, this.appId)
-    this.rpcConfig = getRpcConfig(this.params.chainConfig)
-    this._provider = new ArcanaProvider(this.rpcConfig)
+    this._provider = new ArcanaProvider()
 
     if (this.params.debug) {
       setLogLevel(LOG_LEVEL.DEBUG)
@@ -390,13 +385,10 @@ class AuthProvider {
 export {
   AuthProvider,
   ConstructorParams,
-  ChainConfigInput,
-  Chain as CHAIN,
   EthereumProvider,
   AppConfig,
   Theme,
   Position,
-  RpcConfig,
   Logins,
   UserInfo,
   ThemeConfig,

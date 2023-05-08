@@ -1,5 +1,3 @@
-import { Chain } from './chainList'
-
 export type Theme = 'light' | 'dark'
 
 export type Orientation = 'horizontal' | 'vertical'
@@ -113,7 +111,6 @@ export interface ParentMethods {
   getAppConfig: () => AppConfig
   getAppMode: () => AppMode
   getParentUrl: () => string
-  getRpcConfig: () => RpcConfig
   triggerSocialLogin: (kind: string) => void
   triggerPasswordlessLogin: (email: string) => void
   getPopupState: () => 'open' | 'closed'
@@ -143,11 +140,6 @@ export interface NetworkConfig {
   authUrl: string
   gatewayUrl: string
   walletUrl: string
-}
-
-export interface ChainConfigInput {
-  rpcUrl?: string
-  chainId: Chain
 }
 
 export interface RpcConfig {
@@ -181,7 +173,6 @@ export interface ConstructorParams {
   network: ('testnet' | 'dev' | 'mainnet') | NetworkConfig
   debug: boolean
   alwaysVisible: boolean
-  chainConfig?: ChainConfigInput
   redirectUrl?: string
   theme: Theme
   position: Position
