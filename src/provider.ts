@@ -5,7 +5,6 @@ import {
   JsonRpcResponse,
   ChildMethods,
   EthereumProvider,
-  RpcConfig,
 } from './typings'
 import { Connection } from 'penpal'
 import { ethErrors } from 'eth-rpc-errors'

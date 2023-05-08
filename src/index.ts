@@ -18,7 +18,6 @@ import {
   ConstructorParams,
   NetworkConfig,
   Position,
-  RpcConfig,
   Theme,
   ThemeConfig,
   UserInfo,
