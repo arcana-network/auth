@@ -1,4 +1,4 @@
-import { NetworkConfig, RpcConfig, Network } from './typings'
+import { NetworkConfig, Network } from './typings'
 
 const DEV_NETWORK_CONFIG: NetworkConfig = {
   authUrl: 'https://verify.dev.arcana.network',

@@ -108,7 +108,6 @@ export interface ParentMethods {
   getAppConfig: () => AppConfig
   getAppMode: () => AppMode
   getParentUrl: () => string
-  getRpcConfig: () => RpcConfig
   triggerSocialLogin: (kind: string) => void
   triggerPasswordlessLogin: (email: string) => void
   openPopup: () => void
