@@ -68,6 +68,12 @@ export interface ThemeConfig {
 export interface AppInfo {
   name: string
   theme: Theme
+  logo: {
+    dark_horizontal?: string
+    dark_vertical?: string
+    light_horizontal?: string
+    light_vertical?: string
+  }
 }
 
 export interface AppConfig {
