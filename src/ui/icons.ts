@@ -19,8 +19,8 @@ function getSocialLogo(provider: string, theme: 'light' | 'dark') {
 }
 
 const ARCANA_LOGO = {
-  light: `${BASE_URL}/arcana-logo-dark.png`,
-  dark: `${BASE_URL}/arcana-logo.png`,
+  light: `${BASE_URL}/secured-by-arcana-light.svg`,
+  dark: `${BASE_URL}/secured-by-arcana-dark.svg`,
 }
 
 export { getSocialLogo, ARCANA_LOGO }
