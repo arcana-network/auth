@@ -311,13 +311,17 @@ class AuthProvider {
       this.params.theme,
       this.networkConfig.gatewayUrl
     )
+    const horizontalLogo =
+      appInfo.logo.dark_horizontal || appInfo.logo.light_horizontal
+    const verticalLogo =
+      appInfo.logo.dark_vertical || appInfo.logo.light_vertical
     this.appConfig = {
       name: appInfo.name,
       themeConfig: {
         assets: {
           logo: {
-            horizontal: appImageURLs.horizontal,
-            vertical: appImageURLs.vertical,
+            horizontal: horizontalLogo ? appImageURLs.horizontal : '',
+            vertical: verticalLogo ? appImageURLs.vertical : '',
           },
         },
         theme: this.params.theme,

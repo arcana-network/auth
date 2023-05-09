@@ -1,29 +1,28 @@
 import { ARCANA_LOGO, getSocialLogo } from './icons'
-import { StateUpdater } from 'preact/hooks'
+import { StateUpdater, useState } from 'preact/hooks'
 import { ModalParams } from './typings'
 import { Theme } from '../typings'
 import { JSXInternal } from 'preact/src/jsx'
-import { getFallbackImage } from '../utils'
 import ProgressOval from './loader'
 import './style.css'
 
 const Header = ({ mode, logo }: { mode: Theme; logo: string }) => {
-  const setfallbackLogo = (e: Event) => {
-    const src = getFallbackImage(mode)
-    if (e.target instanceof HTMLImageElement) {
-      e.target.src = src
-    }
+  const [renderLogoContainer, setRenderLogoContainer] = useState(true)
+  const removeLogoContainer = () => {
+    setRenderLogoContainer(false)
   }
   return (
     <>
-      <div className="xar-header-logo__container">
-        <img
-          className="xar-header-logo"
-          src={logo}
-          alt="app-logo"
-          onError={setfallbackLogo}
-        />
-      </div>
+      {renderLogoContainer && logo && (
+        <div className="xar-header-logo__container">
+          <img
+            className="xar-header-logo"
+            src={logo}
+            alt="app-logo"
+            onError={removeLogoContainer}
+          />
+        </div>
+      )}
       <div className="xar-header-text">
         <h1 className="xar-header-heading">Welcome</h1>
         <p className="xar-header-subtext">
@@ -110,9 +109,8 @@ const Footer = ({ mode }: { mode: Theme }) => {
   const logo = ARCANA_LOGO[mode]
   return (
     <div className="xar-footer">
-      <p className="xar-footer-text">Powered by</p>
       <a href="https://arcana.network" className="xar-footer-img__link">
-        <img className="xar-footer-img" src={logo} alt="arcana logo" />
+        <img className="xar-footer-img" src={logo} alt="Secured By Arcana" />
       </a>
     </div>
   )
