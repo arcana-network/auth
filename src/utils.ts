@@ -4,7 +4,6 @@ import {
   ModeWalletTypeRelation,
   WalletType,
   WalletPosition,
-  WalletSize,
   Position,
   Theme,
   Network,
@@ -115,18 +114,6 @@ const createDomElement = (
   return dom
 }
 
-const setWalletSize = (
-  element: HTMLElement,
-  sizes: WalletSize,
-  isViewportSmall: boolean
-): void => {
-  element.style.height = sizes.height
-  element.style.width = sizes.width
-  if (isViewportSmall) {
-    element.style.maxWidth = '100%'
-  }
-}
-
 const setWalletPosition = (
   element: HTMLElement,
   position: WalletPosition
@@ -138,13 +125,6 @@ const setWalletPosition = (
     element.style.left = position.left
   }
   element.style.bottom = position.bottom
-}
-
-const getWalletSize = (): WalletSize => {
-  const sizes = { height: '', width: '' }
-  sizes.height = '80vh'
-  sizes.width = '360px'
-  return sizes
 }
 
 const getWalletPosition = (
@@ -350,8 +330,6 @@ export {
   constructLoginUrl,
   createDomElement,
   getWalletType,
-  setWalletSize,
-  getWalletSize,
   setWalletPosition,
   getUniqueId,
   getWalletPosition,

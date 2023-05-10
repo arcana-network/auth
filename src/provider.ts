@@ -19,16 +19,16 @@ interface RequestArguments {
   params?: unknown[] | Record<string, unknown>
 }
 
-const permissionedCalls = [
-  'eth_sign',
-  'personal_sign',
-  'eth_decrypt',
-  'eth_signTypedData_v4',
-  'eth_signTransaction',
-  'eth_sendTransaction',
-  'wallet_switchEthereumChain',
-  'wallet_addEthereumChain',
-]
+// const permissionedCalls = [
+//   'eth_sign',
+//   'personal_sign',
+//   'eth_decrypt',
+//   'eth_signTypedData_v4',
+//   'eth_signTransaction',
+//   'eth_sendTransaction',
+//   'wallet_switchEthereumChain',
+//   'wallet_addEthereumChain',
+// ]
 
 class ProviderError extends Error implements JsonRpcError {
   code: number
@@ -79,12 +79,13 @@ export class ArcanaProvider
       getParentUrl: getCurrentUrl,
       getAppMode: () => this.iframe?.appMode,
       getAppConfig: this.iframe.getAppConfig,
+      getWalletPosition: this.iframe.getWalletPlace,
       sendPendingRequestCount: this.iframe.onReceivingPendingRequestCount,
       triggerSocialLogin: loginFuncs.loginWithSocial,
       triggerPasswordlessLogin: loginFuncs.loginWithLink,
-      openPopup: () => this.iframe.show(),
-      closePopup: () => this.iframe.hide(),
       getPopupState: () => this.iframe.getState(),
+      setIframeStyle: this.iframe.setIframeStyle,
+      getSDKVersion: () => 'v3',
     })
     this.communication = communication
   }
@@ -146,6 +147,11 @@ export class ArcanaProvider
     return await c.initPasswordlessLogin(email)
   }
 
+  public async expandWallet() {
+    const c = await this.getCommunication('expandWallet')
+    return await c.expandWallet()
+  }
+
   private async getCommunication(
     expectedFn: keyof ChildMethods = 'sendRequest'
   ) {
@@ -165,12 +171,6 @@ export class ArcanaProvider
     )
   }
 
-  private openPermissionScreen(method: string) {
-    if (permissionedCalls.includes(method)) {
-      this.iframe.show()
-    }
-  }
-
   async request(args: RequestArguments) {
     if (!args || typeof args !== 'object' || Array.isArray(args)) {
       throw ethErrors.rpc.invalidRequest({
@@ -187,7 +187,6 @@ export class ArcanaProvider
       })
     }
 
-    this.openPermissionScreen(method)
     const req: JsonRpcRequest<unknown> = {
       method,
       params,
@@ -241,7 +240,6 @@ export class ArcanaProvider
         )
         break
       case 'connect':
-        this.iframe.showWidgetBubble()
         this.chainId =
           typeof val === 'object' ? (val as { chainId: string }).chainId : ''
         this.connected = true
