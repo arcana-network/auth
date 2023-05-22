@@ -371,17 +371,20 @@ class AuthProvider {
 
   /* eslint-disable @typescript-eslint/no-explicit-any */
   private setProviders() {
-    if (!(window as Record<string, any>).arcana) {
-      ;(window as Record<string, any>).arcana = {}
+    const w = window as Record<string, any>
+    try {
+      w.arcana = w.arcana ?? {}
+      w.arcana.provider = this._provider
+    } catch (e) {
+      console.error(e)
     }
-    ;(window as Record<string, any>).arcana.provider = this._provider
-    if (!(window as Record<string, any>).ethereum) {
-      ;(window as Record<string, any>).ethereum = {}
+    try {
+      w.ethereum = w.ethereum ?? this._provider
+      w.ethereum.providers = w.ethereum.providers ?? []
+      w.ethereum.providers.push(this._provider)
+    } catch (e) {
+      console.error(e)
     }
-    if (!(window as Record<string, any>).providers) {
-      ;(window as Record<string, any>).ethereum.providers = []
-    }
-    ;(window as Record<string, any>).ethereum.providers.push(this._provider)
   }
   /* eslint-enable */
 }
