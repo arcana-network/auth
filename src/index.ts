@@ -25,6 +25,7 @@ import {
   Logins,
   EthereumProvider,
   WalletType,
+  ChainConfigInput,
 } from './typings'
 import { getAppInfo, getImageUrls } from './appInfo'
 import { ErrorNotInitialized, ArcanaAuthError } from './errors'
@@ -40,6 +41,7 @@ class AuthProvider {
   private appConfig: AppConfig
   private iframeWrapper: IframeWrapper
   private networkConfig: NetworkConfig
+  private rpcConfig: ChainConfigInput | undefined
   private initStatus: InitStatus = InitStatus.CREATED
   private initPromises: ((value: AuthProvider) => void)[] = []
   private _provider: ArcanaProvider
@@ -62,7 +64,8 @@ class AuthProvider {
     this.networkConfig = getNetworkConfig(this.params.network)
 
     preLoadIframe(this.networkConfig.walletUrl, this.appId)
-    this._provider = new ArcanaProvider()
+    this.rpcConfig = this.params.chainConfig
+    this._provider = new ArcanaProvider(this.rpcConfig)
 
     if (this.params.debug) {
       setLogLevel(LOG_LEVEL.DEBUG)

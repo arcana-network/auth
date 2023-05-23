@@ -5,6 +5,7 @@ import {
   JsonRpcResponse,
   ChildMethods,
   EthereumProvider,
+  ChainConfigInput,
 } from './typings'
 import { Connection } from 'penpal'
 import { ethErrors } from 'eth-rpc-errors'
@@ -57,7 +58,7 @@ export class ArcanaProvider
   private subscriber: SafeEventEmitter
   private iframe: IframeWrapper
   private logger: Logger = getLogger('ArcanaProvider')
-  constructor() {
+  constructor(private rpcConfig: ChainConfigInput | undefined) {
     super()
     this.subscriber = new SafeEventEmitter()
   }
@@ -80,6 +81,7 @@ export class ArcanaProvider
       getAppMode: () => this.iframe?.appMode,
       getAppConfig: this.iframe.getAppConfig,
       getWalletPosition: this.iframe.getWalletPlace,
+      getRpcConfig: () => this.rpcConfig,
       sendPendingRequestCount: this.iframe.onReceivingPendingRequestCount,
       triggerSocialLogin: loginFuncs.loginWithSocial,
       triggerPasswordlessLogin: loginFuncs.loginWithLink,

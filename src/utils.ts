@@ -270,6 +270,9 @@ const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
   if (initParams?.redirectUrl) {
     p.redirectUrl = initParams.redirectUrl
   }
+  if (initParams?.chainConfig) {
+    p.chainConfig = initParams.chainConfig
+  }
   if (initParams?.theme) {
     p.theme = initParams.theme
   }
