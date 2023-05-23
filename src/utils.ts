@@ -260,6 +260,7 @@ const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
     position: 'right',
     theme: 'dark',
     alwaysVisible: true,
+    setWindowProvider: false,
   }
   if (initParams?.network) {
     p.network = initParams.network
