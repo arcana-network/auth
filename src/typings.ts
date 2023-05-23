@@ -182,6 +182,7 @@ export interface ConstructorParams {
   redirectUrl?: string
   theme: Theme
   position: Position
+  setWindowProvider: boolean
 }
 
 type RequestArguments = {

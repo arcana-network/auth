@@ -369,24 +369,24 @@ class AuthProvider {
     throw ErrorNotInitialized
   }
 
-  /* eslint-disable @typescript-eslint/no-explicit-any */
   private setProviders() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const w = window as Record<string, any>
     try {
       w.arcana = w.arcana ?? {}
       w.arcana.provider = this._provider
-    } catch (e) {
-      console.error(e)
-    }
-    try {
-      w.ethereum = w.ethereum ?? this._provider
-      w.ethereum.providers = w.ethereum.providers ?? []
-      w.ethereum.providers.push(this._provider)
-    } catch (e) {
-      console.error(e)
+      // eslint-disable-next-line no-empty
+    } catch {}
+    if (this.params.setWindowProvider) {
+      try {
+        w.ethereum = w.ethereum ?? this._provider
+        w.ethereum.providers = w.ethereum.providers ?? []
+        w.ethereum.providers.push(this._provider)
+      } catch (e) {
+        console.error(e)
+      }
     }
   }
-  /* eslint-enable */
 }
 
 export {
