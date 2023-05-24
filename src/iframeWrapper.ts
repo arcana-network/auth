@@ -83,7 +83,7 @@ export default class IframeWrapper {
   }
 
   private getIframeUrl() {
-    const u = new URL(`/${this.params.appId}/v2/login`, this.params.iframeUrl)
+    const u = new URL(`/${this.params.appId}/v3/login`, this.params.iframeUrl)
     return u.toString()
   }
 

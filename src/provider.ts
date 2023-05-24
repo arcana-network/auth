@@ -110,7 +110,15 @@ export class ArcanaProvider
     return this.connected
   }
 
+  public triggerSocialLogin(type: string) {
+    this.getCommunication('triggerSocialLogin').then((c) => {
+      c.triggerSocialLogin(type)
+    })
+  }
   public async isLoginAvailable(type: string) {
+    if (type == 'steam') {
+      return true
+    }
     const c = await this.getCommunication('isLoginAvailable')
     const available = await c.isLoginAvailable(type)
     this.logger.info('loginAvailable', { [type]: available })
