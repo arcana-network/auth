@@ -9,6 +9,7 @@ const SOCIAL_LOGO: { [k: string]: string } = {
   discord: `${BASE_URL}/discord.png`,
   aws: `${BASE_URL}/aws.png`,
   aws_light: `${BASE_URL}/aws_light.png`,
+  steam: `${BASE_URL}/steam.svg`,
 }
 
 function getSocialLogo(provider: string, theme: 'light' | 'dark') {
@@ -19,8 +20,8 @@ function getSocialLogo(provider: string, theme: 'light' | 'dark') {
 }
 
 const ARCANA_LOGO = {
-  light: `${BASE_URL}/arcana-logo-dark.png`,
-  dark: `${BASE_URL}/arcana-logo.png`,
+  light: `${BASE_URL}/secured-by-arcana-light.svg`,
+  dark: `${BASE_URL}/secured-by-arcana-dark.svg`,
 }
 
 export { getSocialLogo, ARCANA_LOGO }

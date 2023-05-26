@@ -1,5 +1,3 @@
-import { Chain } from './chainList'
-
 export type Theme = 'light' | 'dark'
 
 export type Orientation = 'horizontal' | 'vertical'
@@ -7,6 +5,8 @@ export type Orientation = 'horizontal' | 'vertical'
 export type Position = 'right' | 'left'
 
 export type Network = 'dev' | 'testnet' | 'mainnet'
+
+export type SDKVersion = 'v3'
 
 /* json-rpc-engine types */
 export declare type JsonRpcVersion = '2.0'
@@ -70,6 +70,12 @@ export interface ThemeConfig {
 export interface AppInfo {
   name: string
   theme: Theme
+  logo: {
+    dark_horizontal?: string
+    dark_vertical?: string
+    light_horizontal?: string
+    light_vertical?: string
+  }
 }
 
 export interface AppConfig {
@@ -101,6 +107,7 @@ export interface ChildMethods {
     sessionId: string
     setToken: string
   }
+  expandWallet: () => Promise<void>
 }
 
 export interface ParentMethods {
@@ -110,12 +117,13 @@ export interface ParentMethods {
   getAppConfig: () => AppConfig
   getAppMode: () => AppMode
   getParentUrl: () => string
-  getRpcConfig: () => RpcConfig
+  getRpcConfig: () => ChainConfigInput | undefined
   triggerSocialLogin: (kind: string) => void
   triggerPasswordlessLogin: (email: string) => void
-  openPopup: () => void
-  closePopup: () => void
   getPopupState: () => 'open' | 'closed'
+  setIframeStyle: (styles: CSSStyleDeclaration) => void
+  getWalletPosition: () => Position
+  getSDKVersion: () => SDKVersion
 }
 
 export interface TypedDataMessage {
@@ -139,11 +147,6 @@ export interface NetworkConfig {
   authUrl: string
   gatewayUrl: string
   walletUrl: string
-}
-
-export interface ChainConfigInput {
-  rpcUrl?: string
-  chainId: Chain
 }
 
 export interface RpcConfig {
@@ -173,6 +176,11 @@ export const ModeWalletTypeRelation = {
   [WalletType.NoUI]: [AppMode.NoUI],
 }
 
+export interface ChainConfigInput {
+  rpcUrl?: string
+  chainId: string
+}
+
 export interface ConstructorParams {
   network: ('testnet' | 'dev' | 'mainnet') | NetworkConfig
   debug: boolean
@@ -181,6 +189,7 @@ export interface ConstructorParams {
   redirectUrl?: string
   theme: Theme
   position: Position
+  setWindowProvider: boolean
 }
 
 type RequestArguments = {

@@ -4,7 +4,6 @@ import {
   ModeWalletTypeRelation,
   WalletType,
   WalletPosition,
-  WalletSize,
   Position,
   Theme,
   Network,
@@ -115,18 +114,6 @@ const createDomElement = (
   return dom
 }
 
-const setWalletSize = (
-  element: HTMLElement,
-  sizes: WalletSize,
-  isViewportSmall: boolean
-): void => {
-  element.style.height = sizes.height
-  element.style.width = sizes.width
-  if (isViewportSmall) {
-    element.style.maxWidth = '100%'
-  }
-}
-
 const setWalletPosition = (
   element: HTMLElement,
   position: WalletPosition
@@ -138,13 +125,6 @@ const setWalletPosition = (
     element.style.left = position.left
   }
   element.style.bottom = position.bottom
-}
-
-const getWalletSize = (): WalletSize => {
-  const sizes = { height: '', width: '' }
-  sizes.height = '80vh'
-  sizes.width = '360px'
-  return sizes
 }
 
 const getWalletPosition = (
@@ -280,6 +260,7 @@ const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
     position: 'right',
     theme: 'dark',
     alwaysVisible: true,
+    setWindowProvider: false,
   }
   if (initParams?.network) {
     p.network = initParams.network
@@ -287,11 +268,11 @@ const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
   if (initParams?.debug !== undefined) {
     p.debug = initParams.debug
   }
-  if (initParams?.chainConfig) {
-    p.chainConfig = initParams.chainConfig
-  }
   if (initParams?.redirectUrl) {
     p.redirectUrl = initParams.redirectUrl
+  }
+  if (initParams?.chainConfig) {
+    p.chainConfig = initParams.chainConfig
   }
   if (initParams?.theme) {
     p.theme = initParams.theme
@@ -353,8 +334,6 @@ export {
   constructLoginUrl,
   createDomElement,
   getWalletType,
-  setWalletSize,
-  getWalletSize,
   setWalletPosition,
   getUniqueId,
   getWalletPosition,

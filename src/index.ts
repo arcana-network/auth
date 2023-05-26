@@ -11,15 +11,13 @@ import {
   isClientId,
   getParamsFromClientId,
 } from './utils'
-import { getNetworkConfig, getRpcConfig } from './config'
+import { getNetworkConfig } from './config'
 import {
   AppConfig,
   AppMode,
   ConstructorParams,
-  ChainConfigInput,
   NetworkConfig,
   Position,
-  RpcConfig,
   Theme,
   ThemeConfig,
   UserInfo,
@@ -27,11 +25,11 @@ import {
   Logins,
   EthereumProvider,
   WalletType,
+  ChainConfigInput,
 } from './typings'
 import { getAppInfo, getImageUrls } from './appInfo'
 import { ErrorNotInitialized, ArcanaAuthError } from './errors'
 import { LOG_LEVEL, setExceptionReporter, setLogLevel } from './logger'
-import { Chain } from './chainList'
 import Popup from './popup'
 import { ModalController } from './ui/modalController'
 
@@ -43,7 +41,7 @@ class AuthProvider {
   private appConfig: AppConfig
   private iframeWrapper: IframeWrapper
   private networkConfig: NetworkConfig
-  private rpcConfig: RpcConfig
+  private rpcConfig: ChainConfigInput | undefined
   private initStatus: InitStatus = InitStatus.CREATED
   private initPromises: ((value: AuthProvider) => void)[] = []
   private _provider: ArcanaProvider
@@ -66,7 +64,7 @@ class AuthProvider {
     this.networkConfig = getNetworkConfig(this.params.network)
 
     preLoadIframe(this.networkConfig.walletUrl, this.appId)
-    this.rpcConfig = getRpcConfig(this.params.chainConfig)
+    this.rpcConfig = this.params.chainConfig
     this._provider = new ArcanaProvider(this.rpcConfig)
 
     if (this.params.debug) {
@@ -163,8 +161,7 @@ class AuthProvider {
     if (!this.connected) {
       throw new Error('no connection yet, cannot show wallet')
     }
-
-    this.iframeWrapper.show()
+    this._provider.expandWallet()
   }
 
   /**
@@ -317,13 +314,17 @@ class AuthProvider {
       this.params.theme,
       this.networkConfig.gatewayUrl
     )
+    const horizontalLogo =
+      appInfo.logo.dark_horizontal || appInfo.logo.light_horizontal
+    const verticalLogo =
+      appInfo.logo.dark_vertical || appInfo.logo.light_vertical
     this.appConfig = {
       name: appInfo.name,
       themeConfig: {
         assets: {
           logo: {
-            horizontal: appImageURLs.horizontal,
-            vertical: appImageURLs.vertical,
+            horizontal: horizontalLogo ? appImageURLs.horizontal : '',
+            vertical: verticalLogo ? appImageURLs.vertical : '',
           },
         },
         theme: this.params.theme,
@@ -371,33 +372,33 @@ class AuthProvider {
     throw ErrorNotInitialized
   }
 
-  /* eslint-disable @typescript-eslint/no-explicit-any */
   private setProviders() {
-    if (!(window as Record<string, any>).arcana) {
-      ;(window as Record<string, any>).arcana = {}
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const w = window as Record<string, any>
+    try {
+      w.arcana = w.arcana ?? {}
+      w.arcana.provider = this._provider
+      // eslint-disable-next-line no-empty
+    } catch {}
+    if (this.params.setWindowProvider) {
+      try {
+        w.ethereum = w.ethereum ?? this._provider
+        w.ethereum.providers = w.ethereum.providers ?? []
+        w.ethereum.providers.push(this._provider)
+      } catch (e) {
+        console.error(e)
+      }
     }
-    ;(window as Record<string, any>).arcana.provider = this._provider
-    if (!(window as Record<string, any>).ethereum) {
-      ;(window as Record<string, any>).ethereum = {}
-    }
-    if (!(window as Record<string, any>).providers) {
-      ;(window as Record<string, any>).ethereum.providers = []
-    }
-    ;(window as Record<string, any>).ethereum.providers.push(this._provider)
   }
-  /* eslint-enable */
 }
 
 export {
   AuthProvider,
   ConstructorParams,
-  ChainConfigInput,
-  Chain as CHAIN,
   EthereumProvider,
   AppConfig,
   Theme,
   Position,
-  RpcConfig,
   Logins,
   UserInfo,
   ThemeConfig,
