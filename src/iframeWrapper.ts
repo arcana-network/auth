@@ -1,9 +1,11 @@
-import {
+import type {
   IframeWrapperParams,
   AppMode,
   WalletType,
   ChildMethods,
   ParentMethods,
+  BearerAuthentication,
+  FirebaseBearer,
 } from './typings'
 import { connectToChild, Connection } from 'penpal'
 import { createDomElement, verifyMode } from './utils'
@@ -40,6 +42,16 @@ export default class IframeWrapper {
     } catch (error) {
       throw new Error('Could not set connection methods')
     }
+  }
+
+  public async triggerBearerAuthentication(
+    type: BearerAuthentication,
+    data: FirebaseBearer
+  ) {
+    return (await this.iframeCommunication.promise).triggerBearerLogin(
+      type,
+      data
+    )
   }
 
   public setWalletType(walletType: WalletType, appMode: AppMode | undefined) {

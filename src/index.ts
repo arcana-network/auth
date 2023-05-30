@@ -1,34 +1,36 @@
 import { ArcanaProvider } from './provider'
 import IframeWrapper from './iframeWrapper'
 import {
-  getErrorReporter,
   constructLoginUrl,
-  getCurrentUrl,
   getConstructorParams,
-  removeHexPrefix,
-  preLoadIframe,
-  validateAppAddress,
-  isClientId,
+  getCurrentUrl,
+  getErrorReporter,
   getParamsFromClientId,
+  isClientId,
+  preLoadIframe,
+  removeHexPrefix,
+  validateAppAddress,
 } from './utils'
 import { getNetworkConfig } from './config'
 import {
   AppConfig,
   AppMode,
+  BearerAuthentication,
   ConstructorParams,
+  EthereumProvider,
+  FirebaseBearer,
+  InitStatus,
+  Logins,
   NetworkConfig,
   Position,
   Theme,
   ThemeConfig,
   UserInfo,
-  InitStatus,
-  Logins,
-  EthereumProvider,
   WalletType,
   ChainConfigInput,
 } from './typings'
 import { getAppInfo, getImageUrls } from './appInfo'
-import { ErrorNotInitialized, ArcanaAuthError } from './errors'
+import { ArcanaAuthError, ErrorNotInitialized } from './errors'
 import { LOG_LEVEL, setExceptionReporter, setLogLevel } from './logger'
 import Popup from './popup'
 import { ModalController } from './ui/modalController'
@@ -194,6 +196,16 @@ class AuthProvider {
       return this.beginLogin(url)
     }
     throw ErrorNotInitialized
+  }
+
+  loginWithBearer = async (
+    type: BearerAuthentication,
+    data: FirebaseBearer
+  ): Promise<boolean> => {
+    if (this.initStatus !== InitStatus.DONE) {
+      throw ErrorNotInitialized
+    }
+    return await this.iframeWrapper.triggerBearerAuthentication(type, data)
   }
 
   get connected() {
