@@ -97,10 +97,10 @@ import { AuthProvider } from '@arcana/auth' // From npm
 #### Initialize AuthProvider
 
 ```ts
-import { AuthProvider, CHAIN } from '@arcana/auth'
+import { AuthProvider } from '@arcana/auth'
 
 interface ChainConfig {
-  chainId: CHAIN
+  chainId: 'number string'
   rpcUrl?: string
 }
 
@@ -110,8 +110,8 @@ const auth = new AuthProvider(`${clientId}`, {
   alwaysVisible: false, // default - true
   setWindowProvider: true, // default - false
   chainConfig: {
-    chainId: CHAIN.POLYGON_MAINNET,
-    rpcUrl: '',
+    chainId: '80001',
+    rpcUrl: 'https://rpc.ankr.com/polygon_mumbai',
   },
 })
 
