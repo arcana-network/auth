@@ -177,7 +177,7 @@ class AuthProvider {
       if (!(await this._provider.isLoginAvailable(loginType))) {
         throw new Error(`${loginType} login is not available`)
       }
-      const url = this.getLoginUrl(loginType)
+      const url = await this._provider.initSocialLogin(loginType)
       return this.beginLogin(url)
     }
     throw ErrorNotInitialized

@@ -148,6 +148,10 @@ export class ArcanaProvider
     const c = await this.getCommunication('initPasswordlessLogin')
     return await c.initPasswordlessLogin(email)
   }
+  public async initSocialLogin(kind: string) {
+    const c = await this.getCommunication('initSocialLogin')
+    return await c.initSocialLogin(kind)
+  }
 
   public async expandWallet() {
     const c = await this.getCommunication('expandWallet')

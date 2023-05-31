@@ -114,6 +114,7 @@ export interface ChildMethods {
   getPublicKey: (email: string, verifier: string) => Promise<string>
   triggerLogout: (isV2?: boolean) => Promise<void>
   getUserInfo: () => Promise<UserInfo>
+  initSocialLogin(kind: string): Promise<string>
   initPasswordlessLogin: (email: string) => {
     sessionId: string
     setToken: string
