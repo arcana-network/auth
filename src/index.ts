@@ -1,9 +1,7 @@
 import { ArcanaProvider } from './provider'
 import IframeWrapper from './iframeWrapper'
 import {
-  constructLoginUrl,
   getConstructorParams,
-  getCurrentUrl,
   getErrorReporter,
   getParamsFromClientId,
   isClientId,
@@ -34,8 +32,6 @@ import { LOG_LEVEL, setExceptionReporter, setLogLevel } from './logger'
 import Popup from './popup'
 import { ModalController } from './ui/modalController'
 
-type ExtraParams = 'sessionId' | 'setToken' | 'email'
-
 class AuthProvider {
   public appId: string
   private params: ConstructorParams
@@ -47,6 +43,7 @@ class AuthProvider {
   private initPromises: ((value: AuthProvider) => void)[] = []
   private _provider: ArcanaProvider
   private connectCtrl: ModalController
+  private _uiEventHandler: (...args: any) => void | undefined
   constructor(clientId: string, p?: Partial<ConstructorParams>) {
     let network = p?.network
     let appAddress = clientId
@@ -94,6 +91,7 @@ class AuthProvider {
         iframeUrl: this.networkConfig.walletUrl,
         appConfig: this.appConfig,
         position: this.params.position,
+        uiEventHandler: this._uiEventHandler,
       })
 
       this.iframeWrapper.setWalletType(
@@ -186,14 +184,19 @@ class AuthProvider {
   /**
    * A function to trigger passwordless login in the wallet
    */
-  loginWithLink = async (email: string): Promise<EthereumProvider> => {
+  loginWithLink = async (
+    email: string,
+    emailSentHook?: () => void
+  ): Promise<EthereumProvider> => {
     if (this.initStatus === InitStatus.DONE) {
       if (await this.isLoggedIn()) {
         return this._provider
       }
-      const params = await this._provider.initPasswordlessLogin(email)
-      const url = this.getLoginUrl('passwordless', { ...params, email })
-      return this.beginLogin(url)
+      await this._provider.initPasswordlessLogin(email)
+      if (emailSentHook) {
+        emailSentHook()
+      }
+      return await this.waitForConnect()
     }
     throw ErrorNotInitialized
   }
@@ -282,19 +285,6 @@ class AuthProvider {
   }
 
   /* Private functions */
-
-  private getLoginUrl(
-    loginType: string,
-    params?: { [k in ExtraParams]: string }
-  ) {
-    return constructLoginUrl({
-      loginType,
-      appId: this.appId,
-      authUrl: this.networkConfig.authUrl,
-      parentUrl: getCurrentUrl(),
-      ...params,
-    })
-  }
   /**
    * @internal
    */
@@ -401,6 +391,12 @@ class AuthProvider {
         console.error(e)
       }
     }
+  }
+
+  private setUIEventHandler(
+    uiEventHandler: (eventName: string, data: any) => void
+  ) {
+    this._uiEventHandler = uiEventHandler
   }
 }
 

@@ -55,6 +55,7 @@ export interface IframeWrapperParams {
   iframeUrl: string
   appConfig: AppConfig
   position: Position
+  uiEventHandler?: (t: string, val: unknown) => void
 }
 
 export interface ThemeConfig {
@@ -124,6 +125,7 @@ export interface ChildMethods {
 
 export interface ParentMethods {
   onEvent: (t: string, val: unknown) => void
+  uiEvent: (t: string, val: unknown) => void
   onMethodResponse: (method: string, response: JsonRpcResponse<unknown>) => void
   sendPendingRequestCount: (count: number) => void
   getAppConfig: () => AppConfig

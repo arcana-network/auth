@@ -78,6 +78,10 @@
   font-weight: 400;
 }
 
+.xar-success__img {
+  max-width: 100px;
+}
+
 .xar-email-login__input {
   height: 45px;
   padding: 0 16px;

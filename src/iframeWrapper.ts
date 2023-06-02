@@ -7,7 +7,7 @@ import type {
 } from './typings'
 import { AppMode } from './typings'
 import { Connection, connectToChild } from 'penpal'
-import { createDomElement } from './utils'
+import { createDomElement, encodeJSON } from './utils'
 import { WarningDupeIframe } from './errors'
 import * as styles from './styles'
 
@@ -24,12 +24,19 @@ export default class IframeWrapper {
     this.checkSecureOrigin()
   }
 
-  public async setConnectionMethods(methods: ParentMethods) {
+  public async setConnectionMethods(methods: Omit<ParentMethods, 'uiEvent'>) {
     try {
       if (!this.iframeCommunication) {
         this.iframeCommunication = connectToChild<ChildMethods>({
           iframe: this.widgetIframe,
-          methods: { ...methods },
+          methods: {
+            ...methods,
+            uiEvent: (ev: string, data: unknown) => {
+              if (this.params.uiEventHandler) {
+                this.params.uiEventHandler(ev, data)
+              }
+            },
+          },
           childOrigin: this.params.iframeUrl,
         })
         await this.iframeCommunication.promise
@@ -94,7 +101,11 @@ export default class IframeWrapper {
   }
 
   private getIframeUrl() {
+    const hash = encodeJSON({
+      isStandalone: this.params.uiEventHandler ? true : false,
+    })
     const u = new URL(`/${this.params.appId}/v2/login`, this.params.iframeUrl)
+    u.hash = hash
     return u.toString()
   }
 

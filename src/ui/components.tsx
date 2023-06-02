@@ -120,10 +120,15 @@ const Loader = (props: {
   text: string
   children: preact.ComponentChildren
   mode: Theme
+  header?: JSXInternal.Element
 }) => {
   return (
     <>
-      <ProgressOval stroke={8} secondaryColor="#8D8D8D" />
+      {props.header ? (
+        props.header
+      ) : (
+        <ProgressOval stroke={8} secondaryColor="#8D8D8D" />
+      )}
       {props.text ? <p className="xar-loader__text">{props.text}</p> : ''}
       {props.children ? <>{props.children}</> : ''}
     </>

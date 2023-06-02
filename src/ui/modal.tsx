@@ -10,10 +10,12 @@ import {
 } from './components'
 import { Overlay } from './overlay'
 import { useReducer, useState } from 'preact/hooks'
+import { ICONS } from '../utils'
 
 const WAIT_TEXT = {
   SOCIAL: 'Please complete the login to proceed',
-  LINK: 'Please complete the login by clicking on email',
+  LINK: 'Sending login link to your email',
+  LINK_SENT: 'Please complete the login by clicking on email',
 }
 
 const initLoaderState = {
@@ -24,9 +26,9 @@ const initLoaderState = {
 
 const reducer = (
   state: typeof initLoaderState,
-  action: 'SOCIAL' | 'LINK' | 'RESET'
+  action: 'SOCIAL' | 'LINK' | 'RESET' | 'LINK_SENT'
 ) => {
-  if (action == 'SOCIAL' || action == 'LINK') {
+  if (action == 'SOCIAL' || action == 'LINK' || action == 'LINK_SENT') {
     return {
       text: WAIT_TEXT[action],
       type: action,
@@ -58,17 +60,29 @@ const Modal = (props: ModalParams) => {
 
     dispatch('LINK')
 
-    props.loginWithLink(email).finally(() => {
-      dispatch('RESET')
-    })
+    props
+      .loginWithLink(email, () => {
+        dispatch('LINK_SENT')
+      })
+      .finally(() => {
+        dispatch('RESET')
+      })
   }
 
   if (loaderState.loading) {
     return (
       <Overlay>
         <Container mode={props.mode}>
-          <Loader text={loaderState.text} mode={props.mode}>
-            {loaderState.type == 'LINK' ? (
+          <Loader
+            text={loaderState.text}
+            mode={props.mode}
+            header={
+              loaderState.type == 'LINK_SENT' ? (
+                <img className="xar-success__img" src={ICONS.success} />
+              ) : undefined
+            }
+          >
+            {loaderState.type == 'LINK' || loaderState.type == 'LINK_SENT' ? (
               <>
                 <Action
                   method={() => linkLogin()}
