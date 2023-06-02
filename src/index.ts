@@ -408,6 +408,7 @@ export {
   AuthProvider,
   ConstructorParams,
   EthereumProvider,
+  BearerAuthentication,
   AppConfig,
   Theme,
   Position,
