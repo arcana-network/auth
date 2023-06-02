@@ -87,8 +87,18 @@ export default class IframeWrapper {
   }
 
   setIframeStyle = (styles: CSSStyleDeclaration) => {
-    for (const prop in styles) {
-      this.widgetIframe.style[prop] = styles[prop]
+    if (!this.params.uiEventHandler) {
+      for (const prop in styles) {
+        this.widgetIframe.style[prop] = styles[prop]
+      }
+    } else {
+      this.widgetIframe.style.height = styles['height']
+        ? styles['height']
+        : '80vh'
+      this.widgetIframe.style.maxWidth = '100%'
+      this.widgetIframe.style.width = '430px'
+      this.widgetIframe.style.bottom = '0'
+      this.widgetIframe.style.right = '0'
     }
   }
 

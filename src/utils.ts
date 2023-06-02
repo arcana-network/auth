@@ -253,7 +253,6 @@ export {
   createDomElement,
   setWalletPosition,
   getUniqueId,
-  getWalletPosition,
   preLoadIframe,
   getErrorReporter,
   validateAppAddress,
