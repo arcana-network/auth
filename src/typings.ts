@@ -55,7 +55,7 @@ export interface IframeWrapperParams {
   iframeUrl: string
   appConfig: AppConfig
   position: Position
-  uiEventHandler?: (t: string, val: unknown) => void
+  standaloneMode?: { mode: 1 | 2; handler: (t: string, val: unknown) => void }
 }
 
 export interface ThemeConfig {

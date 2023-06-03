@@ -43,7 +43,10 @@ class AuthProvider {
   private initPromises: ((value: AuthProvider) => void)[] = []
   private _provider: ArcanaProvider
   private connectCtrl: ModalController
-  private _uiEventHandler: (...args: any) => void | undefined
+  private _standaloneMode: {
+    mode: 1 | 2
+    handler: (...args: any) => void | undefined
+  }
   constructor(clientId: string, p?: Partial<ConstructorParams>) {
     let network = p?.network
     let appAddress = clientId
@@ -91,7 +94,7 @@ class AuthProvider {
         iframeUrl: this.networkConfig.walletUrl,
         appConfig: this.appConfig,
         position: this.params.position,
-        uiEventHandler: this._uiEventHandler,
+        standaloneMode: this._standaloneMode,
       })
 
       this.iframeWrapper.setWalletType(
@@ -393,10 +396,14 @@ class AuthProvider {
     }
   }
 
-  private setUIEventHandler(
-    uiEventHandler: (eventName: string, data: any) => void
+  private standaloneMode(
+    mode: 1 | 2,
+    handler: (eventName: string, data: any) => void
   ) {
-    this._uiEventHandler = uiEventHandler
+    this._standaloneMode = {
+      mode,
+      handler,
+    }
   }
 }
 

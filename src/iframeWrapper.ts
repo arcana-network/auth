@@ -32,8 +32,8 @@ export default class IframeWrapper {
           methods: {
             ...methods,
             uiEvent: (ev: string, data: unknown) => {
-              if (this.params.uiEventHandler) {
-                this.params.uiEventHandler(ev, data)
+              if (this.params.standaloneMode?.handler) {
+                this.params.standaloneMode.handler(ev, data)
               }
             },
           },
@@ -87,11 +87,7 @@ export default class IframeWrapper {
   }
 
   setIframeStyle = (styles: CSSStyleDeclaration) => {
-    if (!this.params.uiEventHandler) {
-      for (const prop in styles) {
-        this.widgetIframe.style[prop] = styles[prop]
-      }
-    } else {
+    if (this.params.standaloneMode?.mode == 1) {
       this.widgetIframe.style.height = styles['height']
         ? styles['height']
         : '80vh'
@@ -99,6 +95,10 @@ export default class IframeWrapper {
       this.widgetIframe.style.width = '430px'
       this.widgetIframe.style.bottom = '0'
       this.widgetIframe.style.right = '0'
+    } else {
+      for (const prop in styles) {
+        this.widgetIframe.style[prop] = styles[prop]
+      }
     }
   }
 
@@ -112,7 +112,9 @@ export default class IframeWrapper {
 
   private getIframeUrl() {
     const hash = encodeJSON({
-      isStandalone: this.params.uiEventHandler ? true : false,
+      standaloneMode: this.params.standaloneMode?.mode
+        ? this.params.standaloneMode?.mode
+        : 0,
     })
     const u = new URL(`/${this.params.appId}/v2/login`, this.params.iframeUrl)
     u.hash = hash
