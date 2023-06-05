@@ -171,20 +171,10 @@ export interface RpcConfig {
   }
 }
 
-export enum WalletType {
-  NoUI = 0,
-  UI = 1,
-}
-
 export enum AppMode {
   NoUI = 0,
   Widget = 1,
   Full = 2,
-}
-
-export const ModeWalletTypeRelation = {
-  [WalletType.UI]: [AppMode.Widget, AppMode.Full],
-  [WalletType.NoUI]: [AppMode.NoUI],
 }
 
 export interface ChainConfigInput {
@@ -201,6 +191,7 @@ export interface ConstructorParams {
   theme: Theme
   position: Position
   setWindowProvider: boolean
+  appMode?: AppMode
 }
 
 type RequestArguments = {
