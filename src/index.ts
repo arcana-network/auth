@@ -26,7 +26,6 @@ import {
   Theme,
   ThemeConfig,
   UserInfo,
-  WalletType,
   ChainConfigInput,
 } from './typings'
 import { getAppInfo, getImageUrls } from './appInfo'
@@ -84,8 +83,6 @@ class AuthProvider {
     if (this.initStatus === InitStatus.CREATED) {
       this.initStatus = InitStatus.RUNNING
 
-      const appMode = this.params.alwaysVisible ? AppMode.Full : AppMode.Widget
-
       if (this.iframeWrapper) {
         return this
       }
@@ -99,7 +96,10 @@ class AuthProvider {
         position: this.params.position,
       })
 
-      this.iframeWrapper.setWalletType(WalletType.UI, appMode)
+      this.iframeWrapper.setWalletType(
+        this.params.appMode ??
+          (this.params.alwaysVisible ? AppMode.Full : AppMode.Widget)
+      )
 
       await this._provider.init(this.iframeWrapper, {
         loginWithLink: this.loginWithLink,
@@ -351,7 +351,7 @@ class AuthProvider {
     return await promise
   }
 
-  private async resolveInitPromises() {
+  private resolveInitPromises() {
     const list = this.initPromises
     this.initPromises = []
 

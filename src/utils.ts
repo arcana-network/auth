@@ -1,8 +1,5 @@
 import {
-  AppMode,
   ConstructorParams,
-  ModeWalletTypeRelation,
-  WalletType,
   WalletPosition,
   Position,
   Theme,
@@ -18,56 +15,6 @@ const fallbackLogo = {
 
 const getFallbackImage = (t: Theme) => {
   return fallbackLogo[t]
-}
-
-const fetchWalletType = async (rpcUrl: string, address: string) => {
-  const params = {
-    method: 'eth_call',
-    params: [
-      {
-        to: addHexPrefix(address),
-        data: '0x5b648b0a',
-      },
-      'latest',
-    ],
-    id: 44,
-    jsonrpc: '2.0',
-  }
-
-  const response = await fetch(rpcUrl, {
-    method: 'POST',
-    body: JSON.stringify(params),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-  if (response.status >= 400) {
-    throw new Error('Could not fetch wallet type')
-  }
-  try {
-    const data: { jsonrpc: string; id: number; result: string } =
-      await response.json()
-    if (data.result == '0x') {
-      throw new Error('Invalid app address')
-    }
-    const walletType = parseInt(data.result, 16)
-    return walletType
-  } catch (e) {
-    getLogger('fetchWalletType').error('error fetch wallet type', e)
-    throw new Error('Could not fetch wallet type')
-  }
-}
-
-const getWalletType = async (appId: string, gatewayUrl: string) => {
-  const arcanaRpcUrl = await getArcanaRpc(gatewayUrl)
-
-  try {
-    const walletType = await fetchWalletType(arcanaRpcUrl, appId)
-    return walletType
-  } catch (e) {
-    getLogger('WalletProvider').error('getWalletType', e)
-    throw new Error('Error occurred during getting wallet type')
-  }
 }
 
 const getArcanaRpc = async (gatewayUrl: string) => {
@@ -137,22 +84,6 @@ const getWalletPosition = (
   return {
     bottom: bottomDistance,
     [position]: isWidgetBubble ? '0' : positionDistance,
-  }
-}
-
-function verifyMode(w: WalletType, a: AppMode | undefined): AppMode {
-  const allowedModes = ModeWalletTypeRelation[w]
-  if (a !== undefined) {
-    if (!allowedModes.includes(a)) {
-      getLogger('WalletProvider').warn('verifyMode-mismatch', {
-        a,
-        allowedModes,
-      })
-      return allowedModes[0]
-    }
-    return a
-  } else {
-    return allowedModes[0]
   }
 }
 
@@ -333,11 +264,9 @@ export function encodeJSON<T>(options: T): string {
 export {
   constructLoginUrl,
   createDomElement,
-  getWalletType,
   setWalletPosition,
   getUniqueId,
   getWalletPosition,
-  verifyMode,
   preLoadIframe,
   getErrorReporter,
   validateAppAddress,

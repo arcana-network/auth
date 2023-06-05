@@ -1,14 +1,13 @@
 import type {
-  IframeWrapperParams,
-  AppMode,
-  WalletType,
-  ChildMethods,
-  ParentMethods,
   BearerAuthentication,
+  ChildMethods,
   FirebaseBearer,
+  IframeWrapperParams,
+  ParentMethods,
 } from './typings'
-import { connectToChild, Connection } from 'penpal'
-import { createDomElement, verifyMode } from './utils'
+import { AppMode } from './typings'
+import { Connection, connectToChild } from 'penpal'
+import { createDomElement } from './utils'
 import { WarningDupeIframe } from './errors'
 import * as styles from './styles'
 
@@ -54,8 +53,8 @@ export default class IframeWrapper {
     )
   }
 
-  public setWalletType(walletType: WalletType, appMode: AppMode | undefined) {
-    this.appMode = verifyMode(walletType, appMode)
+  public setWalletType(appMode: AppMode | undefined) {
+    this.appMode = appMode ?? AppMode.Full
     this.initWalletUI()
   }
 
