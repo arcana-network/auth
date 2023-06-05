@@ -92,6 +92,13 @@ export interface UserInfo {
   publicKey: string
 }
 export type Logins = 'google' | 'github' | 'discord' | 'twitch' | 'twitter'
+export enum BearerAuthentication {
+  firebase = 'firebase',
+}
+export type FirebaseBearer = {
+  uid: string
+  token: string
+}
 
 export interface ChildMethods {
   isLoggedIn: () => Promise<boolean>
@@ -99,6 +106,10 @@ export interface ChildMethods {
   getAvailableLogins: () => Promise<Logins[]>
   triggerSocialLogin: (t: string, url: string) => Promise<string>
   triggerPasswordlessLogin: (email: string, url: string) => Promise<string>
+  triggerBearerLogin: (
+    type: BearerAuthentication,
+    data: FirebaseBearer
+  ) => Promise<boolean>
   sendRequest: (req: JsonRpcRequest<unknown>) => Promise<void>
   getPublicKey: (email: string, verifier: string) => Promise<string>
   triggerLogout: (isV2?: boolean) => Promise<void>
