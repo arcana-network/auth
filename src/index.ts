@@ -213,7 +213,7 @@ class AuthProvider {
   }
 
   /**
-   * A function to get user info for logged in user
+   * A function to get user info for the logged-in user
    * @returns available user info
    */
   public getUser(): Promise<UserInfo> {
@@ -224,7 +224,7 @@ class AuthProvider {
   }
 
   /**
-   * A function to determine whether user is logged in
+   * A function to determine whether the user is logged in
    */
   public async isLoggedIn() {
     if (this.initStatus === InitStatus.DONE) {
@@ -235,7 +235,7 @@ class AuthProvider {
   }
 
   /**
-   * A function to logout the user
+   * A function to log out the user
    */
   public logout() {
     if (this.initStatus === InitStatus.DONE) {
@@ -245,7 +245,10 @@ class AuthProvider {
   }
 
   /**
-   * A function to request public key of different users
+   * A function to request public key of other users
+   *
+   * **NOTE**: Currently does not work by default for most applications.
+   *  MFA availability (which is enabled by default) has to be disabled for this to work.
    */
   public async getPublicKey(email: string) {
     if (this.initStatus === InitStatus.DONE) {
