@@ -55,6 +55,7 @@ export interface IframeWrapperParams {
   iframeUrl: string
   appConfig: AppConfig
   position: Position
+  standaloneMode?: { mode: 1 | 2; handler: (t: string, val: unknown) => void }
 }
 
 export interface ThemeConfig {
@@ -114,6 +115,7 @@ export interface ChildMethods {
   getPublicKey: (email: string, verifier: string) => Promise<string>
   triggerLogout: (isV2?: boolean) => Promise<void>
   getUserInfo: () => Promise<UserInfo>
+  initSocialLogin(kind: string): Promise<string>
   initPasswordlessLogin: (email: string) => {
     sessionId: string
     setToken: string
@@ -123,6 +125,7 @@ export interface ChildMethods {
 
 export interface ParentMethods {
   onEvent: (t: string, val: unknown) => void
+  uiEvent: (t: string, val: unknown) => void
   onMethodResponse: (method: string, response: JsonRpcResponse<unknown>) => void
   sendPendingRequestCount: (count: number) => void
   getAppConfig: () => AppConfig

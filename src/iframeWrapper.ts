@@ -7,7 +7,7 @@ import type {
 } from './typings'
 import { AppMode } from './typings'
 import { Connection, connectToChild } from 'penpal'
-import { createDomElement } from './utils'
+import { createDomElement, encodeJSON } from './utils'
 import { WarningDupeIframe } from './errors'
 import * as styles from './styles'
 
@@ -24,12 +24,19 @@ export default class IframeWrapper {
     this.checkSecureOrigin()
   }
 
-  public async setConnectionMethods(methods: ParentMethods) {
+  public async setConnectionMethods(methods: Omit<ParentMethods, 'uiEvent'>) {
     try {
       if (!this.iframeCommunication) {
         this.iframeCommunication = connectToChild<ChildMethods>({
           iframe: this.widgetIframe,
-          methods: { ...methods },
+          methods: {
+            ...methods,
+            uiEvent: (ev: string, data: unknown) => {
+              if (this.params.standaloneMode?.handler) {
+                this.params.standaloneMode.handler(ev, data)
+              }
+            },
+          },
           childOrigin: this.params.iframeUrl,
         })
         await this.iframeCommunication.promise
@@ -80,8 +87,18 @@ export default class IframeWrapper {
   }
 
   setIframeStyle = (styles: CSSStyleDeclaration) => {
-    for (const prop in styles) {
-      this.widgetIframe.style[prop] = styles[prop]
+    if (this.params.standaloneMode?.mode == 1) {
+      this.widgetIframe.style.height = styles['height']
+        ? styles['height']
+        : '80vh'
+      this.widgetIframe.style.maxWidth = '100%'
+      this.widgetIframe.style.width = '430px'
+      this.widgetIframe.style.bottom = '0'
+      this.widgetIframe.style.right = '0'
+    } else {
+      for (const prop in styles) {
+        this.widgetIframe.style[prop] = styles[prop]
+      }
     }
   }
 
@@ -94,7 +111,13 @@ export default class IframeWrapper {
   }
 
   private getIframeUrl() {
+    const hash = encodeJSON({
+      standaloneMode: this.params.standaloneMode?.mode
+        ? this.params.standaloneMode?.mode
+        : 0,
+    })
     const u = new URL(`/${this.params.appId}/v2/login`, this.params.iframeUrl)
+    u.hash = hash
     return u.toString()
   }
 
