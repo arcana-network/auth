@@ -9,6 +9,7 @@
   "unpkg": "dist/standalone/auth.umd.js",
   "exports": {
     ".": {
+      "types": "./types/index.d.ts",
       "require": "./dist/standalone/auth.esm.js",
       "import": "./dist/standalone/auth.esm.js"
     }
