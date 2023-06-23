@@ -138,6 +138,9 @@ export interface ParentMethods {
   setIframeStyle: (styles: CSSStyleDeclaration) => void
   getWalletPosition: () => Position
   getSDKVersion: () => SDKVersion
+  getSessionID: () => string | null
+  setSessionID: (id: string) => void
+  notifyNoStorage: () => void
 }
 
 export interface TypedDataMessage {

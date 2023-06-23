@@ -14,6 +14,7 @@ import {
   AppConfig,
   AppMode,
   BearerAuthentication,
+  ChainConfigInput,
   ConstructorParams,
   EthereumProvider,
   FirebaseBearer,
@@ -24,7 +25,6 @@ import {
   Theme,
   ThemeConfig,
   UserInfo,
-  ChainConfigInput,
 } from './typings'
 import { getAppInfo, getImageUrls } from './appInfo'
 import { ArcanaAuthError, ErrorNotInitialized } from './errors'

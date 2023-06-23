@@ -87,6 +87,9 @@ export class ArcanaProvider
       triggerPasswordlessLogin: loginFuncs.loginWithLink,
       getPopupState: () => this.iframe.getState(),
       setIframeStyle: this.iframe.setIframeStyle,
+      getSessionID: this.iframe.getSessionID,
+      setSessionID: this.iframe.setSessionID,
+      notifyNoStorage: this.iframe.notifyNoStorage,
       getSDKVersion: () => 'v3',
     })
     this.communication = communication

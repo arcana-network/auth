@@ -38,6 +38,7 @@ export default class IframeWrapper {
             },
           },
           childOrigin: this.params.iframeUrl,
+          debug: true,
         })
         await this.iframeCommunication.promise
       }
@@ -58,6 +59,25 @@ export default class IframeWrapper {
       type,
       data
     )
+  }
+
+  public getSessionID = () => {
+    return window.localStorage.getItem(
+      `arcana-auth-${this.params.iframeUrl}-sessionID`
+    )
+  }
+
+  public setSessionID = (sessionID: string) => {
+    window.localStorage.setItem(
+      `arcana-auth-${this.params.iframeUrl}-sessionID`,
+      sessionID
+    )
+  }
+
+  public notifyNoStorage = () => {
+    if (this.getSessionID() != null) {
+      console.log('Session ID != null!')
+    }
   }
 
   public setWalletType(appMode: AppMode | undefined) {
