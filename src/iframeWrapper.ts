@@ -38,7 +38,6 @@ export default class IframeWrapper {
             },
           },
           childOrigin: this.params.iframeUrl,
-          debug: true,
         })
         await this.iframeCommunication.promise
       }
