@@ -140,7 +140,7 @@ export interface ParentMethods {
   getSDKVersion: () => SDKVersion
   getSessionID: () => string | null
   setSessionID: (id: string) => void
-  notifyNoStorage: () => void
+  notifyNoStorage: (arg: { reconnectionURL: string }) => void
 }
 
 export interface TypedDataMessage {

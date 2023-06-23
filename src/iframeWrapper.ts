@@ -74,9 +74,16 @@ export default class IframeWrapper {
     )
   }
 
-  public notifyNoStorage = () => {
-    if (this.getSessionID() != null) {
-      console.log('Session ID != null!')
+  public notifyNoStorage = ({
+    reconnectionURL,
+  }: {
+    reconnectionURL: string
+  }) => {
+    const sid = this.getSessionID()
+    if (sid != null) {
+      const u = new URL(reconnectionURL)
+      u.searchParams.set('sessionID', sid)
+      window.open(u.href)
     }
   }
 
