@@ -1,14 +1,10 @@
 import {
-  AppMode,
   ConstructorParams,
-  ModeWalletTypeRelation,
-  WalletType,
   WalletPosition,
   Position,
   Theme,
   Network,
 } from './typings'
-import { getLogger } from './logger'
 
 const fallbackLogo = {
   light:
@@ -20,72 +16,9 @@ const getFallbackImage = (t: Theme) => {
   return fallbackLogo[t]
 }
 
-const fetchWalletType = async (rpcUrl: string, address: string) => {
-  const params = {
-    method: 'eth_call',
-    params: [
-      {
-        to: addHexPrefix(address),
-        data: '0x5b648b0a',
-      },
-      'latest',
-    ],
-    id: 44,
-    jsonrpc: '2.0',
-  }
-
-  const response = await fetch(rpcUrl, {
-    method: 'POST',
-    body: JSON.stringify(params),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-  if (response.status >= 400) {
-    throw new Error('Could not fetch wallet type')
-  }
-  try {
-    const data: { jsonrpc: string; id: number; result: string } =
-      await response.json()
-    if (data.result == '0x') {
-      throw new Error('Invalid app address')
-    }
-    const walletType = parseInt(data.result, 16)
-    return walletType
-  } catch (e) {
-    getLogger('fetchWalletType').error('error fetch wallet type', e)
-    throw new Error('Could not fetch wallet type')
-  }
-}
-
-const getWalletType = async (appId: string, gatewayUrl: string) => {
-  const arcanaRpcUrl = await getArcanaRpc(gatewayUrl)
-
-  try {
-    const walletType = await fetchWalletType(arcanaRpcUrl, appId)
-    return walletType
-  } catch (e) {
-    getLogger('WalletProvider').error('getWalletType', e)
-    throw new Error('Error occurred during getting wallet type')
-  }
-}
-
-const getArcanaRpc = async (gatewayUrl: string) => {
-  try {
-    const u = new URL('/api/v1/get-config/', gatewayUrl)
-    const res = await fetch(u.toString())
-    if (res.status < 400) {
-      const json: { RPC_URL: string } = await res.json()
-      return json.RPC_URL
-    } else {
-      const err = await res.text()
-      getLogger('AuthProvider').error('getArcanaRpc', { err })
-      throw new Error('Error during fetching config from gateway url')
-    }
-  } catch (e) {
-    getLogger('WalletProvider').error('getConfig', e)
-    throw new Error('Error occurred during getting arcana RPC url')
-  }
+const ICONS = {
+  success:
+    "data:image/svg+xml,%3Csvg width='151' height='147' viewBox='0 0 151 147' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg opacity='0.419035'%3E%3Cpath d='M94.3585 4.39385C94.3585 6.8206 92.3736 8.78798 89.9253 8.78798C87.477 8.78798 85.4922 6.8206 85.4922 4.39385C85.4922 1.96723 87.477 0 89.9253 0C92.3736 0 94.3585 1.96723 94.3585 4.39385Z' fill='%233CA6FA'/%3E%3C/g%3E%3Cg opacity='0.796078'%3E%3Cpath d='M59.4441 15.3287L56.8114 16.8352C56.3347 17.108 55.7253 16.9461 55.4501 16.4737L50.6962 8.31243C50.421 7.84009 50.5844 7.23603 51.0609 6.96337L53.6938 5.45667C54.1703 5.184 54.7797 5.34582 55.055 5.81815L59.8088 13.9795C60.0841 14.452 59.9207 15.0559 59.4441 15.3287Z' fill='%233CA6FA'/%3E%3C/g%3E%3Cg opacity='0.796078'%3E%3Cpath d='M15.0339 32.3637L15.6261 32.5628C16.2975 32.7886 17.0381 32.6722 17.6065 32.2519L18.1077 31.8812C19.5388 30.8226 21.5735 31.8501 21.5507 33.6199L21.5427 34.2397C21.5336 34.9425 21.8739 35.6047 22.4528 36.0106L22.9635 36.3685C24.4215 37.3904 24.0642 39.6257 22.359 40.1512L21.7618 40.3352C21.0846 40.5438 20.5546 41.0694 20.3442 41.7405L20.1584 42.3325C19.6284 44.0226 17.3731 44.3766 16.342 42.9315L15.9807 42.4255C15.5713 41.8517 14.9032 41.5142 14.1942 41.5233L13.5688 41.5311C11.7833 41.5537 10.7467 39.5372 11.8147 38.1186L12.1888 37.6218C12.613 37.0586 12.7302 36.3245 12.5024 35.6589L12.3015 35.0719C11.7281 33.3957 13.3427 31.7954 15.0339 32.3637Z' fill='%233CA6FA'/%3E%3C/g%3E%3Cg opacity='0.796078'%3E%3Cpath d='M11.2466 63.5287L11.9116 66.4689C12.032 67.0012 11.6943 67.5295 11.1572 67.6487L1.87966 69.7101C1.34269 69.8293 0.809791 69.4946 0.689237 68.9623L0.0243071 66.0219C-0.0959554 65.4897 0.241739 64.9615 0.778708 64.8423L10.0564 62.7809C10.5933 62.6617 11.1262 62.9964 11.2466 63.5287Z' fill='%239DE000'/%3E%3C/g%3E%3Cg opacity='0.796078'%3E%3Cpath d='M20.6082 100.625C20.6082 103.052 18.6234 105.019 16.1752 105.019C13.7268 105.019 11.7422 103.052 11.7422 100.625C11.7422 98.1987 13.7268 96.2314 16.1752 96.2314C18.6234 96.2314 20.6082 98.1987 20.6082 100.625Z' fill='%23F23D3D'/%3E%3C/g%3E%3Cg opacity='0.796078'%3E%3Cpath d='M15.0339 122.725L15.6261 122.924C16.2975 123.15 17.0381 123.034 17.6065 122.613L18.1077 122.242C19.5388 121.184 21.5735 122.211 21.5507 123.981L21.5427 124.601C21.5336 125.304 21.8739 125.966 22.4528 126.372L22.9635 126.73C24.4215 127.752 24.0642 129.987 22.359 130.513L21.7618 130.697C21.0846 130.905 20.5546 131.431 20.3442 132.102L20.1584 132.694C19.6284 134.384 17.3731 134.738 16.342 133.293L15.9807 132.787C15.5713 132.213 14.9032 131.876 14.1942 131.885L13.5688 131.893C11.7833 131.915 10.7467 129.899 11.8147 128.48L12.1888 127.983C12.613 127.42 12.7302 126.686 12.5024 126.02L12.3015 125.433C11.7281 123.757 13.3427 122.157 15.0339 122.725Z' fill='%23FAEE3D'/%3E%3C/g%3E%3Cg opacity='0.796078'%3E%3Cpath d='M129.132 28.1704C127.789 26.435 128.205 23.8499 130.054 22.4436C131.903 21.0374 134.53 21.3082 135.873 23.0437C135.876 23.047 135.878 23.0503 135.881 23.0535' stroke='%23F23D3D' stroke-width='1.98137' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3Cg opacity='0.796078'%3E%3Cpath d='M140.862 52.2221L141.454 52.4212C142.126 52.647 142.866 52.5306 143.435 52.1103L143.936 51.7396C145.367 50.681 147.402 51.7085 147.379 53.4783L147.371 54.0981C147.362 54.8009 147.702 55.4631 148.281 55.869L148.792 56.2269C150.25 57.2488 149.893 59.4841 148.187 60.0096L147.59 60.1936C146.913 60.4022 146.383 60.9278 146.172 61.5989L145.986 62.1909C145.456 63.881 143.201 64.235 142.17 62.7899L141.809 62.2839C141.399 61.7101 140.732 61.3726 140.022 61.3817L139.397 61.3896C137.612 61.4121 136.575 59.3956 137.643 57.9771L138.017 57.4803C138.441 56.917 138.558 56.1829 138.33 55.5173L138.13 54.9303C137.556 53.2541 139.171 51.6538 140.862 52.2221Z' fill='%23FAEE3D'/%3E%3C/g%3E%3Cg opacity='0.796078'%3E%3Cpath d='M145.217 104.171C148.232 104.564 150.367 107.485 149.948 110.64C149.529 113.795 146.703 116.068 143.689 115.674C143.683 115.674 143.678 115.673 143.672 115.672' stroke='%23F23D3D' stroke-width='1.48603' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3Cg opacity='0.796078'%3E%3Cpath d='M135.718 141.235L133.085 142.742C132.608 143.014 131.999 142.852 131.724 142.38L126.97 134.219C126.694 133.746 126.858 133.142 127.334 132.87L129.967 131.363C130.444 131.09 131.053 131.252 131.328 131.724L136.082 139.886C136.357 140.358 136.194 140.962 135.718 141.235Z' fill='%233CA6FA'/%3E%3C/g%3E%3Cg opacity='0.796078'%3E%3Cpath d='M49.4302 146.001C47.5793 143.61 48.1523 140.048 50.6998 138.111C53.2472 136.174 56.8664 136.547 58.7173 138.938L58.7279 138.951' stroke='%233CA6FA' stroke-width='1.98137' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3Cpath d='M133.141 69.8273C133.141 98.8525 109.4 122.382 80.1137 122.382C50.8274 122.382 27.0859 98.8525 27.0859 69.8273C27.0859 40.802 50.8274 17.2725 80.1137 17.2725C109.4 17.2725 133.141 40.802 133.141 69.8273Z' fill='%239DE000'/%3E%3Cpath d='M56.6641 69.9175L72.2097 85.3247L103.481 54.332' stroke='white' stroke-width='5.7388' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A",
 }
 
 type elements =
@@ -137,22 +70,6 @@ const getWalletPosition = (
   return {
     bottom: bottomDistance,
     [position]: isWidgetBubble ? '0' : positionDistance,
-  }
-}
-
-function verifyMode(w: WalletType, a: AppMode | undefined): AppMode {
-  const allowedModes = ModeWalletTypeRelation[w]
-  if (a !== undefined) {
-    if (!allowedModes.includes(a)) {
-      getLogger('WalletProvider').warn('verifyMode-mismatch', {
-        a,
-        allowedModes,
-      })
-      return allowedModes[0]
-    }
-    return a
-  } else {
-    return allowedModes[0]
   }
 }
 
@@ -331,13 +248,11 @@ export function encodeJSON<T>(options: T): string {
 }
 
 export {
+  ICONS,
   constructLoginUrl,
   createDomElement,
-  getWalletType,
   setWalletPosition,
   getUniqueId,
-  getWalletPosition,
-  verifyMode,
   preLoadIframe,
   getErrorReporter,
   validateAppAddress,

@@ -78,6 +78,10 @@
   font-weight: 400;
 }
 
+.xar-success__img {
+  max-width: 100px;
+}
+
 .xar-email-login__input {
   height: 45px;
   padding: 0 16px;
@@ -94,6 +98,8 @@
 .xar-social-container {
   display: flex;
   justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .xar-social-icon__wrapper {
@@ -101,10 +107,8 @@
   background: var(--fg);
   width: 42px;
   height: 42px;
-  border-radius: 25px;
+  border-radius: 50%;
   align-items: center;
-  margin-left: 10px;
-  margin-right: 10px;
 }
 
 .xar-social-icon__wrapper:hover {
@@ -167,7 +171,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 10px;
+  margin-top: 1rem;
 }
 
 .xar-footer-text {

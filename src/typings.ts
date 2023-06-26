@@ -55,6 +55,7 @@ export interface IframeWrapperParams {
   iframeUrl: string
   appConfig: AppConfig
   position: Position
+  standaloneMode?: { mode: 1 | 2; handler: (t: string, val: unknown) => void }
 }
 
 export interface ThemeConfig {
@@ -92,6 +93,13 @@ export interface UserInfo {
   publicKey: string
 }
 export type Logins = 'google' | 'github' | 'discord' | 'twitch' | 'twitter'
+export enum BearerAuthentication {
+  firebase = 'firebase',
+}
+export type FirebaseBearer = {
+  uid: string
+  token: string
+}
 
 export interface ChildMethods {
   isLoggedIn: () => Promise<boolean>
@@ -99,10 +107,15 @@ export interface ChildMethods {
   getAvailableLogins: () => Promise<Logins[]>
   triggerSocialLogin: (t: string, url: string) => Promise<string>
   triggerPasswordlessLogin: (email: string, url: string) => Promise<string>
+  triggerBearerLogin: (
+    type: BearerAuthentication,
+    data: FirebaseBearer
+  ) => Promise<boolean>
   sendRequest: (req: JsonRpcRequest<unknown>) => Promise<void>
   getPublicKey: (email: string, verifier: string) => Promise<string>
   triggerLogout: (isV2?: boolean) => Promise<void>
   getUserInfo: () => Promise<UserInfo>
+  initSocialLogin(kind: string): Promise<string>
   initPasswordlessLogin: (email: string) => {
     sessionId: string
     setToken: string
@@ -112,6 +125,7 @@ export interface ChildMethods {
 
 export interface ParentMethods {
   onEvent: (t: string, val: unknown) => void
+  uiEvent: (t: string, val: unknown) => void
   onMethodResponse: (method: string, response: JsonRpcResponse<unknown>) => void
   sendPendingRequestCount: (count: number) => void
   getAppConfig: () => AppConfig
@@ -160,20 +174,10 @@ export interface RpcConfig {
   }
 }
 
-export enum WalletType {
-  NoUI = 0,
-  UI = 1,
-}
-
 export enum AppMode {
   NoUI = 0,
   Widget = 1,
   Full = 2,
-}
-
-export const ModeWalletTypeRelation = {
-  [WalletType.UI]: [AppMode.Widget, AppMode.Full],
-  [WalletType.NoUI]: [AppMode.NoUI],
 }
 
 export interface ChainConfigInput {
@@ -190,6 +194,7 @@ export interface ConstructorParams {
   theme: Theme
   position: Position
   setWindowProvider: boolean
+  appMode?: AppMode
 }
 
 type RequestArguments = {

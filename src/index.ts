@@ -1,39 +1,36 @@
 import { ArcanaProvider } from './provider'
 import IframeWrapper from './iframeWrapper'
 import {
-  getErrorReporter,
-  constructLoginUrl,
-  getCurrentUrl,
   getConstructorParams,
-  removeHexPrefix,
-  preLoadIframe,
-  validateAppAddress,
-  isClientId,
+  getErrorReporter,
   getParamsFromClientId,
+  isClientId,
+  preLoadIframe,
+  removeHexPrefix,
+  validateAppAddress,
 } from './utils'
 import { getNetworkConfig } from './config'
 import {
   AppConfig,
   AppMode,
+  BearerAuthentication,
   ConstructorParams,
+  EthereumProvider,
+  FirebaseBearer,
+  InitStatus,
+  Logins,
   NetworkConfig,
   Position,
   Theme,
   ThemeConfig,
   UserInfo,
-  InitStatus,
-  Logins,
-  EthereumProvider,
-  WalletType,
   ChainConfigInput,
 } from './typings'
 import { getAppInfo, getImageUrls } from './appInfo'
-import { ErrorNotInitialized, ArcanaAuthError } from './errors'
+import { ArcanaAuthError, ErrorNotInitialized } from './errors'
 import { LOG_LEVEL, setExceptionReporter, setLogLevel } from './logger'
 import Popup from './popup'
 import { ModalController } from './ui/modalController'
-
-type ExtraParams = 'sessionId' | 'setToken' | 'email'
 
 class AuthProvider {
   public appId: string
@@ -46,6 +43,10 @@ class AuthProvider {
   private initPromises: ((value: AuthProvider) => void)[] = []
   private _provider: ArcanaProvider
   private connectCtrl: ModalController
+  private _standaloneMode: {
+    mode: 1 | 2
+    handler: (...args: any) => void | undefined
+  }
   constructor(clientId: string, p?: Partial<ConstructorParams>) {
     let network = p?.network
     let appAddress = clientId
@@ -82,8 +83,6 @@ class AuthProvider {
     if (this.initStatus === InitStatus.CREATED) {
       this.initStatus = InitStatus.RUNNING
 
-      const appMode = this.params.alwaysVisible ? AppMode.Full : AppMode.Widget
-
       if (this.iframeWrapper) {
         return this
       }
@@ -95,9 +94,13 @@ class AuthProvider {
         iframeUrl: this.networkConfig.walletUrl,
         appConfig: this.appConfig,
         position: this.params.position,
+        standaloneMode: this._standaloneMode,
       })
 
-      this.iframeWrapper.setWalletType(WalletType.UI, appMode)
+      this.iframeWrapper.setWalletType(
+        this.params.appMode ??
+          (this.params.alwaysVisible ? AppMode.Full : AppMode.Widget)
+      )
 
       await this._provider.init(this.iframeWrapper, {
         loginWithLink: this.loginWithLink,
@@ -175,7 +178,7 @@ class AuthProvider {
       if (!(await this._provider.isLoginAvailable(loginType))) {
         throw new Error(`${loginType} login is not available`)
       }
-      const url = this.getLoginUrl(loginType)
+      const url = await this._provider.initSocialLogin(loginType)
       return this.beginLogin(url)
     }
     throw ErrorNotInitialized
@@ -184,16 +187,31 @@ class AuthProvider {
   /**
    * A function to trigger passwordless login in the wallet
    */
-  loginWithLink = async (email: string): Promise<EthereumProvider> => {
+  loginWithLink = async (
+    email: string,
+    emailSentHook?: () => void
+  ): Promise<EthereumProvider> => {
     if (this.initStatus === InitStatus.DONE) {
       if (await this.isLoggedIn()) {
         return this._provider
       }
-      const params = await this._provider.initPasswordlessLogin(email)
-      const url = this.getLoginUrl('passwordless', { ...params, email })
-      return this.beginLogin(url)
+      await this._provider.initPasswordlessLogin(email)
+      if (emailSentHook) {
+        emailSentHook()
+      }
+      return await this.waitForConnect()
     }
     throw ErrorNotInitialized
+  }
+
+  loginWithBearer = async (
+    type: BearerAuthentication,
+    data: FirebaseBearer
+  ): Promise<boolean> => {
+    if (this.initStatus !== InitStatus.DONE) {
+      throw ErrorNotInitialized
+    }
+    return await this.iframeWrapper.triggerBearerAuthentication(type, data)
   }
 
   get connected() {
@@ -201,7 +219,7 @@ class AuthProvider {
   }
 
   /**
-   * A function to get user info for logged in user
+   * A function to get user info for the logged-in user
    * @returns available user info
    */
   public getUser(): Promise<UserInfo> {
@@ -212,7 +230,7 @@ class AuthProvider {
   }
 
   /**
-   * A function to determine whether user is logged in
+   * A function to determine whether the user is logged in
    */
   public async isLoggedIn() {
     if (this.initStatus === InitStatus.DONE) {
@@ -223,7 +241,7 @@ class AuthProvider {
   }
 
   /**
-   * A function to logout the user
+   * A function to log out the user
    */
   public logout() {
     if (this.initStatus === InitStatus.DONE) {
@@ -233,7 +251,10 @@ class AuthProvider {
   }
 
   /**
-   * A function to request public key of different users
+   * A function to request public key of other users
+   *
+   * **NOTE**: Currently does not work by default for most applications.
+   *  MFA availability (which is enabled by default) has to be disabled for this to work.
    */
   public async getPublicKey(email: string) {
     if (this.initStatus === InitStatus.DONE) {
@@ -270,19 +291,6 @@ class AuthProvider {
   }
 
   /* Private functions */
-
-  private getLoginUrl(
-    loginType: string,
-    params?: { [k in ExtraParams]: string }
-  ) {
-    return constructLoginUrl({
-      loginType,
-      appId: this.appId,
-      authUrl: this.networkConfig.authUrl,
-      parentUrl: getCurrentUrl(),
-      ...params,
-    })
-  }
   /**
    * @internal
    */
@@ -339,7 +347,7 @@ class AuthProvider {
     return await promise
   }
 
-  private async resolveInitPromises() {
+  private resolveInitPromises() {
     const list = this.initPromises
     this.initPromises = []
 
@@ -390,12 +398,23 @@ class AuthProvider {
       }
     }
   }
+
+  private standaloneMode(
+    mode: 1 | 2,
+    handler: (eventName: string, data: any) => void
+  ) {
+    this._standaloneMode = {
+      mode,
+      handler,
+    }
+  }
 }
 
 export {
   AuthProvider,
   ConstructorParams,
   EthereumProvider,
+  BearerAuthentication,
   AppConfig,
   Theme,
   Position,

@@ -9,7 +9,7 @@ const SOCIAL_LOGO: { [k: string]: string } = {
   discord: `${BASE_URL}/discord.png`,
   aws: `${BASE_URL}/aws.png`,
   aws_light: `${BASE_URL}/aws_light.png`,
-  steam: `${BASE_URL}/steam.svg`,
+  steam: `${BASE_URL}/steam.png`,
 }
 
 function getSocialLogo(provider: string, theme: 'light' | 'dark') {
