@@ -256,7 +256,7 @@ class AuthProvider {
    * **NOTE**: Currently does not work by default for most applications.
    *  MFA availability (which is enabled by default) has to be disabled for this to work.
    */
-  public async getPublicKey(email: string) {
+  public async getPublicKey(email: string, verifier: Logins = 'google') {
     if (this.initStatus === InitStatus.DONE) {
       if (!email || email === '') {
         throw new ArcanaAuthError(
@@ -264,7 +264,7 @@ class AuthProvider {
           `Email is required in getPublicKey, got ${email}`
         )
       }
-      return await this._provider.getPublicKey(email, 'google')
+      return await this._provider.getPublicKey(email, verifier)
     }
     throw ErrorNotInitialized
   }
