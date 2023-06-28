@@ -256,7 +256,7 @@ class AuthProvider {
    * **NOTE**: Currently does not work by default for most applications.
    *  MFA availability (which is enabled by default) has to be disabled for this to work.
    */
-  public async getPublicKey(verifier: Logins, email: string) {
+  public async getPublicKey(email: string, verifier: Logins = 'google') {
     if (this.initStatus === InitStatus.DONE) {
       if (!email || email === '') {
         throw new ArcanaAuthError(
