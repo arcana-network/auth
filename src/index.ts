@@ -290,6 +290,44 @@ class AuthProvider {
     throw ErrorNotInitialized
   }
 
+  /**
+   * A function to to be called before trying to .reconnect()
+   */
+  public canReconnect() {
+    const session = this.iframeWrapper.getSessionID()
+    if (!session) {
+      return false
+    }
+
+    if (session.exp < Date.now()) {
+      return false
+    }
+
+    return true
+  }
+
+  /**
+   * A function to try to reconnect to last login session.
+   * Should be called on event of click function as it opens a popup.
+   */
+  public async reconnect() {
+    const session = this.iframeWrapper.getSessionID()
+    if (session) {
+      if (session.exp < Date.now()) {
+        throw new Error('cannot reconnect, session expired')
+      }
+      const u = new URL(
+        `/v1/reconnect/${this.appId}`,
+        this.networkConfig.authUrl
+      )
+      u.searchParams.set('sessionID', session.id)
+      const popup = new Popup(u.toString())
+      await popup.open()
+      return
+    }
+    throw new Error('cannot reconnect, no sessionID found')
+  }
+
   /* Private functions */
   /**
    * @internal

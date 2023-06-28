@@ -139,8 +139,7 @@ export interface ParentMethods {
   getWalletPosition: () => Position
   getSDKVersion: () => SDKVersion
   getSessionID: () => string | null
-  setSessionID: (id: string) => void
-  notifyNoStorage: (arg: { reconnectionURL: string }) => void
+  setSessionID: (id: string, exp: number) => void
 }
 
 export interface TypedDataMessage {
