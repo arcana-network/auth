@@ -1,11 +1,11 @@
 import {
-  JsonRpcId,
-  JsonRpcRequest,
-  JsonRpcError,
-  JsonRpcResponse,
+  ChainConfigInput,
   ChildMethods,
   EthereumProvider,
-  ChainConfigInput,
+  JsonRpcError,
+  JsonRpcId,
+  JsonRpcRequest,
+  JsonRpcResponse,
 } from './typings'
 import { Connection } from 'penpal'
 import { ethErrors } from 'eth-rpc-errors'
@@ -129,8 +129,7 @@ export class ArcanaProvider
 
   public async getPublicKey(email: string, verifier: string) {
     const c = await this.getCommunication('getPublicKey')
-    const pk = await c.getPublicKey(email, verifier)
-    return pk
+    return c.getPublicKey(email, verifier)
   }
 
   public async getAvailableLogins() {
