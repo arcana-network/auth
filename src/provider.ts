@@ -89,7 +89,6 @@ export class ArcanaProvider
       setIframeStyle: this.iframe.setIframeStyle,
       getSessionID: this.iframe.getSessionID,
       setSessionID: this.iframe.setSessionID,
-      notifyNoStorage: this.iframe.notifyNoStorage,
       getSDKVersion: () => 'v3',
     })
     this.communication = communication
@@ -128,6 +127,12 @@ export class ArcanaProvider
     }
     const info = await c.getUserInfo()
     return info
+  }
+
+  public async getReconnectionUrl() {
+    const c = await this.getCommunication('getReconnectionUrl')
+    const url = await c.getReconnectionUrl()
+    return url
   }
 
   public async getPublicKey(email: string, verifier: string) {

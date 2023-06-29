@@ -121,6 +121,7 @@ export interface ChildMethods {
     setToken: string
   }
   expandWallet: () => Promise<void>
+  getReconnectionUrl: () => Promise<string>
 }
 
 export interface ParentMethods {
@@ -139,8 +140,7 @@ export interface ParentMethods {
   getWalletPosition: () => Position
   getSDKVersion: () => SDKVersion
   getSessionID: () => string | null
-  setSessionID: (id: string) => void
-  notifyNoStorage: (arg: { reconnectionURL: string }) => void
+  setSessionID: (id: string, exp: number) => void
 }
 
 export interface TypedDataMessage {

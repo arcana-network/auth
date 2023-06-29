@@ -61,29 +61,20 @@ export default class IframeWrapper {
   }
 
   public getSessionID = () => {
-    return window.localStorage.getItem(
+    const val = window.localStorage.getItem(
       `arcana-auth-${this.params.iframeUrl}-sessionID`
     )
+    if (val) {
+      return JSON.parse(val)
+    }
+    return null
   }
 
-  public setSessionID = (sessionID: string) => {
+  public setSessionID = (id: string, expiry: number) => {
     window.localStorage.setItem(
       `arcana-auth-${this.params.iframeUrl}-sessionID`,
-      sessionID
+      JSON.stringify({ id, expiry })
     )
-  }
-
-  public notifyNoStorage = ({
-    reconnectionURL,
-  }: {
-    reconnectionURL: string
-  }) => {
-    const sid = this.getSessionID()
-    if (sid != null) {
-      const u = new URL(reconnectionURL)
-      u.searchParams.set('sessionID', sid)
-      window.open(u.href)
-    }
   }
 
   public setWalletType(appMode: AppMode | undefined) {
