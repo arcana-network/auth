@@ -316,16 +316,14 @@ class AuthProvider {
       if (session.exp < Date.now()) {
         throw new Error('cannot reconnect, session expired')
       }
-      const u = new URL(
-        `/v1/reconnect/${this.appId}`,
-        this.networkConfig.authUrl
-      )
+      const u = new URL(await this._provider.getReconnectionUrl())
       u.searchParams.set('sessionID', session.id)
+
       const popup = new Popup(u.toString())
       await popup.open()
       return
     }
-    throw new Error('cannot reconnect, no sessionID found')
+    throw new Error('cannot reconnect, no session found')
   }
 
   /* Private functions */

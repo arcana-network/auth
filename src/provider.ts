@@ -129,6 +129,12 @@ export class ArcanaProvider
     return info
   }
 
+  public async getReconnectionUrl() {
+    const c = await this.getCommunication('getReconnectionUrl')
+    const url = await c.getReconnectionUrl()
+    return url
+  }
+
   public async getPublicKey(email: string, verifier: string) {
     const c = await this.getCommunication('getPublicKey')
     const pk = await c.getPublicKey(email, verifier)
