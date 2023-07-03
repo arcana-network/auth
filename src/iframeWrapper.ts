@@ -60,6 +60,23 @@ export default class IframeWrapper {
     )
   }
 
+  public getSessionID = () => {
+    const val = window.localStorage.getItem(
+      `arcana-auth-${this.params.iframeUrl}-sessionID`
+    )
+    if (val) {
+      return JSON.parse(val)
+    }
+    return null
+  }
+
+  public setSessionID = (id: string, expiry: number) => {
+    window.localStorage.setItem(
+      `arcana-auth-${this.params.iframeUrl}-sessionID`,
+      JSON.stringify({ id, expiry })
+    )
+  }
+
   public setWalletType(appMode: AppMode | undefined) {
     this.appMode = appMode ?? AppMode.Full
     this.initWalletUI()

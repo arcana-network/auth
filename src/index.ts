@@ -14,6 +14,7 @@ import {
   AppConfig,
   AppMode,
   BearerAuthentication,
+  ChainConfigInput,
   ConstructorParams,
   EthereumProvider,
   FirebaseBearer,
@@ -24,7 +25,6 @@ import {
   Theme,
   ThemeConfig,
   UserInfo,
-  ChainConfigInput,
 } from './typings'
 import { getAppInfo, getImageUrls } from './appInfo'
 import { ArcanaAuthError, ErrorNotInitialized } from './errors'
@@ -288,6 +288,42 @@ class AuthProvider {
       return this._provider
     }
     throw ErrorNotInitialized
+  }
+
+  /**
+   * A function to to be called before trying to .reconnect()
+   */
+  public canReconnect() {
+    const session = this.iframeWrapper.getSessionID()
+    if (!session) {
+      return false
+    }
+
+    if (session.exp < Date.now()) {
+      return false
+    }
+
+    return true
+  }
+
+  /**
+   * A function to try to reconnect to last login session.
+   * Should be called on event of click function as it opens a popup.
+   */
+  public async reconnect() {
+    const session = this.iframeWrapper.getSessionID()
+    if (session) {
+      if (session.exp < Date.now()) {
+        throw new Error('cannot reconnect, session expired')
+      }
+      const u = new URL(await this._provider.getReconnectionUrl())
+      u.searchParams.set('sessionID', session.id)
+
+      const popup = new Popup(u.toString())
+      await popup.open()
+      return
+    }
+    throw new Error('cannot reconnect, no session found')
   }
 
   /* Private functions */

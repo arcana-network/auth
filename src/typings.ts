@@ -121,6 +121,7 @@ export interface ChildMethods {
     setToken: string
   }
   expandWallet: () => Promise<void>
+  getReconnectionUrl: () => Promise<string>
 }
 
 export interface ParentMethods {
@@ -138,6 +139,8 @@ export interface ParentMethods {
   setIframeStyle: (styles: CSSStyleDeclaration) => void
   getWalletPosition: () => Position
   getSDKVersion: () => SDKVersion
+  getSessionID: () => string | null
+  setSessionID: (id: string, exp: number) => void
 }
 
 export interface TypedDataMessage {
