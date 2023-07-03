@@ -76,6 +76,12 @@ export default class IframeWrapper {
       JSON.stringify({ id, expiry })
     )
   }
+  
+  public clearSessionID = () => {
+    window.localStorage.removeItem(
+      `arcana-auth-${this.params.iframeUrl}-sessionID`
+    )
+  }
 
   public setWalletType(appMode: AppMode | undefined) {
     this.appMode = appMode ?? AppMode.Full
@@ -88,6 +94,7 @@ export default class IframeWrapper {
 
   public handleDisconnect() {
     this.widgetIframe.src = this.getIframeUrl()
+    this.clearSessionID()
   }
 
   public onReceivingPendingRequestCount(count: number) {
