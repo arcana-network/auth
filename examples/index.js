@@ -84,6 +84,20 @@ async function showWallet() {
   await auth.showWallet()
 }
 
+async function reconnect() {
+  console.log('Requesting showWallet')
+  setRequest('reconnect')
+  await auth.reconnect()
+}
+
+async function canReconnect() {
+  console.log('Requesting canReconnect')
+  setRequest('can_reconnect')
+  const val = await auth.canReconnect()
+  console.log({ canReconnect: val })
+  setResult(val)
+}
+
 async function switchChain() {
   try {
     await provider.request({
