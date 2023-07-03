@@ -76,6 +76,7 @@ export default class IframeWrapper {
       JSON.stringify({ id, expiry })
     )
   }
+  
   public clearSessionID = () => {
     window.localStorage.removeItem(
       `arcana-auth-${this.params.iframeUrl}-sessionID`

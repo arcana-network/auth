@@ -1,6 +1,6 @@
 {
   "name": "@arcana/auth",
-  "version": "1.0.5-beta.3",
+  "version": "1.0.5",
   "description": "Arcana Auth",
   "main": "dist/standalone/auth.esm.js",
   "type": "module",
@@ -9,6 +9,7 @@
   "unpkg": "dist/standalone/auth.umd.js",
   "exports": {
     ".": {
+      "types": "./types/index.d.ts",
       "require": "./dist/standalone/auth.esm.js",
       "import": "./dist/standalone/auth.esm.js"
     }
