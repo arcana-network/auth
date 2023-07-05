@@ -6,32 +6,28 @@ import { JSXInternal } from 'preact/src/jsx'
 import ProgressOval from './loader'
 import './style.css'
 
-const Header = ({ mode, logo }: { mode: Theme; logo: string }) => {
+const Header = ({ logo }: { logo: string }) => {
   const [renderLogoContainer, setRenderLogoContainer] = useState(true)
   const removeLogoContainer = () => {
     setRenderLogoContainer(false)
   }
   return (
     <>
-      {renderLogoContainer && logo && (
+      {renderLogoContainer && logo ? (
         <div className="xar-header-logo__container">
-          <img
-            className="xar-header-logo"
-            src={logo}
-            alt="app-logo"
-            onError={removeLogoContainer}
-          />
+            <img
+              className="xar-header-logo"
+              src={logo}
+              alt="app-logo"
+              onError={removeLogoContainer}
+            />
         </div>
-      )}
-      <div className="xar-header-text">
-        <h1 className="xar-header-heading">Welcome</h1>
-        <p className="xar-header-subtext">
-          We’ll email you a login link for a password-free sign in.
-        </p>
-      </div>
+      ): <div className="xar-header-logo__empty-container"></div>}
     </>
   )
 }
+
+function maybeValidEmail (email: string) { return /^\S+@\S+\.\S+$/.test(email); }
 
 const EmailLogin = ({
   loginWithLink,
@@ -41,8 +37,10 @@ const EmailLogin = ({
   email: string
   setEmail: StateUpdater<string>
 } & Pick<ModalParams, 'loginWithLink'>) => {
+  const [disabled, setDisabled] = useState(true)
   const onInput: JSXInternal.GenericEventHandler<HTMLInputElement> = (e) => {
     setEmail(e.currentTarget.value)
+    setDisabled(!maybeValidEmail(e.currentTarget.value))
   }
 
   const clickHandler = async (
@@ -57,17 +55,15 @@ const EmailLogin = ({
   }
   return (
     <form className="xar-email-login">
-      <label className="xar-email-login__label" htmlFor="">
-        Email
-      </label>
       <input
         value={email}
         onInput={onInput}
         className="xar-email-login__input"
         type="text"
+        placeholder={'Enter your email'}
       />
-      <button onClick={clickHandler} className="xar-btn">
-        Get Link
+      <button disabled={disabled} onClick={clickHandler} className="xar-btn">
+        Get login link
       </button>
     </form>
   )

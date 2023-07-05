@@ -15,7 +15,7 @@ import { ICONS } from '../utils'
 const WAIT_TEXT = {
   SOCIAL: 'Please complete the login to proceed',
   LINK: 'Sending login link to your email',
-  LINK_SENT: 'Please complete the login by clicking on email',
+  LINK_SENT: 'Please complete the login by clicking on the link sent in the email',
 }
 
 const initLoaderState = {
@@ -82,15 +82,15 @@ const Modal = (props: ModalParams) => {
               ) : undefined
             }
           >
-            {loaderState.type == 'LINK' || loaderState.type == 'LINK_SENT' ? (
+            {loaderState.type == 'LINK_SENT' ? (
               <>
                 <Action
                   method={() => linkLogin()}
-                  text="Send the email again"
+                  text="Resend email"
                 />
                 <Action
                   method={() => dispatch('RESET')}
-                  text="Change email id"
+                  text="Change email"
                 />
               </>
             ) : null}
@@ -103,7 +103,7 @@ const Modal = (props: ModalParams) => {
   return (
     <Overlay closeFunc={props.closeFunc}>
       <Container mode={props.mode}>
-        <Header mode={props.mode} logo={props.logo} />
+        <Header logo={props.logo} />
         <EmailLogin
           email={email}
           setEmail={setEmail}
