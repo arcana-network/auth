@@ -305,7 +305,7 @@ class AuthProvider {
       return false
     }
 
-    if (session.exp < Date.now()) {
+    if (session.expiry < Date.now()) {
       return false
     }
 
@@ -326,7 +326,7 @@ class AuthProvider {
 
     const session = this.iframeWrapper.getSessionID()
     if (session) {
-      if (session.exp < Date.now()) {
+      if (session.expiry < Date.now()) {
         throw new Error('cannot reconnect, session expired')
       }
       const u = new URL(await this._provider.getReconnectionUrl())

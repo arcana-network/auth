@@ -65,7 +65,7 @@ export default class IframeWrapper {
       `arcana-auth-${this.getIframeUrl()}-sessionID`
     )
     if (val) {
-      return JSON.parse(val)
+      return JSON.parse(val) as { id: string; expiry: number }
     }
     return null
   }
