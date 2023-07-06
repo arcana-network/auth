@@ -62,7 +62,7 @@ export default class IframeWrapper {
 
   public getSessionID = () => {
     const val = window.localStorage.getItem(
-      `arcana-auth-${this.params.iframeUrl}-sessionID`
+      `arcana-auth-${this.getIframeUrl()}-sessionID`
     )
     if (val) {
       return JSON.parse(val)
@@ -72,14 +72,14 @@ export default class IframeWrapper {
 
   public setSessionID = (id: string, expiry: number) => {
     window.localStorage.setItem(
-      `arcana-auth-${this.params.iframeUrl}-sessionID`,
+      `arcana-auth-${this.getIframeUrl()}-sessionID`,
       JSON.stringify({ id, expiry })
     )
   }
-  
+
   public clearSessionID = () => {
     window.localStorage.removeItem(
-      `arcana-auth-${this.params.iframeUrl}-sessionID`
+      `arcana-auth-${this.getIframeUrl()}-sessionID`
     )
   }
 
