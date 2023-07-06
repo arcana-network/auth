@@ -293,7 +293,13 @@ class AuthProvider {
   /**
    * A function to to be called before trying to .reconnect()
    */
-  public canReconnect() {
+  public async canReconnect() {
+    await this.init()
+
+    if (await this.isLoggedIn()) {
+      return false
+    }
+
     const session = this.iframeWrapper.getSessionID()
     if (!session) {
       return false
@@ -311,13 +317,13 @@ class AuthProvider {
    * Should be called on event of click function as it opens a popup.
    */
   public async reconnect() {
-    if (this.initStatus !== InitStatus.DONE) {
-      await this.init()
-    }
+    await this.init()
+
     if (await this.isLoggedIn()) {
       await this.waitForConnect()
       return
     }
+
     const session = this.iframeWrapper.getSessionID()
     if (session) {
       if (session.exp < Date.now()) {
