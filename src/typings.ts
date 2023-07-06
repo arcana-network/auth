@@ -85,6 +85,7 @@ export interface AppConfig {
 }
 
 export interface UserInfo {
+  loginType: Logins | 'passwordless'
   id: string
   email?: string
   name?: string
@@ -92,7 +93,15 @@ export interface UserInfo {
   address: string
   publicKey: string
 }
-export type Logins = 'google' | 'github' | 'discord' | 'twitch' | 'twitter'
+export type Logins =
+  | 'google'
+  | 'github'
+  | 'discord'
+  | 'twitch'
+  | 'twitter'
+  | 'aws'
+  | 'firebase'
+  | 'steam'
 export enum BearerAuthentication {
   firebase = 'firebase',
 }
