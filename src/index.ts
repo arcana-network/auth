@@ -315,6 +315,7 @@ class AuthProvider {
       await this.init()
     }
     if (await this.isLoggedIn()) {
+      await this.waitForConnect()
       return
     }
     const session = this.iframeWrapper.getSessionID()
@@ -327,6 +328,7 @@ class AuthProvider {
 
       const popup = new Popup(u.toString())
       await popup.open()
+      await this.waitForConnect()
       return
     }
     throw new Error('cannot reconnect, no session found')
