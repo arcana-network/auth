@@ -149,12 +149,15 @@ Check if a user is logged in
 const isloggedIn = await auth.isLoggedIn() // boolean
 ```
 
-Check and reconnect if possible
+Check and reconnect, if required, within a 30-minute window after logout.
 
 ```js
+// canReconnect can be used to conditionally render connect or reconnect button
 const canReconnect = await auth.canReconnect()
-// auth.reconnect() should be on a click event since it opens a new tab
-await auth.reconnect()
+if (canReconnect) {
+  // auth.reconnect() should be on a click event since it opens in a new tab
+  await auth.reconnect()
+}
 ```
 
 Get user information
