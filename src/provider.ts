@@ -87,6 +87,7 @@ export class ArcanaProvider
       triggerPasswordlessLogin: loginFuncs.loginWithLink,
       getPopupState: () => this.iframe.getState(),
       setIframeStyle: this.iframe.setIframeStyle,
+      setSessionID: this.iframe.setSessionID,
       getSDKVersion: () => 'v3',
     })
     this.communication = communication
@@ -125,6 +126,12 @@ export class ArcanaProvider
     }
     const info = await c.getUserInfo()
     return info
+  }
+
+  public async getReconnectionUrl() {
+    const c = await this.getCommunication('getReconnectionUrl')
+    const url = await c.getReconnectionUrl()
+    return url
   }
 
   public async getPublicKey(email: string, verifier: string) {

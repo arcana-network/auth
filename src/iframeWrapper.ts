@@ -60,6 +60,29 @@ export default class IframeWrapper {
     )
   }
 
+  public getSessionID = () => {
+    const val = window.localStorage.getItem(
+      `arcana-auth-${this.getIframeUrl()}-sessionID`
+    )
+    if (val) {
+      return JSON.parse(val) as { id: string; expiry: number }
+    }
+    return null
+  }
+
+  public setSessionID = (id: string, expiry: number) => {
+    window.localStorage.setItem(
+      `arcana-auth-${this.getIframeUrl()}-sessionID`,
+      JSON.stringify({ id, expiry })
+    )
+  }
+
+  public clearSessionID = () => {
+    window.localStorage.removeItem(
+      `arcana-auth-${this.getIframeUrl()}-sessionID`
+    )
+  }
+
   public setWalletType(appMode: AppMode | undefined) {
     this.appMode = appMode ?? AppMode.Full
     this.initWalletUI()
@@ -71,6 +94,7 @@ export default class IframeWrapper {
 
   public handleDisconnect() {
     this.widgetIframe.src = this.getIframeUrl()
+    this.clearSessionID()
   }
 
   public onReceivingPendingRequestCount(count: number) {

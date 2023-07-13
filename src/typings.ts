@@ -85,6 +85,7 @@ export interface AppConfig {
 }
 
 export interface UserInfo {
+  loginType: Logins | 'passwordless'
   id: string
   email?: string
   name?: string
@@ -92,7 +93,15 @@ export interface UserInfo {
   address: string
   publicKey: string
 }
-export type Logins = 'google' | 'github' | 'discord' | 'twitch' | 'twitter'
+export type Logins =
+  | 'google'
+  | 'github'
+  | 'discord'
+  | 'twitch'
+  | 'twitter'
+  | 'aws'
+  | 'firebase'
+  | 'steam'
 export enum BearerAuthentication {
   firebase = 'firebase',
 }
@@ -121,6 +130,7 @@ export interface ChildMethods {
     setToken: string
   }
   expandWallet: () => Promise<void>
+  getReconnectionUrl: () => Promise<string>
 }
 
 export interface ParentMethods {
@@ -138,6 +148,7 @@ export interface ParentMethods {
   setIframeStyle: (styles: CSSStyleDeclaration) => void
   getWalletPosition: () => Position
   getSDKVersion: () => SDKVersion
+  setSessionID: (id: string, exp: number) => void
 }
 
 export interface TypedDataMessage {
