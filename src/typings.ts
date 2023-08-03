@@ -1,3 +1,5 @@
+import SafeEventEmitter from '@metamask/safe-event-emitter'
+
 export type Theme = 'light' | 'dark'
 
 export type Orientation = 'horizontal' | 'vertical'
@@ -213,11 +215,6 @@ type RequestArguments = {
   readonly params?: readonly unknown[] | object
 }
 
-export interface EthereumProvider {
+export interface EthereumProvider extends SafeEventEmitter {
   request(args: RequestArguments): Promise<unknown>
-  on(eventName: string | symbol, listener: (...args: any[]) => void): this
-  removeListener(
-    eventName: string | symbol,
-    listener: (...args: any[]) => void
-  ): this
 }
