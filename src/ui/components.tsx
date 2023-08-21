@@ -78,7 +78,7 @@ const EmailLogin = ({
         placeholder={'Enter your email'}
       />
       <button disabled={disabled} onClick={clickHandler} className="xar-btn">
-        Get Link
+        Get Login Link
       </button>
     </form>
   )
