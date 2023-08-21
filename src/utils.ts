@@ -178,6 +178,7 @@ const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
     theme: 'dark',
     alwaysVisible: true,
     setWindowProvider: false,
+    compactConnectMode: false,
   }
   if (initParams?.network) {
     p.network = initParams.network
@@ -199,6 +200,9 @@ const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
   }
   if (initParams?.alwaysVisible !== undefined) {
     p.alwaysVisible = initParams.alwaysVisible
+  }
+  if (initParams?.compactConnectMode !== undefined) {
+    p.compactConnectMode = initParams.compactConnectMode
   }
 
   if (p.network == 'testnet' || p.network == 'dev') {

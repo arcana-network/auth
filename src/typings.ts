@@ -94,6 +94,7 @@ export interface UserInfo {
   picture?: string
   address: string
   publicKey: string
+  loginToken: string
 }
 export type Logins =
   | 'google'
@@ -208,6 +209,7 @@ export interface ConstructorParams {
   position: Position
   setWindowProvider: boolean
   appMode?: AppMode
+  compactConnectMode: boolean
 }
 
 type RequestArguments = {

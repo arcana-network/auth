@@ -105,10 +105,11 @@ interface ChainConfig {
 }
 
 const auth = new AuthProvider(`${clientId}`, {
-  position: 'left', // default - 'right'
-  theme: 'light', // default - 'dark'
-  alwaysVisible: false, // default - true
+  position: 'left',        // default - right
+  theme: 'light',          // default - dark
+  alwaysVisible: false,    // default - true
   setWindowProvider: true, // default - false
+  compactConnectMode: true // default - false
   chainConfig: {
     chainId: CHAIN.POLYGON_MAINNET,
     rpcUrl: '',

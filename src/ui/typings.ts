@@ -7,6 +7,7 @@ type ModalParams = {
   loginList: string[]
   mode: Theme
   logo: string
+  compactMode: boolean
 }
 
 export { ModalParams }
