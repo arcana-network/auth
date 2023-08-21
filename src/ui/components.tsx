@@ -120,7 +120,7 @@ const Footer = ({ mode }: { mode: Theme }) => {
   const logo = ARCANA_LOGO[mode]
   return (
     <div className="xar-footer">
-      <a href="https://arcana.network" className="xar-footer-img__link">
+      <a href="https://arcana.network" target="_blank" className="xar-footer-img__link">
         <img className="xar-footer-img" src={logo} alt="Secured By Arcana" />
       </a>
     </div>
