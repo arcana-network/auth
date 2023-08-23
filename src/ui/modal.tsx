@@ -74,7 +74,7 @@ const Modal = (props: ModalParams) => {
       <Overlay>
         <Container mode={props.mode}>
           <Loader
-            compact={props.compactMode}
+            compact={props.options.compact}
             text={loaderState.text}
             mode={props.mode}
             header={
@@ -104,7 +104,7 @@ const Modal = (props: ModalParams) => {
   return (
     <Overlay closeFunc={props.closeFunc}>
       <Container mode={props.mode}>
-        <Header compact={props.compactMode} logo={props.logo} />
+        <Header compact={props.options.compact} logo={props.logo} />
         <EmailLogin
           email={email}
           setEmail={setEmail}

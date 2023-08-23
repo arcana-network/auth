@@ -199,6 +199,10 @@ export interface ChainConfigInput {
   chainId: string
 }
 
+export interface ConnectOptions {
+  compact: boolean
+}
+
 export interface ConstructorParams {
   network: ('testnet' | 'dev' | 'mainnet') | NetworkConfig
   debug: boolean
@@ -209,7 +213,7 @@ export interface ConstructorParams {
   position: Position
   setWindowProvider: boolean
   appMode?: AppMode
-  compactConnectMode: boolean
+  connectOptions: ConnectOptions
 }
 
 type RequestArguments = {

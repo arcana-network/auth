@@ -141,7 +141,7 @@ class AuthProvider {
         loginList: logins,
         mode: this.theme,
         logo: this.logo.vertical,
-        compactMode: this.params.compactConnectMode,
+        options: this.params.connectOptions,
       })
     }
     return new Promise((resolve, reject) => {

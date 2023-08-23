@@ -15,7 +15,7 @@ class ModalController {
       mode: params.mode,
       closeFunc: this.close,
       logo: params.logo,
-      compactMode: params.compactMode,
+      options: params.options,
     }
 
     this.createContainer()
@@ -38,7 +38,7 @@ class ModalController {
   }
 
   private createContainer() {
-    const modeClass = this.params.compactMode ?'compact': 'full'
+    const modeClass = this.params.options.compact ?'compact': 'full'
     this.container = document.createElement('div')
     this.container.setAttribute('id', 'xar-login-container')
     this.container.classList.add(`xar-${this.params.mode}-mode`)

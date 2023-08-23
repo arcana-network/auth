@@ -1,4 +1,4 @@
-import { Theme } from '../typings'
+import { ConnectOptions, Theme } from '../typings'
 
 type ModalParams = {
   loginWithLink: (email: string, emailSentHook?: () => void) => Promise<unknown>
@@ -7,7 +7,7 @@ type ModalParams = {
   loginList: string[]
   mode: Theme
   logo: string
-  compactMode: boolean
+  options: ConnectOptions
 }
 
 export { ModalParams }
