@@ -74,6 +74,7 @@ const Modal = (props: ModalParams) => {
       <Overlay>
         <Container mode={props.mode}>
           <Loader
+            compact={props.options.compact}
             text={loaderState.text}
             mode={props.mode}
             header={
@@ -82,11 +83,11 @@ const Modal = (props: ModalParams) => {
               ) : undefined
             }
           >
-            {loaderState.type == 'LINK' || loaderState.type == 'LINK_SENT' ? (
+            {loaderState.type == 'LINK_SENT' ? (
               <>
                 <Action
                   method={() => linkLogin()}
-                  text="Send the email again"
+                  text="Resend email"
                 />
                 <Action
                   method={() => dispatch('RESET')}
@@ -103,7 +104,7 @@ const Modal = (props: ModalParams) => {
   return (
     <Overlay closeFunc={props.closeFunc}>
       <Container mode={props.mode}>
-        <Header mode={props.mode} logo={props.logo} />
+        <Header compact={props.options.compact} logo={props.logo} />
         <EmailLogin
           email={email}
           setEmail={setEmail}

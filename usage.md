@@ -105,10 +105,13 @@ interface ChainConfig {
 }
 
 const auth = new AuthProvider(`${clientId}`, {
-  position: 'left', // default - 'right'
-  theme: 'light', // default - 'dark'
+  position: 'left', // default - right
+  theme: 'light', // default - dark
   alwaysVisible: false, // default - true
   setWindowProvider: true, // default - false
+  connectOptions: {
+    compact: true, // default - false
+  },
   chainConfig: {
     chainId: CHAIN.POLYGON_MAINNET,
     rpcUrl: '',
@@ -123,6 +126,8 @@ See [Get Started with Auth SDK](https://docs.dev.arcana.network/walletsdk/wallet
 ### Auth APIs
 
 #### Plug and Play Authentication
+
+The size of the connect modal can be changed by setting `connectOptions.compact` to true or false
 
 ```js
 const provider = await auth.connect()

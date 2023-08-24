@@ -1,34 +1,41 @@
 import { ARCANA_LOGO, getSocialLogo } from './icons'
-import { StateUpdater, useState } from 'preact/hooks'
+import { StateUpdater, useEffect, useState } from 'preact/hooks'
 import { ModalParams } from './typings'
 import { Theme } from '../typings'
 import { JSXInternal } from 'preact/src/jsx'
+import isEmail from 'validator/es/lib/isEmail'
 import ProgressOval from './loader'
 import './style.css'
 
-const Header = ({ mode, logo }: { mode: Theme; logo: string }) => {
-  const [renderLogoContainer, setRenderLogoContainer] = useState(true)
-  const removeLogoContainer = () => {
-    setRenderLogoContainer(false)
+const Header = ({ compact, logo }: { compact: boolean; logo: string }) => {
+  const [loaded, setLoaded] = useState(false)
+  const showLogoContainer = () => {
+    setLoaded(false)
   }
   return (
     <>
-      {renderLogoContainer && logo && (
-        <div className="xar-header-logo__container">
-          <img
-            className="xar-header-logo"
-            src={logo}
-            alt="app-logo"
-            onError={removeLogoContainer}
-          />
-        </div>
-      )}
-      <div className="xar-header-text">
-        <h1 className="xar-header-heading">Welcome</h1>
-        <p className="xar-header-subtext">
-          We’ll email you a login link for a password-free sign in.
-        </p>
+      {!loaded ? <div className="xar-header-logo__empty-container"></div> : ''}
+      <div
+        className="xar-header-logo__container"
+        style={loaded ? {} : { display: 'none' }}
+      >
+        <img
+          className="xar-header-logo"
+          src={logo}
+          alt="app-logo"
+          onLoad={showLogoContainer}
+        />
       </div>
+      {!compact ? (
+        <div className="xar-header-text">
+          <h1 className="xar-header-heading">Welcome</h1>
+          <p className="xar-header-subtext">
+            We’ll email you a login link for a password-free sign in.
+          </p>
+        </div>
+      ) : (
+        ''
+      )}
     </>
   )
 }
@@ -41,8 +48,10 @@ const EmailLogin = ({
   email: string
   setEmail: StateUpdater<string>
 } & Pick<ModalParams, 'loginWithLink'>) => {
+  const [disabled, setDisabled] = useState(true)
   const onInput: JSXInternal.GenericEventHandler<HTMLInputElement> = (e) => {
     setEmail(e.currentTarget.value)
+    setDisabled(!isEmail(e.currentTarget.value))
   }
 
   const clickHandler = async (
@@ -55,19 +64,21 @@ const EmailLogin = ({
     await loginWithLink(email)
     return
   }
+
+  useEffect(() => {
+    setDisabled(!isEmail(email))
+  }, [])
   return (
     <form className="xar-email-login">
-      <label className="xar-email-login__label" htmlFor="">
-        Email
-      </label>
       <input
         value={email}
         onInput={onInput}
         className="xar-email-login__input"
         type="text"
+        placeholder={'Enter your email'}
       />
-      <button onClick={clickHandler} className="xar-btn">
-        Get Link
+      <button disabled={disabled} onClick={clickHandler} className="xar-btn">
+        Get Login Link
       </button>
     </form>
   )
@@ -109,7 +120,7 @@ const Footer = ({ mode }: { mode: Theme }) => {
   const logo = ARCANA_LOGO[mode]
   return (
     <div className="xar-footer">
-      <a href="https://arcana.network" className="xar-footer-img__link">
+      <a href="https://arcana.network" target="_blank" className="xar-footer-img__link">
         <img className="xar-footer-img" src={logo} alt="Secured By Arcana" />
       </a>
     </div>
@@ -120,6 +131,7 @@ const Loader = (props: {
   text: string
   children: preact.ComponentChildren
   mode: Theme
+  compact: boolean
   header?: JSXInternal.Element
 }) => {
   return (
@@ -127,7 +139,11 @@ const Loader = (props: {
       {props.header ? (
         props.header
       ) : (
-        <ProgressOval stroke={8} secondaryColor="#8D8D8D" />
+        <ProgressOval
+          compact={props.compact}
+          stroke={8}
+          secondaryColor="#8D8D8D"
+        />
       )}
       {props.text ? <p className="xar-loader__text">{props.text}</p> : ''}
       {props.children ? <>{props.children}</> : ''}
