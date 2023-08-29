@@ -1,19 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@100;400;600;700&display=block');
 
 .xar-light-mode {
-  --fg: #101010;
-  --bg: #f7f7f7;
-  --background: #ffffff;
-  --inputShadow: inset -1px -7px 7px rgba(255, 255, 255, 0.7),
-    inset 3px 1px 6px rgba(174, 174, 192, 0.2);
+  --fg: #333333;
+  --bg: #eff1f3;
+  --background: #fcfcfc;
+  --inputShadow: 0 0 8px 3px rgba(126, 126, 126, 0.25);
 }
 
 .xar-dark-mode {
-  --fg: #f7f7f7;
-  --bg: #101010;
-  --background: #262626;
-  --inputShadow: inset -2px -2px 4px rgb(57 57 57 / 44%),
-    inset 5px 5px 10px rgb(11 11 11 / 50%);
+  --fg: #ffffff;
+  --bg: #313131;
+  --background: #141414;
+  --inputShadow: 0 0 8px 3px rgba(0, 0, 0, 0.05);
 }
 
 .compact {
@@ -51,7 +49,7 @@
 .xar-header-logo__container {
   width: 70px;
   height: 70px;
-  border-radius: 60px;
+  border-radius: 50%;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -62,7 +60,7 @@
 .xar-header-logo__empty-container {
   width: 70px;
   height: 70px;
-  border-radius: 60px;
+  border-radius: 50%;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -77,7 +75,7 @@
 }
 
 .xar-header-heading {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Sora', sans-serif;
   text-align: center;
 }
 
@@ -100,7 +98,7 @@
 .xar-email-login__label {
   text-align: left;
   font-size: 14px;
-  color: #8d8d8d;
+  color: var(--fg);
   font-weight: 400;
 }
 
@@ -116,7 +114,7 @@
   color: var(--fg);
   background: var(--bg);
   border: none;
-  border-radius: 10px;
+  border-radius: 5px;
   outline: none;
   box-shadow: var(--inputShadow);
 }
@@ -233,7 +231,7 @@
 .xar-separator:after {
   content: '';
   flex: 1 1 auto;
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid var(--bg);
 }
 
 .xar-separator:before {
@@ -248,7 +246,7 @@
   text-underline-offset: 3px;
   text-transform: uppercase;
   text-decoration: underline;
-  color: #13a3fd;
+  color: #3e9aff;
   font-weight: 700;
   font-size: var(--action-link-size);
   line-height: 19px;
