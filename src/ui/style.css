@@ -54,7 +54,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid var(--bg);
+  border: 2px solid var(--fg);
 }
 
 .xar-header-logo__empty-container {
@@ -183,7 +183,7 @@
   color: var(--bg);
   background: var(--fg);
   border: none;
-  border-radius: 10px;
+  border-radius: 5px;
 }
 
 .xar-btn:disabled {
@@ -232,7 +232,7 @@
 .xar-separator:after {
   content: '';
   flex: 1 1 auto;
-  border-bottom: 1px solid var(--bg);
+  border-bottom: 1px solid var(--fg);
 }
 
 .xar-separator:before {
