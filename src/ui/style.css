@@ -10,7 +10,7 @@
 .xar-dark-mode {
   --fg: #ffffff;
   --bg: #313131;
-  --background: #141414;
+  --background: #1f1f1f;
   --inputShadow: 0 0 8px 3px rgba(0, 0, 0, 0.05);
 }
 
@@ -83,6 +83,7 @@
   font-family: 'Sora', sans-serif;
   font-size: 12px;
   font-weight: 400;
+  max-width: 200px;
 }
 
 .xar-email-login {
