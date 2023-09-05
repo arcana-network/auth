@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@100;200;300;400;500;600;700;800&family=Inter:wght@100;200;300;400&display=block');
+
+:root > * {
+  font-family: 'Inter';
+  font-size: 14px;
+}
+
+.tsd-page-toolbar {
+  border: 0;
+  border-radius: 5px;
+}
+
+.tsd-theme-toggle {
+  padding-top: 0.75rem;
+}
+.tsd-theme-toggle > h4 {
+  display: inline;
+  vertical-align: middle;
+  margin-right: 0.75rem;
+}
+
+.tsd-generator > p {
+  font-style: italic;
+}
+
+pre > button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  opacity: 0;
+  transition: opacity 0.1s;
+  box-sizing: border-box;
+  border: 0;
+}
+
+code,
+pre {
+  font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
+  padding: 0.4rem;
+  margin: 0;
+  font-size: 0.75rem;
+  border: 0;
+  border-radius: 0.8em;
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin: 0.67rem 0;
+}
+
+h2 {
+  font-size: 1.2rem;
+  margin: 0.83rem 0;
+}
+
+h3 {
+  font-size: 1rem;
+  margin: 1rem 0;
+}
+
+h4 {
+  font-size: 0.85rem;
+  margin: 1.33rem 0;
+}
+
+h5 {
+  font-size: 0.8rem;
+  margin: 1.5rem 0;
+}
+
+h6 {
+  font-size: 0.7rem;
+  margin: 2.33rem 0;
+}

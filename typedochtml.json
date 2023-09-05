@@ -1,5 +1,6 @@
 {
   "entryPoints": ["src/index.ts"],
+  "entryPointStrategy": "expand",
   "name": "Auth SDK Reference Guide",
   "out": "htmldocs",
   "excludePrivate": true,
@@ -8,5 +9,7 @@
   "includeVersion": true,
   "footerDate": true,
   "footerTime": true,
-  "plugin": ["typedoc-plugin-extras"]
+  "plugin": ["typedoc-plugin-extras", "typedoc-plugin-rename-defaults", "typedoc-theme-hierarchy"],
+  "theme": "hierarchy",
+  "customCss": "./typedoc-theme/an_style.css"
 }
