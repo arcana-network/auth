@@ -1,6 +1,6 @@
 {
   "name": "@arcana/auth",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Arcana Auth",
   "main": "dist/standalone/auth.esm.js",
   "type": "module",
@@ -61,6 +61,7 @@
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@rollup/plugin-typescript": "^8.3.3",
     "@types/jest": "^27.4.1",
+    "@types/validator": "^13.11.1",
     "@typescript-eslint/eslint-plugin": "^5.18.0",
     "@typescript-eslint/parser": "^5.18.0",
     "babel-jest": "^29.0.2",
@@ -90,7 +91,8 @@
   "dependencies": {
     "@metamask/safe-event-emitter": "^2.0.0",
     "eth-rpc-errors": "^4.0.3",
-    "penpal": "^6.0.1"
+    "penpal": "^6.0.1",
+    "validator": "^13.11.0"
   },
   "resolutions": {
     "terser": "^5.15.0"

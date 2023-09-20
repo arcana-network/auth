@@ -94,6 +94,7 @@ export interface UserInfo {
   picture?: string
   address: string
   publicKey: string
+  loginToken: string
 }
 export type Logins =
   | 'google'
@@ -198,6 +199,10 @@ export interface ChainConfigInput {
   chainId: string
 }
 
+export interface ConnectOptions {
+  compact: boolean
+}
+
 export interface ConstructorParams {
   network: ('testnet' | 'dev' | 'mainnet') | NetworkConfig
   debug: boolean
@@ -208,6 +213,7 @@ export interface ConstructorParams {
   position: Position
   setWindowProvider: boolean
   appMode?: AppMode
+  connectOptions: ConnectOptions
 }
 
 type RequestArguments = {

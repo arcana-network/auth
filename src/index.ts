@@ -26,6 +26,7 @@ import {
   ThemeConfig,
   UserInfo,
 } from './typings'
+import isEmail from 'validator/es/lib/isEmail'
 import { getAppInfo, getImageUrls } from './appInfo'
 import { ArcanaAuthError, ErrorNotInitialized } from './errors'
 import { LOG_LEVEL, setExceptionReporter, setLogLevel } from './logger'
@@ -140,6 +141,7 @@ class AuthProvider {
         loginList: logins,
         mode: this.theme,
         logo: this.logo.vertical,
+        options: this.params.connectOptions,
       })
     }
     return new Promise((resolve, reject) => {
@@ -194,6 +196,10 @@ class AuthProvider {
     if (this.initStatus === InitStatus.DONE) {
       if (await this.isLoggedIn()) {
         return this._provider
+      }
+
+      if (!isEmail(email)) {
+        throw new Error('Invalid email')
       }
       await this._provider.initPasswordlessLogin(email)
       if (emailSentHook) {
@@ -359,7 +365,7 @@ class AuthProvider {
       if (this.connected) {
         return resolve(this._provider)
       }
-      this._provider.on('connect', () => {
+      this._provider.once('connect', () => {
         return resolve(this._provider)
       })
     })
