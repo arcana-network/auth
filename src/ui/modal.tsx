@@ -7,6 +7,7 @@ import {
   Container,
   Loader,
   Action,
+  Disclaimer,
 } from './components'
 import { Overlay } from './overlay'
 import { useReducer, useState } from 'preact/hooks'
@@ -120,6 +121,7 @@ const Modal = (props: ModalParams) => {
             />
           </>
         ) : null}
+        <Disclaimer text="Arcana does not store any data related to your social logins" />
       </Container>
     </Overlay>
   )
