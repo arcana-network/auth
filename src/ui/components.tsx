@@ -176,6 +176,10 @@ const Action = ({ text, method }: { text: string; method: () => void }) => {
   )
 }
 
+const Disclaimer = ({ text }: { text: string }) => {
+  return <p className="xar-disclaimer">{text}</p>
+}
+
 export {
   Action,
   Header,
@@ -185,4 +189,5 @@ export {
   Footer,
   Loader,
   Container,
+  Disclaimer,
 }
