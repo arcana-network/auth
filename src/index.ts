@@ -5,6 +5,7 @@ import {
   getErrorReporter,
   getParamsFromClientId,
   isClientId,
+  onWindowReady,
   preLoadIframe,
   removeHexPrefix,
   validateAppAddress,
@@ -16,6 +17,7 @@ import {
   BearerAuthentication,
   ChainConfigInput,
   ConstructorParams,
+  EIP6963ProviderInfo,
   EthereumProvider,
   FirebaseBearer,
   InitStatus,
@@ -36,6 +38,12 @@ import { ModalController } from './ui/modalController'
 class AuthProvider {
   public appId: string
   private params: ConstructorParams
+  private providerInfo: EIP6963ProviderInfo = {
+    uuid: window.crypto.randomUUID(),
+    name: 'Arcana Wallet',
+    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>", // TODO: Fix this
+    rdns: 'network.arcana.wallet',
+  }
   private appConfig: AppConfig
   private iframeWrapper: IframeWrapper
   private networkConfig: NetworkConfig
@@ -103,10 +111,7 @@ class AuthProvider {
           (this.params.alwaysVisible ? AppMode.Full : AppMode.Widget)
       )
 
-      await this._provider.init(this.iframeWrapper, {
-        loginWithLink: this.loginWithLink,
-        loginWithSocial: this.loginWithSocial,
-      })
+      await this._provider.init(this.iframeWrapper, this)
       this.setProviders()
 
       this.initStatus = InitStatus.DONE
@@ -437,22 +442,40 @@ class AuthProvider {
   }
 
   private setProviders() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const w = window as Record<string, any>
-    try {
-      w.arcana = w.arcana ?? {}
-      w.arcana.provider = this._provider
-      // eslint-disable-next-line no-empty
-    } catch {}
-    if (this.params.setWindowProvider) {
+    onWindowReady(() => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const w = window as Record<string, any>
       try {
-        w.ethereum = w.ethereum ?? this._provider
-        w.ethereum.providers = w.ethereum.providers ?? []
-        w.ethereum.providers.push(this._provider)
-      } catch (e) {
-        console.error(e)
+        w.arcana = w.arcana ?? {}
+        w.arcana.provider = this._provider
+        // eslint-disable-next-line no-empty
+      } catch {}
+      if (this.params.setWindowProvider) {
+        try {
+          w.ethereum = w.ethereum ?? this._provider
+          w.ethereum.providers = w.ethereum.providers ?? []
+          w.ethereum.providers.push(this._provider)
+        } catch (e) {
+          console.error(e)
+        }
       }
-    }
+
+      this.announceProvider()
+      window.addEventListener('eip6963:requestProvider', () => {
+        this.announceProvider()
+      })
+    })
+  }
+
+  private announceProvider() {
+    window.dispatchEvent(
+      new CustomEvent('eip6963:announceProvider', {
+        detail: Object.freeze({
+          info: this.providerInfo,
+          provider: this._provider,
+        }),
+      })
+    )
   }
 
   private standaloneMode(
