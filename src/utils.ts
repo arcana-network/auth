@@ -60,19 +60,6 @@ const setWalletPosition = (
   element.style.bottom = position.bottom
 }
 
-const getWalletPosition = (
-  isViewportSmall: boolean,
-  position: Position,
-  isWidgetBubble: boolean
-): WalletPosition => {
-  const positionDistance = isViewportSmall ? '0' : '32px'
-  const bottomDistance = isViewportSmall ? '0' : '40px'
-  return {
-    bottom: bottomDistance,
-    [position]: isWidgetBubble ? '0' : positionDistance,
-  }
-}
-
 const getErrorReporter = (): ((m: string) => void) => {
   return (msg: string) => {
     console.error(msg)
