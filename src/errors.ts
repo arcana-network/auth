@@ -1,14 +1,14 @@
 class ArcanaAuthError extends Error {
   constructor(code: string, public message: string) {
     super(code)
-    this.message = `Arcana SDK error: [${code}] ${message}`
+    this.message = `[XAR_AUTH_SDK] error: [${code}] ${message}`
   }
 }
 
 class ArcanaAuthWarning {
   public message: string
   constructor(code: string, message: string) {
-    this.message = `Arcana SDK warning: [${code}] ${message}`
+    this.message = `[XAR_AUTH_SDK] warning: [${code}] ${message}`
   }
 
   public log() {

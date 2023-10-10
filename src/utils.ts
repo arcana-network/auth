@@ -121,6 +121,7 @@ const validateAppAddress = (arg: unknown) => {
 }
 
 const CLIENT_ID_SEPERATOR = '_'
+
 const isClientId = (id: string): boolean => {
   const parts = id.split(CLIENT_ID_SEPERATOR)
   return parts.length == 3
@@ -150,7 +151,7 @@ const getParamsFromClientId = (
 const HEX_PREFIX = '0x'
 
 const addHexPrefix = (i: string) =>
-  i.startsWith(HEX_PREFIX) ? i : `${HEX_PREFIX}${i}`
+  i.startsWith(HEX_PREFIX) ? i : HEX_PREFIX + i
 
 const removeHexPrefix = (i: string) =>
   i.startsWith(HEX_PREFIX) ? i.substring(2) : i
@@ -209,7 +210,7 @@ const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
 
   if (p.network == 'testnet' || p.network == 'dev') {
     console.log(
-      `%c[Arcana Auth] You are currently on ${p.network} network.`,
+      `%c[XAR_AUTH_SDK] You are currently on ${p.network} network.`,
       'color: red'
     )
   }
@@ -251,6 +252,14 @@ function percentToByte(p: string) {
 
 export function encodeJSON<T>(options: T): string {
   return btoaUTF8(JSON.stringify(options))
+}
+
+export function onWindowReady(fn: () => void) {
+  if (document.readyState === 'complete') {
+    fn()
+  } else {
+    window.addEventListener('load', fn)
+  }
 }
 
 export {

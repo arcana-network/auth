@@ -231,3 +231,10 @@ type RequestArguments = {
 export interface EthereumProvider extends SafeEventEmitter {
   request(args: RequestArguments): Promise<unknown>
 }
+
+export type EIP6963ProviderInfo = {
+  uuid: string
+  name: string
+  icon: string
+  rdns: string
+}

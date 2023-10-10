@@ -20,17 +20,6 @@ export interface RequestArguments {
   params?: unknown[] | Record<string, unknown>
 }
 
-// const permissionedCalls = [
-//   'eth_sign',
-//   'personal_sign',
-//   'eth_decrypt',
-//   'eth_signTypedData_v4',
-//   'eth_signTransaction',
-//   'eth_sendTransaction',
-//   'wallet_switchEthereumChain',
-//   'wallet_addEthereumChain',
-// ]
-
 class ProviderError extends Error implements JsonRpcError {
   code: number
   message: string
@@ -43,9 +32,10 @@ class ProviderError extends Error implements JsonRpcError {
   }
 }
 
-interface TriggerLoginFuncs {
+interface AuthProvider {
   loginWithSocial(loginType: string): void
   loginWithLink(email: string): void
+  connect(): Promise<EthereumProvider>
 }
 
 export class ArcanaProvider
@@ -54,10 +44,11 @@ export class ArcanaProvider
 {
   public chainId: string
   public connected = false
+  private auth: AuthProvider
   private communication: Connection<ChildMethods>
   private subscriber: SafeEventEmitter
   private iframe: IframeWrapper
-  private logger: Logger = getLogger('ArcanaProvider')
+  private logger: Logger = getLogger()
   constructor(private rpcConfig: ChainConfigInput | undefined) {
     super()
     this.subscriber = new SafeEventEmitter()
@@ -67,24 +58,20 @@ export class ArcanaProvider
     return true
   }
 
-  public async init(iframe: IframeWrapper, loginFuncs: TriggerLoginFuncs) {
+  public async init(iframe: IframeWrapper, auth: AuthProvider) {
+    this.auth = auth
     this.iframe = iframe
     const { communication } = await this.iframe.setConnectionMethods({
       onEvent: this.handleEvents,
-      onMethodResponse: (
-        method: string,
-        response: JsonRpcResponse<unknown>
-      ) => {
-        this.onResponse(method, response)
-      },
+      onMethodResponse: this.onResponse,
       getParentUrl: getCurrentUrl,
-      getAppMode: () => this.iframe?.appMode,
+      getAppMode: () => this.iframe.appMode,
       getAppConfig: this.iframe.getAppConfig,
       getWalletPosition: this.iframe.getWalletPlace,
       getRpcConfig: () => this.rpcConfig,
       sendPendingRequestCount: this.iframe.onReceivingPendingRequestCount,
-      triggerSocialLogin: loginFuncs.loginWithSocial,
-      triggerPasswordlessLogin: loginFuncs.loginWithLink,
+      triggerSocialLogin: auth.loginWithSocial,
+      triggerPasswordlessLogin: auth.loginWithLink,
       getPopupState: () => this.iframe.getState(),
       setIframeStyle: this.iframe.setIframeStyle,
       setSessionID: this.iframe.setSessionID,
@@ -107,6 +94,10 @@ export class ArcanaProvider
     }
   }
 
+  public connect() {
+    return this.auth.connect()
+  }
+
   public async isConnected() {
     return this.connected
   }
@@ -114,7 +105,7 @@ export class ArcanaProvider
   public async isLoginAvailable(type: string) {
     const c = await this.getCommunication('isLoginAvailable')
     const available = await c.isLoginAvailable(type)
-    this.logger.info('loginAvailable', { [type]: available })
+    this.logger.debug('loginAvailable', { [type]: available })
     return available
   }
 
@@ -154,6 +145,7 @@ export class ArcanaProvider
     const c = await this.getCommunication('initPasswordlessLogin')
     return await c.initPasswordlessLogin(email)
   }
+
   public async initSocialLogin(kind: string) {
     const c = await this.getCommunication('initSocialLogin')
     return await c.initSocialLogin(kind)
@@ -241,34 +233,39 @@ export class ArcanaProvider
 
   handleEvents = (t: string, val: unknown) => {
     switch (t) {
-      case 'accountsChanged':
+      case EVENTS.ACCOUNTS_CHANGED:
         this.emit(t, [val])
         break
-      case 'chainChanged':
+      case EVENTS.CHAIN_CHANGED:
         this.setChainId(val)
-        this.emit(
-          'chainChanged',
-          getHexFromNumber((val as { chainId: number }).chainId)
-        )
+        this.emit(t, getHexFromNumber((val as { chainId: number }).chainId))
         break
-      case 'connect':
+      case EVENTS.CONNECT:
         this.chainId =
           typeof val === 'object' ? (val as { chainId: string }).chainId : ''
         this.connected = true
-        this.emit('connect', val)
+        this.emit(t, val)
         break
-      case 'disconnect':
+      case EVENTS.DISCONNECT:
         this.iframe.handleDisconnect()
         this.connected = false
-        this.emit('disconnect', val)
+        this.emit(t, val)
         break
-      case 'message':
-        this.emit('message', val)
+      case EVENTS.MESSAGE:
+        this.emit(t, val)
         break
       default:
         break
     }
   }
+}
+
+const EVENTS = {
+  ACCOUNTS_CHANGED: 'accountsChanged',
+  CHAIN_CHANGED: 'chainChanged',
+  CONNECT: 'connect',
+  DISCONNECT: 'disconnect',
+  MESSAGE: 'message',
 }
 
 type ErrorObj = {
@@ -278,7 +275,7 @@ type ErrorObj = {
 }
 
 const getError = (error: string | ErrorObj) => {
-  getLogger('ArcanaProvider').error('getError', error)
+  getLogger().error('getError', error)
   switch (error) {
     case 'user_deny':
       return new ProviderError(4001, 'User rejected the request.')
