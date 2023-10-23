@@ -13,7 +13,13 @@ import SafeEventEmitter from '@metamask/safe-event-emitter'
 import { ArcanaAuthError, ErrorNotLoggedIn } from './errors'
 import { getLogger, Logger } from './logger'
 import IframeWrapper from './iframeWrapper'
-import { getCurrentUrl, getHexFromNumber, getUniqueId } from './utils'
+import Popup from './popup'
+import {
+  encodeJSONToBase64,
+  getCurrentUrl,
+  getHexFromNumber,
+  getUniqueId,
+} from './utils'
 
 export interface RequestArguments {
   method: string
@@ -32,6 +38,16 @@ class ProviderError extends Error implements JsonRpcError {
   }
 }
 
+const permissionedMethod = [
+  'eth_sendTransaction',
+  'eth_signTransaction',
+  'eth_sign',
+  'eth_signTypedData_v3',
+  'eth_signTypedData_v4',
+  'personal_sign',
+  'eth_decrypt',
+]
+
 interface AuthProvider {
   loginWithSocial(loginType: string): void
   loginWithLink(email: string): void
@@ -49,7 +65,10 @@ export class ArcanaProvider
   private subscriber: SafeEventEmitter
   private iframe: IframeWrapper
   private logger: Logger = getLogger()
-  constructor(private rpcConfig: ChainConfigInput | undefined) {
+  constructor(
+    private authUrl: string,
+    private rpcConfig: ChainConfigInput | undefined
+  ) {
     super()
     this.subscriber = new SafeEventEmitter()
   }
@@ -199,10 +218,24 @@ export class ArcanaProvider
     }
 
     return new Promise((resolve, reject) => {
-      this.getCommunication().then(async (c) => {
-        this.getResponse<string>(method, req.id).then(resolve, reject)
-        await c.sendRequest(req)
-      }, reject)
+      if (permissionedMethod.includes(method)) {
+        const url = this.createRequestUrl(req)
+        const popup = new Popup(url)
+        popup.open('request').then((value: any) => {
+          console.log({ value })
+          if (value.error) {
+            console.log({ error: value.error })
+            return reject(getError(value.error))
+          } else {
+            return resolve(value.result)
+          }
+        })
+      } else {
+        this.getCommunication().then(async (c) => {
+          this.getResponse<string>(method, req.id).then(resolve, reject)
+          await c.sendRequest(req)
+        }, reject)
+      }
     })
   }
 
@@ -218,6 +251,13 @@ export class ArcanaProvider
         }
       )
     })
+  }
+
+  private createRequestUrl(data: any) {
+    const u = new URL('/permission/', this.authUrl)
+    const hash = encodeJSONToBase64(data)
+    u.hash = hash
+    return u.href
   }
 
   setChainId(val: unknown) {
@@ -279,6 +319,8 @@ const getError = (error: string | ErrorObj) => {
   switch (error) {
     case 'user_deny':
       return new ProviderError(4001, 'User rejected the request.')
+    case 'user_closed_popup':
+      return new ProviderError(4001, 'User closed the popup.')
     case 'operation_not_supported':
       return new ProviderError(
         4200,

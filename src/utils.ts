@@ -1,10 +1,4 @@
-import {
-  ConstructorParams,
-  WalletPosition,
-  Position,
-  Theme,
-  Network,
-} from './typings'
+import { ConstructorParams, WalletPosition, Theme, Network } from './typings'
 
 const fallbackLogo = {
   light:
@@ -268,4 +262,42 @@ export {
   getConstructorParams,
   getParamsFromClientId,
   isClientId,
+}
+
+/**
+ * Decodes a Base64 string. Safe for UTF-8 characters.
+ * Original source is from the `universal-base64` NPM package.
+ *
+ * @source https://github.com/blakeembrey/universal-base64/blob/master/src/browser.ts
+ */
+function atobUTF8(str: string) {
+  return decodeURIComponent(Array.from(atob(str), byteToPercent).join(''))
+}
+
+function byteToPercent(b: string) {
+  return `%${`00${b.charCodeAt(0).toString(16)}`.slice(-2)}`
+}
+
+/**
+ * Given a JSON-serializable object, encode as a Base64-URL string.
+ */
+export function encodeJSONToBase64(options: unknown): string {
+  return escape(btoaUTF8(JSON.stringify(options)))
+}
+
+/**
+ * Given a Base64-URL JSON string, decode a JavaScript object.
+ */
+export function decodeBase64ToJSON<T>(queryString: string): T {
+  return JSON.parse(atobUTF8(unescape(queryString)))
+}
+
+function unescape(str: string) {
+  return (str + '==='.slice((str.length + 3) % 4))
+    .replace(/-/g, '+')
+    .replace(/_/g, '/')
+}
+
+function escape(str: string) {
+  return str.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '')
 }
