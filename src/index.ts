@@ -41,16 +41,7 @@ import isEmail from 'validator/es/lib/isEmail'
 class AuthProvider {
   public appId: string
   private params: ConstructorParams
-<<<<<<< HEAD
   private providerInfo: EIP6963ProviderInfo
-=======
-  private providerInfo: EIP6963ProviderInfo = {
-    uuid: window.crypto.randomUUID(),
-    name: 'Arcana Wallet',
-    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>", // TODO: Fix this
-    rdns: 'network.arcana.wallet',
-  }
->>>>>>> 9b61ba3 (announcing providers acc to eip 6963, updated logger to a singleton)
   private appConfig: AppConfig
   private iframeWrapper: IframeWrapper
   private networkConfig: NetworkConfig
@@ -361,7 +352,7 @@ class AuthProvider {
       u.searchParams.set('sessionID', session.id)
 
       const popup = new Popup(u.toString())
-      await popup.open()
+      await popup.open('login')
       await this.waitForConnect()
       return
     }
@@ -378,7 +369,7 @@ class AuthProvider {
 
   private async beginLogin(url: string): Promise<EthereumProvider> {
     const popup = new Popup(url)
-    await popup.open()
+    await popup.open('login')
     return await this.waitForConnect()
   }
 
