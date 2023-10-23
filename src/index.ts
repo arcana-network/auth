@@ -70,7 +70,10 @@ class AuthProvider {
 
     preLoadIframe(this.networkConfig.walletUrl, this.appId)
     this.rpcConfig = this.params.chainConfig
-    this._provider = new ArcanaProvider(this.rpcConfig)
+    this._provider = new ArcanaProvider(
+      this.networkConfig.authUrl,
+      this.rpcConfig
+    )
 
     if (this.params.debug) {
       setLogLevel(LOG_LEVEL.DEBUG)
@@ -339,7 +342,7 @@ class AuthProvider {
       u.searchParams.set('sessionID', session.id)
 
       const popup = new Popup(u.toString())
-      await popup.open()
+      await popup.open('login')
       await this.waitForConnect()
       return
     }
@@ -356,7 +359,7 @@ class AuthProvider {
 
   private async beginLogin(url: string): Promise<EthereumProvider> {
     const popup = new Popup(url)
-    await popup.open()
+    await popup.open('login')
     return await this.waitForConnect()
   }
 
