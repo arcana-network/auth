@@ -52,6 +52,7 @@ interface AuthProvider {
   loginWithSocial(loginType: string): void
   loginWithLink(email: string): void
   connect(): Promise<EthereumProvider>
+  appId: string
 }
 
 export class ArcanaProvider
@@ -254,8 +255,13 @@ export class ArcanaProvider
   }
 
   private createRequestUrl(data: any) {
+    const r = {
+      appId: this.auth.appId,
+      chainId: this.chainId,
+      request: data,
+    }
     const u = new URL('/permission/', this.authUrl)
-    const hash = encodeJSONToBase64(data)
+    const hash = encodeJSONToBase64(r)
     u.hash = hash
     return u.href
   }
