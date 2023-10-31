@@ -15,6 +15,7 @@ import {
   AppMode,
   BearerAuthentication,
   ChainConfigInput,
+  ChainType,
   ConstructorParams,
   EthereumProvider,
   FirebaseBearer,
@@ -26,12 +27,14 @@ import {
   ThemeConfig,
   UserInfo,
 } from './typings'
-import isEmail from 'validator/es/lib/isEmail'
 import { getAppInfo, getImageUrls } from './appInfo'
 import { ArcanaAuthError, ErrorNotInitialized } from './errors'
 import { LOG_LEVEL, setExceptionReporter, setLogLevel } from './logger'
 import Popup from './popup'
 import { ModalController } from './ui/modalController'
+import { ArcanaSolanaAPI } from './solana'
+
+import isEmail from 'validator/es/lib/isEmail'
 
 class AuthProvider {
   public appId: string
@@ -297,7 +300,7 @@ class AuthProvider {
   }
 
   /**
-   * A function to to be called before trying to .reconnect()
+   * A function to be called before trying to .reconnect()
    */
   public async canReconnect() {
     await this.init()
@@ -384,6 +387,7 @@ class AuthProvider {
       appInfo.logo.dark_vertical || appInfo.logo.light_vertical
     this.appConfig = {
       name: appInfo.name,
+      chainType: appInfo.chain_type,
       themeConfig: {
         assets: {
           logo: {
@@ -420,6 +424,15 @@ class AuthProvider {
       return this._provider
     }
     throw ErrorNotInitialized
+  }
+
+  get solana() {
+    // Throw error if uninitialized first
+    const s = new ArcanaSolanaAPI(this.provider)
+    if (this.appConfig.chainType != ChainType.solana_cv25519) {
+      throw new Error('This API is only accessible in Solana applications')
+    }
+    return s
   }
 
   get logo() {

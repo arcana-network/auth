@@ -15,7 +15,7 @@ import { getLogger, Logger } from './logger'
 import IframeWrapper from './iframeWrapper'
 import { getCurrentUrl, getHexFromNumber, getUniqueId } from './utils'
 
-interface RequestArguments {
+export interface RequestArguments {
   method: string
   params?: unknown[] | Record<string, unknown>
 }

@@ -52,6 +52,11 @@ export enum InitStatus {
   DONE,
 }
 
+export enum ChainType {
+  evm_secp256k1 = 'evm_secp256k1',
+  solana_cv25519 = 'solana_cv25519',
+}
+
 export interface IframeWrapperParams {
   appId: string
   iframeUrl: string
@@ -72,6 +77,7 @@ export interface ThemeConfig {
 
 export interface AppInfo {
   name: string
+  chain_type: ChainType
   theme: Theme
   logo: {
     dark_horizontal?: string
@@ -83,6 +89,7 @@ export interface AppInfo {
 
 export interface AppConfig {
   name: string
+  chainType: ChainType
   themeConfig: ThemeConfig
 }
 
