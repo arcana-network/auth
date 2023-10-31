@@ -397,8 +397,7 @@ class AuthProvider {
       appInfo.logo.dark_vertical || appInfo.logo.light_vertical
     this.appConfig = {
       name: appInfo.name,
-      // chainType: ChainType.solana_cv25519,
-      chainType: ChainType.evm_secp256k1,
+     chainType: appInfo.chain_type,
       themeConfig: {
         assets: {
           logo: {
