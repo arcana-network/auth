@@ -22,7 +22,7 @@ import {
   getUniqueId,
 } from './utils'
 
-interface RequestArguments {
+export interface RequestArguments {
   method: string
   params?: unknown[] | Record<string, unknown>
 }

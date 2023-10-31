@@ -90,6 +90,7 @@
   },
   "dependencies": {
     "@metamask/safe-event-emitter": "^2.0.0",
+    "bs58": "^5.0.0",
     "eth-rpc-errors": "^4.0.3",
     "penpal": "^6.0.1",
     "validator": "^13.11.0"
