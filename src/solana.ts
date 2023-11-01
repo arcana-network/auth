@@ -35,6 +35,11 @@ export class ArcanaSolanaAPI {
       case 'signMessage': {
         return this.parseSignatureResponse(response as SignatureResRaw)
       }
+      case 'signTransaction': {
+        return this.web3Module.VersionedTransaction.deserialize(
+          bs58.decode(response as string)
+        )
+      }
       default: {
         return response
       }
@@ -48,15 +53,26 @@ export class ArcanaSolanaAPI {
     }
   }
 
-  async signMessage(data: Uint8Array, display: string): Promise<SignatureRes> {
-    const response = (await this.p.request({
+  signMessage(data: Uint8Array, display: string): Promise<SignatureRes> {
+    const r = this.request({
       method: 'signMessage',
       params: {
         message: this.bs58Module.encode(data),
         display,
       },
-    })) as SignatureResRaw
+    })
+    return r as Promise<SignatureRes>
+  }
 
-    return this.parseSignatureResponse(response)
+  signTransaction(
+    tx: Web3Module.VersionedTransaction | Web3Module.Transaction
+  ): Promise<Web3Module.VersionedTransaction> {
+    const r = this.request({
+      method: 'signTransaction',
+      params: {
+        message: this.bs58Module.encode(tx.serialize()),
+      },
+    })
+    return r as Promise<Web3Module.VersionedTransaction>
   }
 }
