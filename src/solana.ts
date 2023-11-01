@@ -29,8 +29,23 @@ export class ArcanaSolanaAPI {
     return this.p.connected
   }
 
-  async request(args: RequestArguments): Promise<unknown> {
+  async request(_args: RequestArguments): Promise<unknown> {
+    const args = structuredClone(_args)
+
+    switch (args.method) {
+      case 'signMessage': {
+        const p = args.params as {
+          message: string | Uint8Array | Buffer
+          display: string
+        }
+        if (Buffer.isBuffer(p.message) || p.message instanceof Uint8Array) {
+          p.message = this.bs58Module.encode(p.message)
+        }
+      }
+    }
+
     const response = await this.p.request(args)
+
     switch (args.method) {
       case 'signMessage': {
         return this.parseSignatureResponse(response as SignatureResRaw)
