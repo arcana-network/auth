@@ -38,7 +38,7 @@ export class ArcanaSolanaAPI {
           message: string | Uint8Array | Buffer
           display: string
         }
-        if (Buffer.isBuffer(p.message) || p.message instanceof Uint8Array) {
+        if (p.message instanceof Uint8Array) {
           p.message = this.bs58Module.encode(p.message)
         }
       }
@@ -89,5 +89,17 @@ export class ArcanaSolanaAPI {
       },
     })
     return r as Promise<Web3Module.VersionedTransaction>
+  }
+
+  signAndSendTransaction(
+    tx: Web3Module.VersionedTransaction | Web3Module.Transaction
+  ): Promise<{ signature: string; publicKey: string }> {
+    const r = this.request({
+      method: 'signAndSendTransaction',
+      params: {
+        message: this.bs58Module.encode(tx.serialize()),
+      },
+    })
+    return r as Promise<{ signature: string; publicKey: string }>
   }
 }
