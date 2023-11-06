@@ -397,7 +397,7 @@ class AuthProvider {
       appInfo.logo.dark_vertical || appInfo.logo.light_vertical
     this.appConfig = {
       name: appInfo.name,
-     chainType: appInfo.chain_type,
+      chainType: appInfo.chain_type,
       themeConfig: {
         assets: {
           logo: {
