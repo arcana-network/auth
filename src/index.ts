@@ -45,10 +45,13 @@ class AuthProvider {
   private appConfig: AppConfig
   private iframeWrapper: IframeWrapper
   private networkConfig: NetworkConfig
-  private rpcConfig: ChainConfigInput | undefined
+  private readonly rpcConfig: ChainConfigInput | undefined
   private initStatus: InitStatus = InitStatus.CREATED
   private initPromises: ((value: AuthProvider) => void)[] = []
-  private _provider: ArcanaProvider
+
+  private readonly _provider: ArcanaProvider
+  private _solanaAPI: ArcanaSolanaAPI
+
   private connectCtrl: ModalController
   private _standaloneMode: {
     mode: 1 | 2
@@ -114,6 +117,12 @@ class AuthProvider {
 
       await this._provider.init(this.iframeWrapper, this)
       this.setProviders()
+
+      switch (this.appConfig.chainType) {
+        case ChainType.solana_cv25519: {
+          this._solanaAPI = await ArcanaSolanaAPI.create(this._provider)
+        }
+      }
 
       this.initStatus = InitStatus.DONE
       this.resolveInitPromises()
@@ -388,7 +397,7 @@ class AuthProvider {
       appInfo.logo.dark_vertical || appInfo.logo.light_vertical
     this.appConfig = {
       name: appInfo.name,
-      chainType: appInfo.chain_type,
+      chainType: ChainType.solana_cv25519,
       themeConfig: {
         assets: {
           logo: {
@@ -428,12 +437,10 @@ class AuthProvider {
   }
 
   get solana() {
-    // Throw error if uninitialized first
-    const s = new ArcanaSolanaAPI(this.provider)
-    if (this.appConfig.chainType != ChainType.solana_cv25519) {
-      throw new Error('This API is only accessible in Solana applications')
+    if (this._solanaAPI) {
+      return this._solanaAPI
     }
-    return s
+    throw ErrorNotInitialized
   }
 
   get logo() {
