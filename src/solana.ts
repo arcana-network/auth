@@ -1,6 +1,6 @@
 import type { ArcanaProvider, RequestArguments } from './provider'
 import type * as Web3Module from '@solana/web3.js'
-import * as bs58 from 'bs58'
+import type * as BS58Module from 'bs58'
 
 type SignatureRes = {
   publicKey: Web3Module.PublicKey // can use new solanaWeb3.PublicKey(address),
@@ -22,7 +22,7 @@ export class ArcanaSolanaAPI {
   constructor(
     private p: ArcanaProvider,
     private web3Module: typeof Web3Module,
-    private bs58Module: typeof bs58
+    private bs58Module: typeof BS58Module
   ) {}
 
   get isConnected() {
@@ -52,7 +52,14 @@ export class ArcanaSolanaAPI {
       }
       case 'signTransaction': {
         return this.web3Module.VersionedTransaction.deserialize(
-          bs58.decode(response as string)
+          this.bs58Module.decode(response as string)
+        )
+      }
+      case 'signAllTransactions': {
+        return (response as string[]).map((x) =>
+          this.web3Module.VersionedTransaction.deserialize(
+            this.bs58Module.decode(x)
+          )
         )
       }
       default: {
@@ -101,5 +108,17 @@ export class ArcanaSolanaAPI {
       },
     })
     return r as Promise<{ signature: string; publicKey: string }>
+  }
+
+  signAllTransactions(
+    txes: (Web3Module.VersionedTransaction | Web3Module.Transaction)[]
+  ): Promise<Web3Module.VersionedTransaction[]> {
+    const r = this.request({
+      method: 'signAllTransactions',
+      params: {
+        message: txes.map((x) => this.bs58Module.encode(x.serialize())),
+      },
+    })
+    return r as Promise<Web3Module.VersionedTransaction[]>
   }
 }
