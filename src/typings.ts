@@ -141,6 +141,7 @@ export interface ChildMethods {
   }
   expandWallet: () => Promise<void>
   getReconnectionUrl: () => Promise<string>
+  getKeySpaceConfigType: () => Promise<string>
 }
 
 export interface ParentMethods {
