@@ -176,6 +176,11 @@ export class ArcanaProvider
     return await c.expandWallet()
   }
 
+  private async getKeySpaceConfigType() {
+    const c = await this.getCommunication('getKeySpaceConfigType')
+    return await c.getKeySpaceConfigType()
+  }
+
   private async getCommunication(
     expectedFn: keyof ChildMethods = 'sendRequest'
   ) {
@@ -218,8 +223,10 @@ export class ArcanaProvider
       id: getUniqueId(),
     }
 
+    const keySpaceType = await this.getKeySpaceConfigType()
+
     return new Promise((resolve, reject) => {
-      if (permissionedMethod.includes(method)) {
+      if (permissionedMethod.includes(method) && keySpaceType === 'global') {
         const url = this.createRequestUrl(req)
         const popup = new Popup(url)
         popup.open('request').then((value: any) => {
