@@ -66,6 +66,7 @@ export class ArcanaProvider
   private subscriber: SafeEventEmitter
   private iframe: IframeWrapper
   private logger: Logger = getLogger()
+  private popup: Popup | null = null
   constructor(
     private authUrl: string,
     private rpcConfig: ChainConfigInput | undefined
@@ -228,8 +229,9 @@ export class ArcanaProvider
     return new Promise((resolve, reject) => {
       if (permissionedMethod.includes(method) && keySpaceType === 'global') {
         const url = this.createRequestUrl(req)
-        const popup = new Popup(url)
-        popup.open('request').then((value: any) => {
+        if (!this.popup) this.popup = new Popup(url)
+        this.popup.setUrl(url)
+        this.popup.open('request').then((value: any) => {
           console.log({ value })
           if (value.error) {
             console.log({ error: value.error })

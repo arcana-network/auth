@@ -2,18 +2,36 @@ import { JsonRpcResponse } from './typings'
 
 class Popup {
   private window: Window | null
-  constructor(public url: string) {}
+  private url: string
+  private requestCount: number
+  constructor(url: string) {
+    this.url = url
+  }
 
   public open(type: 'login'): Promise<unknown>
   public open(type: 'request'): Promise<JsonRpcResponse<unknown>>
   public open(type: 'login' | 'request' = 'login') {
     const windowFeatures = getWindowFeatures()
-    this.window = window.open(this.url, '_blank', windowFeatures)
+    if (type === 'request' && this.window && !this.window.closed) {
+      this.requestCount += 1
+      this.window.postMessage(
+        { type: 'request', data: this.url },
+        'http://localhost:8080'
+      )
+      this.window.focus()
+    } else {
+      if (type === 'request') this.requestCount = 1
+      this.window = window.open(this.url, '_blank', windowFeatures)
+    }
     if (type == 'login') {
       return this.getWindowResponse()
     } else {
       return this.requestHandler()
     }
+  }
+
+  public setUrl(url: string) {
+    this.url = url
   }
 
   private getWindowResponse() {
@@ -69,7 +87,10 @@ class Popup {
         if (event.data.type == 'json_rpc_response') {
           cleanExit = true
           this.clear(handler, id)
-          this.window?.close()
+          if (this.requestCount <= 1) {
+            this.window?.close()
+          }
+          this.requestCount -= 1
           return resolve(event.data.response)
         }
       }
