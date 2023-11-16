@@ -354,7 +354,7 @@ class AuthProvider {
       u.searchParams.set('sessionID', session.id)
 
       const popup = new Popup(u.toString())
-      await popup.open('login')
+      await popup.open()
       await this.waitForConnect()
       return
     }
@@ -371,7 +371,7 @@ class AuthProvider {
 
   private async beginLogin(url: string): Promise<EthereumProvider> {
     const popup = new Popup(url)
-    await popup.open('login')
+    await popup.open()
     return await this.waitForConnect()
   }
 

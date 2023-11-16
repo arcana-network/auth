@@ -6,6 +6,7 @@ import {
   JsonRpcId,
   JsonRpcRequest,
   JsonRpcResponse,
+  JsonRpcSuccess,
 } from './typings'
 import { Connection } from 'penpal'
 import { ethErrors } from 'eth-rpc-errors'
@@ -13,7 +14,7 @@ import SafeEventEmitter from '@metamask/safe-event-emitter'
 import { ArcanaAuthError, ErrorNotLoggedIn } from './errors'
 import { getLogger, Logger } from './logger'
 import IframeWrapper from './iframeWrapper'
-import Popup from './popup'
+import { RequestPopupHandler } from './popup'
 import {
   encodeJSONToBase64,
   getCurrentUrl,
@@ -66,7 +67,7 @@ export class ArcanaProvider
   private subscriber: SafeEventEmitter
   private iframe: IframeWrapper
   private logger: Logger = getLogger()
-  private popup: Popup | null = null
+  private popup: RequestPopupHandler
   constructor(
     private authUrl: string,
     private rpcConfig: ChainConfigInput | undefined
@@ -81,6 +82,7 @@ export class ArcanaProvider
 
   public async init(iframe: IframeWrapper, auth: AuthProvider) {
     this.auth = auth
+    this.popup = new RequestPopupHandler(this.createRequestUrl(auth.appId))
     this.iframe = iframe
     const { communication } = await this.iframe.setConnectionMethods({
       onEvent: this.handleEvents,
@@ -227,19 +229,23 @@ export class ArcanaProvider
     const keySpaceType = await this.getKeySpaceConfigType()
 
     return new Promise((resolve, reject) => {
-      if (permissionedMethod.includes(method) && keySpaceType === 'global') {
-        const url = this.createRequestUrl(req)
-        if (!this.popup) this.popup = new Popup(url)
-        this.popup.setUrl(url)
-        this.popup.open('request').then((value: any) => {
-          console.log({ value })
-          if (value.error) {
-            console.log({ error: value.error })
-            return reject(getError(value.error))
-          } else {
-            return resolve(value.result)
-          }
-        })
+      if (permissionedMethod.includes(method)) {
+        this.popup
+          .sendRequest({
+            chainId: this.chainId,
+            request: req,
+          })
+          .then((value: JsonRpcResponse<unknown>) => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore-next-line
+            if (value.error) {
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore-next-line
+              return reject(getError(value.error))
+            } else {
+              return resolve((<JsonRpcSuccess<unknown>>value).result)
+            }
+          })
       } else {
         this.getCommunication().then(async (c) => {
           this.getResponse<string>(method, req.id).then(resolve, reject)
@@ -263,15 +269,8 @@ export class ArcanaProvider
     })
   }
 
-  private createRequestUrl(data: any) {
-    const r = {
-      appId: this.auth.appId,
-      chainId: this.chainId,
-      request: data,
-    }
-    const u = new URL('/permission/', this.authUrl)
-    const hash = encodeJSONToBase64(r)
-    u.hash = hash
+  private createRequestUrl(appId: string) {
+    const u = new URL(`/${appId}/permission/`, this.authUrl)
     return u.href
   }
 
