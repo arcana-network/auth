@@ -227,9 +227,10 @@ export class ArcanaProvider
     }
 
     const keySpaceType = await this.getKeySpaceConfigType()
+    const c = await this.getCommunication('addToActivity')
 
     return new Promise((resolve, reject) => {
-      if (permissionedMethod.includes(method)) {
+      if (permissionedMethod.includes(method) && keySpaceType === 'global') {
         this.popup
           .sendRequest({
             chainId: this.chainId,
@@ -238,12 +239,22 @@ export class ArcanaProvider
           .then((value: JsonRpcResponse<unknown>) => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore-next-line
-            if (value.error) {
+            const error = value.error
+            if (error) {
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore-next-line
-              return reject(getError(value.error))
+              if (value.error === 'user_closed_popup') {
+                c.addToActivity({ req, error })
+              }
+              return reject(getError(error))
             } else {
-              return resolve((<JsonRpcSuccess<unknown>>value).result)
+              const result = (<JsonRpcSuccess<unknown>>value).result
+              c.addToActivity({
+                req,
+                result,
+                chainId: this.chainId,
+              })
+              return resolve(result)
             }
           })
       } else {
