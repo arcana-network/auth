@@ -243,9 +243,6 @@ export class ArcanaProvider
             if (error) {
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore-next-line
-              if (value.error === 'user_closed_popup') {
-                c.addToActivity({ req, error })
-              }
               return reject(getError(error))
             } else {
               const result = (<JsonRpcSuccess<unknown>>value).result
