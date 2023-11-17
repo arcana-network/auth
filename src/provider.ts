@@ -99,12 +99,6 @@ export class ArcanaProvider
       setIframeStyle: this.iframe.setIframeStyle,
       setSessionID: this.iframe.setSessionID,
       getSDKVersion: () => 'v3',
-      requestFromWallet: (request) => {
-        this.popup.sendRequest({
-          chainId: this.chainId,
-          request,
-        })
-      },
     })
     this.communication = communication
   }
