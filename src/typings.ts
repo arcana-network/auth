@@ -161,6 +161,7 @@ export interface ParentMethods {
   getWalletPosition: () => Position
   getSDKVersion: () => SDKVersion
   setSessionID: (id: string, exp: number) => void
+  requestFromWallet: (req: any) => void
 }
 
 export interface TypedDataMessage {
