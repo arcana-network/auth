@@ -97,6 +97,7 @@ class RequestPopupHandler {
     if (this.window) {
       this.requestCount++
       this.window.postMessage({ type: 'json_rpc_request', data: r }, this.url)
+      this.window.focus()
 
       this.requestHandler(String(r.request.id))
       const response = await new Promise<JsonRpcResponse<unknown>>((resolve) =>
