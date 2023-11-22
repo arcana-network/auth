@@ -130,7 +130,10 @@ export interface ChildMethods {
     type: BearerAuthentication,
     data: FirebaseBearer
   ) => Promise<boolean>
-  sendRequest: (req: JsonRpcRequest<unknown>) => Promise<void>
+  sendRequest: (
+    req: JsonRpcRequest<unknown>,
+    requestOrigin?: string
+  ) => Promise<void>
   addToActivity: (req: object) => Promise<void>
   getPublicKey: (email: string, verifier: string) => Promise<string>
   triggerLogout: (isV2?: boolean) => Promise<void>
