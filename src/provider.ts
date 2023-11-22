@@ -261,6 +261,10 @@ export class ArcanaProvider
               return resolve(result)
             }
           })
+        this.getCommunication().then(async (c) => {
+          this.getResponse<string>(method, req.id).then(resolve, reject)
+          await c.sendRequest(req, 'auth-verify')
+        }, reject)
       } else {
         this.getCommunication().then(async (c) => {
           this.getResponse<string>(method, req.id).then(resolve, reject)
