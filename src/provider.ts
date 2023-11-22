@@ -248,7 +248,9 @@ export class ArcanaProvider
                 error,
                 chainId: this.chainId,
               })
-              return reject(getError(error))
+              if (error !== 'user_closed_popup') {
+                return reject(getError(error))
+              }
             } else {
               const result = (<JsonRpcSuccess<unknown>>value).result
               c.addToActivity({
