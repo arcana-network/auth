@@ -54,6 +54,7 @@ export class ArcanaProvider
 {
   public chainId: string
   public connected = false
+  public addressType = ''
   private communication: Connection<ChildMethods>
   private subscriber: SafeEventEmitter
   private iframe: IframeWrapper
@@ -89,6 +90,9 @@ export class ArcanaProvider
       setIframeStyle: this.iframe.setIframeStyle,
       setSessionID: this.iframe.setSessionID,
       getSDKVersion: () => 'v3',
+      setAddressType: (type: string) => {
+        this.addressType = type
+      },
     })
     this.communication = communication
   }
@@ -109,6 +113,10 @@ export class ArcanaProvider
 
   public async isConnected() {
     return this.connected
+  }
+
+  public async getAddressType() {
+    return this.addressType
   }
 
   public async isLoginAvailable(type: string) {
@@ -264,6 +272,10 @@ export class ArcanaProvider
         break
       case 'message':
         this.emit('message', val)
+        break
+      case 'addressChanged':
+        this.addressType = val as string
+        this.emit('addressChanged', val)
         break
       default:
         break

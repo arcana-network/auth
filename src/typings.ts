@@ -152,6 +152,7 @@ export interface ParentMethods {
   getWalletPosition: () => Position
   getSDKVersion: () => SDKVersion
   setSessionID: (id: string, exp: number) => void
+  setAddressType: (addressType: string) => void
 }
 
 export interface TypedDataMessage {

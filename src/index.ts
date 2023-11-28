@@ -224,6 +224,10 @@ class AuthProvider {
     return this._provider.connected
   }
 
+  get addressType() {
+    return this._provider.addressType
+  }
+
   /**
    * A function to get user info for the logged-in user
    * @returns available user info
