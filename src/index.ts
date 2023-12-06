@@ -176,17 +176,15 @@ class AuthProvider {
    * A function to trigger social login in the wallet
    */
   loginWithSocial = async (loginType: string): Promise<EthereumProvider> => {
-    if (this.initStatus === InitStatus.DONE) {
-      if (await this.isLoggedIn()) {
-        return this._provider
-      }
-      if (!(await this._provider.isLoginAvailable(loginType))) {
-        throw new Error(`${loginType} login is not available`)
-      }
-      const url = await this._provider.initSocialLogin(loginType)
-      return this.beginLogin(url)
+    await this.init()
+    if (await this.isLoggedIn()) {
+      return this._provider
     }
-    throw ErrorNotInitialized
+    if (!(await this._provider.isLoginAvailable(loginType))) {
+      throw new Error(`${loginType} login is not available`)
+    }
+    const url = await this._provider.initSocialLogin(loginType)
+    return this.beginLogin(url)
   }
 
   /**
@@ -196,30 +194,30 @@ class AuthProvider {
     email: string,
     emailSentHook?: () => void
   ): Promise<EthereumProvider> => {
-    if (this.initStatus === InitStatus.DONE) {
-      if (await this.isLoggedIn()) {
-        return this._provider
-      }
-
-      if (!isEmail(email)) {
-        throw new Error('Invalid email')
-      }
-      await this._provider.initPasswordlessLogin(email)
-      if (emailSentHook) {
-        emailSentHook()
-      }
-      return await this.waitForConnect()
+    await this.init()
+    if (await this.isLoggedIn()) {
+      return this._provider
     }
-    throw ErrorNotInitialized
+
+    if (!isEmail(email)) {
+      throw new Error('Invalid email')
+    }
+    const url = await this._provider.initPasswordlessLogin(email)
+    if (url && typeof url === 'string') {
+      return this.beginLogin(url)
+    }
+
+    if (emailSentHook) {
+      emailSentHook()
+    }
+    return await this.waitForConnect()
   }
 
   loginWithBearer = async (
     type: BearerAuthentication,
     data: FirebaseBearer
   ): Promise<boolean> => {
-    if (this.initStatus !== InitStatus.DONE) {
-      throw ErrorNotInitialized
-    }
+    await this.init()
     return await this.iframeWrapper.triggerBearerAuthentication(type, data)
   }
 
@@ -243,7 +241,7 @@ class AuthProvider {
    */
   public async isLoggedIn() {
     if (this.initStatus === InitStatus.DONE) {
-      const isLoggedIn = this._provider.isLoggedIn()
+      const isLoggedIn = await this._provider.isLoggedIn()
       return isLoggedIn
     }
     throw ErrorNotInitialized

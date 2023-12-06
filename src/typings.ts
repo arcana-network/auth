@@ -132,10 +132,12 @@ export interface ChildMethods {
   triggerLogout: (isV2?: boolean) => Promise<void>
   getUserInfo: () => Promise<UserInfo>
   initSocialLogin(kind: string): Promise<string>
-  initPasswordlessLogin: (email: string) => {
-    sessionId: string
-    setToken: string
-  }
+  initPasswordlessLogin: (email: string) =>
+    | {
+        sessionId: string
+        setToken: string
+      }
+    | string
   expandWallet: () => Promise<void>
   getReconnectionUrl: () => Promise<string>
   getKeySpaceConfigType: () => Promise<string>
