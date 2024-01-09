@@ -15,12 +15,7 @@ import { ArcanaAuthError, ErrorNotLoggedIn } from './errors'
 import { getLogger, Logger } from './logger'
 import IframeWrapper from './iframeWrapper'
 import { RequestPopupHandler } from './popup'
-import {
-  encodeJSONToBase64,
-  getCurrentUrl,
-  getHexFromNumber,
-  getUniqueId,
-} from './utils'
+import { getCurrentUrl, getHexFromNumber, getUniqueId } from './utils'
 
 export interface RequestArguments {
   method: string
@@ -148,6 +143,15 @@ export class ArcanaProvider
     return url
   }
 
+  public async initOTPLogin(email: string) {
+    const c = await this.getCommunication('initOTPLogin')
+    await c.initOTPLogin(email)
+  }
+  public async completeOTPLogin(otp: string) {
+    const c = await this.getCommunication('completeOTPLogin')
+    await c.completeOTPLogin(otp)
+  }
+
   public async getPublicKey(email: string, verifier: string) {
     const c = await this.getCommunication('getPublicKey')
     return c.getPublicKey(email, verifier)
@@ -179,7 +183,7 @@ export class ArcanaProvider
     return await c.expandWallet()
   }
 
-  private async getKeySpaceConfigType() {
+  public async getKeySpaceConfigType() {
     const c = await this.getCommunication('getKeySpaceConfigType')
     return await c.getKeySpaceConfigType()
   }
@@ -325,6 +329,7 @@ export class ArcanaProvider
         this.emit(t, val)
         break
       case EVENTS.MESSAGE:
+        console.log({ t, val })
         this.emit(t, val)
         break
       default:

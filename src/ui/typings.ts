@@ -1,7 +1,10 @@
 import { ConnectOptions, Theme } from '../typings'
 
 type ModalParams = {
-  loginWithLink: (email: string, emailSentHook?: () => void) => Promise<unknown>
+  loginWithOTPStart: (
+    email: string
+  ) => Promise<{ begin: () => Promise<void>; isCompleteRequired: boolean }>
+  loginWithOTPComplete: (otp: string) => Promise<unknown>
   loginWithSocial: (type: string) => Promise<unknown>
   closeFunc: () => unknown
   loginList: string[]
