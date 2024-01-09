@@ -1,17 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@100;400;600;700&display=block');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Sora:wght@400;600&display=block');
 
 .xar-light-mode {
   --fg: #333333;
   --bg: #eff1f3;
   --background: #fcfcfc;
   --inputShadow: 0 0 8px 3px rgba(126, 126, 126, 0.25);
+  --text-color: #101010;
+  --otp-bg: #eeeeee;
+  --otp-shadow: 1px 1px 2px 0px #aeaec033 inset,
+    -1px -1px 1px 0px #ffffffb2 inset;
 }
 
 .xar-dark-mode {
   --fg: #ffffff;
   --bg: #313131;
-  --background: #1f1f1f;
+  --background: #262626;
   --inputShadow: 0 0 8px 3px rgba(0, 0, 0, 0.05);
+  --text-color: #f7f7f7;
+  --otp-bg: linear-gradient(141.48deg, #161616 -4.56%, #151515 135.63%);
+  --otp-shadow: -50px 49px 29px 22px #1c1c1cd6 inset,
+    5px 5px 10px 0px #0b0b0b80 inset;
 }
 
 .compact {
@@ -110,6 +119,7 @@
 .xar-email-login__input {
   height: 45px;
   padding: 0 16px;
+  font-family: 'Sora', sans-serif;
   font-size: 14px;
   font-weight: 400;
   color: var(--fg);
@@ -159,6 +169,7 @@
   box-shadow: 4px 5px 4px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
   box-sizing: content-box;
+  transition: all 1s ease;
 }
 
 .xar-inner-container {
@@ -246,6 +257,8 @@
 }
 
 .xar-action__link {
+  border: 0;
+  background: none;
   text-underline-offset: 3px;
   text-transform: uppercase;
   text-decoration: underline;
@@ -256,6 +269,11 @@
   cursor: pointer;
 }
 
+.xar-action__link:disabled {
+  color: #667b91;
+  cursor: not-allowed;
+}
+
 .xar-loader__text {
   font-size: var(--loader-font-size);
   font-weight: var(--loader-font-weight);
@@ -263,4 +281,64 @@
 
 .xar-loader-circle {
   stroke: var(--fg);
+}
+
+.xar-otp-box {
+  display: flex;
+  gap: 0.5em;
+}
+
+.xar-otp-input {
+  color: var(--fg);
+  font-size: 20px;
+  font-weight: 400;
+  border: none;
+  outline: none;
+  text-align: center;
+  width: 30px;
+  height: 35px;
+  border-radius: 10px;
+  background: var(--otp-bg);
+  box-shadow: var(--otp-shadow);
+}
+
+.xar-invalid-otp {
+  border: 1px solid #b43030;
+}
+
+.xar-invalid-otp-text {
+  color: #b43030;
+}
+
+.xar-otp-input:disabled {
+  opacity: 0.5;
+}
+
+.xar-otp-heading {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--text-color);
+}
+
+.xar-otp-sub-heading {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  text-align: center;
+  color: var(--text-color);
+}
+
+.xar-otp-error-heading {
+  color: var(--fg);
+  font-weight: 700;
+  font-size: 24px;
+  font-family: 'Montserrat', sans-serif;
+}
+.xar-otp-error-subheading {
+  color: var(--text-color);
+  font-weight: 400;
+  font-size: 12px;
+  font-family: 'Montserrat', sans-serif;
 }

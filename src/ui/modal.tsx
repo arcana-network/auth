@@ -6,16 +6,17 @@ import {
   SocialLogin,
   Container,
   Loader,
-  Action,
+  OTPEntry,
+  OTPError,
 } from './components'
 import { Overlay } from './overlay'
 import { useReducer, useState } from 'preact/hooks'
-import { ICONS } from '../utils'
 
 const WAIT_TEXT = {
   SOCIAL: 'Please complete the login to proceed',
-  LINK: 'Sending login link to your email',
-  LINK_SENT: 'Please complete the login by clicking on email',
+  OTP_INIT: 'Sending login OTP to your email address',
+  OTP_SENT: '',
+  OTP_ERROR: 'Invalid OTP, please try again',
 }
 
 const initLoaderState = {
@@ -26,13 +27,13 @@ const initLoaderState = {
 
 const reducer = (
   state: typeof initLoaderState,
-  action: 'SOCIAL' | 'LINK' | 'RESET' | 'LINK_SENT'
+  action: 'SOCIAL' | 'RESET' | 'OTP_SENT' | 'OTP_INIT' | 'OTP_ERROR'
 ) => {
-  if (action == 'SOCIAL' || action == 'LINK' || action == 'LINK_SENT') {
+  if (action == 'SOCIAL' || action == 'OTP_SENT' || action == 'OTP_INIT' || action == 'OTP_ERROR') {
     return {
       text: WAIT_TEXT[action],
       type: action,
-      loading: true,
+      loading: action == 'OTP_ERROR' ? false : true,
     }
   } else if (action == 'RESET') {
     return initLoaderState
@@ -53,49 +54,31 @@ const Modal = (props: ModalParams) => {
     })
   }
 
-  const linkLogin = async () => {
-    if (!email) {
-      return
-    }
-
-    dispatch('LINK')
-
-    props
-      .loginWithLink(email, () => {
-        dispatch('LINK_SENT')
-      })
-      .finally(() => {
-        dispatch('RESET')
-      })
+  const otpLogin = async (email: string) => {
+    dispatch('OTP_INIT')
+    const login = await props.loginWithOTPStart(email)
+    dispatch('OTP_SENT')
+    return login
   }
 
   if (loaderState.loading) {
     return (
       <Overlay>
         <Container mode={props.mode}>
-          <Loader
-            compact={props.options.compact}
-            text={loaderState.text}
-            mode={props.mode}
-            header={
-              loaderState.type == 'LINK_SENT' ? (
-                <img className="xar-success__img" src={ICONS.success} />
-              ) : undefined
-            }
-          >
-            {loaderState.type == 'LINK_SENT' ? (
-              <>
-                <Action
-                  method={() => linkLogin()}
-                  text="Resend email"
-                />
-                <Action
-                  method={() => dispatch('RESET')}
-                  text="Change email id"
-                />
-              </>
-            ) : null}
-          </Loader>
+          {loaderState.type == 'OTP_SENT' ?
+            <OTPEntry 
+              loginWithOtpStart={() => props.loginWithOTPStart(email)}
+              setError={() => dispatch('OTP_ERROR')}
+              closeFunc={props.closeFunc}
+              loginWithOtpComplete={props.loginWithOTPComplete} 
+              compact={props.options.compact}
+            /> :
+            (<Loader
+              compact={props.options.compact}
+              text={loaderState.text}
+              mode={props.mode}
+            >
+            </Loader>)}
         </Container>
       </Overlay>
     )
@@ -104,22 +87,27 @@ const Modal = (props: ModalParams) => {
   return (
     <Overlay closeFunc={props.closeFunc}>
       <Container mode={props.mode}>
-        <Header compact={props.options.compact} logo={props.logo} />
-        <EmailLogin
-          email={email}
-          setEmail={setEmail}
-          loginWithLink={linkLogin}
-        />
-        {props.loginList.length > 0 ? (
+        {loaderState.type == 'OTP_ERROR' ? 
+        <OTPError action={() => dispatch('RESET')}/> :
           <>
-            <Separator text="or continue with" />
-            <SocialLogin
-              loginWithSocial={socialLogin}
-              loginList={props.loginList}
-              mode={props.mode}
+            <Header compact={props.options.compact} logo={props.logo} />
+            <EmailLogin
+              email={email}
+              setEmail={setEmail}
+              loginWithOTPStart={otpLogin}
             />
-          </>
-        ) : null}
+            {props.loginList.length > 0 ? (
+              <>
+                <Separator text="or continue with" />
+                <SocialLogin
+                  loginWithSocial={socialLogin}
+                  loginList={props.loginList}
+                  mode={props.mode}
+                />
+              </>
+            ) : null}
+          </>}
+
       </Container>
     </Overlay>
   )

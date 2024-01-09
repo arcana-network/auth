@@ -135,6 +135,25 @@ class AuthProvider {
     return this
   }
 
+  public loginWithOTPStart = async (email: string) => {
+    await this.init()
+    return {
+      begin: () => this._loginWithOTPStart(email),
+      isCompleteRequired:
+        (await this._provider.getKeySpaceConfigType()) === 'global',
+    }
+  }
+
+  public loginWithOTPComplete = async (
+    email: string,
+    onMFAFlow?: () => void
+  ) => {
+    if ((await this._provider.getKeySpaceConfigType()) === 'global') {
+      throw new Error('complete is not required for global login')
+    }
+    await this._loginWithOTPComplete(email, onMFAFlow)
+  }
+
   /**
    * A function to open login plug n play modal
    */
@@ -151,7 +170,8 @@ class AuthProvider {
 
     if (!this.connectCtrl) {
       this.connectCtrl = new ModalController({
-        loginWithLink: this.loginWithLink,
+        loginWithOTPStart: this.loginWithOTPStart,
+        loginWithOTPComplete: this.loginWithOTPComplete,
         loginWithSocial: this.loginWithSocial,
         loginList: logins,
         mode: this.theme,
@@ -222,6 +242,40 @@ class AuthProvider {
     if (emailSentHook) {
       emailSentHook()
     }
+    return await this.waitForConnect()
+  }
+
+  private _loginWithOTPStart = async (email: string) => {
+    await this.init()
+    if (await this.isLoggedIn()) {
+      return
+    }
+
+    if (!isEmail(email)) {
+      throw new Error('Invalid email')
+    }
+
+    await this._provider.initOTPLogin(email)
+  }
+
+  private _loginWithOTPComplete = async (
+    otp: string,
+    onMFAFlow?: () => void
+  ) => {
+    await this.init()
+    if (await this.isLoggedIn()) {
+      return this._provider
+    }
+
+    this._provider.once('message', (msg) => {
+      if (msg === 'mfa_flow') {
+        if (onMFAFlow) {
+          onMFAFlow()
+        }
+      }
+    })
+
+    await this._provider.completeOTPLogin(otp)
     return await this.waitForConnect()
   }
 

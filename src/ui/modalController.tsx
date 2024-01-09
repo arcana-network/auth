@@ -11,7 +11,8 @@ class ModalController {
     this.params = {
       loginList: params.loginList.filter((l) => l !== 'passwordless'),
       loginWithSocial: params.loginWithSocial,
-      loginWithLink: params.loginWithLink,
+      loginWithOTPStart: params.loginWithOTPStart,
+      loginWithOTPComplete: params.loginWithOTPComplete,
       mode: params.mode,
       closeFunc: this.close,
       logo: params.logo,
