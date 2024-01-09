@@ -11,8 +11,7 @@ export default {
     manualChunks: function (id) {
       if (id.includes('@solana/web3.js/lib')) {
         return 'solana'
-      }
-      if (id.includes('/node_modules/')) {
+      } else if (id.includes('/node_modules/')) {
         return 'vendor'
       }
     },
