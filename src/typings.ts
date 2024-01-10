@@ -145,7 +145,7 @@ export interface ChildMethods {
         setToken: string
       }
     | string
-  initOTPLogin: (email: string) => Promise<void>
+  initOTPLogin: (email: string) => Promise<void | string>
   completeOTPLogin: (otp: string) => Promise<void>
   expandWallet: () => Promise<void>
   getReconnectionUrl: () => Promise<string>

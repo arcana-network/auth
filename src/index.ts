@@ -139,8 +139,9 @@ class AuthProvider {
     await this.init()
     return {
       begin: () => this._loginWithOTPStart(email),
-      isCompleteRequired:
-        (await this._provider.getKeySpaceConfigType()) === 'global',
+      isCompleteRequired: !(
+        (await this._provider.getKeySpaceConfigType()) === 'global'
+      ),
     }
   }
 
@@ -255,7 +256,10 @@ class AuthProvider {
       throw new Error('Invalid email')
     }
 
-    await this._provider.initOTPLogin(email)
+    const url = await this._provider.initOTPLogin(email)
+    if (url && typeof url === 'string') {
+      await this.beginLogin(url)
+    }
   }
 
   private _loginWithOTPComplete = async (

@@ -16,6 +16,7 @@ const WAIT_TEXT = {
   SOCIAL: 'Please complete the login to proceed',
   OTP_INIT: 'Sending login OTP to your email address',
   OTP_SENT: '',
+  OTP_SENT_GLOBAL: 'Please complete the login to proceed',
   OTP_ERROR: 'Invalid OTP, please try again',
 }
 
@@ -27,9 +28,21 @@ const initLoaderState = {
 
 const reducer = (
   state: typeof initLoaderState,
-  action: 'SOCIAL' | 'RESET' | 'OTP_SENT' | 'OTP_INIT' | 'OTP_ERROR'
+  action:
+    | 'SOCIAL'
+    | 'RESET'
+    | 'OTP_SENT'
+    | 'OTP_INIT'
+    | 'OTP_ERROR'
+    | 'OTP_SENT_GLOBAL'
 ) => {
-  if (action == 'SOCIAL' || action == 'OTP_SENT' || action == 'OTP_INIT' || action == 'OTP_ERROR') {
+  if (
+    action == 'OTP_SENT_GLOBAL' ||
+    action == 'SOCIAL' ||
+    action == 'OTP_SENT' ||
+    action == 'OTP_INIT' ||
+    action == 'OTP_ERROR'
+  ) {
     return {
       text: WAIT_TEXT[action],
       type: action,
@@ -57,7 +70,7 @@ const Modal = (props: ModalParams) => {
   const otpLogin = async (email: string) => {
     dispatch('OTP_INIT')
     const login = await props.loginWithOTPStart(email)
-    dispatch('OTP_SENT')
+    dispatch(login.isCompleteRequired ? 'OTP_SENT' : 'OTP_SENT_GLOBAL')
     return login
   }
 
@@ -65,20 +78,21 @@ const Modal = (props: ModalParams) => {
     return (
       <Overlay>
         <Container mode={props.mode}>
-          {loaderState.type == 'OTP_SENT' ?
-            <OTPEntry 
+          {loaderState.type == 'OTP_SENT' ? (
+            <OTPEntry
               loginWithOtpStart={() => props.loginWithOTPStart(email)}
               setError={() => dispatch('OTP_ERROR')}
               closeFunc={props.closeFunc}
-              loginWithOtpComplete={props.loginWithOTPComplete} 
+              loginWithOtpComplete={props.loginWithOTPComplete}
               compact={props.options.compact}
-            /> :
-            (<Loader
+            />
+          ) : (
+            <Loader
               compact={props.options.compact}
               text={loaderState.text}
               mode={props.mode}
-            >
-            </Loader>)}
+            ></Loader>
+          )}
         </Container>
       </Overlay>
     )
@@ -87,8 +101,9 @@ const Modal = (props: ModalParams) => {
   return (
     <Overlay closeFunc={props.closeFunc}>
       <Container mode={props.mode}>
-        {loaderState.type == 'OTP_ERROR' ? 
-        <OTPError action={() => dispatch('RESET')}/> :
+        {loaderState.type == 'OTP_ERROR' ? (
+          <OTPError action={() => dispatch('RESET')} />
+        ) : (
           <>
             <Header compact={props.options.compact} logo={props.logo} />
             <EmailLogin
@@ -106,8 +121,8 @@ const Modal = (props: ModalParams) => {
                 />
               </>
             ) : null}
-          </>}
-
+          </>
+        )}
       </Container>
     </Overlay>
   )
