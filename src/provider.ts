@@ -145,7 +145,7 @@ export class ArcanaProvider
 
   public async initOTPLogin(email: string) {
     const c = await this.getCommunication('initOTPLogin')
-    await c.initOTPLogin(email)
+    return await c.initOTPLogin(email)
   }
   public async completeOTPLogin(otp: string) {
     const c = await this.getCommunication('completeOTPLogin')
