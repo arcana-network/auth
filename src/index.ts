@@ -15,6 +15,7 @@ import {
   AppMode,
   BearerAuthentication,
   ChainConfigInput,
+  ChainType,
   ConstructorParams,
   EthereumProvider,
   FirebaseBearer,
@@ -26,12 +27,14 @@ import {
   ThemeConfig,
   UserInfo,
 } from './typings'
-import isEmail from 'validator/es/lib/isEmail'
 import { getAppInfo, getImageUrls } from './appInfo'
 import { ArcanaAuthError, ErrorNotInitialized } from './errors'
 import { LOG_LEVEL, setExceptionReporter, setLogLevel } from './logger'
 import Popup from './popup'
 import { ModalController } from './ui/modalController'
+import { ArcanaSolanaAPI } from './solana'
+
+import isEmail from 'validator/es/lib/isEmail'
 
 class AuthProvider {
   public appId: string
@@ -39,10 +42,13 @@ class AuthProvider {
   private appConfig: AppConfig
   private iframeWrapper: IframeWrapper
   private networkConfig: NetworkConfig
-  private rpcConfig: ChainConfigInput | undefined
+  private readonly rpcConfig: ChainConfigInput | undefined
   private initStatus: InitStatus = InitStatus.CREATED
   private initPromises: ((value: AuthProvider) => void)[] = []
-  private _provider: ArcanaProvider
+
+  private readonly _provider: ArcanaProvider
+  private _solanaAPI: ArcanaSolanaAPI
+
   private connectCtrl: ModalController
   private _standaloneMode: {
     mode: 1 | 2
@@ -108,6 +114,12 @@ class AuthProvider {
         loginWithSocial: this.loginWithSocial,
       })
       this.setProviders()
+
+      switch (this.appConfig.chainType) {
+        case ChainType.solana_cv25519: {
+          this._solanaAPI = await ArcanaSolanaAPI.create(this._provider)
+        }
+      }
 
       this.initStatus = InitStatus.DONE
       this.resolveInitPromises()
@@ -297,7 +309,7 @@ class AuthProvider {
   }
 
   /**
-   * A function to to be called before trying to .reconnect()
+   * A function to be called before trying to .reconnect()
    */
   public async canReconnect() {
     await this.init()
@@ -384,6 +396,8 @@ class AuthProvider {
       appInfo.logo.dark_vertical || appInfo.logo.light_vertical
     this.appConfig = {
       name: appInfo.name,
+      // chainType: ChainType.solana_cv25519,
+      chainType: ChainType.evm_secp256k1,
       themeConfig: {
         assets: {
           logo: {
@@ -418,6 +432,13 @@ class AuthProvider {
   get provider() {
     if (this._provider) {
       return this._provider
+    }
+    throw ErrorNotInitialized
+  }
+
+  get solana() {
+    if (this._solanaAPI) {
+      return this._solanaAPI
     }
     throw ErrorNotInitialized
   }

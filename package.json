@@ -2,19 +2,19 @@
   "name": "@arcana/auth",
   "version": "1.0.8",
   "description": "Arcana Auth",
-  "main": "dist/standalone/auth.esm.js",
+  "main": "dist/index.js",
   "type": "module",
-  "module": "dist/standalone/auth.esm.js",
+  "module": "dist/index.js",
   "jsdelivr": "dist/standalone/auth.umd.js",
   "unpkg": "dist/standalone/auth.umd.js",
   "exports": {
     ".": {
       "types": "./types/index.d.ts",
-      "require": "./dist/standalone/auth.esm.js",
-      "import": "./dist/standalone/auth.esm.js"
+      "require": "./dist/index.js",
+      "import": "./dist/index.js"
     }
   },
-  "types": "types/index.d.ts",
+  "types": "dist/types/index.d.ts",
   "files": [
     "dist",
     "types"
@@ -59,7 +59,7 @@
     "@rollup/plugin-inject": "^4.0.4",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
-    "@rollup/plugin-typescript": "^8.3.3",
+    "@rollup/plugin-typescript": "^11.1.5",
     "@types/jest": "^27.4.1",
     "@types/validator": "^13.11.1",
     "@typescript-eslint/eslint-plugin": "^5.18.0",
@@ -90,6 +90,8 @@
   },
   "dependencies": {
     "@metamask/safe-event-emitter": "^2.0.0",
+    "@solana/web3.js": "^1.87.3",
+    "bs58": "^5.0.0",
     "eth-rpc-errors": "^4.0.3",
     "penpal": "^6.0.1",
     "validator": "^13.11.0"

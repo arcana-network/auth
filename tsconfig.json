@@ -5,7 +5,7 @@
     "module": "commonjs",     
     "moduleResolution": "node",                     
     "declaration": true,                         
-    "declarationDir": "types",
+    "declarationDir": "dist/types",
     "outDir": "dist", 
     "strict": true,
     "noImplicitAny": true,
