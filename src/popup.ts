@@ -5,16 +5,10 @@ class Popup {
   private window: Window | null
   constructor(public url: string) {}
 
-  public open(type: 'login'): Promise<unknown>
-  public open(type: 'request'): Promise<JsonRpcResponse<unknown>>
-  public open(type: 'login' | 'request' = 'login') {
+  public open() {
     const windowFeatures = getWindowFeatures()
     this.window = window.open(this.url, '_blank', windowFeatures)
-    if (type == 'login') {
-      return this.getWindowResponse()
-    } else {
-      return this.requestHandler()
-    }
+    return this.getWindowResponse()
   }
 
   private getWindowResponse() {
