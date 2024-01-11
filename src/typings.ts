@@ -75,9 +75,7 @@ export interface ThemeConfig {
   theme: Theme
 }
 
-export interface AppInfo {
-  name: string
-  chain_type: ChainType
+export interface AppThemeInfo {
   theme: Theme
   logo: {
     dark_horizontal?: string
@@ -85,6 +83,10 @@ export interface AppInfo {
     light_horizontal?: string
     light_vertical?: string
   }
+}
+export interface AppInfo {
+  name: string
+  chain_type: 'evm' | 'solana'
 }
 
 export interface AppConfig {

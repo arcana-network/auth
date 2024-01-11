@@ -29,7 +29,7 @@ import {
   ThemeConfig,
   UserInfo,
 } from './typings'
-import { getAppInfo, getImageUrls } from './appInfo'
+import { getAppInfo, getAppThemeInfo, getImageUrls } from './appInfo'
 import { ArcanaAuthError, ErrorNotInitialized } from './errors'
 import { LOG_LEVEL, setExceptionReporter, setLogLevel } from './logger'
 import Popup from './popup'
@@ -443,19 +443,25 @@ class AuthProvider {
   }
 
   private async setAppConfig() {
-    const appInfo = await getAppInfo(this.appId, this.networkConfig.gatewayUrl)
+    const [appThemeInfo, appInfo] = await Promise.all([
+      getAppThemeInfo(this.appId, this.networkConfig.gatewayUrl),
+      getAppInfo(this.appId, this.networkConfig.gatewayUrl),
+    ])
     const appImageURLs = getImageUrls(
       this.appId,
       this.params.theme,
       this.networkConfig.gatewayUrl
     )
     const horizontalLogo =
-      appInfo.logo.dark_horizontal || appInfo.logo.light_horizontal
+      appThemeInfo.logo.dark_horizontal || appThemeInfo.logo.light_horizontal
     const verticalLogo =
-      appInfo.logo.dark_vertical || appInfo.logo.light_vertical
+      appThemeInfo.logo.dark_vertical || appThemeInfo.logo.light_vertical
     this.appConfig = {
       name: appInfo.name,
-      chainType: appInfo.chain_type,
+      chainType:
+        appInfo.chain_type.toLowerCase() === 'evm'
+          ? ChainType.evm_secp256k1
+          : ChainType.solana_cv25519,
       themeConfig: {
         assets: {
           logo: {
