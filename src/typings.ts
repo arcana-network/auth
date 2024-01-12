@@ -225,8 +225,6 @@ export interface ConstructorParams {
   network: ('testnet' | 'dev' | 'mainnet') | NetworkConfig
   debug: boolean
   alwaysVisible: boolean
-  chainConfig?: ChainConfigInput
-  redirectUrl?: string
   theme: Theme
   position: Position
   setWindowProvider: boolean

@@ -45,7 +45,6 @@ class AuthProvider {
   private appConfig: AppConfig
   private iframeWrapper: IframeWrapper
   private networkConfig: NetworkConfig
-  private readonly rpcConfig: ChainConfigInput | undefined
   private initStatus: InitStatus = InitStatus.CREATED
   private initPromises: ((value: AuthProvider) => void)[] = []
 
@@ -75,11 +74,7 @@ class AuthProvider {
     this.networkConfig = getNetworkConfig(this.params.network)
 
     preLoadIframe(this.networkConfig.walletUrl, this.appId)
-    this.rpcConfig = this.params.chainConfig
-    this._provider = new ArcanaProvider(
-      this.networkConfig.authUrl,
-      this.rpcConfig
-    )
+    this._provider = new ArcanaProvider(this.networkConfig.authUrl)
 
     if (this.params.debug) {
       setLogLevel(LOG_LEVEL.DEBUG)

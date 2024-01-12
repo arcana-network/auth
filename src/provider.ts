@@ -63,10 +63,7 @@ export class ArcanaProvider
   private iframe: IframeWrapper
   private logger: Logger = getLogger()
   private popup: RequestPopupHandler
-  constructor(
-    private authUrl: string,
-    private rpcConfig: ChainConfigInput | undefined
-  ) {
+  constructor(private authUrl: string) {
     super()
     this.subscriber = new SafeEventEmitter()
   }
@@ -86,7 +83,7 @@ export class ArcanaProvider
       getAppMode: () => this.iframe.appMode,
       getAppConfig: this.iframe.getAppConfig,
       getWalletPosition: this.iframe.getWalletPlace,
-      getRpcConfig: () => this.rpcConfig,
+      getRpcConfig: () => undefined,
       sendPendingRequestCount: this.iframe.onReceivingPendingRequestCount,
       triggerSocialLogin: auth.loginWithSocial,
       triggerPasswordlessLogin: auth.loginWithLink,
