@@ -9,7 +9,12 @@
   "includeVersion": true,
   "footerDate": true,
   "footerTime": true,
-  "plugin": ["typedoc-plugin-extras", "typedoc-plugin-rename-defaults", "typedoc-theme-hierarchy", "typedoc-plugin-missing-exports"],
+  "plugin": [
+    "typedoc-plugin-extras",
+    "typedoc-plugin-rename-defaults",
+    "typedoc-theme-hierarchy",
+    "typedoc-plugin-missing-exports"
+  ],
   "theme": "hierarchy",
   "customCss": "./typedoc-theme/an_style.css"
 }
