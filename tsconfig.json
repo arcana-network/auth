@@ -1,5 +1,5 @@
 {
-  "compilerOptions": {                       
+  "compilerOptions": {
     "lib": ["dom", "es2018"],
     "target": "es6",
     "module": "commonjs",     
@@ -14,9 +14,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-jsx",
-    "jsxImportSource": "preact",
+    "jsxImportSource": "preact"
   },
-  "include": [
-    "src/*.*",
-  ],
+  "include": ["src/*.*"]
 }

@@ -32,7 +32,7 @@ The following authentication mechanisms are supported:
 
 - Passwordless authentication
 
-Application developers can choose to use plug and play feature of the Auth SDK that provides a default UI for user login.  Alternatively, they can build their own UI and simply call the Auth SDK functions for social login and passwordless authentication.
+Application developers can choose to use plug and play feature of the Auth SDK that provides a default UI for user login. Alternatively, they can build their own UI and simply call the Auth SDK functions for social login and passwordless authentication.
 
 # 💪 Key Features
 

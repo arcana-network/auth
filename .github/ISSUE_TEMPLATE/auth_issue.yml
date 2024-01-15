@@ -1,7 +1,7 @@
 name: Arcana Auth SDK Bug Report
 description: File an bug report for Arcana Auth SDK
-title: "[Auth_SDK_Issuecw]: "
-labels: ["docs", "bug", "triage"]
+title: '[Auth_SDK_Issuecw]: '
+labels: ['docs', 'bug', 'triage']
 assignees:
   - makylfang
 body:
@@ -26,7 +26,7 @@ body:
           required: false
   - type: markdown
     attributes:
-      value: "## Create GitHub Issue for Arcana Auth SDK"
+      value: '## Create GitHub Issue for Arcana Auth SDK'
   - type: markdown
     attributes:
       value: |
@@ -40,7 +40,7 @@ body:
       label: What happened?
       description: Describe the scenario and the bug.
       placeholder: Tell us what you see!
-      value: "Something did not work when you tried..."
+      value: 'Something did not work when you tried...'
     validations:
       required: true
   - type: textarea
@@ -49,12 +49,12 @@ body:
       label: Expected Behavior
       description: Tell us, what did you expect to happen?
       placeholder: Tell us about the expected behavior!
-      value: "This error should show up or this value should be returned, etc."
+      value: 'This error should show up or this value should be returned, etc.'
     validations:
       required: true
   - type: markdown
     attributes:
-      value: "## Help us Recreate the Bug"
+      value: '## Help us Recreate the Bug'
   - type: textarea
     id: steps
     attributes:
@@ -62,11 +62,11 @@ body:
       description: Describe how to reproduce the bug step by step.
       placeholder: Details
       value: |
-         1. Do this...
-         2. Next do this...
-         3. ...
+        1. Do this...
+        2. Next do this...
+        3. ...
     validations:
-        required: true
+      required: true
   - type: markdown
     attributes:
       value: |
@@ -86,9 +86,9 @@ body:
         * What's the version of React Native / Vue / JavaScript / TypeScript you're using in your dApp?
         * Does this issue show up on iOS, Android or both mobileplatforms?
         * Are you using Mac, Linux or Windows desktop platform?
-        * Which browser / version you were using to access the Dashboard? 
+        * Which browser / version you were using to access the Dashboard?
     validations:
-        required: false
+      required: false
   - type: input
     id: contact
     attributes:
