@@ -85,10 +85,7 @@ const Modal = (props: ModalParams) => {
           >
             {loaderState.type == 'LINK_SENT' ? (
               <>
-                <Action
-                  method={() => linkLogin()}
-                  text="Resend email"
-                />
+                <Action method={() => linkLogin()} text="Resend email" />
                 <Action
                   method={() => dispatch('RESET')}
                   text="Change email id"

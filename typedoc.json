@@ -9,6 +9,10 @@
   "excludeInternal": true,
   "includeVersion": true,
   "hideGenerator": true,
-  "plugin": ["typedoc-plugin-extras", "typedoc-plugin-rename-defaults", "typedoc-theme-hierarchy"],
+  "plugin": [
+    "typedoc-plugin-extras",
+    "typedoc-plugin-rename-defaults",
+    "typedoc-theme-hierarchy"
+  ],
   "theme": "hierarchy"
 }
