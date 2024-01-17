@@ -52,6 +52,11 @@ export enum InitStatus {
   DONE,
 }
 
+export enum ChainType {
+  evm_secp256k1 = 'evm_secp256k1',
+  solana_cv25519 = 'solana_cv25519',
+}
+
 export interface IframeWrapperParams {
   appId: string
   iframeUrl: string
@@ -70,8 +75,7 @@ export interface ThemeConfig {
   theme: Theme
 }
 
-export interface AppInfo {
-  name: string
+export interface AppThemeInfo {
   theme: Theme
   logo: {
     dark_horizontal?: string
@@ -80,9 +84,14 @@ export interface AppInfo {
     light_vertical?: string
   }
 }
+export interface AppInfo {
+  name: string
+  chain_type: 'evm' | 'solana'
+}
 
 export interface AppConfig {
   name: string
+  chainType: ChainType
   themeConfig: ThemeConfig
 }
 
@@ -123,17 +132,26 @@ export interface ChildMethods {
     type: BearerAuthentication,
     data: FirebaseBearer
   ) => Promise<boolean>
-  sendRequest: (req: JsonRpcRequest<unknown>) => Promise<void>
+  sendRequest: (
+    req: JsonRpcRequest<unknown>,
+    requestOrigin?: string
+  ) => Promise<void>
+  addToActivity: (req: object) => Promise<void>
   getPublicKey: (email: string, verifier: string) => Promise<string>
   triggerLogout: (isV2?: boolean) => Promise<void>
   getUserInfo: () => Promise<UserInfo>
   initSocialLogin(kind: string): Promise<string>
-  initPasswordlessLogin: (email: string) => {
-    sessionId: string
-    setToken: string
-  }
+  initPasswordlessLogin: (email: string) =>
+    | {
+        sessionId: string
+        setToken: string
+      }
+    | string
+  initOTPLogin: (email: string) => Promise<void | string>
+  completeOTPLogin: (otp: string) => Promise<void>
   expandWallet: () => Promise<void>
   getReconnectionUrl: () => Promise<string>
+  getKeySpaceConfigType: () => Promise<string>
 }
 
 export interface ParentMethods {
@@ -144,7 +162,7 @@ export interface ParentMethods {
   getAppConfig: () => AppConfig
   getAppMode: () => AppMode
   getParentUrl: () => string
-  getRpcConfig: () => ChainConfigInput | undefined
+  getRpcConfig: () => undefined
   triggerSocialLogin: (kind: string) => void
   triggerPasswordlessLogin: (email: string) => void
   getPopupState: () => 'open' | 'closed'
@@ -194,11 +212,6 @@ export enum AppMode {
   Full = 2,
 }
 
-export interface ChainConfigInput {
-  rpcUrl?: string
-  chainId: string
-}
-
 export interface ConnectOptions {
   compact: boolean
 }
@@ -207,8 +220,6 @@ export interface ConstructorParams {
   network: ('testnet' | 'dev' | 'mainnet') | NetworkConfig
   debug: boolean
   alwaysVisible: boolean
-  chainConfig?: ChainConfigInput
-  redirectUrl?: string
   theme: Theme
   position: Position
   setWindowProvider: boolean
@@ -223,4 +234,11 @@ type RequestArguments = {
 
 export interface EthereumProvider extends SafeEventEmitter {
   request(args: RequestArguments): Promise<unknown>
+}
+
+export type EIP6963ProviderInfo = {
+  uuid: string
+  name: string
+  icon: string
+  rdns: string
 }

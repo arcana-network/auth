@@ -97,12 +97,7 @@ import { AuthProvider } from '@arcana/auth' // From npm
 #### Initialize AuthProvider
 
 ```ts
-import { AuthProvider, CHAIN } from '@arcana/auth'
-
-interface ChainConfig {
-  chainId: CHAIN
-  rpcUrl?: string
-}
+import { AuthProvider } from '@arcana/auth'
 
 const auth = new AuthProvider(`${clientId}`, {
   position: 'left', // default - right
@@ -111,10 +106,6 @@ const auth = new AuthProvider(`${clientId}`, {
   setWindowProvider: true, // default - false
   connectOptions: {
     compact: true, // default - false
-  },
-  chainConfig: {
-    chainId: CHAIN.POLYGON_MAINNET,
-    rpcUrl: '',
   },
 })
 
@@ -142,10 +133,23 @@ Social login
 const provider = await auth.loginWithSocial(`${loginType}`)
 ```
 
-Passwordless login via an email verification link
+[DEPRECATED] Passwordless login via an email verification link
 
 ```js
 const provider = await auth.loginWithLink(`${email}`)
+```
+
+Passwordless login via an OTP
+
+```js
+const login = await auth.loginWithOTPStart(`${email}`)
+await login.begin()
+
+if(login.isCompleteRequired) {
+  await loginWithOTPComplete(`${otp}`, onMFARequired() => {
+    // Hide overlay(if used) so that user can recover device share via wallet ui
+  })
+}
 ```
 
 Check if a user is logged in

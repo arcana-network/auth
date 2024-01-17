@@ -5,6 +5,7 @@ import {
   getErrorReporter,
   getParamsFromClientId,
   isClientId,
+  onWindowReady,
   preLoadIframe,
   removeHexPrefix,
   validateAppAddress,
@@ -14,8 +15,9 @@ import {
   AppConfig,
   AppMode,
   BearerAuthentication,
-  ChainConfigInput,
+  ChainType,
   ConstructorParams,
+  EIP6963ProviderInfo,
   EthereumProvider,
   FirebaseBearer,
   InitStatus,
@@ -26,23 +28,28 @@ import {
   ThemeConfig,
   UserInfo,
 } from './typings'
-import isEmail from 'validator/es/lib/isEmail'
-import { getAppInfo, getImageUrls } from './appInfo'
+import { getAppInfo, getAppThemeInfo, getImageUrls } from './appInfo'
 import { ArcanaAuthError, ErrorNotInitialized } from './errors'
 import { LOG_LEVEL, setExceptionReporter, setLogLevel } from './logger'
 import Popup from './popup'
 import { ModalController } from './ui/modalController'
+import { ArcanaSolanaAPI } from './solana'
+
+import isEmail from 'validator/es/lib/isEmail'
 
 class AuthProvider {
   public appId: string
   private params: ConstructorParams
+  private providerInfo: EIP6963ProviderInfo
   private appConfig: AppConfig
   private iframeWrapper: IframeWrapper
   private networkConfig: NetworkConfig
-  private rpcConfig: ChainConfigInput | undefined
   private initStatus: InitStatus = InitStatus.CREATED
   private initPromises: ((value: AuthProvider) => void)[] = []
-  private _provider: ArcanaProvider
+
+  private readonly _provider: ArcanaProvider
+  private _solanaAPI: ArcanaSolanaAPI
+
   private connectCtrl: ModalController
   private _standaloneMode: {
     mode: 1 | 2
@@ -66,8 +73,7 @@ class AuthProvider {
     this.networkConfig = getNetworkConfig(this.params.network)
 
     preLoadIframe(this.networkConfig.walletUrl, this.appId)
-    this.rpcConfig = this.params.chainConfig
-    this._provider = new ArcanaProvider(this.rpcConfig)
+    this._provider = new ArcanaProvider(this.networkConfig.authUrl)
 
     if (this.params.debug) {
       setLogLevel(LOG_LEVEL.DEBUG)
@@ -103,11 +109,14 @@ class AuthProvider {
           (this.params.alwaysVisible ? AppMode.Full : AppMode.Widget)
       )
 
-      await this._provider.init(this.iframeWrapper, {
-        loginWithLink: this.loginWithLink,
-        loginWithSocial: this.loginWithSocial,
-      })
+      await this._provider.init(this.iframeWrapper, this)
       this.setProviders()
+
+      switch (this.appConfig.chainType) {
+        case ChainType.solana_cv25519: {
+          this._solanaAPI = await ArcanaSolanaAPI.create(this._provider)
+        }
+      }
 
       this.initStatus = InitStatus.DONE
       this.resolveInitPromises()
@@ -118,6 +127,26 @@ class AuthProvider {
     }
 
     return this
+  }
+
+  public loginWithOTPStart = async (email: string) => {
+    await this.init()
+    return {
+      begin: () => this._loginWithOTPStart(email),
+      isCompleteRequired: !(
+        (await this._provider.getKeySpaceConfigType()) === 'global'
+      ),
+    }
+  }
+
+  public loginWithOTPComplete = async (
+    email: string,
+    onMFAFlow?: () => void
+  ) => {
+    if ((await this._provider.getKeySpaceConfigType()) === 'global') {
+      throw new Error('complete is not required for global login')
+    }
+    await this._loginWithOTPComplete(email, onMFAFlow)
   }
 
   /**
@@ -136,7 +165,8 @@ class AuthProvider {
 
     if (!this.connectCtrl) {
       this.connectCtrl = new ModalController({
-        loginWithLink: this.loginWithLink,
+        loginWithOTPStart: this.loginWithOTPStart,
+        loginWithOTPComplete: this.loginWithOTPComplete,
         loginWithSocial: this.loginWithSocial,
         loginList: logins,
         mode: this.theme,
@@ -173,17 +203,15 @@ class AuthProvider {
    * A function to trigger social login in the wallet
    */
   loginWithSocial = async (loginType: string): Promise<EthereumProvider> => {
-    if (this.initStatus === InitStatus.DONE) {
-      if (await this.isLoggedIn()) {
-        return this._provider
-      }
-      if (!(await this._provider.isLoginAvailable(loginType))) {
-        throw new Error(`${loginType} login is not available`)
-      }
-      const url = await this._provider.initSocialLogin(loginType)
-      return this.beginLogin(url)
+    await this.init()
+    if (await this.isLoggedIn()) {
+      return this._provider
     }
-    throw ErrorNotInitialized
+    if (!(await this._provider.isLoginAvailable(loginType))) {
+      throw new Error(`${loginType} login is not available`)
+    }
+    const url = await this._provider.initSocialLogin(loginType)
+    return this.beginLogin(url)
   }
 
   /**
@@ -193,30 +221,67 @@ class AuthProvider {
     email: string,
     emailSentHook?: () => void
   ): Promise<EthereumProvider> => {
-    if (this.initStatus === InitStatus.DONE) {
-      if (await this.isLoggedIn()) {
-        return this._provider
-      }
-
-      if (!isEmail(email)) {
-        throw new Error('Invalid email')
-      }
-      await this._provider.initPasswordlessLogin(email)
-      if (emailSentHook) {
-        emailSentHook()
-      }
-      return await this.waitForConnect()
+    await this.init()
+    if (await this.isLoggedIn()) {
+      return this._provider
     }
-    throw ErrorNotInitialized
+
+    if (!isEmail(email)) {
+      throw new Error('Invalid email')
+    }
+    const url = await this._provider.initPasswordlessLogin(email)
+    if (url && typeof url === 'string') {
+      return this.beginLogin(url)
+    }
+
+    if (emailSentHook) {
+      emailSentHook()
+    }
+    return await this.waitForConnect()
+  }
+
+  private _loginWithOTPStart = async (email: string) => {
+    await this.init()
+    if (await this.isLoggedIn()) {
+      return
+    }
+
+    if (!isEmail(email)) {
+      throw new Error('Invalid email')
+    }
+
+    const url = await this._provider.initOTPLogin(email)
+    if (url && typeof url === 'string') {
+      await this.beginLogin(url)
+    }
+  }
+
+  private _loginWithOTPComplete = async (
+    otp: string,
+    onMFAFlow?: () => void
+  ) => {
+    await this.init()
+    if (await this.isLoggedIn()) {
+      return this._provider
+    }
+
+    this._provider.once('message', (msg) => {
+      if (msg === 'mfa_flow') {
+        if (onMFAFlow) {
+          onMFAFlow()
+        }
+      }
+    })
+
+    await this._provider.completeOTPLogin(otp)
+    return await this.waitForConnect()
   }
 
   loginWithBearer = async (
     type: BearerAuthentication,
     data: FirebaseBearer
   ): Promise<boolean> => {
-    if (this.initStatus !== InitStatus.DONE) {
-      throw ErrorNotInitialized
-    }
+    await this.init()
     return await this.iframeWrapper.triggerBearerAuthentication(type, data)
   }
 
@@ -240,7 +305,7 @@ class AuthProvider {
    */
   public async isLoggedIn() {
     if (this.initStatus === InitStatus.DONE) {
-      const isLoggedIn = this._provider.isLoggedIn()
+      const isLoggedIn = await this._provider.isLoggedIn()
       return isLoggedIn
     }
     throw ErrorNotInitialized
@@ -297,7 +362,7 @@ class AuthProvider {
   }
 
   /**
-   * A function to to be called before trying to .reconnect()
+   * A function to be called before trying to .reconnect()
    */
   public async canReconnect() {
     await this.init()
@@ -372,18 +437,25 @@ class AuthProvider {
   }
 
   private async setAppConfig() {
-    const appInfo = await getAppInfo(this.appId, this.networkConfig.gatewayUrl)
+    const [appThemeInfo, appInfo] = await Promise.all([
+      getAppThemeInfo(this.appId, this.networkConfig.gatewayUrl),
+      getAppInfo(this.appId, this.networkConfig.gatewayUrl),
+    ])
     const appImageURLs = getImageUrls(
       this.appId,
       this.params.theme,
       this.networkConfig.gatewayUrl
     )
     const horizontalLogo =
-      appInfo.logo.dark_horizontal || appInfo.logo.light_horizontal
+      appThemeInfo.logo.dark_horizontal || appThemeInfo.logo.light_horizontal
     const verticalLogo =
-      appInfo.logo.dark_vertical || appInfo.logo.light_vertical
+      appThemeInfo.logo.dark_vertical || appThemeInfo.logo.light_vertical
     this.appConfig = {
       name: appInfo.name,
+      chainType:
+        appInfo.chain_type.toLowerCase() === 'evm'
+          ? ChainType.evm_secp256k1
+          : ChainType.solana_cv25519,
       themeConfig: {
         assets: {
           logo: {
@@ -422,6 +494,13 @@ class AuthProvider {
     throw ErrorNotInitialized
   }
 
+  get solana() {
+    if (this._solanaAPI) {
+      return this._solanaAPI
+    }
+    throw ErrorNotInitialized
+  }
+
   get logo() {
     if (this.initStatus === InitStatus.DONE) {
       return this.appConfig.themeConfig.assets.logo
@@ -437,22 +516,48 @@ class AuthProvider {
   }
 
   private setProviders() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const w = window as Record<string, any>
-    try {
-      w.arcana = w.arcana ?? {}
-      w.arcana.provider = this._provider
-      // eslint-disable-next-line no-empty
-    } catch {}
-    if (this.params.setWindowProvider) {
-      try {
-        w.ethereum = w.ethereum ?? this._provider
-        w.ethereum.providers = w.ethereum.providers ?? []
-        w.ethereum.providers.push(this._provider)
-      } catch (e) {
-        console.error(e)
+    if (typeof window !== undefined) {
+      this.providerInfo = {
+        uuid: window.crypto.randomUUID(),
+        name: 'Arcana Wallet',
+        icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>", // TODO: Fix this
+        rdns: 'network.arcana.wallet',
       }
+      onWindowReady(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const w = window as Record<string, any>
+        try {
+          w.arcana = w.arcana ?? {}
+          w.arcana.provider = this._provider
+          // eslint-disable-next-line no-empty
+        } catch {}
+        if (this.params.setWindowProvider) {
+          try {
+            w.ethereum = w.ethereum ?? this._provider
+            w.ethereum.providers = w.ethereum.providers ?? []
+            w.ethereum.providers.push(this._provider)
+          } catch (e) {
+            console.error(e)
+          }
+        }
+
+        this.announceProvider()
+        window.addEventListener('eip6963:requestProvider', () => {
+          this.announceProvider()
+        })
+      })
     }
+  }
+
+  private announceProvider() {
+    window.dispatchEvent(
+      new CustomEvent('eip6963:announceProvider', {
+        detail: Object.freeze({
+          info: this.providerInfo,
+          provider: this._provider,
+        }),
+      })
+    )
   }
 
   private standaloneMode(
