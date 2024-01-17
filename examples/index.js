@@ -1,12 +1,7 @@
 const { AuthProvider } = window.arcana.auth
 
 let provider
-const auth = new AuthProvider(
-  'xar_dev_bf981ebaed0eb2a550b158d14eb1c42c5bbcac56'
-)
-// const auth = new AuthProvider(
-//   'xar_dev_ecc6292e414c8228ae69ce5ff6a1b3eca59984e9'
-// )
+const auth = new AuthProvider('...')
 provider = auth.provider
 setHooks()
 

@@ -1,5 +1,4 @@
 import {
-  ChainConfigInput,
   ChildMethods,
   EthereumProvider,
   JsonRpcError,

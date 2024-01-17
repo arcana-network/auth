@@ -162,7 +162,7 @@ export interface ParentMethods {
   getAppConfig: () => AppConfig
   getAppMode: () => AppMode
   getParentUrl: () => string
-  getRpcConfig: () => ChainConfigInput | undefined
+  getRpcConfig: () => undefined
   triggerSocialLogin: (kind: string) => void
   triggerPasswordlessLogin: (email: string) => void
   getPopupState: () => 'open' | 'closed'
@@ -210,11 +210,6 @@ export enum AppMode {
   NoUI = 0,
   Widget = 1,
   Full = 2,
-}
-
-export interface ChainConfigInput {
-  rpcUrl?: string
-  chainId: string
 }
 
 export interface ConnectOptions {

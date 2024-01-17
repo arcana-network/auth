@@ -97,12 +97,7 @@ import { AuthProvider } from '@arcana/auth' // From npm
 #### Initialize AuthProvider
 
 ```ts
-import { AuthProvider, CHAIN } from '@arcana/auth'
-
-interface ChainConfig {
-  chainId: CHAIN
-  rpcUrl?: string
-}
+import { AuthProvider } from '@arcana/auth'
 
 const auth = new AuthProvider(`${clientId}`, {
   position: 'left', // default - right
@@ -111,10 +106,6 @@ const auth = new AuthProvider(`${clientId}`, {
   setWindowProvider: true, // default - false
   connectOptions: {
     compact: true, // default - false
-  },
-  chainConfig: {
-    chainId: CHAIN.POLYGON_MAINNET,
-    rpcUrl: '',
   },
 })
 

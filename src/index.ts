@@ -15,7 +15,6 @@ import {
   AppConfig,
   AppMode,
   BearerAuthentication,
-  ChainConfigInput,
   ChainType,
   ConstructorParams,
   EIP6963ProviderInfo,
