@@ -9,7 +9,7 @@ interface LoaderProps {
 }
 
 export default function Loader(props: LoaderProps) {
-  const width = props.width ? props.width : props.compact ? 60 : 80;
+  const width = props.width ? props.width : props.compact ? 60 : 80
   const { stroke = 8, secondaryColor } = props
   return (
     <div aria-label="oval-loading">
