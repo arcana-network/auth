@@ -1,4 +1,5 @@
 import { ConstructorParams, WalletPosition, Theme, Network } from './typings'
+import { ArcanaAuthError } from './errors'
 
 const fallbackLogo = {
   light:
@@ -103,8 +104,10 @@ const validateAppAddress = (arg: unknown) => {
 }
 
 const CLIENT_ID_SEPERATOR = '_'
-
-const isClientId = (id: string): boolean => {
+const isClientId = (id: string | undefined | null): boolean => {
+  if (!isValidString(id)) {
+    throw new ArcanaAuthError('invalid_client_id', 'Invalid Client ID')
+  }
   const parts = id.split(CLIENT_ID_SEPERATOR)
   return parts.length == 3
 }
