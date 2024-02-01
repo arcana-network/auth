@@ -318,7 +318,7 @@ async function sendTransaction() {
       gasLimit: 70000,
       sender: from,
       receiver:
-        'erd12d5qk7jdxapwa06jxpu4p0cuxvq9325wm5tdy7lcl59dtmev39rs6qhlz4',
+        'erd1hd6e6syrmjxse2cmdgxjaxe9v24uv6m2way8g4zdue3zk36t5c3stvm444',
       value: '1',
       chainID: 'D',
       data: 'helloWorld',
