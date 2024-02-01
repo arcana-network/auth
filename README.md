@@ -14,34 +14,41 @@
 <a href="https://docs.beta.arcana.network/"><img src="https://raw.githubusercontent.com/arcana-network/branding/main/an_banner_docs.png" alt="Arcana Auth SDK"/></a>
 </p>
 
-# What is Auth SDK?
+# Arcana Auth
 
-Integrate your application with Arcana Network Auth SDK to easily onboard application users and allow authenticated users to sign blockchain transactions. Configure one or more social login and passwordless authentication options for application users. Application users don't need to manage keys or share them explicitly for enabling any blockchain transaction.
+Use Arcana Auth SDK to onboard Web3 app users via social login and allow authenticated users to instantly access the built-in, embedded Arcana wallet and sign blockchain transactions from within the app context. 
 
-Auth SDK enables the standard [Ethereum provider](https://eips.ethereum.org/EIPS/eip-1193) that can be used by the application for Web3 operations.
+Use the built-in gasless feature in the Auth SDK to enable gasless transactions in the Arcana wallet. 
 
-The following authentication mechanisms are supported:
+Auth SDK enables the standard [Ethereum provider](https://eips.ethereum.org/EIPS/eip-1193) that can be used by the application for Web3 operations. Users are not required to install any wallet extension or manage keys or share them explicitly for enabling any blockchain transaction.
+
+## Auth Providers
 
 - Social Login
 
   - Discord
   - GitHub
   - Google
+  - Steam
   - Twitter
   - Twitch
 
+- Custom IAM
+  
+  - Cognito
+  - Firebase
+
 - Passwordless authentication
 
-Application developers can choose to use plug and play feature of the Auth SDK that provides a default UI for user login. Alternatively, they can build their own UI and simply call the Auth SDK functions for social login and passwordless authentication.
+Auth SDK usage is easily customizable. Developers can choose to use the built-in plug and play login UI to onboard users or use a custom UI. Also, instead of the built-in Arcana wallet UI, developers can integrate with the SDK and use a custom wallet UI.
 
 # 💪 Key Features
 
-<p>🗝️ &nbsp; Plug and play user authentication</p>
-<p>🔒 &nbsp; Onboard dApp users via social, passwordless login</p>
-<p>🗝️ &nbsp; Secure Ethereum provider access for Web3 operations</p>
-<p>🔒 &nbsp; Embedded Web3 Arcana wallet that can be branded and configured as per the application needs </p>
-<p>⛓️ &nbsp; Sign blockchain transactions, deploy and interact with smart contracts, manage native and custom tokens, view and manage NFTs, send and receive tokens</p>
-<p>⚙️ &nbsp; Configure blockchain transaction signing user experience using wallet visibility modes</p>
+<p>🔒 &nbsp; Onboard users via social, passwordless login</p>
+<p>🗝️ &nbsp; Allow authenticated users to sign blockchain transactions</p>
+<p>🔒 &nbsp; Non-custodial, embedded Web3 Arcana wallet that can be branded and configured </p>
+<p>⛓️ &nbsp; Web3 wallet operations: sign blockchain transactions, deploy and interact with smart contracts, manage native and custom tokens, view and manage NFTs, send and receive tokens</p>
+<p>⚙️ &nbsp; Gaslesss transactions</p>
 
 # 🏗️ Installation
 
@@ -69,21 +76,19 @@ yarn add @arcana/auth
 
 # 📋 Prerequisites
 
-Before you can start using the Arcana Auth SDK, you need to register your dApp using [Arcana Developer Dashboard](https://dashboard.arcana.network/).
-
-A unique **App Address** will be assigned to your dApp and you need the same to initialize the Arcana Auth SDK.
+Configure Auth SDK usage through the [Arcana Dashboard](https://dashboard.arcana.network), obtain a unique app identifier (client Id). Then install the SDK, use the client Id to integrate the app with the Arcana Auth SDK. [Learn more...](https://docs.arcana.network/).
 
 # 📚 Documentation
 
-Check out [Arcana Network documentation](https://docs.arcana.network/) for [Auth SDK Quick Start Guide](https://docs.arcana.network/walletsdk/wallet_qs.html), [Usage Guide](https://docs.arcana.network/walletsdk/wallet_usage.html) and [API Reference Guide](https://authsdk-ref-guide.netlify.app).
+Check out [Arcana Network documentation](https://docs.arcana.network/) for [Auth SDK Quick Start Guide](https://docs.arcana.network/quick-start/auth-sdk/index.html), [Usage Guide](https://docs.arcana.network/web-sdk/auth-usage-guide.html) and [API Reference Guide](https://authsdk-ref-guide.netlify.app).
 
 # 💡 Support
 
-For any support or integration-related queries, contact [Arcana support team](mailto:support@arcana.network).
+For support or integration-related queries, contact [Arcana support team](mailto:support@arcana.network).
 
 # 🤝 Contributing
 
-We welcome all contributions to the Arcana Auth SDK from the community. Read our [contributing guide](https://github.com/arcana-network/license/blob/main/CONTRIBUTING.md) to learn about the SDK development process, how to propose bug fixes and improvements, and the code of conduct that we expect the participants to adhere to. Refer to the build and test section of this readme for details on how to test and validate your changes to the Auth SDK code before submitting your contributions.
+We welcome all contributions to the Arcana Auth SDK from the community. See [contributing guide](https://github.com/arcana-network/license/blob/main/CONTRIBUTING.md) for details.
 
 # ℹ️ License
 
