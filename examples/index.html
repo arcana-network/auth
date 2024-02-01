@@ -26,23 +26,25 @@
             <button class="btn" onclick="getSelfPublicKey()">
               Get Public Key
             </button>
-            <button class="btn" onclick="addChain()">Add Chain</button>
+            <!-- <button class="btn" onclick="addChain()">Add Chain</button>
             <button class="btn" onclick="switchChain()">Switch Chain</button>
-            <button class="btn" onclick="addToken()">Add Token</button>
+            <button class="btn" onclick="addToken()">Add Token</button> -->
             <!-- <button class="btn" onclick="getPublicKey()">Get other's Public Key</button> -->
-            <button class="btn" onclick="sign()">Request signature</button>
+            <!-- <button class="btn" onclick="sign()">Request signature</button> -->
             <!-- <button class="btn" onclick="encrypt()">Do encryption</button> -->
             <!-- <button class="btn" onclick="ethDecrypt()">Request decryption</button> -->
             <button class="btn" onclick="personalSign()">
               Personal signature
             </button>
-            <button class="btn" onclick="signTyped()">Sign Typed</button>
+            <!-- <button class="btn" onclick="signTyped()">Sign Typed</button> -->
             <button class="btn" onclick="sendTransaction()">
               Send Transaction
             </button>
-            <button class="btn" onclick="signTransaction()">
+            <!-- <button class="btn" onclick="signTransaction()">
               Sign Transaction
-            </button>
+            </button> -->
+            <!-- <button class="btn" onclick="deploy()">Deploy Contract</button> -->
+            <!-- <button class="btn" onclick="interact()">Interact</button> -->
             <button class="btn" onclick="logout()">Logout</button>
           </div>
           <div class="view-window">
@@ -76,7 +78,12 @@
         </div>
       </main>
     </div>
+    <script
+      src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"
+      type="application/javascript"
+    ></script>
     <script src="../dist/standalone/auth.umd.js"></script>
+    <script src="./sdk-core.js"></script>
     <script src="./index.js"></script>
   </body>
 </html>
