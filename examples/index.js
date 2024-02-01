@@ -1,10 +1,20 @@
 const { AuthProvider } = window.arcana.auth
+const { Transaction, TransactionPayload, Account } = window.multiversxSdkCore
 
 let provider
-const auth = new AuthProvider('...')
+const auth = new AuthProvider('fd9c8ccd8e5f1591c597b0c8167a7f51868b9cbf', {
+  network: {
+    authUrl: 'http://localhost:8080',
+    gatewayUrl: 'https://gateway-dev.arcana.network',
+    walletUrl: 'http://localhost:3000',
+  },
+  theme: 'dark',
+})
+console.log({ auth })
 provider = auth.provider
 setHooks()
 
+console.log('Before load')
 window.onload = async () => {
   try {
     console.time('auth_init')
@@ -27,6 +37,9 @@ function setRequest(value) {
 
 function setResult(value) {
   resElement.innerText = value
+  if (value !== '-') {
+    resElement.title = value
+  }
 }
 
 function setAccount(value) {
@@ -46,12 +59,17 @@ function setHooks() {
   provider.on('chainChanged', async (params) => {
     console.log({ type: 'chainChanged', params: params })
   })
+  provider.on('addressChanged', async (params) => {
+    console.log({ type: 'addressChanged', params: params })
+  })
 }
 
 async function logout() {
   console.log('Requesting logout')
   try {
+    setRequest('Logout')
     await auth.logout()
+    setResult('Logged out')
   } catch (e) {
     console.log({ e })
   }
@@ -59,20 +77,22 @@ async function logout() {
 
 async function addChain() {
   try {
-    await provider.request({
+    setRequest('wallet_addEthereumChain')
+    const response = await provider.request({
       method: 'wallet_addEthereumChain',
       params: [
         {
-          chainId: '0x64',
+          chainId: '0x1',
           chainName: 'Ethereum',
           blockExplorerUrls: ['https://etherscan.io/'],
-          rpcUrls: ['https://cloudflare-eth.com/'],
+          rpcUrls: ['https://rpc.ankr.com/eth'],
           nativeCurrency: {
             symbol: 'ETH',
           },
         },
       ],
     })
+    setResult(response)
   } catch (e) {
     console.log({ e })
   }
@@ -100,33 +120,40 @@ async function canReconnect() {
 
 async function switchChain() {
   try {
-    await provider.request({
+    setRequest('wallet_switchEthereumChain')
+    const response = await provider.request({
       method: 'wallet_switchEthereumChain',
       params: [
         {
-          chainId: '0x64',
+          chainId: '8081',
         },
       ],
     })
+    setResult(response)
   } catch (e) {
     console.log({ e })
   }
 }
 
+let contractAddress
+
 async function addToken() {
   try {
-    await provider.request({
+    setRequest('wallet_watchAsset')
+    const response = await provider.request({
       method: 'wallet_watchAsset',
       params: {
         type: 'ERC20',
         options: {
-          address: '0xB983E01458529665007fF7E0CDdeCDB74B967Eb6',
+          address:
+            contractAddress || '0xB983E01458529665007fF7E0CDdeCDB74B967Eb6',
           symbol: 'FOO',
           decimals: 18,
           image: 'https://foo.io/token-image.svg',
         },
       },
     })
+    setResult(response)
   } catch (e) {
     console.log({ e })
   }
@@ -135,14 +162,27 @@ async function addToken() {
 async function getAccounts() {
   console.log('Requesting accounts')
   try {
-    setRequest('eth_accounts')
-    const accounts = await provider.request({ method: 'eth_accounts' })
+    setRequest('getAccounts')
+    const accounts = await provider.request({ method: 'getAccounts' })
+    console.log({ accounts })
+    from = accounts[0]
+    setAccount(accounts)
+    setResult(JSON.stringify(accounts))
+  } catch (e) {
+    console.log({ e })
+  }
+}
+
+async function requestAccounts() {
+  console.log('Requesting accounts')
+  try {
+    setRequest('getAccounts')
+    const accounts = await provider.request({ method: 'getAccounts' })
     console.log({ accounts })
     from = accounts[0]
     setAccount(from)
-    setResult(from)
+    setResult(JSON.stringify(accounts))
   } catch (e) {
-    console.log(e)
     console.log({ e })
   }
 }
@@ -150,6 +190,9 @@ async function getAccounts() {
 async function sign() {
   console.log('Requesting signature')
   setRequest('eth_sign')
+  if (!from) {
+    return setResult('ERROR: Click get accounts to continue')
+  }
   const signature = await provider.request({
     method: 'eth_sign',
     params: [from, 'some_random_data'],
@@ -160,37 +203,74 @@ async function sign() {
 
 async function connect() {
   console.log('Requesting connect wallet')
-  setRequest('connect_wallet')
+  setRequest('Connect Wallet')
   try {
     const provider = await auth.connect()
     console.log({ provider })
+    setResult('Logged in using connect_wallet')
   } catch (error) {
     console.log({ error })
   }
 }
 
+async function getAddressType() {
+  console.log('Requesting address type')
+  setRequest('getAddressType')
+  try {
+    const addressType = auth.addressType
+    console.log({ addressType })
+    setResult(addressType)
+  } catch (error) {
+    console.log({ error })
+  }
+}
+
+async function getPrivateKey() {
+  try {
+    setRequest('_arcana_getPrivateKey')
+    const privateKey = await provider.request({
+      method: '_arcana_getPrivateKey',
+    })
+    setResult(privateKey)
+  } catch (e) {
+    console.log({ e })
+    setResult(e)
+  }
+}
+
 async function socialLogin() {
-  console.log('Requesting login')
-  setRequest('social_login')
-  await auth.loginWithSocial('google')
+  try {
+    console.log('Requesting login')
+    setRequest('Social Login')
+    await auth.loginWithSocial('google')
+    setResult('Logged in using social login')
+  } catch (e) {
+    console.log({ e })
+  }
 }
 
 async function linkLogin() {
   console.log('Requesting passwordlesslogin')
-  setRequest('link_login')
-  await auth.loginWithLink('makyl@newfang.io')
+  setRequest('Passwordless Login')
+  await auth.loginWithLink('karthik@newfang.io')
+  setResult('Logged in using email')
 }
 
 async function personalSign() {
   console.log('Requesting personal signature')
-  setRequest('personal_sign')
-
+  setRequest('mvx_signMessage')
+  if (!from) {
+    return setResult('ERROR: Click get accounts to continue')
+  }
   const personalSign = await provider.request({
-    method: 'personal_sign',
-    params: ['0', from],
+    method: 'mvx_signMessage',
+    params: {
+      message: 'food for cats',
+      address: from,
+    },
   })
 
-  setResult(personalSign)
+  setResult(personalSign.signature)
   console.log({ personalSign })
 }
 
@@ -211,13 +291,14 @@ async function encrypt() {
 }
 
 async function ethDecrypt() {
-  if (!ciphertext) {
-    setResult('No ciphertext, ignoring event')
-    return
-  }
   console.log('Requesting decryption')
   setRequest('eth_decrypt')
-
+  if (!from) {
+    return setResult('ERROR: Click get accounts to continue')
+  }
+  if (!ciphertext) {
+    return setResult('No ciphertext, ignoring event')
+  }
   const plaintext = await provider.request({
     method: 'eth_decrypt',
     params: [ciphertext, from],
@@ -227,26 +308,48 @@ async function ethDecrypt() {
 }
 
 async function sendTransaction() {
-  setRequest('eth_sendTransaction')
+  setRequest('mvx_signTransaction')
+  if (!from) {
+    return setResult('ERROR: Click get accounts to continue')
+  }
 
-  const hash = await provider.request({
-    method: 'eth_sendTransaction',
-    params: [
-      {
-        from,
-        gasPrice: 0,
-        to: '0xE28F01Cf69f27Ee17e552bFDFB7ff301ca07e780',
-        value: '0x0de0b6b3a7640000',
-      },
-    ],
+  const params = {
+    transaction: {
+      gasLimit: 70000,
+      sender: from,
+      receiver:
+        'erd12d5qk7jdxapwa06jxpu4p0cuxvq9325wm5tdy7lcl59dtmev39rs6qhlz4',
+      value: '1',
+      chainID: 'D',
+      data: 'helloWorld',
+      version: 1,
+    },
+  }
+
+  const data = await provider.request({
+    method: 'mvx_signTransaction',
+    params,
   })
-  setResult(hash)
 
-  console.log({ hash })
+  console.log(data, 'data-data')
+
+  fetch('https://devnet-api.multiversx.com/transactions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+    .then((res) => res.json())
+    .then(console.log)
+    .catch(console.log)
 }
+
 async function signTransaction() {
   setRequest('eth_signTransaction')
-
+  if (!from) {
+    return setResult('ERROR: Click get accounts to continue')
+  }
   const sig = await provider.request({
     method: 'eth_signTransaction',
     params: [
@@ -265,10 +368,12 @@ async function signTransaction() {
 
 async function getSelfPublicKey() {
   console.log('Requesting public key')
-  setRequest('eth_getEncryptionPublicKey')
-
+  setRequest('getPublicKey')
+  if (!from) {
+    return setResult('ERROR: Click get accounts to continue')
+  }
   const pk = await provider.request({
-    method: 'eth_getEncryptionPublicKey',
+    method: 'getPublicKey',
     params: [from],
   })
   console.log({ pk })
@@ -280,7 +385,7 @@ async function getPublicKey() {
   setRequest('getPublicKey')
 
   console.log('Requesting others public key')
-  const pk = await auth.getPublicKey('makyl@newfang.io')
+  const pk = await auth.getPublicKey('karthik@newfang.io')
   setResult(pk)
 
   console.log({ pk })
@@ -288,7 +393,9 @@ async function getPublicKey() {
 
 async function signTyped() {
   setRequest('eth_signTypedData_v4')
-
+  if (!from) {
+    return setResult('ERROR: Click get accounts to continue')
+  }
   console.log('Requesting typed signature')
   const typedSign = await provider.request({
     method: 'eth_signTypedData_v4',
@@ -368,3 +475,36 @@ const msgParams = JSON.stringify({
     ],
   },
 })
+
+async function deploy() {
+  setRequest('Ethers ContractFactory Deploy method')
+  const { abi20, byteCode } = await (await fetch('./artifact-lib.json')).json()
+  const web3pro = new window.ethers.providers.Web3Provider(provider)
+  console.log({ web3pro })
+  const signer = await web3pro.getSigner()
+  console.log({ signer })
+  const cFactory = new window.ethers.ContractFactory(abi20, byteCode, signer)
+  console.log({ cFactory })
+  const contract = await cFactory.deploy(20000)
+  contractAddress = contract.address
+  console.log({ contract })
+  setResult(contract.address)
+}
+
+async function interact() {
+  setRequest('Ethers Contract Transfer method')
+  if (!contractAddress) {
+    return setResult('ERROR: Deploy Contract to interact with it')
+  }
+  const { abi20 } = await (await fetch('./artifact-lib.json')).json()
+  const web3pro = new window.ethers.providers.Web3Provider(provider)
+  const signer = await web3pro.getSigner()
+  const contract = new window.ethers.Contract(contractAddress, abi20, signer)
+  let tx = await contract.transfer(
+    '0xd5485e03893854078C4d825C7794162643C38158',
+    1
+  )
+  await tx.wait()
+  console.log(await contract.balanceOf(await signer.getAddress()))
+  setResult('Balance: ' + (await contract.balanceOf(await signer.getAddress())))
+}
