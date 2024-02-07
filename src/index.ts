@@ -129,6 +129,10 @@ class AuthProvider {
     return this
   }
 
+  /**
+   * A function to start otp login
+   */
+
   public loginWithOTPStart = async (email: string) => {
     await this.init()
     return {
@@ -139,14 +143,15 @@ class AuthProvider {
     }
   }
 
-  public loginWithOTPComplete = async (
-    email: string,
-    onMFAFlow?: () => void
-  ) => {
+  /**
+   * A function to finish otp login
+   */
+
+  public loginWithOTPComplete = async (otp: string, onMFAFlow?: () => void) => {
     if ((await this._provider.getKeySpaceConfigType()) === 'global') {
       throw new Error('complete is not required for global login')
     }
-    await this._loginWithOTPComplete(email, onMFAFlow)
+    await this._loginWithOTPComplete(otp, onMFAFlow)
   }
 
   /**
@@ -216,6 +221,7 @@ class AuthProvider {
 
   /**
    * A function to trigger passwordless login in the wallet
+   * @deprecated use loginWithOTPStart and loginWithOTPComplete instead
    */
   loginWithLink = async (
     email: string,
