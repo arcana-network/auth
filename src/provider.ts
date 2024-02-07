@@ -226,51 +226,11 @@ export class ArcanaProvider
       id: getUniqueId(),
     }
 
-    const keySpaceType = await this.getKeySpaceConfigType()
-    const c = await this.getCommunication('addToActivity')
-
     return new Promise((resolve, reject) => {
-      if (permissionedMethod.includes(method) && keySpaceType === 'global') {
-        this.popup
-          .sendRequest({
-            chainId: this.chainId,
-            request: req,
-          })
-          .then((value: JsonRpcResponse<unknown>) => {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore-next-line
-            const error = value.error
-            if (error) {
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore-next-line
-              c.addToActivity({
-                req,
-                error,
-                chainId: this.chainId,
-              })
-              if (error !== 'user_closed_popup') {
-                return reject(getError(error))
-              }
-            } else {
-              const result = (<JsonRpcSuccess<unknown>>value).result
-              c.addToActivity({
-                req,
-                result,
-                chainId: this.chainId,
-              })
-              return resolve(result)
-            }
-          })
-        this.getCommunication().then(async (c) => {
-          this.getResponse<string>(method, req.id).then(resolve, reject)
-          await c.sendRequest(req, 'auth-verify')
-        }, reject)
-      } else {
-        this.getCommunication().then(async (c) => {
-          this.getResponse<string>(method, req.id).then(resolve, reject)
-          await c.sendRequest(req)
-        }, reject)
-      }
+      this.getCommunication().then(async (c) => {
+        this.getResponse<string>(method, req.id).then(resolve, reject)
+        await c.sendRequest(req)
+      }, reject)
     })
   }
 
