@@ -16,7 +16,7 @@
 
 # Auth
 
-[Arcana Network](https://arcana.network) Auth SDK integrates with Web3 apps to enable social login and embedded, in-app Arcana wallet. Users don't need to install a wallet. Developers can leverage the built-in gasless feature to sponsor gas fees for white-listed blockchain transactions. 
+Web3 apps can integrate with the [Arcana Network](https://arcana.network) Auth SDK to enable social login and embedded, in-app Arcana wallet. Users don't need to install a wallet. Developers can leverage the built-in gasless feature to sponsor gas fees for white-listed blockchain transactions.
 
 Auth SDK exposes the standard [Ethereum provider](https://eips.ethereum.org/EIPS/eip-1193) interface for Web3 operations. 
 
