@@ -40,7 +40,7 @@ Auth SDK exposes the standard [Ethereum provider](https://eips.ethereum.org/EIPS
 
 ## Supported Blockchain Networks
 
-The Arcana wallet is [pre-configured with a subset of supported chains](https://docs.arcana.network/state-of-the-arcana-auth#supported-blockchains). Others can be added programmatically or via the wallet UI.
+The Arcana wallet is [pre-configured with a subset of supported chains](https://docs.arcana.network/state-of-the-arcana-auth#supported-blockchains). Other supported chains can be added by app developers programmatically or via the dashboard. App users can add supported chains through the wallet UI.
 
 - EVM-chains: All. 
 - Non-EVM chains: Solana, MultiversX
