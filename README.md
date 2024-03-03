@@ -11,18 +11,16 @@
 <a title="CodeCov" href="https://codecov.io/gh/arcana-network/auth"> 
  <img src="https://codecov.io/gh/arcana-network/auth/branch/dev/graph/badge.svg?token=KmdjEs3enL"/></a>
 </p><p id="start" align="center">
-<a href="https://docs.beta.arcana.network/"><img src="https://raw.githubusercontent.com/arcana-network/branding/main/an_banner_docs.png" alt="Arcana Auth SDK"/></a>
+<a href="https://docs.beta.arcana.network/"><img src="https://raw.githubusercontent.com/arcana-network/branding/main/an_auth_sdk_banner_feb_24.png" alt="Arcana Auth SDK"/></a>
 </p>
 
-# Arcana Auth
+# Auth
 
-Use Arcana Auth SDK to onboard Web3 app users via social login and allow authenticated users to instantly access the built-in, embedded Arcana wallet and sign blockchain transactions from within the app context. 
+Web3 apps can integrate with the [Arcana Network](https://arcana.network) Auth SDK to enable social login and embedded, in-app Arcana wallet. Users don't need to install a wallet. Developers can leverage the built-in gasless feature to sponsor gas fees for white-listed blockchain transactions.
 
-Use the built-in gasless feature in the Auth SDK to enable gasless transactions in the Arcana wallet. 
+Auth SDK exposes the standard [Ethereum provider](https://eips.ethereum.org/EIPS/eip-1193) interface for Web3 operations. 
 
-Auth SDK enables the standard [Ethereum provider](https://eips.ethereum.org/EIPS/eip-1193) that can be used by the application for Web3 operations. Users are not required to install any wallet extension or manage keys or share them explicitly for enabling any blockchain transaction.
-
-## Auth Providers
+## Supported Auth Providers
 
 - Social Login
 
@@ -40,25 +38,37 @@ Auth SDK enables the standard [Ethereum provider](https://eips.ethereum.org/EIPS
 
 - Passwordless authentication
 
-Auth SDK usage is easily customizable. Developers can choose to use the built-in plug and play login UI to onboard users or use a custom UI. Also, instead of the built-in Arcana wallet UI, developers can integrate with the SDK and use a custom wallet UI.
+## Supported Blockchain Networks
 
-# 💪 Key Features
+The Arcana wallet is [pre-configured with a subset of supported chains](https://docs.arcana.network/state-of-the-arcana-auth#supported-blockchains). Other supported chains can be added by app developers programmatically or via the dashboard. App users can add supported chains through the wallet UI.
 
-<p>🔒 &nbsp; Onboard users via social, passwordless login</p>
-<p>🗝️ &nbsp; Allow authenticated users to sign blockchain transactions</p>
-<p>🔒 &nbsp; Non-custodial, embedded Web3 Arcana wallet that can be branded and configured </p>
-<p>⛓️ &nbsp; Web3 wallet operations: sign blockchain transactions, deploy and interact with smart contracts, manage native and custom tokens, view and manage NFTs, send and receive tokens</p>
-<p>⚙️ &nbsp; Gaslesss transactions</p>
+- EVM-chains: All. 
+- Non-EVM chains: Solana, MultiversX
 
-# 🏗️ Installation
+## Customization
 
-## npm
+- **Login UI**: Use default, built-in plug-and-play UI or use a custom one
+- **Wallet UI**: Select default, built-in wallet UI or configure custom wallet UI
+- **Branding**: Configure the theme and logo displayed in the wallet
+- **Social Providers**: Enable one or more social login providers in addition to the default passwordless login
+- **Wallet UX**: Configure Keyspace - global or app-specific (default)
+- **Gasless Transactions**: Add gas tanks, deposit funds to sponsor gas fees
+
+## Prerequisites
+
+1. Use the [Arcana Dashboard](https://dashboard.arcana.network) to register the app and obtain a unique app identifier (client ID). 
+2. Configure SDK usage, enable social providers, set up gasless (optional), select wallet UX
+3. Install the SDK and use the Client ID to integrate the app. [Learn more...](https://docs.arcana.network/quick-start/auth-sdk/index.html)
+
+## Installation
+
+### npm
 
 ```sh
 npm install --save @arcana/auth
 ```
 
-## yarn
+### yarn
 
 ```sh
 yarn add @arcana/auth
@@ -74,24 +84,14 @@ yarn add @arcana/auth
 <script src="https://unpkg.com/@arcana/auth"></script>
 ```
 
-# 📋 Prerequisites
+## Documentation
 
-Configure Auth SDK usage through the [Arcana Dashboard](https://dashboard.arcana.network), obtain a unique app identifier (client Id). Then install the SDK, use the client Id to integrate the app with the Arcana Auth SDK. [Learn more...](https://docs.arcana.network/).
+See [Arcana Network documentation](https://docs.arcana.network/), [Auth SDK Quick Start Guide](https://docs.arcana.network/quick-start/auth-sdk/index.html), [Usage Guide](https://docs.arcana.network/web-sdk/auth-usage-guide.html), [API Reference Guide](https://authsdk-ref-guide.netlify.app) and [integration examples](https://docs.arcana.network/tutorials/).
 
-# 📚 Documentation
+## Support
 
-Check out [Arcana Network documentation](https://docs.arcana.network/) for [Auth SDK Quick Start Guide](https://docs.arcana.network/quick-start/auth-sdk/index.html), [Usage Guide](https://docs.arcana.network/web-sdk/auth-usage-guide.html) and [API Reference Guide](https://authsdk-ref-guide.netlify.app).
+Contact [Arcana Support](https://docs.arcana.network/support).
 
-# 💡 Support
+## License
 
-For support or integration-related queries, contact [Arcana support team](mailto:support@arcana.network).
-
-# 🤝 Contributing
-
-We welcome all contributions to the Arcana Auth SDK from the community. See [contributing guide](https://github.com/arcana-network/license/blob/main/CONTRIBUTING.md) for details.
-
-# ℹ️ License
-
-Arcana Auth SDK is distributed under the [MIT License](https://fossa.com/blog/open-source-licenses-101-mit-license/).
-
-For details see [Arcana License](https://github.com/arcana-network/license/blob/main/LICENSE.md).
+Arcana Auth SDK is distributed under the [MIT License](https://fossa.com/blog/open-source-licenses-101-mit-license/). For details, see [Arcana License](https://github.com/arcana-network/license/blob/main/LICENSE.md).
