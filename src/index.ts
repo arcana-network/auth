@@ -130,6 +130,40 @@ class AuthProvider {
   }
 
   /**
+   * A function to perform otp login
+   * @example
+   * Local Keyspace:
+   * ```
+   * const login = await auth.loginWithOtp("abc@example.com");
+   * await login.begin();
+   *
+   * // On user input of OTP
+   * const onSubmitClick = () => {
+   *  const userInput = ... // Get user input from input element
+   *  await login.complete(userInput);
+   * }
+   * ```
+   *
+   * @example
+   * Global Keyspace:
+   * ```
+   * const login = await auth.loginWithOtp("abc@example.com");
+   * await login.begin();
+   * ```
+   */
+
+  public loginWithOTP = async (email: string) => {
+    await this.init()
+    return {
+      begin: () => this._loginWithOTPStart(email),
+      isCompleteRequired: !(
+        (await this._provider.getKeySpaceConfigType()) === 'global'
+      ),
+      complete: this._loginWithOTPComplete.bind(this),
+    }
+  }
+
+  /**
    * A function to start otp login
    */
 
@@ -156,6 +190,18 @@ class AuthProvider {
 
   /**
    * A function to open login plug n play modal
+   * @example
+   * ```
+   * const auth = new AuthProvider('xar_xxx_...')
+   * window.onload = () => {
+   *  try {
+   *    await auth.connect();
+   *    // User is logged in, use auth.provider
+   *  } catch(e){
+   *    // Login failed due to some error or user closed login popup
+   *  }
+   * }
+   * ```
    */
   public async connect(): Promise<EthereumProvider> {
     if (this.initStatus !== InitStatus.DONE) {
@@ -321,10 +367,14 @@ class AuthProvider {
    * A function to log out the user
    */
   public logout() {
-    if (this.initStatus === InitStatus.DONE) {
-      return this._provider.triggerLogout()
-    }
-    throw ErrorNotInitialized
+    return new Promise((resolve, reject) => {
+      if (this.initStatus === InitStatus.DONE) {
+        this._provider.once('disconnect', resolve)
+        this._provider.triggerLogout()
+      } else {
+        return reject(ErrorNotInitialized)
+      }
+    })
   }
 
   /**

@@ -8,13 +8,14 @@ export default {
     format: 'esm',
     compact: true,
     chunkFileNames: '[name].chunk.js',
-    manualChunks: function (id) {
-      if (id.includes('@solana/web3.js/lib')) {
-        return 'solana'
-      }
-      if (id.includes('/node_modules/')) {
-        return 'vendor'
-      }
-    },
+    inlineDynamicImports: true,
+    // manualChunks: function (id) {
+    //   if (id.includes('@solana/web3.js/lib')) {
+    //     return 'solana'
+    //   }
+    //   if (id.includes('/node_modules/')) {
+    //     return 'vendor'
+    //   }
+    // },
   },
 }
