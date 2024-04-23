@@ -139,6 +139,7 @@ export interface ChildMethods {
   addToActivity: (req: object) => Promise<void>
   getPublicKey: (email: string, verifier: string) => Promise<string>
   triggerLogout: (isV2?: boolean) => Promise<void>
+  logout: () => Promise<void>
   getUserInfo: () => Promise<UserInfo>
   initSocialLogin(kind: string): Promise<string>
   initPasswordlessLogin: (email: string) =>

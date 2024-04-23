@@ -322,7 +322,7 @@ class AuthProvider {
    */
   public logout() {
     if (this.initStatus === InitStatus.DONE) {
-      return this._provider.triggerLogout()
+      return this._provider.logout()
     }
     throw ErrorNotInitialized
   }
