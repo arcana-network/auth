@@ -1,6 +1,6 @@
 {
   "name": "@arcana/auth",
-  "version": "1.0.11-beta.4",
+  "version": "1.0.11-beta.5",
   "description": "Arcana Auth",
   "main": "dist/index.js",
   "type": "module",
