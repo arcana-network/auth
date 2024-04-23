@@ -159,9 +159,9 @@ export class ArcanaProvider
     return logins
   }
 
-  public async triggerLogout() {
-    const c = await this.getCommunication('triggerLogout')
-    await c.triggerLogout(true)
+  public async logout() {
+    const c = await this.getCommunication('logout')
+    await c.logout()
   }
 
   public async initPasswordlessLogin(email: string) {

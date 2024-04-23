@@ -207,7 +207,7 @@ function preLoadIframe(url: string, appId: string) {
   try {
     if (typeof document === 'undefined') return
     const iframeLink = document.createElement('link')
-    iframeLink.href = `${url}/${appId}/login`
+    iframeLink.href = `${url}/${appId}/v2/login`
     iframeLink.type = 'text/html'
     iframeLink.rel = 'prefetch'
     document.head.appendChild(iframeLink)
