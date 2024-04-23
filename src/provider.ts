@@ -1,5 +1,6 @@
 import {
   ChildMethods,
+  CustomProviderParams,
   EthereumProvider,
   JsonRpcError,
   JsonRpcId,
@@ -121,6 +122,11 @@ export class ArcanaProvider
     const available = await c.isLoginAvailable(type)
     this.logger.debug('loginAvailable', { [type]: available })
     return available
+  }
+
+  public async initCustomLogin(params: CustomProviderParams) {
+    const c = await this.getCommunication('triggerCustomLogin')
+    return await c.triggerCustomLogin(params)
   }
 
   public async requestUserInfo() {

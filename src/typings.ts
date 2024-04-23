@@ -140,6 +140,11 @@ export interface ChildMethods {
   getPublicKey: (email: string, verifier: string) => Promise<string>
   triggerLogout: (isV2?: boolean) => Promise<void>
   logout: () => Promise<void>
+  triggerCustomLogin: (params: {
+    token: string
+    userID: string
+    provider: string
+  }) => Promise<string>
   getUserInfo: () => Promise<UserInfo>
   initSocialLogin(kind: string): Promise<string>
   initPasswordlessLogin: (email: string) =>
@@ -242,4 +247,10 @@ export type EIP6963ProviderInfo = {
   name: string
   icon: string
   rdns: string
+}
+
+export type CustomProviderParams = {
+  provider: string
+  userID: string
+  token: string
 }
