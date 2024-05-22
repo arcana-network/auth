@@ -562,10 +562,12 @@ class AuthProvider {
           }
         }
 
-        this.announceProvider()
-        window.addEventListener('eip6963:requestProvider', () => {
+        if (this.params.useEIP6963) {
           this.announceProvider()
-        })
+          window.addEventListener('eip6963:requestProvider', () => {
+            this.announceProvider()
+          })
+        }
       })
     }
   }

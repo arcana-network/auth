@@ -164,6 +164,7 @@ const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
     theme: 'dark',
     alwaysVisible: true,
     setWindowProvider: false,
+    useEIP6963: false,
     connectOptions: {
       compact: false,
     },
@@ -185,6 +186,9 @@ const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
   }
   if (initParams?.connectOptions?.compact !== undefined) {
     p.connectOptions.compact = initParams.connectOptions.compact
+  }
+  if (initParams?.useEIP6963 !== undefined) {
+    p.useEIP6963 = initParams.useEIP6963
   }
 
   if (p.network == 'testnet' || p.network == 'dev') {

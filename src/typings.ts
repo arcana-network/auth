@@ -230,6 +230,7 @@ export interface ConstructorParams {
   position: Position
   setWindowProvider: boolean
   appMode?: AppMode
+  useEIP6963: boolean
   connectOptions: ConnectOptions
 }
 
