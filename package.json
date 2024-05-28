@@ -34,7 +34,7 @@
     "format": "prettier --ignore-path .gitignore --write .",
     "lint": "eslint --ext .ts src",
     "prepare": "husky install",
-    "prepublishOnly": "yarn run build"
+    "prepublishOnly": "npm run build"
   },
   "author": "makyl",
   "license": "MIT",
