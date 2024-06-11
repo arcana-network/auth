@@ -104,6 +104,7 @@ export interface UserInfo {
   address: string
   publicKey: string
   loginToken: string
+  userDIDToken: string
 }
 export type Logins =
   | 'google'
