@@ -1,11 +1,11 @@
 import {
   ChildMethods,
+  CustomProviderParams,
   EthereumProvider,
   JsonRpcError,
   JsonRpcId,
   JsonRpcRequest,
   JsonRpcResponse,
-  JsonRpcSuccess,
 } from './typings'
 import { Connection } from 'penpal'
 import { ethErrors } from 'eth-rpc-errors'
@@ -32,16 +32,6 @@ class ProviderError extends Error implements JsonRpcError {
     this.data = data
   }
 }
-
-const permissionedMethod = [
-  'eth_sendTransaction',
-  'eth_signTransaction',
-  'eth_sign',
-  'eth_signTypedData_v3',
-  'eth_signTypedData_v4',
-  'personal_sign',
-  'eth_decrypt',
-]
 
 interface AuthProvider {
   loginWithSocial(loginType: string): void
@@ -121,6 +111,11 @@ export class ArcanaProvider
     const available = await c.isLoginAvailable(type)
     this.logger.debug('loginAvailable', { [type]: available })
     return available
+  }
+
+  public async initCustomLogin(params: CustomProviderParams) {
+    const c = await this.getCommunication('triggerCustomLogin')
+    return await c.triggerCustomLogin(params)
   }
 
   public async requestUserInfo() {

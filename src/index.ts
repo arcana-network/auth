@@ -17,6 +17,7 @@ import {
   BearerAuthentication,
   ChainType,
   ConstructorParams,
+  CustomProviderParams,
   EIP6963ProviderInfo,
   EthereumProvider,
   FirebaseBearer,
@@ -141,6 +142,20 @@ class AuthProvider {
         (await this._provider.getKeySpaceConfigType()) === 'global'
       ),
     }
+  }
+
+  /**
+   * A function to trigger custom login in the wallet
+   */
+  loginWithCustomProvider = async (
+    params: CustomProviderParams
+  ): Promise<EthereumProvider> => {
+    await this.init()
+    if (await this.isLoggedIn()) {
+      return this._provider
+    }
+    await this._provider.initCustomLogin(params)
+    return await this.waitForConnect()
   }
 
   /**
@@ -547,10 +562,12 @@ class AuthProvider {
           }
         }
 
-        this.announceProvider()
-        window.addEventListener('eip6963:requestProvider', () => {
+        if (this.params.useEIP6963) {
           this.announceProvider()
-        })
+          window.addEventListener('eip6963:requestProvider', () => {
+            this.announceProvider()
+          })
+        }
       })
     }
   }

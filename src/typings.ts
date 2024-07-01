@@ -104,6 +104,7 @@ export interface UserInfo {
   address: string
   publicKey: string
   loginToken: string
+  userDIDToken: string
 }
 export type Logins =
   | 'google'
@@ -140,6 +141,11 @@ export interface ChildMethods {
   getPublicKey: (email: string, verifier: string) => Promise<string>
   triggerLogout: (isV2?: boolean) => Promise<void>
   logout: () => Promise<void>
+  triggerCustomLogin: (params: {
+    token: string
+    userID: string
+    provider: string
+  }) => Promise<string>
   getUserInfo: () => Promise<UserInfo>
   initSocialLogin(kind: string): Promise<string>
   initPasswordlessLogin: (email: string) =>
@@ -225,6 +231,7 @@ export interface ConstructorParams {
   position: Position
   setWindowProvider: boolean
   appMode?: AppMode
+  useEIP6963: boolean
   connectOptions: ConnectOptions
 }
 
@@ -242,4 +249,10 @@ export type EIP6963ProviderInfo = {
   name: string
   icon: string
   rdns: string
+}
+
+export type CustomProviderParams = {
+  provider: string
+  userID: string
+  token: string
 }
