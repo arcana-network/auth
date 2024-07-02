@@ -93,7 +93,6 @@ export default class IframeWrapper {
   }
 
   public handleDisconnect() {
-    this.widgetIframe.src = this.getIframeUrl()
     this.clearSessionID()
   }
 
