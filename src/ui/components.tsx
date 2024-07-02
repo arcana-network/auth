@@ -1,4 +1,10 @@
-import { StateUpdater, useEffect, useState, useRef } from 'preact/hooks'
+import {
+  StateUpdater,
+  useEffect,
+  useState,
+  useRef,
+  Dispatch,
+} from 'preact/hooks'
 import { ARCANA_LOGO, getSocialLogo } from './icons'
 import { ICONS } from '../utils'
 import { ModalParams } from './typings'
@@ -47,7 +53,7 @@ const EmailLogin = ({
   setEmail,
 }: {
   email: string
-  setEmail: StateUpdater<string>
+  setEmail: Dispatch<StateUpdater<string>>
 } & Pick<ModalParams, 'loginWithOTPStart'>) => {
   const [disabled, setDisabled] = useState(true)
   const onInput: JSXInternal.GenericEventHandler<HTMLInputElement> = (e) => {
