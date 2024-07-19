@@ -502,7 +502,13 @@ input[type='text']:focus {
   font-size: 12px;
   font-weight: 400;
   text-align: center;
-  color: var(--text-color);
+  color: var(--sub-text-color);
+}
+
+.xar-otp-email {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--sub-text-color);
 }
 
 .xar-otp-email {
