@@ -168,15 +168,7 @@ const Loader = (props: {
 }) => {
   return (
     <>
-      {props.header ? (
-        props.header
-      ) : (
-        <ProgressOval
-          compact={props.compact}
-          stroke={8}
-          secondaryColor="#8D8D8D"
-        />
-      )}
+      {props.header ? props.header : <ProgressOval />}
       {props.text ? <p className="xar-loader__text">{props.text}</p> : ''}
       {props.children ? <>{props.children}</> : ''}
     </>
@@ -392,7 +384,7 @@ const OTPEntry = ({
   if (loader.loading) {
     return (
       <>
-        <ProgressOval stroke={8} secondaryColor="#8D8D8D" compact={compact} />
+        <ProgressOval />
         <div class="xar-loader__text">{loader.text}</div>
       </>
     )

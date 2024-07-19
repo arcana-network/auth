@@ -1,5 +1,7 @@
 const BASE_URL = 'https://auth-icons.s3.ap-south-1.amazonaws.com'
 
+const LOADING_ICON = `${BASE_URL}/loading.svg`
+
 const SOCIAL_LOGO: { [k: string]: string } = {
   google: `${BASE_URL}/google.png`,
   twitter: `${BASE_URL}/twitter.png`,
@@ -51,4 +53,4 @@ const ARCANA_LOGO = {
   dark: `${BASE_URL}/secured-by-arcana-dark.svg`,
 }
 
-export { getSocialLogo, ARCANA_LOGO, MISC_ICONS }
+export { getSocialLogo, ARCANA_LOGO, MISC_ICONS, LOADING_ICON }
