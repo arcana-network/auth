@@ -5,8 +5,7 @@ import {
   useRef,
   Dispatch,
 } from 'preact/hooks'
-import { ARCANA_LOGO, getSocialLogo } from './icons'
-import { ICONS } from '../utils'
+import { ARCANA_LOGO, getSocialLogo, MISC_ICONS } from './icons'
 import { ModalParams } from './typings'
 import { Theme } from '../typings'
 import { JSXInternal } from 'preact/src/jsx'
@@ -17,7 +16,7 @@ import './style.css'
 const Header = ({ compact, logo }: { compact: boolean; logo: string }) => {
   const [loaded, setLoaded] = useState(false)
   const showLogoContainer = () => {
-    setLoaded(false)
+    setLoaded(true)
   }
   return (
     <>
@@ -35,10 +34,7 @@ const Header = ({ compact, logo }: { compact: boolean; logo: string }) => {
       </div>
       {!compact ? (
         <div className="xar-header-text">
-          <h1 className="xar-header-heading">Welcome</h1>
-          <p className="xar-header-subtext">
-            We’ll email you a login link for a password-free sign in.
-          </p>
+          <h1 className="xar-header-heading">Log In</h1>
         </div>
       ) : (
         ''
@@ -51,9 +47,11 @@ const EmailLogin = ({
   loginWithOTPStart,
   email,
   setEmail,
+  mode,
 }: {
   email: string
   setEmail: Dispatch<StateUpdater<string>>
+  mode: Theme
 } & Pick<ModalParams, 'loginWithOTPStart'>) => {
   const [disabled, setDisabled] = useState(true)
   const onInput: JSXInternal.GenericEventHandler<HTMLInputElement> = (e) => {
@@ -80,16 +78,18 @@ const EmailLogin = ({
   }, [])
   return (
     <form className="xar-email-login">
-      <input
-        value={email}
-        onInput={onInput}
-        className="xar-email-login__input"
-        type="text"
-        placeholder={'Enter your email'}
-      />
-      <button disabled={disabled} onClick={clickHandler} className="xar-btn">
-        Get Login OTP
-      </button>
+      <div class="xar-email-login__input-container">
+        <input
+          value={email}
+          onInput={onInput}
+          className="xar-email-login__input"
+          type="text"
+          placeholder={'Enter your email'}
+        />
+        <button onClick={clickHandler} class="xar-btn">
+          <img src={MISC_ICONS[mode].arrow} alt="proceed" />
+        </button>
+      </div>
     </form>
   )
 }
@@ -102,13 +102,17 @@ const SocialLogin = ({
   loginWithSocial,
   loginList,
   mode,
-}: Pick<ModalParams, 'loginWithSocial' | 'loginList'> & { mode: Theme }) => {
+  setShowMore,
+}: { setShowMore: Dispatch<StateUpdater<boolean>> } & Pick<
+  ModalParams,
+  'loginWithSocial' | 'loginList'
+> & { mode: Theme }) => {
   const clickHandler = (p: string) => {
     return loginWithSocial(p)
   }
   return (
     <div className="xar-social-container">
-      {loginList.map((l) => {
+      {loginList.slice(0, 4).map((l) => {
         return (
           <div
             className="xar-social-icon__wrapper"
@@ -122,6 +126,20 @@ const SocialLogin = ({
           </div>
         )
       })}
+      {loginList.length > 4 ? (
+        <div
+          className="xar-social-icon__wrapper"
+          onClick={() => setShowMore(true)}
+        >
+          <img
+            src={MISC_ICONS[mode]['dots-horizontal']}
+            alt="more"
+            className="xar-social-icon"
+          />
+        </div>
+      ) : (
+        ''
+      )}
     </div>
   )
 }
@@ -135,7 +153,7 @@ const Footer = ({ mode }: { mode: Theme }) => {
         target="_blank"
         className="xar-footer-img__link"
       >
-        <img className="xar-footer-img" src={logo} alt="Secured By Arcana" />
+        <img className="xar-footer-img" src={logo} alt="Powered By Arcana" />
       </a>
     </div>
   )
@@ -171,6 +189,9 @@ const OTPEntry = ({
   setError,
   closeFunc,
   compact,
+  email,
+  mode,
+  toHome,
 }: {
   loginWithOtpStart: () => Promise<unknown>
   loginWithOtpComplete: (
@@ -180,6 +201,9 @@ const OTPEntry = ({
   setError(): void
   closeFunc(): void
   compact: boolean
+  email: string
+  mode: Theme
+  toHome(): void
 }) => {
   const { counter, resetCounter } = useCounter(30)
   const [attempts, setAttempts] = useState(3)
@@ -376,54 +400,70 @@ const OTPEntry = ({
 
   return (
     <>
-      <div class="xar-otp-heading">Verification</div>
+      <div class="xar-otp-heading-container">
+        <button
+          class="xar-btn"
+          style={{ position: 'absolute' }}
+          onClick={toHome}
+        >
+          <img src={MISC_ICONS[mode]['back-arrow']} alt="back" />
+        </button>
+        <p class="xar-otp-heading">Enter OTP</p>
+      </div>
+      <div>
+        <img src={MISC_ICONS[mode].email} alt="email" />
+      </div>
       <div class="xar-otp-sub-heading">
-        Please enter the OTP that was sent to your <br />
-        email address
+        We’ve sent a verification code to
+        <br />
+        <span class="xar-otp-email">{email}</span>
       </div>
-      <div className="xar-otp-box">
-        {Array(numInputs)
-          .fill(null)
-          .map((_, i) => {
-            return (
-              <input
-                value={getOTPValue()[i] ?? ''}
-                key={i}
-                type="text"
-                maxLength={1}
-                autoComplete="off"
-                ref={(el) => (inputRefs.current[i] = el)}
-                onFocus={(event) => handleFocus(event)(i)}
-                onInput={handleInputChange}
-                onKeyDown={handleKeyDown}
-                onPaste={handlePaste}
-                className={
-                  isInvalidOTP
-                    ? 'xar-otp-input xar-invalid-otp'
-                    : 'xar-otp-input'
-                }
-              />
-            )
-          })}
-      </div>
-      {isInvalidOTP ? (
-        <div>
-          <p class="xar-invalid-otp-text">
-            Incorrect OTP. {attempts} attempts left.
-          </p>
+      <div className="xar-otp-box-container">
+        <div class="xar-otp-box">
+          {Array(numInputs)
+            .fill(null)
+            .map((_, i) => {
+              return (
+                <input
+                  value={getOTPValue()[i] ?? ''}
+                  key={i}
+                  type="text"
+                  maxLength={1}
+                  autoComplete="off"
+                  ref={(el) => (inputRefs.current[i] = el)}
+                  onFocus={(event) => handleFocus(event)(i)}
+                  onInput={handleInputChange}
+                  onKeyDown={handleKeyDown}
+                  onPaste={handlePaste}
+                  className={
+                    isInvalidOTP
+                      ? 'xar-otp-input xar-invalid-otp'
+                      : 'xar-otp-input'
+                  }
+                />
+              )
+            })}
         </div>
-      ) : (
-        ''
-      )}
+        {isInvalidOTP ? (
+          <div>
+            <p class="xar-invalid-otp-text">
+              Incorrect OTP. {attempts} attempts left.
+            </p>
+          </div>
+        ) : (
+          ''
+        )}
+      </div>
 
       <div>
-        <Action
-          disabled={counter > 0}
-          text={
-            counter > 0 ? `Resend code in ${counter} seconds` : 'Resend code'
-          }
-          method={resendCode}
-        />
+        {counter > 0 ? (
+          <span class="xar-sub-text">Resend code in {counter} seconds</span>
+        ) : (
+          <div>
+            <span class="xar-sub-text">Did not receive your code yet?</span>
+            <Action text={'Re-send code'} method={resendCode} />
+          </div>
+        )}
       </div>
     </>
   )
@@ -450,16 +490,17 @@ const useCounter = (time = 60) => {
   return { counter, resetCounter }
 }
 
-const OTPError = ({ action }: { action: () => void }) => {
+const OTPError = ({ action, mode }: { action: () => void; mode: Theme }) => {
   return (
     <>
-      <img class="xar-header-logo" src={ICONS.fail} alt="failed" />
+      <img class="xar-header-logo" src={MISC_ICONS[mode].failed} alt="failed" />
       <h2 class="xar-otp-error-heading">Login Failed</h2>
       <p class="xar-otp-error-subheading">
         Please check credentials and try again
       </p>
       <button className="xar-btn" onClick={action}>
-        Go Home
+        <img src={MISC_ICONS[mode]['try-again']} alt="Try again" />
+        <span class="xar-action__link">Try Again</span>
       </button>
     </>
   )
