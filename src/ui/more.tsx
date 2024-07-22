@@ -11,9 +11,16 @@ interface MoreProps {
 
 export default function More(props: MoreProps) {
   const { list, setShow, mode, onLoginClick } = props
+
+  const onSocialLoginClick = (kind: string) => {
+    onLoginClick(kind)
+    setShow(false)
+  }
+
   return (
     <div class="xar-more-sheet-container">
-      <div class="xar-more-sheet">
+      <div onClick={() => setShow(false)} style={{ flex: 1 }}></div>
+      <div class="xar-more-sheet" onClick={(e) => e.preventDefault()}>
         <div>
           <img
             class="xar-more-shrink-icon"
@@ -28,13 +35,15 @@ export default function More(props: MoreProps) {
             return (
               <div
                 className="xar-more-sheet__list-wrapper"
-                onClick={() => onLoginClick(l)}
+                onClick={() => onSocialLoginClick(l)}
               >
-                <img
-                  src={getSocialLogo(l, mode)}
-                  alt={`${l} logo`}
-                  className="xar-more-sheet__list-icon"
-                />
+                <div class="xar-more-sheet__list-icon-container">
+                  <img
+                    src={getSocialLogo(l, mode)}
+                    alt={`${l} logo`}
+                    className="xar-more-sheet__list-icon"
+                  />
+                </div>
                 <p class="xar-more-sheet__list-text">{l}</p>
               </div>
             )
