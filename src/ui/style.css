@@ -14,7 +14,9 @@
     -1px -1px 1px 0px #ffffffb2 inset;
   --action-link-text-color: #aa346a;
   --separator-color: #c8d5d9;
+  --separator-text-color: #74919c;
   --error-text-color: #f61d1d;
+  --more-icon-bg: #47545b;
 }
 
 .xar-dark-mode {
@@ -29,7 +31,9 @@
     5px 5px 10px 0px #0b0b0b80 inset;
   --action-link-text-color: #ff89bf;
   --separator-color: #39444a;
+  --separator-text-color: #829299;
   --error-text-color: #fa3636;
+  --more-icon-bg: #47545b;
 }
 
 .compact {
@@ -41,9 +45,9 @@
 }
 
 .full {
-  --modal-height: 428px;
-  --loader-font-size: 20px;
-  --loader-font-weight: 700;
+  --modal-height: 400px;
+  --loader-font-size: 12px;
+  --loader-font-weight: 400;
   --success-img-width: 100px;
   --action-link-size: 12px;
 }
@@ -220,10 +224,11 @@
 .xar-more-sheet-container {
   background: rgb(18 18 18 / 90%);
   position: absolute;
-  height: 139.5%;
-  width: 113%;
+  height: 136.4%;
+  width: 112.4%;
   border-radius: 10px;
   bottom: -75px;
+  display: flex;
 }
 
 .xar-more-sheet {
@@ -257,7 +262,7 @@
 .xar-more-sheet__list-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 16px;
   border-radius: 10px;
   background: var(--bg);
   padding: 10px;
@@ -269,14 +274,19 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  cursor: pointer;
+}
+
+.xar-more-sheet__list-icon-container {
+  background: var(--more-icon-bg);
+  border-radius: 50%;
+  display: flex;
 }
 
 .xar-more-sheet__list-icon {
-  background: var(--fg);
   padding: 6px;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
+  width: 16px;
+  height: 16px;
 }
 
 .xar-more-sheet__list-text {
@@ -337,6 +347,13 @@
   color: var(--separator-color);
 }
 
+.xar-separator__text {
+  font-size: 12px;
+  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+  color: var(--separator-text-color);
+}
+
 .xar-separator:before,
 .xar-separator:after {
   content: '';
@@ -364,6 +381,12 @@
 .xar-action__link:disabled {
   color: #667b91;
   cursor: not-allowed;
+}
+
+.xar-loading__header {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-color);
 }
 
 .xar-loader__text {
