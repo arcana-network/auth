@@ -76,6 +76,7 @@ const EmailLogin = ({
   useEffect(() => {
     setDisabled(!isEmail(email))
   }, [])
+
   return (
     <form className="xar-email-login">
       <div class="xar-email-login__input-container">
@@ -86,7 +87,7 @@ const EmailLogin = ({
           type="text"
           placeholder={'Enter your email'}
         />
-        <button onClick={clickHandler} class="xar-btn">
+        <button disabled={disabled} onClick={clickHandler} class="xar-btn">
           <img src={MISC_ICONS[mode].arrow} alt="proceed" />
         </button>
       </div>
@@ -95,7 +96,11 @@ const EmailLogin = ({
 }
 
 const Separator = ({ text }: { text: string }) => {
-  return <div className="xar-separator">{text}</div>
+  return (
+    <div className="xar-separator">
+      <span class="xar-separator__text">{text}</span>
+    </div>
+  )
 }
 
 const SocialLogin = ({
