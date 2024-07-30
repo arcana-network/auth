@@ -32,7 +32,7 @@ const MISC_ICONS = {
     success: `${BASE_URL}/success.svg`,
     failed: `${BASE_URL}/failed.svg`,
     email: `${BASE_URL}/email.svg`,
-    'try-again': `${BASE_URL}/try-again.svg`,
+    'try-again': `${BASE_URL}/try-again-dark.svg`,
     change: `${BASE_URL}/change.svg`,
     send: `${BASE_URL}/send.svg`,
     'dots-horizontal': `${BASE_URL}/dots-horizontal-dark.svg`,

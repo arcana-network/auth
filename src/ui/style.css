@@ -12,7 +12,7 @@
   --otp-bg: #eeeeee;
   --otp-shadow: 1px 1px 2px 0px #aeaec033 inset,
     -1px -1px 1px 0px #ffffffb2 inset;
-  --action-link-text-color: #aa346a;
+  --action-link-text-color: #4c626e;
   --separator-color: #c8d5d9;
   --separator-text-color: #74919c;
   --error-text-color: #f61d1d;
@@ -29,7 +29,7 @@
   --otp-bg: linear-gradient(141.48deg, #161616 -4.56%, #151515 135.63%);
   --otp-shadow: -50px 49px 29px 22px #1c1c1cd6 inset,
     5px 5px 10px 0px #0b0b0b80 inset;
-  --action-link-text-color: #ff89bf;
+  --action-link-text-color: #bbccd6;
   --separator-color: #39444a;
   --separator-text-color: #829299;
   --error-text-color: #fa3636;
@@ -224,10 +224,10 @@
 .xar-more-sheet-container {
   background: rgb(18 18 18 / 90%);
   position: absolute;
-  height: 136.4%;
+  height: 175%;
   width: 112.4%;
   border-radius: 10px;
-  bottom: -75px;
+  bottom: -100px;
   display: flex;
 }
 
