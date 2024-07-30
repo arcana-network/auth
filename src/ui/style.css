@@ -8,11 +8,11 @@
   --background: #f7f7f7;
   --inputShadow: 0 0 8px 3px rgba(126, 126, 126, 0.25);
   --text-color: #1d2a31;
-  --sub-text-color: #4c626e;
+  --sub-text-color: #829299;
   --otp-bg: #eeeeee;
   --otp-shadow: 1px 1px 2px 0px #aeaec033 inset,
     -1px -1px 1px 0px #ffffffb2 inset;
-  --action-link-text-color: #4c626e;
+  --action-link-text-color: #bbccd6;
   --separator-color: #c8d5d9;
   --separator-text-color: #74919c;
   --error-text-color: #f61d1d;
