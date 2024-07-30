@@ -17,6 +17,7 @@
   --separator-text-color: #74919c;
   --error-text-color: #f61d1d;
   --more-icon-bg: #47545b;
+  --email-id-color: #1d2a31;
 }
 
 .xar-dark-mode {
@@ -34,6 +35,7 @@
   --separator-text-color: #829299;
   --error-text-color: #fa3636;
   --more-icon-bg: #47545b;
+  --email-id-color: #d4d7d8;
 }
 
 .compact {
@@ -143,9 +145,7 @@
 .xar-email-login__input-container {
   display: flex;
   min-height: 45px;
-  background: var(--bg);
-  border-radius: 8px;
-  padding: 0 10px;
+  position: relative;
 }
 
 .xar-email-login__input {
@@ -159,6 +159,13 @@
   background: var(--bg);
   border: none;
   outline: none;
+  border-radius: 8px;
+  padding: 0px 10px;
+  box-sizing: border-box;
+}
+
+input[type='text']:focus {
+  border: 1px solid var(--sub-text-color);
 }
 
 .xar-social-container {
@@ -294,6 +301,14 @@
   font-weight: 500;
   color: var(--text-color);
   text-transform: capitalize;
+}
+
+.xar-btn__input-arrow {
+  position: absolute;
+  left: 290px;
+  height: 100%;
+  display: inline-flex;
+  justify-content: right;
 }
 
 .xar-btn {
@@ -452,13 +467,13 @@
   font-size: 12px;
   font-weight: 400;
   text-align: center;
-  color: var(--sub-text-color);
+  color: var(--text-color);
 }
 
 .xar-otp-email {
   font-size: 14px;
   font-weight: 700;
-  color: var(--sub-text-color);
+  color: var(--email-id-color);
 }
 
 .xar-otp-error-heading {

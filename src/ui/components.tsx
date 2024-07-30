@@ -87,7 +87,11 @@ const EmailLogin = ({
           type="text"
           placeholder={'Enter your email'}
         />
-        <button disabled={disabled} onClick={clickHandler} class="xar-btn">
+        <button
+          disabled={disabled}
+          onClick={clickHandler}
+          class="xar-btn xar-btn__input-arrow"
+        >
           <img src={MISC_ICONS[mode].arrow} alt="proceed" />
         </button>
       </div>
