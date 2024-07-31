@@ -121,20 +121,36 @@ const SocialLogin = ({
   }
   return (
     <div className="xar-social-container">
-      {loginList.slice(0, 4).map((l) => {
-        return (
-          <div
-            className="xar-social-icon__wrapper"
-            onClick={() => clickHandler(l)}
-          >
-            <img
-              src={getSocialLogo(l, mode)}
-              alt={`${l} logo`}
-              className="xar-social-icon"
-            />
-          </div>
-        )
-      })}
+      {loginList.length <= 4
+        ? loginList.map((l: string) => {
+            return (
+              <div
+                className="xar-social-icon__wrapper-full-width"
+                onClick={() => clickHandler(l)}
+              >
+                <img
+                  src={getSocialLogo(l, mode)}
+                  alt={`${l} logo`}
+                  className="xar-social-icon"
+                />
+                <p>Continue with {l.charAt(0).toUpperCase() + l.slice(1)}</p>
+              </div>
+            )
+          })
+        : loginList.slice(0, 4).map((l) => {
+            return (
+              <div
+                className="xar-social-icon__wrapper"
+                onClick={() => clickHandler(l)}
+              >
+                <img
+                  src={getSocialLogo(l, mode)}
+                  alt={`${l} logo`}
+                  className="xar-social-icon"
+                />
+              </div>
+            )
+          })}
       {loginList.length > 4 ? (
         <div
           className="xar-social-icon__wrapper"

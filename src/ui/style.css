@@ -26,6 +26,7 @@
   --error-text-color: #f61d1d;
   --more-icon-bg: #47545b;
   --email-id-color: #1d2a31;
+  --social-login-fw-bg: #1d2a31;
 }
 
 .xar-dark-mode {
@@ -44,6 +45,7 @@
   --error-text-color: #fa3636;
   --more-icon-bg: #47545b;
   --email-id-color: #d4d7d8;
+  --social-login-fw-bg: #f7f7f7;
 }
 
 .compact {
@@ -181,6 +183,31 @@ input[type='text']:focus {
   justify-content: center;
   gap: 1rem;
   flex-wrap: wrap;
+  width: 100%;
+}
+
+.xar-social-icon__wrapper-full-width {
+  display: flex;
+  background: var(--social-login-fw-bg);
+  width: 100%;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-radius: 100px;
+  cursor: pointer;
+}
+
+.xar-social-icon__wrapper-full-width img {
+  margin: 0;
+  height: 22px;
+  width: 22px;
+}
+
+.xar-social-icon__wrapper-full-width p {
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
 }
 
 .xar-social-icon__wrapper {
@@ -239,7 +266,7 @@ input[type='text']:focus {
 .xar-more-sheet-container {
   background: rgb(18 18 18 / 90%);
   position: absolute;
-  height: 175%;
+  height: 178.5%;
   width: 112.4%;
   border-radius: 10px;
   bottom: -100px;

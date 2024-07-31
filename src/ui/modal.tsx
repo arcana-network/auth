@@ -134,7 +134,7 @@ const Modal = (props: ModalParams) => {
             ) : null}
             {showMore ? (
               <More
-                list={props.loginList}
+                list={props.loginList.slice(4)}
                 setShow={() => onShowMore(false)}
                 mode={props.mode}
                 onLoginClick={socialLogin}
