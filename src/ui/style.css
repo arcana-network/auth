@@ -180,7 +180,7 @@ input[type='text']:focus {
 
 .xar-social-container {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
   width: 100%;
@@ -266,7 +266,7 @@ input[type='text']:focus {
 .xar-more-sheet-container {
   background: rgb(18 18 18 / 90%);
   position: absolute;
-  height: 178.5%;
+  height: 151%;
   width: 112.4%;
   border-radius: 10px;
   bottom: -100px;

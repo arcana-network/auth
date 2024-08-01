@@ -137,11 +137,28 @@ const SocialLogin = ({
               </div>
             )
           })
-        : loginList.slice(0, 4).map((l) => {
-            return (
+        : loginList.slice(0, 5).map((l, i) => {
+            return i === 0 ? (
+              <div
+                className="xar-social-icon__wrapper-full-width"
+                onClick={() => clickHandler(l)}
+              >
+                <img
+                  src={getSocialLogo(l, mode)}
+                  alt={`${l} logo`}
+                  className="xar-social-icon"
+                />
+                <p>Continue with {l.charAt(0).toUpperCase() + l.slice(1)}</p>
+              </div>
+            ) : (
               <div
                 className="xar-social-icon__wrapper"
                 onClick={() => clickHandler(l)}
+                style={
+                  loginList.length === 5
+                    ? { width: '60px', height: '44px', borderRadius: '40%' }
+                    : {}
+                }
               >
                 <img
                   src={getSocialLogo(l, mode)}
@@ -151,7 +168,7 @@ const SocialLogin = ({
               </div>
             )
           })}
-      {loginList.length > 4 ? (
+      {loginList.length > 5 ? (
         <div
           className="xar-social-icon__wrapper"
           onClick={() => setShowMore(true)}
