@@ -169,7 +169,7 @@
   border: none;
   outline: none;
   border-radius: 8px;
-  padding: 1px;
+  padding: 10px;
   box-sizing: border-box;
 }
 
@@ -256,10 +256,7 @@ input[type='text']:focus {
   position: relative;
   margin: auto;
   width: 100%;
-}
-
-.xar-inner-container > *:not(:first-child) {
-  margin-top: 20px;
+  gap: 20px;
 }
 
 .xar-more-sheet-container {
