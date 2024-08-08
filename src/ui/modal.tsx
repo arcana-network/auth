@@ -10,6 +10,7 @@ import {
   OTPError,
 } from './components'
 import { Overlay } from './overlay'
+import More from './more'
 import { useReducer, useState } from 'preact/hooks'
 
 const WAIT_TEXT = {
@@ -58,6 +59,7 @@ const reducer = (
 const Modal = (props: ModalParams) => {
   const [loaderState, dispatch] = useReducer(reducer, initLoaderState)
   const [email, setEmail] = useState('')
+  const [showMore, setShowMore] = useState(false)
 
   const socialLogin = async (kind: string) => {
     dispatch('SOCIAL')
@@ -74,17 +76,24 @@ const Modal = (props: ModalParams) => {
     return login
   }
 
+  function onShowMore(val: boolean) {
+    setShowMore(val)
+  }
+
   if (loaderState.loading) {
     return (
       <Overlay>
         <Container mode={props.mode}>
           {loaderState.type == 'OTP_SENT' ? (
             <OTPEntry
+              toHome={() => dispatch('RESET')}
               loginWithOtpStart={() => props.loginWithOTPStart(email)}
               setError={() => dispatch('OTP_ERROR')}
               closeFunc={props.closeFunc}
               loginWithOtpComplete={props.loginWithOTPComplete}
               compact={props.options.compact}
+              email={email}
+              mode={props.mode}
             />
           ) : (
             <Loader
@@ -102,7 +111,7 @@ const Modal = (props: ModalParams) => {
     <Overlay closeFunc={props.closeFunc}>
       <Container mode={props.mode}>
         {loaderState.type == 'OTP_ERROR' ? (
-          <OTPError action={() => dispatch('RESET')} />
+          <OTPError action={() => dispatch('RESET')} mode={props.mode} />
         ) : (
           <>
             <Header compact={props.options.compact} logo={props.logo} />
@@ -110,17 +119,29 @@ const Modal = (props: ModalParams) => {
               email={email}
               setEmail={setEmail}
               loginWithOTPStart={otpLogin}
+              mode={props.mode}
             />
             {props.loginList.length > 0 ? (
               <>
-                <Separator text="or continue with" />
+                <Separator text="or" />
                 <SocialLogin
                   loginWithSocial={socialLogin}
                   loginList={props.loginList}
                   mode={props.mode}
+                  setShowMore={() => onShowMore(true)}
                 />
               </>
             ) : null}
+            {showMore ? (
+              <More
+                list={props.loginList.slice(5)}
+                setShow={() => onShowMore(false)}
+                mode={props.mode}
+                onLoginClick={socialLogin}
+              />
+            ) : (
+              ''
+            )}
           </>
         )}
       </Container>
