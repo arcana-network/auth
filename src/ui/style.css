@@ -57,7 +57,7 @@
 }
 
 .full {
-  --modal-height: 400px;
+  --modal-height: 200px;
   --loader-font-size: 12px;
   --loader-font-weight: 400;
   --success-img-width: 100px;
@@ -161,7 +161,6 @@
 .xar-email-login__input {
   flex: 1;
   height: 45px;
-  padding: 0;
   font-family: 'Sora', sans-serif;
   font-size: 16px;
   font-weight: 500;
@@ -266,10 +265,10 @@ input[type='text']:focus {
 .xar-more-sheet-container {
   background: rgb(18 18 18 / 90%);
   position: absolute;
-  height: 151%;
+  height: 108%;
   width: 112.4%;
   border-radius: 10px;
-  bottom: -100px;
+  bottom: 0px;
   display: flex;
 }
 
@@ -344,6 +343,10 @@ input[type='text']:focus {
   height: 100%;
   display: inline-flex;
   justify-content: right;
+}
+
+.xar-btn__input-arrow:disabled img {
+  filter: opacity(25%);
 }
 
 .xar-btn {
