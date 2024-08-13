@@ -4,7 +4,7 @@
   },
   "entryPoints": ["src/index.ts"],
   "entryPointStrategy": "expand",
-  "name": "Auth SDK Reference Guide",
+  "name": "Auth SDK Reference",
   "out": "htmldocs",
   "excludePrivate": true,
   "excludeProtected": true,
