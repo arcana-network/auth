@@ -1,8 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@100;200;300;400;500;600;700;800&family=Inter:wght@100;200;300;400&display=block');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;600;800&display=block');
 
 :root > * {
-  font-family: 'Inter';
   font-size: 14px;
+
+  /* Change default colors in the material theme */
+  font-family: 'Inter', sans-serif;
+  --md-an-color: var(--md-sys-color-surface);
+}
+
+footer {
+  border-top: 0;
+  text-align: center;
+}
+
+:root[data-theme='dark'] {
+  --md-an-color: #0a0a0a;
+  border-radius: 9px;
 }
 
 .tsd-page-toolbar {
@@ -21,6 +34,15 @@
 
 .tsd-generator > p {
   font-style: italic;
+}
+
+div.tsd-signature,
+.tsd-signature,
+.tsd-signature.tsd-signature,
+.tsd-signature.tsd-anchor-link {
+  border-radius: 9px;
+  border: 0.05rem solid #ff4e9f;
+  background-color: var(--md-an-color);
 }
 
 pre > button {

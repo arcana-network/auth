@@ -21,7 +21,6 @@
   ],
   "scripts": {
     "test": "jest",
-    "docs": "typedoc --options typedoc.json",
     "htmldocs": "typedoc --options typedochtml.json",
     "clean": "run-p clean:dist clean:types",
     "clean:dist": "rimraf dist/",
@@ -85,10 +84,10 @@
     "ts-jest": "^29.0.3",
     "typedoc": "^0.26.3",
     "typedoc-plugin-extras": "^3.0.0",
-    "typedoc-plugin-markdown": "^3.12.1",
+    "typedoc-plugin-markdown": "^4.2.3",
     "typedoc-plugin-missing-exports": "^3.0.0",
     "typedoc-plugin-rename-defaults": "^0.7.1",
-    "typedoc-theme-hierarchy": "^5.0.0",
+    "typedoc-material-theme": "^1.1.0",
     "typescript": "^4.5.2"
   },
   "dependencies": {
