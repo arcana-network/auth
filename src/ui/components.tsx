@@ -20,7 +20,11 @@ const Header = ({ compact, logo }: { compact: boolean; logo: string }) => {
   }
   return (
     <>
-      {!loaded ? <div className="xar-header-logo__empty-container"></div> : ''}
+      {!loaded && logo ? (
+        <div className="xar-header-logo__empty-container"></div>
+      ) : (
+        ''
+      )}
       <div
         className="xar-header-logo__container"
         style={loaded ? {} : { display: 'none' }}
@@ -34,7 +38,7 @@ const Header = ({ compact, logo }: { compact: boolean; logo: string }) => {
       </div>
       {!compact ? (
         <div className="xar-header-text">
-          <h1 className="xar-header-heading">Log In</h1>
+          <h1 className="xar-header-heading">Log in or sign up</h1>
         </div>
       ) : (
         ''
@@ -227,7 +231,10 @@ const OTPEntry = ({
   mode,
   toHome,
 }: {
-  loginWithOtpStart: () => Promise<unknown>
+  loginWithOtpStart: () => Promise<{
+    begin: () => Promise<void>
+    isCompleteRequired: boolean
+  }>
   loginWithOtpComplete: (
     otp: string,
     onMFAFlow: () => unknown
@@ -286,7 +293,8 @@ const OTPEntry = ({
 
   const resendCode = async () => {
     setLoader({ loading: true, text: 'Sending OTP to your email address' })
-    await loginWithOtpStart()
+    const login = await loginWithOtpStart()
+    await login.begin()
     resetCounter()
     setLoader({ loading: false, text: '' })
   }
