@@ -7,7 +7,7 @@ import {
 } from 'preact/hooks'
 import { ARCANA_LOGO, getSocialLogo, MISC_ICONS } from './icons'
 import { ModalParams } from './typings'
-import { Theme } from '../typings'
+import { Theme, ThemeSettings } from '../typings'
 import { JSXInternal } from 'preact/src/jsx'
 import isEmail from 'validator/es/lib/isEmail'
 import ProgressOval from './loader'
@@ -112,9 +112,10 @@ const SocialLogin = ({
   loginList,
   mode,
   setShowMore,
+  theme_settings,
 }: { setShowMore: Dispatch<StateUpdater<boolean>> } & Pick<
   ModalParams,
-  'loginWithSocial' | 'loginList'
+  'loginWithSocial' | 'loginList' | 'theme_settings'
 > & { mode: Theme }) => {
   const clickHandler = (p: string) => {
     return loginWithSocial(p)
@@ -127,6 +128,7 @@ const SocialLogin = ({
               <div
                 className="xar-social-icon__wrapper-full-width"
                 onClick={() => clickHandler(l)}
+                style={{ backgroundColor: theme_settings.accent_color }}
               >
                 <img
                   src={getSocialLogo(l, mode)}
@@ -142,6 +144,7 @@ const SocialLogin = ({
               <div
                 className="xar-social-icon__wrapper-full-width"
                 onClick={() => clickHandler(l)}
+                style={{ backgroundColor: theme_settings.accent_color }}
               >
                 <img
                   src={getSocialLogo(l, mode)}
@@ -540,15 +543,35 @@ const OTPError = ({ action, mode }: { action: () => void; mode: Theme }) => {
   )
 }
 
+const getRadius = (radius: string) => {
+  switch (radius) {
+    case 'S':
+      return '4px'
+    case 'M':
+      return '8px'
+    case 'L':
+      return '12px'
+    case 'XL':
+      return '16px'
+    default:
+      return '0px'
+  }
+}
+
 const Container = ({
   children,
   mode,
+  theme_settings,
 }: {
   mode: Theme
   children: preact.ComponentChildren
+  theme_settings: ThemeSettings
 }) => {
   return (
-    <div class="xar-container">
+    <div
+      class="xar-container"
+      style={{ borderRadius: getRadius(theme_settings.radius) }}
+    >
       <div class="xar-inner-container">{children}</div>
       <Footer mode={mode} />
     </div>
