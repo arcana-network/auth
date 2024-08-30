@@ -83,7 +83,7 @@ const Modal = (props: ModalParams) => {
   if (loaderState.loading) {
     return (
       <Overlay>
-        <Container mode={props.mode}>
+        <Container mode={props.mode} theme_settings={props.theme_settings}>
           {loaderState.type == 'OTP_SENT' ? (
             <OTPEntry
               toHome={() => dispatch('RESET')}
@@ -109,7 +109,7 @@ const Modal = (props: ModalParams) => {
 
   return (
     <Overlay closeFunc={props.closeFunc}>
-      <Container mode={props.mode}>
+      <Container mode={props.mode} theme_settings={props.theme_settings}>
         {loaderState.type == 'OTP_ERROR' ? (
           <OTPError action={() => dispatch('RESET')} mode={props.mode} />
         ) : (
@@ -129,6 +129,7 @@ const Modal = (props: ModalParams) => {
                   loginList={props.loginList}
                   mode={props.mode}
                   setShowMore={() => onShowMore(true)}
+                  theme_settings={props.theme_settings}
                 />
               </>
             ) : null}

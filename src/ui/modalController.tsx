@@ -17,6 +17,7 @@ class ModalController {
       closeFunc: this.close,
       logo: params.logo,
       options: params.options,
+      theme_settings: params.theme_settings,
     }
 
     this.createContainer()

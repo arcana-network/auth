@@ -192,6 +192,7 @@ class AuthProvider {
         mode: this.theme,
         logo: this.logo.vertical,
         options: this.params.connectOptions,
+        theme_settings: this.appConfig.theme_settings,
       })
     }
     return new Promise((resolve, reject) => {
@@ -462,6 +463,7 @@ class AuthProvider {
       getAppThemeInfo(this.appId, this.networkConfig.gatewayUrl),
       getAppInfo(this.appId, this.networkConfig.gatewayUrl),
     ])
+    console.log({ appThemeInfo, appInfo })
     const appImageURLs = getImageUrls(
       this.appId,
       this.params.theme,
@@ -485,6 +487,13 @@ class AuthProvider {
           },
         },
         theme: this.params.theme,
+      },
+      theme_settings: {
+        accent_color: appInfo.theme_settings.accent_color,
+        font_pairing: appInfo.theme_settings.font_pairing,
+        font_color: appInfo.theme_settings.font_color,
+        radius: appInfo.theme_settings.radius,
+        font_size: appInfo.theme_settings.font_size,
       },
     }
   }
