@@ -4,6 +4,7 @@ const LOADING_ICON = `${BASE_URL}/loading.svg`
 
 const SOCIAL_LOGO: { [k: string]: string } = {
   google: `${BASE_URL}/google.png`,
+  apple: `${BASE_URL}/apple.png`,
   twitter: `${BASE_URL}/twitter.png`,
   github: `${BASE_URL}/github.png`,
   github_light: `${BASE_URL}/github-light.png`,
