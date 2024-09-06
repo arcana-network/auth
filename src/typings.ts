@@ -108,6 +108,7 @@ export interface UserInfo {
 }
 export type Logins =
   | 'google'
+  | 'apple'
   | 'github'
   | 'discord'
   | 'twitch'

@@ -30,6 +30,7 @@ Auth SDK exposes the standard [Ethereum provider](https://eips.ethereum.org/EIPS
   - Steam
   - Twitter
   - Twitch
+  - Apple
 
 - Custom IAM
   
