@@ -29,7 +29,6 @@ export default function More(props: MoreProps) {
             onClick={() => setShow(false)}
           />
         </div>
-        <p class="xar-more-sheet__title">Continue with a social account</p>
         <div class="xar-more-sheet__list-container">
           {list.map((l) => {
             return (

@@ -9,6 +9,23 @@
   font-weight: 400;
   font-style: normal;
 }
+@font-face {
+  font-family: 'Nohemi';
+  src: url('https://new-fonts.s3.ap-south-1.amazonaws.com/Nohemi-Regular.79399531.woff2')
+    format('woff2');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@keyframes slide-up {
+  0% {
+    bottom: -100%;
+  }
+
+  100% {
+    bottom: 0;
+  }
+}
 
 .xar-light-mode {
   --fg: #e4e9eb;
@@ -88,18 +105,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid var(--fg);
 }
 
 .xar-header-logo__empty-container {
-  /* width: 70px;
+  outline: 2px solid var(--fg);
+  width: 70px;
   height: 70px;
   border-radius: 50%;
   margin: 0 auto;
   display: flex;
   align-items: center;
-  justify-content: center; */
-  display: none;
+  justify-content: center;
+  /* display: none; */
 }
 
 .xar-header-logo {
@@ -113,7 +130,9 @@
 .xar-header-heading {
   font-family: 'Nohemi', 'Sora', sans-serif;
   text-align: center;
-  font-size: 20px;
+  font-size: 16px;
+  font-weight: 300;
+  letter-spacing: 1px;
   color: var(--text-color);
 }
 
@@ -174,7 +193,11 @@
 }
 
 input[type='text']:focus {
-  border: 1px solid var(--sub-text-color);
+  outline-color: var(--sub-text-color);
+}
+input[type='text'] {
+  outline: 1px solid transparent;
+  transition: outline-color 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
 .xar-social-container {
@@ -195,6 +218,7 @@ input[type='text']:focus {
   gap: 4px;
   border-radius: 100px;
   cursor: pointer;
+  transition: all 0.5s;
 }
 
 .xar-social-icon__wrapper-full-width img {
@@ -216,12 +240,17 @@ input[type='text']:focus {
   height: 42px;
   border-radius: 50%;
   align-items: center;
+  transition: all 0.5s;
 }
 
 .xar-social-icon__wrapper:hover {
   cursor: pointer;
-  transition: all 0.5s;
   transform: scale(1.15, 1.15);
+}
+
+.xar-social-icon__wrapper-full-width:hover {
+  cursor: pointer;
+  transform: scale(1.05, 1.05);
 }
 
 .xar-social-icon {
@@ -231,6 +260,7 @@ input[type='text']:focus {
 }
 
 .xar-container {
+  overflow: hidden;
   padding: 20px;
   width: 360px;
   min-height: var(--modal-height);
@@ -277,11 +307,11 @@ input[type='text']:focus {
   flex-direction: column;
   gap: 10px;
   background: var(--background);
-  transition: all 0.3s ease-in-out;
-  animation: slide-up 0.3s ease-in-out forwards;
+  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  animation: slide-up 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
   position: absolute;
   width: 100%;
-  height: 80%;
+  max-height: 80%;
   bottom: 0px;
 }
 
@@ -503,6 +533,12 @@ input[type='text']:focus {
   font-weight: 400;
   text-align: center;
   color: var(--text-color);
+}
+
+.xar-otp-email {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--email-id-color);
 }
 
 .xar-otp-email {
