@@ -20,7 +20,7 @@ import {
   CustomProviderParams,
   EIP6963ProviderInfo,
   EthereumProvider,
-  FirebaseBearer,
+  BearerAuthParams,
   InitStatus,
   Logins,
   NetworkConfig,
@@ -300,7 +300,7 @@ class AuthProvider {
 
   loginWithBearer = async (
     type: BearerAuthentication,
-    data: FirebaseBearer
+    data: BearerAuthParams
   ): Promise<boolean> => {
     await this.init()
     return await this.iframeWrapper.triggerBearerAuthentication(type, data)
