@@ -118,9 +118,10 @@ export type Logins =
   | 'steam'
 export enum BearerAuthentication {
   firebase = 'firebase',
+  telegram = 'telegram',
 }
-export type FirebaseBearer = {
-  uid: string
+export type BearerAuthParams = {
+  uid?: string
   token: string
 }
 
@@ -132,7 +133,7 @@ export interface ChildMethods {
   triggerPasswordlessLogin: (email: string, url: string) => Promise<string>
   triggerBearerLogin: (
     type: BearerAuthentication,
-    data: FirebaseBearer
+    data: BearerAuthParams
   ) => Promise<boolean>
   sendRequest: (
     req: JsonRpcRequest<unknown>,
