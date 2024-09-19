@@ -112,6 +112,7 @@ export type Logins =
   | 'github'
   | 'discord'
   | 'twitch'
+  | 'telegram'
   | 'twitter'
   | 'aws'
   | 'firebase'

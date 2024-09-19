@@ -9,6 +9,7 @@ const SOCIAL_LOGO: { [k: string]: string } = {
   github: `${BASE_URL}/github.png`,
   github_light: `${BASE_URL}/github-light.png`,
   twitch: `${BASE_URL}/twitch.png`,
+  telegram: `${BASE_URL}/telegram.png`,
   discord: `${BASE_URL}/discord.png`,
   aws: `${BASE_URL}/aws.png`,
   aws_light: `${BASE_URL}/aws_light.png`,
