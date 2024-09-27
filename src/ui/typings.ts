@@ -6,6 +6,7 @@ type ModalParams = {
   ) => Promise<{ begin: () => Promise<void>; isCompleteRequired: boolean }>
   loginWithOTPComplete: (otp: string) => Promise<unknown>
   loginWithSocial: (type: string) => Promise<unknown>
+  loginWithPasskey: () => Promise<void>
   closeFunc: () => unknown
   loginList: string[]
   mode: Theme

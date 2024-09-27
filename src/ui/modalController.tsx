@@ -13,6 +13,7 @@ class ModalController {
       loginWithSocial: params.loginWithSocial,
       loginWithOTPStart: params.loginWithOTPStart,
       loginWithOTPComplete: params.loginWithOTPComplete,
+      loginWithPasskey: params.loginWithPasskey,
       mode: params.mode,
       closeFunc: this.close,
       logo: params.logo,

@@ -192,6 +192,7 @@ class AuthProvider {
         loginWithOTPStart: this.loginWithOTPStart,
         loginWithOTPComplete: this.loginWithOTPComplete,
         loginWithSocial: this.loginWithSocial,
+        loginWithPasskey: this.loginWithPasskey,
         loginList: logins,
         mode: this.theme,
         logo: this.logo.vertical,
@@ -329,17 +330,19 @@ class AuthProvider {
     return browserSupportsWebAuthn()
   }
 
-  public async loginWithPasskey() {
+  loginWithPasskey = async () => {
     if (await this.isLoggedIn()) {
       throw new Error('user already logged in')
     }
+
     if (!this.isPasskeyLoginSupported()) {
       throw new Error('passkey login not supported')
     }
 
     const params = await this._provider.startPasskeyLogin()
     const data = await startAuthentication(params)
-    this._provider.finishPasskeyLogin(data)
+    await this._provider.finishPasskeyLogin(data)
+    await this.waitForConnect()
   }
 
   public async linkPasskey() {

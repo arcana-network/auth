@@ -19,6 +19,7 @@ const WAIT_TEXT = {
   OTP_SENT: '',
   OTP_SENT_GLOBAL: 'Please complete the login to proceed',
   OTP_ERROR: 'Invalid OTP, please try again',
+  PASSKEY: 'Please complete the login to proceed',
 }
 
 const initLoaderState = {
@@ -36,13 +37,15 @@ const reducer = (
     | 'OTP_INIT'
     | 'OTP_ERROR'
     | 'OTP_SENT_GLOBAL'
+    | 'PASSKEY'
 ) => {
   if (
     action == 'OTP_SENT_GLOBAL' ||
     action == 'SOCIAL' ||
     action == 'OTP_SENT' ||
     action == 'OTP_INIT' ||
-    action == 'OTP_ERROR'
+    action == 'OTP_ERROR' ||
+    action == 'PASSKEY'
   ) {
     return {
       text: WAIT_TEXT[action],
@@ -60,6 +63,8 @@ const Modal = (props: ModalParams) => {
   const [loaderState, dispatch] = useReducer(reducer, initLoaderState)
   const [email, setEmail] = useState('')
   const [showMore, setShowMore] = useState(false)
+  const isPasskeyEnabled = props.loginList.includes('passkey')
+  const loginList = props.loginList.filter((l) => l !== 'passkey')
 
   const socialLogin = async (kind: string) => {
     dispatch('SOCIAL')
@@ -121,20 +126,41 @@ const Modal = (props: ModalParams) => {
               loginWithOTPStart={otpLogin}
               mode={props.mode}
             />
-            {props.loginList.length > 0 ? (
+            {loginList.length > 0 ? (
               <>
                 <Separator text="or" />
                 <SocialLogin
                   loginWithSocial={socialLogin}
-                  loginList={props.loginList}
+                  loginList={loginList}
                   mode={props.mode}
                   setShowMore={() => onShowMore(true)}
                 />
+                {isPasskeyEnabled ? (
+                  <>
+                    <Separator text="or" />
+                    <div className="xar-header-text">
+                      <a
+                        className="xar-passkey-login"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          dispatch('PASSKEY')
+                          props.loginWithPasskey().finally(() => {
+                            dispatch('RESET')
+                          })
+                        }}
+                      >
+                        Login with passkey
+                      </a>
+                    </div>
+                  </>
+                ) : (
+                  ''
+                )}
               </>
             ) : null}
             {showMore ? (
               <More
-                list={props.loginList.slice(5)}
+                list={loginList.slice(5)}
                 setShow={() => onShowMore(false)}
                 mode={props.mode}
                 onLoginClick={socialLogin}

@@ -136,6 +136,16 @@
   color: var(--text-color);
 }
 
+.xar-passkey-login {
+  font-family: 'Nohemi', 'Sora', sans-serif;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 1px;
+  color: var(--text-color);
+  cursor: pointer;
+}
+
 .xar-header-subtext {
   font-family: 'Inter', sans-serif;
   font-size: 12px;
@@ -284,7 +294,7 @@ input[type='text'] {
   justify-content: center;
   text-align: center;
   position: relative;
-  margin: auto;
+  margin: auto auto 10px;
   width: 100%;
   gap: 20px;
 }
