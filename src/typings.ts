@@ -143,6 +143,10 @@ export interface ChildMethods {
   getPublicKey: (email: string, verifier: string) => Promise<string>
   triggerLogout: (isV2?: boolean) => Promise<void>
   logout: () => Promise<void>
+  startPasskeyLogin: () => Promise<any>
+  finishPasskeyLogin: (params: any) => Promise<any>
+  startPasskeyLink: () => Promise<any>
+  finishPasskeyLink: (params: any) => Promise<boolean>
   triggerCustomLogin: (params: {
     token: string
     userID: string

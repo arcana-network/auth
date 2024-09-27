@@ -57,6 +57,17 @@ async function logout() {
   }
 }
 
+async function linkPasskey() {
+  console.log('Requesting registerPasskey')
+  setRequest('register_passkey')
+  await auth.linkPasskey()
+}
+async function loginPasskey() {
+  console.log('Requesting loginPasskey')
+  setRequest('login_passkey')
+  await auth.loginWithPasskey()
+}
+
 async function addChain() {
   try {
     await provider.request({

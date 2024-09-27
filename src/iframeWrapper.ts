@@ -1,7 +1,7 @@
 import type {
   BearerAuthentication,
+  BearerAuthParams,
   ChildMethods,
-  FirebaseBearer,
   IframeWrapperParams,
   ParentMethods,
 } from './typings'
@@ -52,7 +52,7 @@ export default class IframeWrapper {
 
   public async triggerBearerAuthentication(
     type: BearerAuthentication,
-    data: FirebaseBearer
+    data: BearerAuthParams
   ) {
     return (await this.iframeCommunication.promise).triggerBearerLogin(
       type,

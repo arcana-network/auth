@@ -35,7 +35,11 @@ import { LOG_LEVEL, setExceptionReporter, setLogLevel } from './logger'
 import Popup from './popup'
 import { ModalController } from './ui/modalController'
 import { ArcanaSolanaAPI } from './solana'
-
+import {
+  startAuthentication,
+  startRegistration,
+  browserSupportsWebAuthn,
+} from '@simplewebauthn/browser'
 import isEmail from 'validator/es/lib/isEmail'
 
 class AuthProvider {
@@ -319,6 +323,33 @@ class AuthProvider {
       return this._provider.requestUserInfo()
     }
     throw ErrorNotInitialized
+  }
+
+  public isPasskeyLoginSupported() {
+    return browserSupportsWebAuthn()
+  }
+
+  public async loginWithPasskey() {
+    if (await this.isLoggedIn()) {
+      throw new Error('user already logged in')
+    }
+    if (!this.isPasskeyLoginSupported()) {
+      throw new Error('passkey login not supported')
+    }
+
+    const params = await this._provider.startPasskeyLogin()
+    const data = await startAuthentication(params)
+    this._provider.finishPasskeyLogin(data)
+  }
+
+  public async linkPasskey() {
+    if (!(await this.isLoggedIn())) {
+      throw new Error('user not logged in')
+    }
+
+    const params = await this._provider.startPasskeyLink()
+    const data = await startRegistration(params)
+    return this._provider.finishPasskeyLink(data)
   }
 
   /**

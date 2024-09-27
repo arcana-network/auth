@@ -1,82 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
-    <title>Auth example</title>
-  </head>
 
-  <body>
-    <h1>Auth Example</h1>
-    <div class="x-container">
-      <main>
-        <div class="flex">
-          <div class="operations">
-            <button class="btn" onclick="connect()">Connect</button>
-            <button class="btn" onclick="reconnect()">Reconnect</button>
-            <button class="btn" onclick="canReconnect()">Can Reconnect?</button>
-            <button class="btn" onclick="socialLogin()">
-              Login with google
-            </button>
-            <button class="btn" onclick="linkLogin()">Login with link</button>
-            <button class="btn" onclick="showWallet()">Show wallet</button>
-            <button class="btn" onclick="getAccounts()">Get Accounts</button>
-            <button class="btn" onclick="getSelfPublicKey()">
-              Get Public Key
-            </button>
-            <button class="btn" onclick="addChain()">Add Chain</button>
-            <button class="btn" onclick="switchChain()">Switch Chain</button>
-            <button class="btn" onclick="addToken()">Add Token</button>
-            <!-- <button class="btn" onclick="getPublicKey()">Get other's Public Key</button> -->
-            <button class="btn" onclick="sign()">Request signature</button>
-            <!-- <button class="btn" onclick="encrypt()">Do encryption</button> -->
-            <!-- <button class="btn" onclick="ethDecrypt()">Request decryption</button> -->
-            <button class="btn" onclick="personalSign()">
-              Personal signature
-            </button>
-            <button class="btn" onclick="signTyped()">Sign Typed</button>
-            <button class="btn" onclick="sendTransaction()">
-              Send Transaction
-            </button>
-            <button class="btn" onclick="signTransaction()">
-              Sign Transaction
-            </button>
-            <button class="btn" onclick="logout()">Logout</button>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Auth example</title>
+</head>
+
+<body>
+  <h1>Auth Example</h1>
+  <div class="x-container">
+    <main>
+      <div class="flex">
+        <div class="operations">
+          <button class="btn" onclick="connect()">Connect</button>
+          <button class="btn" onclick="reconnect()">Reconnect</button>
+          <button class="btn" onclick="linkPasskey()">Link Passkey</button>
+          <button class="btn" onclick="loginPasskey()">Login with Passkey</button>
+          <button class="btn" onclick="canReconnect()">Can Reconnect?</button>
+          <button class="btn" onclick="socialLogin()">
+            Login with google
+          </button>
+          <button class="btn" onclick="linkLogin()">Login with link</button>
+          <button class="btn" onclick="showWallet()">Show wallet</button>
+          <button class="btn" onclick="getAccounts()">Get Accounts</button>
+          <button class="btn" onclick="getSelfPublicKey()">
+            Get Public Key
+          </button>
+          <button class="btn" onclick="addChain()">Add Chain</button>
+          <button class="btn" onclick="switchChain()">Switch Chain</button>
+          <button class="btn" onclick="addToken()">Add Token</button>
+          <!-- <button class="btn" onclick="getPublicKey()">Get other's Public Key</button> -->
+          <button class="btn" onclick="sign()">Request signature</button>
+          <!-- <button class="btn" onclick="encrypt()">Do encryption</button> -->
+          <!-- <button class="btn" onclick="ethDecrypt()">Request decryption</button> -->
+          <button class="btn" onclick="personalSign()">
+            Personal signature
+          </button>
+          <button class="btn" onclick="signTyped()">Sign Typed</button>
+          <button class="btn" onclick="sendTransaction()">
+            Send Transaction
+          </button>
+          <button class="btn" onclick="signTransaction()">
+            Sign Transaction
+          </button>
+          <button class="btn" onclick="logout()">Logout</button>
+        </div>
+        <div class="view-window">
+          <h2 class="section-heading">STATUS</h2>
+          <div class="pill">
+            <span class="sub-heading">Current account: </span>
+            <span class="sub-value" id="account">-</span>
+            <br />
           </div>
-          <div class="view-window">
-            <h2 class="section-heading">STATUS</h2>
-            <div class="pill">
-              <span class="sub-heading">Current account: </span>
-              <span class="sub-value" id="account">-</span>
-              <br />
-            </div>
-            <div class="pill">
-              <span class="sub-heading">REQ: </span>
-              <span class="sub-value" id="request">-</span>
-              <br />
-            </div>
-            <div class="pill">
-              <span class="sub-heading">RESULT: </span>
-              <span class="sub-value" id="result">-</span>
-              <br />
-            </div>
-            <hr />
-            <!-- <div class="pill" v-if="error">
+          <div class="pill">
+            <span class="sub-heading">REQ: </span>
+            <span class="sub-value" id="request">-</span>
+            <br />
+          </div>
+          <div class="pill">
+            <span class="sub-heading">RESULT: </span>
+            <span class="sub-value" id="result">-</span>
+            <br />
+          </div>
+          <hr />
+          <!-- <div class="pill" v-if="error">
             <div class="error">
               <span>-</span>
             </div> -->
-            <!-- <br /> -->
-            <!-- </div> -->
-            <!-- <div class="pill">
+          <!-- <br /> -->
+          <!-- </div> -->
+          <!-- <div class="pill">
             <input type="text" placeholder="User Input" v-model="input" />
           </div> -->
-          </div>
         </div>
-      </main>
-    </div>
-    <script src="../dist/standalone/auth.umd.js"></script>
-    <script src="./index.js"></script>
-  </body>
+      </div>
+    </main>
+  </div>
+  <script src="../dist/standalone/auth.umd.js"></script>
+  <script src="./index.js"></script>
+</body>
+
 </html>

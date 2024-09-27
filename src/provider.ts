@@ -138,6 +138,27 @@ export class ArcanaProvider
     const c = await this.getCommunication('initOTPLogin')
     return await c.initOTPLogin(email)
   }
+
+  public async startPasskeyLogin() {
+    const c = await this.getCommunication('startPasskeyLogin')
+    return await c.startPasskeyLogin()
+  }
+
+  public async finishPasskeyLogin(params: any) {
+    const c = await this.getCommunication('finishPasskeyLogin')
+    return await c.finishPasskeyLogin(params)
+  }
+
+  public async startPasskeyLink() {
+    const c = await this.getCommunication('startPasskeyLink')
+    return await c.startPasskeyLink()
+  }
+
+  public async finishPasskeyLink(data: any) {
+    const c = await this.getCommunication('finishPasskeyLink')
+    return await c.finishPasskeyLink(data)
+  }
+
   public async completeOTPLogin(otp: string) {
     const c = await this.getCommunication('completeOTPLogin')
     await c.completeOTPLogin(otp)
