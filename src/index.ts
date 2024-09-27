@@ -192,6 +192,7 @@ class AuthProvider {
         mode: this.theme,
         logo: this.logo.vertical,
         options: this.params.connectOptions,
+        allowedProviders: this.params.allowedProviders,
       })
     }
     return new Promise((resolve, reject) => {

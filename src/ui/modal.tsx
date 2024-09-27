@@ -12,6 +12,7 @@ import {
 import { Overlay } from './overlay'
 import More from './more'
 import { useReducer, useState } from 'preact/hooks'
+import { Logins } from '../typings'
 
 const WAIT_TEXT = {
   SOCIAL: 'Please complete the login to proceed',
@@ -56,10 +57,28 @@ const reducer = (
   }
 }
 
+const getAllowedProviders = (
+  allowedProviders: (Logins | 'passwordless')[],
+  allProviders: (Logins | 'passwordless')[]
+) => {
+  allProviders = allProviders.filter((provider) => provider !== 'passwordless')
+  if (allowedProviders.length == 0) {
+    return allProviders
+  }
+  console.log({ allowedProviders, allProviders })
+  return allProviders.filter((provider) => allowedProviders.includes(provider))
+}
+
 const Modal = (props: ModalParams) => {
   const [loaderState, dispatch] = useReducer(reducer, initLoaderState)
   const [email, setEmail] = useState('')
   const [showMore, setShowMore] = useState(false)
+
+  const isPasswordlessAllowed =
+    props.allowedProviders.length > 0 &&
+    props.allowedProviders.includes('passwordless')
+
+  const loginList = getAllowedProviders(props.allowedProviders, props.loginList)
 
   const socialLogin = async (kind: string) => {
     dispatch('SOCIAL')
@@ -115,18 +134,22 @@ const Modal = (props: ModalParams) => {
         ) : (
           <>
             <Header compact={props.options.compact} logo={props.logo} />
-            <EmailLogin
-              email={email}
-              setEmail={setEmail}
-              loginWithOTPStart={otpLogin}
-              mode={props.mode}
-            />
-            {props.loginList.length > 0 ? (
+            {isPasswordlessAllowed ? (
+              <EmailLogin
+                email={email}
+                setEmail={setEmail}
+                loginWithOTPStart={otpLogin}
+                mode={props.mode}
+              />
+            ) : (
+              ''
+            )}
+            {loginList.length > 0 ? (
               <>
-                <Separator text="or" />
+                {isPasswordlessAllowed ? <Separator text="or" /> : ''}
                 <SocialLogin
                   loginWithSocial={socialLogin}
-                  loginList={props.loginList}
+                  loginList={loginList}
                   mode={props.mode}
                   setShowMore={() => onShowMore(true)}
                 />
@@ -134,7 +157,7 @@ const Modal = (props: ModalParams) => {
             ) : null}
             {showMore ? (
               <More
-                list={props.loginList.slice(5)}
+                list={loginList.slice(5)}
                 setShow={() => onShowMore(false)}
                 mode={props.mode}
                 onLoginClick={socialLogin}

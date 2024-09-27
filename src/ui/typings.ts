@@ -1,4 +1,4 @@
-import { ConnectOptions, Theme } from '../typings'
+import { ConnectOptions, Logins, Theme } from '../typings'
 
 type ModalParams = {
   loginWithOTPStart: (
@@ -7,10 +7,11 @@ type ModalParams = {
   loginWithOTPComplete: (otp: string) => Promise<unknown>
   loginWithSocial: (type: string) => Promise<unknown>
   closeFunc: () => unknown
-  loginList: string[]
+  loginList: (Logins | 'passwordless')[]
   mode: Theme
   logo: string
   options: ConnectOptions
+  allowedProviders: (Logins | 'passwordless')[]
 }
 
 export { ModalParams }

@@ -235,6 +235,7 @@ export interface ConstructorParams {
   appMode?: AppMode
   useEIP6963: boolean
   connectOptions: ConnectOptions
+  allowedProviders: Logins[]
 }
 
 type RequestArguments = {

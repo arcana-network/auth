@@ -168,6 +168,7 @@ const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
     connectOptions: {
       compact: false,
     },
+    allowedProviders: [],
   }
   if (initParams?.network) {
     p.network = initParams.network
@@ -189,6 +190,9 @@ const getConstructorParams = (initParams?: Partial<ConstructorParams>) => {
   }
   if (initParams?.useEIP6963 !== undefined) {
     p.useEIP6963 = initParams.useEIP6963
+  }
+  if (initParams?.allowedProviders !== undefined) {
+    p.allowedProviders = initParams.allowedProviders
   }
 
   if (p.network == 'testnet' || p.network == 'dev') {

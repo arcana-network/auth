@@ -1,9 +1,9 @@
 import { StateUpdater, Dispatch } from 'preact/hooks'
 import { getSocialLogo, MISC_ICONS } from './icons'
-import { Theme } from '../typings'
+import { Logins, Theme } from '../typings'
 
 interface MoreProps {
-  list: Array<string>
+  list: (Logins | 'passwordless')[]
   setShow: Dispatch<StateUpdater<boolean>>
   onLoginClick: (kind: string) => void
   mode: Theme

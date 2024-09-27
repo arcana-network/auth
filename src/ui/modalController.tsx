@@ -9,7 +9,7 @@ class ModalController {
   private onClose: (err?: Error) => unknown
   constructor(params: Omit<ModalParams, 'closeFunc'>) {
     this.params = {
-      loginList: params.loginList.filter((l) => l !== 'passwordless'),
+      loginList: params.loginList,
       loginWithSocial: params.loginWithSocial,
       loginWithOTPStart: params.loginWithOTPStart,
       loginWithOTPComplete: params.loginWithOTPComplete,
@@ -17,6 +17,7 @@ class ModalController {
       closeFunc: this.close,
       logo: params.logo,
       options: params.options,
+      allowedProviders: params.allowedProviders,
     }
 
     this.createContainer()
