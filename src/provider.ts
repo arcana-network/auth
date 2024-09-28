@@ -280,7 +280,6 @@ export class ArcanaProvider
         this.emit(t, val)
         break
       case EVENTS.MESSAGE:
-        console.log({ t, val })
         this.emit(t, val)
         break
       default:

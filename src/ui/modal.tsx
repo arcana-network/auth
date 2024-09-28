@@ -65,7 +65,6 @@ const getAllowedProviders = (
   if (allowedProviders.length == 0) {
     return allProviders
   }
-  console.log({ allowedProviders, allProviders })
   return allProviders.filter((provider) => allowedProviders.includes(provider))
 }
 

@@ -270,8 +270,7 @@ const OTPEntry = ({
       setLoader({ loading: true, text: 'Processing...' })
       loginWithOtpComplete(otp, onMFAFlow)
         .then(() => setLoader({ loading: false, text: '' }))
-        .catch((e) => {
-          console.log(e)
+        .catch(() => {
           setAttempts((attempts) => attempts - 1)
           setIsInvalidOTP(true)
           setLoader({ loading: false, text: '' })
