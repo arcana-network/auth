@@ -144,9 +144,9 @@ export class ArcanaProvider
     return await c.startPasskeyLogin()
   }
 
-  public async finishPasskeyLogin(params: any) {
+  public async finishPasskeyLogin(sid: string, params: any) {
     const c = await this.getCommunication('finishPasskeyLogin')
-    return await c.finishPasskeyLogin(params)
+    return await c.finishPasskeyLogin(sid, params)
   }
 
   public async startPasskeyLink() {
@@ -154,9 +154,19 @@ export class ArcanaProvider
     return await c.startPasskeyLink()
   }
 
-  public async finishPasskeyLink(data: any) {
+  public async finishPasskeyLink(sid: string, data: any) {
     const c = await this.getCommunication('finishPasskeyLink')
-    return await c.finishPasskeyLink(data)
+    return await c.finishPasskeyLink(sid, data)
+  }
+
+  public async unlinkPasskey(id: string) {
+    const c = await this.getCommunication('unlinkPasskey')
+    return await c.unlinkPasskey(id)
+  }
+
+  public async getMyPasskeys() {
+    const c = await this.getCommunication('getMyPasskeys')
+    return await c.getMyPasskeys()
   }
 
   public async completeOTPLogin(otp: string) {

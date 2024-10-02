@@ -339,9 +339,9 @@ class AuthProvider {
       throw new Error('passkey login not supported')
     }
 
-    const params = await this._provider.startPasskeyLogin()
-    const data = await startAuthentication(params)
-    await this._provider.finishPasskeyLogin(data)
+    const { sid, loginParams } = await this._provider.startPasskeyLogin()
+    const data = await startAuthentication(loginParams)
+    await this._provider.finishPasskeyLogin(sid, data)
     await this.waitForConnect()
   }
 
@@ -350,9 +350,25 @@ class AuthProvider {
       throw new Error('user not logged in')
     }
 
-    const params = await this._provider.startPasskeyLink()
-    const data = await startRegistration(params)
-    return this._provider.finishPasskeyLink(data)
+    const { sid, linkParams } = await this._provider.startPasskeyLink()
+    const data = await startRegistration(linkParams)
+    return this._provider.finishPasskeyLink(sid, data)
+  }
+
+  public async getMyPasskeys() {
+    if (!(await this.isLoggedIn())) {
+      throw new Error('user not logged in')
+    }
+
+    return this._provider.getMyPasskeys()
+  }
+
+  public async unlinkPasskey(id: string) {
+    if (!(await this.isLoggedIn())) {
+      throw new Error('user not logged in')
+    }
+
+    return this._provider.unlinkPasskey(id)
   }
 
   /**

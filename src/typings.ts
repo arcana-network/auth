@@ -125,6 +125,14 @@ export type BearerAuthParams = {
   token: string
 }
 
+type PasskeyCred = {
+  id: string
+  authenticatorName: string
+  browser: string
+  os: string
+  createdAt: string
+}
+
 export interface ChildMethods {
   isLoggedIn: () => Promise<boolean>
   isLoginAvailable: (type: string) => Promise<boolean>
@@ -143,10 +151,12 @@ export interface ChildMethods {
   getPublicKey: (email: string, verifier: string) => Promise<string>
   triggerLogout: (isV2?: boolean) => Promise<void>
   logout: () => Promise<void>
-  startPasskeyLogin: () => Promise<any>
-  finishPasskeyLogin: (params: any) => Promise<any>
-  startPasskeyLink: () => Promise<any>
-  finishPasskeyLink: (params: any) => Promise<boolean>
+  startPasskeyLogin: () => Promise<{ sid: string; loginParams: any }>
+  finishPasskeyLogin: (sid: string, params: any) => Promise<any>
+  startPasskeyLink: () => Promise<{ sid: string; linkParams: any }>
+  finishPasskeyLink: (sid: string, params: any) => Promise<boolean>
+  getMyPasskeys: () => Promise<PasskeyCred[]>
+  unlinkPasskey: (id: string) => Promise<void>
   triggerCustomLogin: (params: {
     token: string
     userID: string

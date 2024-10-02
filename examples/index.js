@@ -58,10 +58,24 @@ async function logout() {
 }
 
 async function linkPasskey() {
-  console.log('Requesting registerPasskey')
-  setRequest('register_passkey')
+  console.log('Requesting linkPasskey')
+  setRequest('link_passkey')
   await auth.linkPasskey()
 }
+
+async function unlinkPasskey() {
+  console.log('Requesting unlinkPasskey')
+  setRequest('unlink_passkey')
+  await auth.unlinkPasskey('7YlfwGbx3P_QQA3IoQoDlg')
+}
+
+async function getPasskeys() {
+  console.log('Requesting getPasskeys')
+  setRequest('get_passkeys')
+  const passkeys = await auth.getMyPasskeys()
+  console.log({ passkeys })
+}
+
 async function loginPasskey() {
   console.log('Requesting loginPasskey')
   setRequest('login_passkey')
