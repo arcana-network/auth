@@ -153,6 +153,10 @@ export interface ChildMethods {
   logout: () => Promise<void>
   startPasskeyLogin: () => Promise<{ sid: string; loginParams: any }>
   finishPasskeyLogin: (sid: string, params: any) => Promise<any>
+  startPasskeyRegistration: (
+    displayName: string
+  ) => Promise<{ sid: string; registrationParams: any }>
+  finishPasskeyRegistration: (sid: string, params: any) => Promise<any>
   startPasskeyLink: () => Promise<{ sid: string; linkParams: any }>
   finishPasskeyLink: (sid: string, params: any) => Promise<boolean>
   getMyPasskeys: () => Promise<PasskeyCred[]>

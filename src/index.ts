@@ -326,10 +326,17 @@ class AuthProvider {
     throw ErrorNotInitialized
   }
 
+  /**
+   * Checks whether the browser supports webauthn
+   * @returns boolean
+   */
   public isPasskeyLoginSupported() {
     return browserSupportsWebAuthn()
   }
 
+  /**
+   * Starts the passkey login flow
+   */
   loginWithPasskey = async () => {
     if (await this.isLoggedIn()) {
       throw new Error('user already logged in')
@@ -345,6 +352,27 @@ class AuthProvider {
     await this.waitForConnect()
   }
 
+  /**
+   * Starts the passkey registration flow
+   */
+  registerWithPasskey = async (displayName = '') => {
+    if (!this.isPasskeyLoginSupported()) {
+      throw new Error('passkey login not supported')
+    }
+
+    if (await this.isLoggedIn()) {
+      throw new Error('user already logged in')
+    }
+
+    const { sid, registrationParams } =
+      await this._provider.startPasskeyRegistration(displayName)
+    const data = await startRegistration(registrationParams)
+    await this._provider.finishPasskeyRegistration(sid, data)
+  }
+
+  /**
+   * Links a new passkey to an existing account
+   */
   public async linkPasskey() {
     if (!(await this.isLoggedIn())) {
       throw new Error('user not logged in')
@@ -355,6 +383,9 @@ class AuthProvider {
     return this._provider.finishPasskeyLink(sid, data)
   }
 
+  /**
+   * Gets all passkeys linked to the current account
+   */
   public async getMyPasskeys() {
     if (!(await this.isLoggedIn())) {
       throw new Error('user not logged in')
@@ -363,6 +394,9 @@ class AuthProvider {
     return this._provider.getMyPasskeys()
   }
 
+  /**
+   * Unlinks a passkey from the current account
+   */
   public async unlinkPasskey(id: string) {
     if (!(await this.isLoggedIn())) {
       throw new Error('user not logged in')

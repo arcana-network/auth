@@ -63,6 +63,12 @@ async function linkPasskey() {
   await auth.linkPasskey()
 }
 
+async function registerPasskey() {
+  console.log('Requesting registerPasskey')
+  setRequest('register_passkey')
+  await auth.registerWithPasskey('testing123')
+}
+
 async function unlinkPasskey() {
   console.log('Requesting unlinkPasskey')
   setRequest('unlink_passkey')

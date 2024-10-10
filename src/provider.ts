@@ -149,6 +149,16 @@ export class ArcanaProvider
     return await c.finishPasskeyLogin(sid, params)
   }
 
+  public async startPasskeyRegistration(displayName: string) {
+    const c = await this.getCommunication('startPasskeyRegistration')
+    return await c.startPasskeyRegistration(displayName)
+  }
+
+  public async finishPasskeyRegistration(sid: string, params: any) {
+    const c = await this.getCommunication('finishPasskeyRegistration')
+    return await c.finishPasskeyRegistration(sid, params)
+  }
+
   public async startPasskeyLink() {
     const c = await this.getCommunication('startPasskeyLink')
     return await c.startPasskeyLink()
