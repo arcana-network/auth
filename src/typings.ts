@@ -84,15 +84,25 @@ export interface AppThemeInfo {
     light_vertical?: string
   }
 }
+
+export interface ThemeSettings {
+  accent_color: string
+  font_pairing: string
+  font_size: string
+  font_color: string
+  radius: string
+}
 export interface AppInfo {
   name: string
   chain_type: 'evm' | 'solana'
+  theme_settings: ThemeSettings
 }
 
 export interface AppConfig {
   name: string
   chainType: ChainType
   themeConfig: ThemeConfig
+  theme_settings: ThemeSettings
 }
 
 export interface UserInfo {

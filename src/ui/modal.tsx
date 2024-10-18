@@ -83,7 +83,7 @@ const Modal = (props: ModalParams) => {
   if (loaderState.loading) {
     return (
       <Overlay>
-        <Container mode={props.mode}>
+        <Container mode={props.mode} theme_settings={props.theme_settings}>
           {loaderState.type == 'OTP_SENT' ? (
             <OTPEntry
               toHome={() => dispatch('RESET')}
@@ -94,12 +94,14 @@ const Modal = (props: ModalParams) => {
               compact={props.options.compact}
               email={email}
               mode={props.mode}
+              theme_settings={props.theme_settings}
             />
           ) : (
             <Loader
               compact={props.options.compact}
               text={loaderState.text}
               mode={props.mode}
+              theme_settings={props.theme_settings}
             ></Loader>
           )}
         </Container>
@@ -109,26 +111,36 @@ const Modal = (props: ModalParams) => {
 
   return (
     <Overlay closeFunc={props.closeFunc}>
-      <Container mode={props.mode}>
+      <Container mode={props.mode} theme_settings={props.theme_settings}>
         {loaderState.type == 'OTP_ERROR' ? (
-          <OTPError action={() => dispatch('RESET')} mode={props.mode} />
+          <OTPError
+            action={() => dispatch('RESET')}
+            mode={props.mode}
+            theme_settings={props.theme_settings}
+          />
         ) : (
           <>
-            <Header compact={props.options.compact} logo={props.logo} />
+            <Header
+              compact={props.options.compact}
+              logo={props.logo}
+              theme_settings={props.theme_settings}
+            />
             <EmailLogin
               email={email}
               setEmail={setEmail}
               loginWithOTPStart={otpLogin}
               mode={props.mode}
+              theme_settings={props.theme_settings}
             />
             {props.loginList.length > 0 ? (
               <>
-                <Separator text="or" />
+                <Separator text="or" theme_settings={props.theme_settings} />
                 <SocialLogin
                   loginWithSocial={socialLogin}
                   loginList={props.loginList}
                   mode={props.mode}
                   setShowMore={() => onShowMore(true)}
+                  theme_settings={props.theme_settings}
                 />
               </>
             ) : null}
@@ -138,6 +150,7 @@ const Modal = (props: ModalParams) => {
                 setShow={() => onShowMore(false)}
                 mode={props.mode}
                 onLoginClick={socialLogin}
+                theme_settings={props.theme_settings}
               />
             ) : (
               ''

@@ -1,12 +1,14 @@
 import { StateUpdater, Dispatch } from 'preact/hooks'
 import { getSocialLogo, MISC_ICONS } from './icons'
-import { Theme } from '../typings'
+import { Theme, ThemeSettings } from '../typings'
+import { getFontFaimly, getFontSizeStyle } from '../utilsFunction'
 
 interface MoreProps {
   list: Array<string>
   setShow: Dispatch<StateUpdater<boolean>>
   onLoginClick: (kind: string) => void
   mode: Theme
+  theme_settings: ThemeSettings
 }
 
 export default function More(props: MoreProps) {
@@ -29,6 +31,17 @@ export default function More(props: MoreProps) {
             onClick={() => setShow(false)}
           />
         </div>
+        <p
+          class="xar-more-sheet__title"
+          style={{
+            fontFamily: getFontFaimly(props.theme_settings.font_pairing)
+              .primaryFontClass,
+            color: props.theme_settings.font_color,
+            font: getFontSizeStyle(Number(props.theme_settings.font_size)),
+          }}
+        >
+          Continue with a social account
+        </p>
         <div class="xar-more-sheet__list-container">
           {list.map((l) => {
             return (

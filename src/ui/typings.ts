@@ -1,4 +1,4 @@
-import { ConnectOptions, Theme } from '../typings'
+import { ConnectOptions, Theme, ThemeSettings } from '../typings'
 
 type ModalParams = {
   loginWithOTPStart: (
@@ -11,6 +11,7 @@ type ModalParams = {
   mode: Theme
   logo: string
   options: ConnectOptions
+  theme_settings: ThemeSettings
 }
 
 export { ModalParams }
