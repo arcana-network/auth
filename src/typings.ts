@@ -43,6 +43,11 @@ export interface JsonRpcSuccess<T> extends JsonRpcResponseBase {
   result: Maybe<T>
 }
 
+export type FirebaseBearer = {
+  uid?: string | undefined
+  token: string
+}
+
 export type JsonRpcResponse<T> = JsonRpcSuccess<T> | JsonRpcFailure
 /* end of json-rpc-engine types */
 

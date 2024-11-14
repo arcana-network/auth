@@ -1,18 +1,18 @@
 import {
+  Dispatch,
   StateUpdater,
   useEffect,
-  useState,
   useRef,
-  Dispatch,
+  useState,
 } from 'preact/hooks'
-import { ARCANA_LOGO, getSocialLogo, MISC_ICONS } from './icons'
-import { ModalParams } from './typings'
-import { Theme, ThemeSettings } from '../typings'
 import { JSXInternal } from 'preact/src/jsx'
 import isEmail from 'validator/es/lib/isEmail'
+import { Theme, ThemeSettings } from '../typings'
+import { getFontFaimly, getFontSizeStyle, getRadius } from '../utilsFunction'
+import { ARCANA_LOGO, getSocialLogo, MISC_ICONS } from './icons'
 import ProgressOval from './loader'
 import './style.css'
-import { getFontFaimly, getFontSizeStyle, getRadius } from '../utilsFunction'
+import { ModalParams } from './typings'
 
 const Header = ({
   compact,
@@ -828,13 +828,13 @@ const Action = ({
 
 export {
   Action,
-  Header,
-  EmailLogin,
-  Separator,
-  SocialLogin,
-  Footer,
-  Loader,
   Container,
+  EmailLogin,
+  Footer,
+  Header,
+  Loader,
   OTPEntry,
   OTPError,
+  Separator,
+  SocialLogin,
 }
