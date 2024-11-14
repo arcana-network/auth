@@ -1,23 +1,33 @@
 import {
+  Dispatch,
   StateUpdater,
   useEffect,
-  useState,
   useRef,
-  Dispatch,
+  useState,
 } from 'preact/hooks'
-import { ARCANA_LOGO, getSocialLogo, MISC_ICONS } from './icons'
-import { ModalParams } from './typings'
-import { Theme } from '../typings'
 import { JSXInternal } from 'preact/src/jsx'
 import isEmail from 'validator/es/lib/isEmail'
+import { Theme, ThemeSettings } from '../typings'
+import { getFontFaimly, getFontSizeStyle, getRadius } from '../utilsFunction'
+import { ARCANA_LOGO, getSocialLogo, MISC_ICONS } from './icons'
 import ProgressOval from './loader'
 import './style.css'
+import { ModalParams } from './typings'
 
-const Header = ({ compact, logo }: { compact: boolean; logo: string }) => {
+const Header = ({
+  compact,
+  logo,
+  theme_settings,
+}: {
+  compact: boolean
+  logo: string
+  theme_settings: ThemeSettings
+}) => {
   const [loaded, setLoaded] = useState(false)
   const showLogoContainer = () => {
     setLoaded(true)
   }
+
   return (
     <>
       {!loaded && logo ? (
@@ -38,7 +48,16 @@ const Header = ({ compact, logo }: { compact: boolean; logo: string }) => {
       </div>
       {!compact ? (
         <div className="xar-header-text">
-          <h1 className="xar-header-heading">Log in or sign up</h1>
+          <h1
+            style={{
+              fontFamily: getFontFaimly(theme_settings.font_pairing)
+                .primaryFontClass,
+              color: theme_settings.font_color,
+              font: getFontSizeStyle(Number(theme_settings.font_size)),
+            }}
+          >
+            Log In
+          </h1>
         </div>
       ) : (
         ''
@@ -52,11 +71,12 @@ const EmailLogin = ({
   email,
   setEmail,
   mode,
+  theme_settings,
 }: {
   email: string
   setEmail: Dispatch<StateUpdater<string>>
   mode: Theme
-} & Pick<ModalParams, 'loginWithOTPStart'>) => {
+} & Pick<ModalParams, 'loginWithOTPStart' | 'theme_settings'>) => {
   const [disabled, setDisabled] = useState(true)
   const onInput: JSXInternal.GenericEventHandler<HTMLInputElement> = (e) => {
     setEmail(e.currentTarget.value)
@@ -90,11 +110,23 @@ const EmailLogin = ({
           className="xar-email-login__input"
           type="text"
           placeholder={'Enter your email'}
+          style={{
+            fontFamily: getFontFaimly(theme_settings.font_pairing)
+              .primaryFontClass,
+            color: theme_settings.font_color,
+            font: getFontSizeStyle(Number(theme_settings.font_size)),
+          }}
         />
         <button
           disabled={disabled}
           onClick={clickHandler}
           class="xar-btn xar-btn__input-arrow"
+          style={{
+            fontFamily: getFontFaimly(theme_settings.font_pairing)
+              .primaryFontClass,
+            color: theme_settings.font_color,
+            font: getFontSizeStyle(Number(theme_settings.font_size)),
+          }}
         >
           <img src={MISC_ICONS[mode].arrow} alt="proceed" />
         </button>
@@ -103,10 +135,25 @@ const EmailLogin = ({
   )
 }
 
-const Separator = ({ text }: { text: string }) => {
+const Separator = ({
+  text,
+  theme_settings,
+}: {
+  text: string
+  theme_settings: ThemeSettings
+}) => {
   return (
     <div className="xar-separator">
-      <span class="xar-separator__text">{text}</span>
+      <span
+        style={{
+          fontFamily: getFontFaimly(theme_settings.font_pairing)
+            .primaryFontClass,
+          color: theme_settings.font_color,
+          font: getFontSizeStyle(Number(theme_settings.font_size)),
+        }}
+      >
+        {text}
+      </span>
     </div>
   )
 }
@@ -116,9 +163,10 @@ const SocialLogin = ({
   loginList,
   mode,
   setShowMore,
+  theme_settings,
 }: { setShowMore: Dispatch<StateUpdater<boolean>> } & Pick<
   ModalParams,
-  'loginWithSocial' | 'loginList'
+  'loginWithSocial' | 'loginList' | 'theme_settings'
 > & { mode: Theme }) => {
   const clickHandler = (p: string) => {
     return loginWithSocial(p)
@@ -131,13 +179,29 @@ const SocialLogin = ({
               <div
                 className="xar-social-icon__wrapper-full-width"
                 onClick={() => clickHandler(l)}
+                style={{
+                  backgroundColor: theme_settings.accent_color,
+                  fontFamily: getFontFaimly(theme_settings.font_pairing)
+                    .primaryFontClass,
+                  color: theme_settings.font_color,
+                  font: getFontSizeStyle(Number(theme_settings.font_size)),
+                }}
               >
                 <img
                   src={getSocialLogo(l, mode)}
                   alt={`${l} logo`}
                   className="xar-social-icon"
                 />
-                <p>Continue with {l.charAt(0).toUpperCase() + l.slice(1)}</p>
+                <p
+                  style={{
+                    fontFamily: getFontFaimly(theme_settings.font_pairing)
+                      .primaryFontClass,
+                    color: theme_settings.font_color,
+                    font: getFontSizeStyle(Number(theme_settings.font_size)),
+                  }}
+                >
+                  Continue with {l.charAt(0).toUpperCase() + l.slice(1)}
+                </p>
               </div>
             )
           })
@@ -146,13 +210,30 @@ const SocialLogin = ({
               <div
                 className="xar-social-icon__wrapper-full-width"
                 onClick={() => clickHandler(l)}
+                style={{
+                  backgroundColor: theme_settings.accent_color,
+                  fontFamily: getFontFaimly(theme_settings.font_pairing)
+                    .primaryFontClass,
+                  color: theme_settings.font_color,
+                  font: getFontSizeStyle(Number(theme_settings.font_size)),
+                }}
               >
                 <img
                   src={getSocialLogo(l, mode)}
                   alt={`${l} logo`}
                   className="xar-social-icon"
                 />
-                <p>Continue with {l.charAt(0).toUpperCase() + l.slice(1)}</p>
+                <p
+                  style={{
+                    backgroundColor: theme_settings.accent_color,
+                    fontFamily: getFontFaimly(theme_settings.font_pairing)
+                      .primaryFontClass,
+                    color: theme_settings.font_color,
+                    font: getFontSizeStyle(Number(theme_settings.font_size)),
+                  }}
+                >
+                  Continue with {l.charAt(0).toUpperCase() + l.slice(1)}
+                </p>
               </div>
             ) : (
               <div
@@ -190,7 +271,13 @@ const SocialLogin = ({
   )
 }
 
-const Footer = ({ mode }: { mode: Theme }) => {
+const Footer = ({
+  mode,
+  theme_settings,
+}: {
+  mode: Theme
+  theme_settings: ThemeSettings
+}) => {
   const logo = ARCANA_LOGO[mode]
   return (
     <div className="xar-footer">
@@ -211,11 +298,26 @@ const Loader = (props: {
   mode: Theme
   compact: boolean
   header?: JSXInternal.Element
+  theme_settings: ThemeSettings
 }) => {
   return (
     <>
       {props.header ? props.header : <ProgressOval />}
-      {props.text ? <p className="xar-loader__text">{props.text}</p> : ''}
+      {props.text ? (
+        <p
+          className="xar-loader__text"
+          style={{
+            fontFamily: getFontFaimly(props.theme_settings.font_pairing)
+              .primaryFontClass,
+            color: props.theme_settings.font_color,
+            font: getFontSizeStyle(Number(props.theme_settings.font_size)),
+          }}
+        >
+          {props.text}
+        </p>
+      ) : (
+        ''
+      )}
       {props.children ? <>{props.children}</> : ''}
     </>
   )
@@ -230,6 +332,7 @@ const OTPEntry = ({
   email,
   mode,
   toHome,
+  theme_settings,
 }: {
   loginWithOtpStart: () => Promise<{
     begin: () => Promise<void>
@@ -245,6 +348,7 @@ const OTPEntry = ({
   email: string
   mode: Theme
   toHome(): void
+  theme_settings: ThemeSettings
 }) => {
   const { counter, resetCounter } = useCounter(30)
   const [attempts, setAttempts] = useState(3)
@@ -435,7 +539,17 @@ const OTPEntry = ({
     return (
       <>
         <ProgressOval />
-        <div class="xar-loader__text">{loader.text}</div>
+        <div
+          class="xar-loader__text"
+          style={{
+            fontFamily: getFontFaimly(theme_settings.font_pairing)
+              .primaryFontClass,
+            color: theme_settings.font_color,
+            font: getFontSizeStyle(Number(theme_settings.font_size)),
+          }}
+        >
+          {loader.text}
+        </div>
       </>
     )
   }
@@ -445,20 +559,54 @@ const OTPEntry = ({
       <div class="xar-otp-heading-container">
         <button
           class="xar-btn"
-          style={{ position: 'absolute' }}
           onClick={toHome}
+          style={{
+            position: 'absolute',
+            fontFamily: getFontFaimly(theme_settings.font_pairing)
+              .primaryFontClass,
+            color: theme_settings.font_color,
+            font: getFontSizeStyle(Number(theme_settings.font_size)),
+          }}
         >
           <img src={MISC_ICONS[mode]['back-arrow']} alt="back" />
         </button>
-        <p class="xar-otp-heading">Enter OTP</p>
+        <p
+          class="xar-otp-heading"
+          style={{
+            fontFamily: getFontFaimly(theme_settings.font_pairing)
+              .primaryFontClass,
+            color: theme_settings.font_color,
+            font: getFontSizeStyle(Number(theme_settings.font_size)),
+          }}
+        >
+          Enter OTP
+        </p>
       </div>
       <div>
         <img src={MISC_ICONS[mode].email} alt="email" />
       </div>
-      <div class="xar-otp-sub-heading">
+      <div
+        class="xar-otp-sub-heading"
+        style={{
+          fontFamily: getFontFaimly(theme_settings.font_pairing)
+            .primaryFontClass,
+          color: theme_settings.font_color,
+          font: getFontSizeStyle(Number(theme_settings.font_size)),
+        }}
+      >
         We’ve sent a verification code to
         <br />
-        <span class="xar-otp-email">{email}</span>
+        <span
+          class="xar-otp-email"
+          style={{
+            fontFamily: getFontFaimly(theme_settings.font_pairing)
+              .primaryFontClass,
+            color: theme_settings.font_color,
+            font: getFontSizeStyle(Number(theme_settings.font_size)),
+          }}
+        >
+          {email}
+        </span>
       </div>
       <div className="xar-otp-box-container">
         <div class="xar-otp-box">
@@ -482,13 +630,27 @@ const OTPEntry = ({
                       ? 'xar-otp-input xar-invalid-otp'
                       : 'xar-otp-input'
                   }
+                  style={{
+                    fontFamily: getFontFaimly(theme_settings.font_pairing)
+                      .primaryFontClass,
+                    color: theme_settings.font_color,
+                    font: getFontSizeStyle(Number(theme_settings.font_size)),
+                  }}
                 />
               )
             })}
         </div>
         {isInvalidOTP ? (
           <div>
-            <p class="xar-invalid-otp-text">
+            <p
+              class="xar-invalid-otp-text"
+              style={{
+                fontFamily: getFontFaimly(theme_settings.font_pairing)
+                  .primaryFontClass,
+                color: theme_settings.font_color,
+                font: getFontSizeStyle(Number(theme_settings.font_size)),
+              }}
+            >
               Incorrect OTP. {attempts} attempts left.
             </p>
           </div>
@@ -499,11 +661,35 @@ const OTPEntry = ({
 
       <div>
         {counter > 0 ? (
-          <span class="xar-sub-text">Resend code in {counter} seconds</span>
+          <span
+            class="xar-sub-text"
+            style={{
+              fontFamily: getFontFaimly(theme_settings.font_pairing)
+                .primaryFontClass,
+              color: theme_settings.font_color,
+              font: getFontSizeStyle(Number(theme_settings.font_size)),
+            }}
+          >
+            Resend code in {counter} seconds
+          </span>
         ) : (
           <div>
-            <span class="xar-sub-text">Did not receive your code yet?</span>
-            <Action text={'Re-send code'} method={resendCode} />
+            <span
+              class="xar-sub-text"
+              style={{
+                fontFamily: getFontFaimly(theme_settings.font_pairing)
+                  .primaryFontClass,
+                color: theme_settings.font_color,
+                font: getFontSizeStyle(Number(theme_settings.font_size)),
+              }}
+            >
+              Did not receive your code yet?
+            </span>
+            <Action
+              text={'Re-send code'}
+              method={resendCode}
+              theme_settings={theme_settings}
+            />
           </div>
         )}
       </div>
@@ -532,17 +718,53 @@ const useCounter = (time = 60) => {
   return { counter, resetCounter }
 }
 
-const OTPError = ({ action, mode }: { action: () => void; mode: Theme }) => {
+const OTPError = ({
+  action,
+  mode,
+  theme_settings,
+}: {
+  action: () => void
+  mode: Theme
+  theme_settings: ThemeSettings
+}) => {
   return (
     <>
       <img class="xar-header-logo" src={MISC_ICONS[mode].failed} alt="failed" />
-      <h2 class="xar-otp-error-heading">Login Failed</h2>
-      <p class="xar-otp-error-subheading">
+      <h2
+        class="xar-otp-error-heading"
+        style={{
+          fontFamily: getFontFaimly(theme_settings.font_pairing)
+            .primaryFontClass,
+          color: theme_settings.font_color,
+          font: getFontSizeStyle(Number(theme_settings.font_size)),
+        }}
+      >
+        Login Failed
+      </h2>
+      <p
+        class="xar-otp-error-subheading"
+        style={{
+          fontFamily: getFontFaimly(theme_settings.font_pairing)
+            .primaryFontClass,
+          color: theme_settings.font_color,
+          font: getFontSizeStyle(Number(theme_settings.font_size)),
+        }}
+      >
         Please check credentials and try again
       </p>
       <button className="xar-btn" onClick={action}>
         <img src={MISC_ICONS[mode]['try-again']} alt="Try again" />
-        <span class="xar-action__link">Try Again</span>
+        <span
+          class="xar-action__link"
+          style={{
+            fontFamily: getFontFaimly(theme_settings.font_pairing)
+              .primaryFontClass,
+            color: theme_settings.font_color,
+            font: getFontSizeStyle(Number(theme_settings.font_size)),
+          }}
+        >
+          Try Again
+        </span>
       </button>
     </>
   )
@@ -551,14 +773,25 @@ const OTPError = ({ action, mode }: { action: () => void; mode: Theme }) => {
 const Container = ({
   children,
   mode,
+  theme_settings,
 }: {
   mode: Theme
   children: preact.ComponentChildren
+  theme_settings: ThemeSettings
 }) => {
   return (
-    <div class="xar-container">
+    <div
+      class="xar-container"
+      style={{
+        borderRadius: getRadius(theme_settings.radius),
+        backgroundColor: mode === 'dark' ? '#13171A' : '#F7F7F7',
+        color: theme_settings.font_color,
+        fontFamily: getFontFaimly(theme_settings.font_pairing)
+          .secondaryFontClass,
+      }}
+    >
       <div class="xar-inner-container">{children}</div>
-      <Footer mode={mode} />
+      <Footer mode={mode} theme_settings={theme_settings} />
     </div>
   )
 }
@@ -567,10 +800,12 @@ const Action = ({
   text,
   method,
   disabled = false,
+  theme_settings,
 }: {
   text: string
   method: () => void
   disabled?: boolean
+  theme_settings: ThemeSettings
 }) => {
   return (
     <div class="xar-action-container">
@@ -578,6 +813,12 @@ const Action = ({
         disabled={disabled}
         onClick={() => method()}
         className="xar-action__link"
+        style={{
+          fontFamily: getFontFaimly(theme_settings.font_pairing)
+            .primaryFontClass,
+          color: theme_settings.font_color,
+          font: getFontSizeStyle(Number(theme_settings.font_size)),
+        }}
       >
         {text}
       </button>
@@ -587,13 +828,13 @@ const Action = ({
 
 export {
   Action,
-  Header,
-  EmailLogin,
-  Separator,
-  SocialLogin,
-  Footer,
-  Loader,
   Container,
+  EmailLogin,
+  Footer,
+  Header,
+  Loader,
   OTPEntry,
   OTPError,
+  Separator,
+  SocialLogin,
 }

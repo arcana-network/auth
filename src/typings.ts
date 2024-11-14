@@ -43,6 +43,11 @@ export interface JsonRpcSuccess<T> extends JsonRpcResponseBase {
   result: Maybe<T>
 }
 
+export type FirebaseBearer = {
+  uid?: string | undefined
+  token: string
+}
+
 export type JsonRpcResponse<T> = JsonRpcSuccess<T> | JsonRpcFailure
 /* end of json-rpc-engine types */
 
@@ -84,15 +89,25 @@ export interface AppThemeInfo {
     light_vertical?: string
   }
 }
+
+export interface ThemeSettings {
+  accent_color: string
+  font_pairing: string
+  font_size: string
+  font_color: string
+  radius: string
+}
 export interface AppInfo {
   name: string
   chain_type: 'evm' | 'solana'
+  theme_settings: ThemeSettings
 }
 
 export interface AppConfig {
   name: string
   chainType: ChainType
   themeConfig: ThemeConfig
+  theme_settings: ThemeSettings
 }
 
 export interface UserInfo {

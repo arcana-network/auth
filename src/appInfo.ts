@@ -1,4 +1,4 @@
-import { AppThemeInfo, AppInfo, Theme } from './typings'
+import { AppInfo, AppThemeInfo, Theme } from './typings'
 
 function getImageUrls(appId: string, theme: Theme, gatewayUrl: string) {
   const u = new URL(`/api/v2/app/${appId}/logo/?type=${theme}`, gatewayUrl)
@@ -20,4 +20,4 @@ async function getAppInfo(appId: string, gatewayUrl: string) {
   return appInfo
 }
 
-export { getImageUrls, getAppInfo, getAppThemeInfo }
+export { getAppInfo, getAppThemeInfo, getImageUrls }

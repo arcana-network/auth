@@ -1,5 +1,30 @@
-import { ArcanaProvider } from './provider'
+import { getAppInfo, getAppThemeInfo, getImageUrls } from './appInfo'
+import { getNetworkConfig } from './config'
+import { ArcanaAuthError, ErrorNotInitialized } from './errors'
 import IframeWrapper from './iframeWrapper'
+import { LOG_LEVEL, setExceptionReporter, setLogLevel } from './logger'
+import Popup from './popup'
+import { ArcanaProvider } from './provider'
+import { ArcanaSolanaAPI } from './solana'
+import {
+  AppConfig,
+  AppMode,
+  BearerAuthentication,
+  BearerAuthParams,
+  ChainType,
+  ConstructorParams,
+  CustomProviderParams,
+  EIP6963ProviderInfo,
+  EthereumProvider,
+  InitStatus,
+  Logins,
+  NetworkConfig,
+  Position,
+  Theme,
+  ThemeConfig,
+  UserInfo,
+} from './typings'
+import { ModalController } from './ui/modalController'
 import {
   getConstructorParams,
   getErrorReporter,
@@ -10,31 +35,6 @@ import {
   removeHexPrefix,
   validateAppAddress,
 } from './utils'
-import { getNetworkConfig } from './config'
-import {
-  AppConfig,
-  AppMode,
-  BearerAuthentication,
-  ChainType,
-  ConstructorParams,
-  CustomProviderParams,
-  EIP6963ProviderInfo,
-  EthereumProvider,
-  BearerAuthParams,
-  InitStatus,
-  Logins,
-  NetworkConfig,
-  Position,
-  Theme,
-  ThemeConfig,
-  UserInfo,
-} from './typings'
-import { getAppInfo, getAppThemeInfo, getImageUrls } from './appInfo'
-import { ArcanaAuthError, ErrorNotInitialized } from './errors'
-import { LOG_LEVEL, setExceptionReporter, setLogLevel } from './logger'
-import Popup from './popup'
-import { ModalController } from './ui/modalController'
-import { ArcanaSolanaAPI } from './solana'
 
 import isEmail from 'validator/es/lib/isEmail'
 
@@ -192,6 +192,7 @@ class AuthProvider {
         mode: this.theme,
         logo: this.logo.vertical,
         options: this.params.connectOptions,
+        theme_settings: this.appConfig.theme_settings,
       })
     }
     return new Promise((resolve, reject) => {
@@ -462,9 +463,10 @@ class AuthProvider {
       getAppThemeInfo(this.appId, this.networkConfig.gatewayUrl),
       getAppInfo(this.appId, this.networkConfig.gatewayUrl),
     ])
+
     const appImageURLs = getImageUrls(
       this.appId,
-      this.params.theme,
+      appThemeInfo.theme,
       this.networkConfig.gatewayUrl
     )
     const horizontalLogo =
@@ -484,7 +486,14 @@ class AuthProvider {
             vertical: verticalLogo ? appImageURLs.vertical : '',
           },
         },
-        theme: this.params.theme,
+        theme: appThemeInfo.theme,
+      },
+      theme_settings: {
+        accent_color: appInfo.theme_settings.accent_color,
+        font_pairing: appInfo.theme_settings.font_pairing,
+        font_color: appInfo.theme_settings.font_color,
+        radius: appInfo.theme_settings.radius,
+        font_size: appInfo.theme_settings.font_size,
       },
     }
   }
@@ -595,15 +604,15 @@ class AuthProvider {
 }
 
 export {
+  AppConfig,
   AuthProvider,
+  BearerAuthentication,
   ConstructorParams,
   EthereumProvider,
-  BearerAuthentication,
-  AppConfig,
-  Theme,
-  Position,
   Logins,
-  UserInfo,
-  ThemeConfig,
   NetworkConfig,
+  Position,
+  Theme,
+  ThemeConfig,
+  UserInfo,
 }
