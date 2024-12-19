@@ -234,7 +234,7 @@ Arcana wallet implements the following common interfaces exposed by all Ethereum
 - [eth_accounts](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_accounts)
 - [eth_getBalance](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_getbalance)
 - [eth_sendTransaction](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_sendtransaction)
-- [eth_sign](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_signtransaction)
+- [eth_sign](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_sign)
 - [eth_call](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_call)
 
 ### Switching Chains
