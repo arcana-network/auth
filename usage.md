@@ -91,7 +91,9 @@ window.onload = async () => {
 ```js
 const { AuthProvider } = window.arcana.auth // From CDN
 // or
-import { AuthProvider } from '@arcana/auth' // From npm
+import { AuthProvider } from '@arcana/auth' // For polyfilled version of SDK
+// or
+import { AuthProvider } from '@arcana/auth/esm' // For non polyfilled version of SDK
 ```
 
 #### Initialize AuthProvider
