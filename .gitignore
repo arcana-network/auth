@@ -1,5 +1,6 @@
 node_modules
 dist
+dist-esm
 types
 .DS_Store
 .eslintcache

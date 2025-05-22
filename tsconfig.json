@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "es2018"],
+    "lib": ["dom", "es2020"],
     "target": "es6",
-    "module": "commonjs",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "declaration": true,
     "declarationDir": "dist/types",
-    "outDir": "dist",
+    // "outDir": "dist",
     "strict": true,
     "noImplicitAny": true,
     "strictPropertyInitialization": false,
